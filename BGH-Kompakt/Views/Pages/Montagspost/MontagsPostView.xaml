@@ -503,13 +503,40 @@
                             <DataGridTemplateColumn Width="*" MinWidth="200">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="40" />
+                                            </Grid.ColumnDefinitions>
                                             <TextBlock
                                                 x:Name="Txt_Senate"
-                                                Width="160"
+                                                Grid.Column="0"
+                                                Width="Auto"
                                                 Text="{Binding MPSenatName}"
                                                 TextAlignment="Left" />
-                                        </StackPanel>
+                                            <Border
+                                                Grid.Column="1"
+                                                Width="20"
+                                                Height="20"
+                                                Margin="0,-10,0,0"
+                                                Padding="0"
+                                                x:Name="Senat_Circle_Border"
+                                                Background="{StaticResource BGH-Color}"
+                                                CornerRadius="50">
+                                                <TextBlock
+                                                    x:Name="Senat_Circle_Text"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{StaticResource BGHActivityRequestBackground}"
+                                                    Text="{Binding MPDecisions.Count}" />
+                                            </Border>
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                                <Setter TargetName="Senat_Circle_Border" Property="Background" Value="{StaticResource BGHActivityRequestBackground}" />
+                                                <Setter TargetName="Senat_Circle_Text" Property="Foreground" Value="{StaticResource BGH-Color}" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                                 <DataGridColumn.Header>
