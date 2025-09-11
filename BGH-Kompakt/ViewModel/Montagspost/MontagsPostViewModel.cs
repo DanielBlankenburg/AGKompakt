@@ -537,7 +537,25 @@ namespace BGH_Kompakt.ViewModel
             set { SetProperty<bool>(ref _showWebbrowserVermerk, value); }
         }
 
+        private bool _SelectedOutlineAll = false;
+        public bool SelectedOutlineAll
+        {
+            get { return _SelectedOutlineAll; }
+            set { 
+                SetProperty<bool>(ref _SelectedOutlineAll, value); 
+                if (value) showSenate = false;
+            }
+        }
 
+        private bool _SelectedOutlineSenate = true;
+        public bool SelectedOutlineSenate
+        {
+            get { return _SelectedOutlineSenate; }
+            set { 
+                SetProperty<bool>(ref _SelectedOutlineSenate, value); 
+                if (value) showSenate = true;
+            }
+        }
 
         #endregion
 
