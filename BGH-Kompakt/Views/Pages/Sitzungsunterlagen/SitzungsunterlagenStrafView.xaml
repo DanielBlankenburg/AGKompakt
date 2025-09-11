@@ -1,0 +1,236 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.Pages.Sitzungsunterlagen.SitzungsunterlagenStrafView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:components="clr-namespace:BGH_Kompakt.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.Pages.Sitzungsunterlagen"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sitzungsunterlagen="clr-namespace:BGH_Kompakt.ViewModel.Sitzungsunterlagen"
+    d:DataContext="{d:DesignInstance Type=sitzungsunterlagen:SitzungsunterlagenStrafViewModel}"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    Language="de-DE"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Button_Menu"
+            BasedOn="{StaticResource Button_Master}"
+            TargetType="Button">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+        <Style x:Key="MDCard_Import_Files" TargetType="{x:Type MD:Card}">
+            <Setter Property="Margin" Value="10,5" />
+            <Setter Property="Padding" Value="10" />
+        </Style>
+        <Style
+            x:Key="Combobox_Add"
+            BasedOn="{StaticResource Combobox_Base}"
+            TargetType="{x:Type ComboBox}">
+            <Setter Property="Margin" Value="15,0" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="MinWidth" Value="80" />
+            <Setter Property="TextBlock.HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style
+            x:Key="Textbox_Verfahren"
+            BasedOn="{StaticResource Textbox_Base}"
+            TargetType="TextBox">
+            <Setter Property="Margin" Value="15,0" />
+            <Setter Property="MinWidth" Value="80" />
+        </Style>
+
+    </UserControl.Resources>
+    <Grid Background="{StaticResource MaterialDesignPaper}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource Style_Textblock_Titel}" Text="Export Unterlagen BSCW-Server" />
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <MD:Card Grid.Row="0" Style="{StaticResource MDCard_Import_Files}">
+                <StackPanel>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource Style_Textblock_Titel_Unter2}"
+                        Text="Verfahrensdaten" />
+                    <Grid Margin="0,10,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1">
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <ComboBox
+                                    MD:HintAssist.Hint="Senat:"
+                                    DisplayMemberPath="SenatName"
+                                    ItemsSource="{Binding SenatList, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedItem="{Binding SelectedSenat, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{StaticResource Combobox_Add}" />
+                                <ComboBox
+                                    MD:HintAssist.Hint="Reg-Zeichen:"
+                                    DisplayMemberPath="SenatAktenzeichenName"
+                                    IsEnabled="{Binding AZIsEnable, UpdateSourceTrigger=PropertyChanged}"
+                                    ItemsSource="{Binding AZList, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedItem="{Binding SelectedAZ, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{StaticResource Combobox_Add}" />
+                                <TextBox
+                                    MD:HintAssist.Hint="Lfd-Nr.:"
+                                    Style="{StaticResource Textbox_Verfahren}"
+                                    Text="{Binding TextLaufendeNummer, UpdateSourceTrigger=LostFocus}" />
+                                <TextBox
+                                    MD:HintAssist.Hint="Jahr:"
+                                    Style="{StaticResource Textbox_Verfahren}"
+                                    Text="{Binding TextJahr, UpdateSourceTrigger=LostFocus}" />
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <!--<ComboBox
+                                    MinWidth="60"
+                                    MD:HintAssist.Hint="Spruchgruppe:"
+                                    DisplayMemberPath="SenatSpruchgruppeName"
+                                    ItemsSource="{Binding SGList, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedItem="{Binding SelectedSG, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{StaticResource Combobox_Add}" />-->
+                                <ComboBox
+                                    MinWidth="60"
+                                    Margin="15,10,15,0"
+                                    MD:HintAssist.Hint="Berichtserstatter:"
+                                    DisplayMemberPath="Fullname"
+                                    ItemsSource="{Binding ListBeisitzer, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedItem="{Binding SelectedBeisitzer, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{StaticResource Combobox_Add}" />
+                            </StackPanel>
+                            <!--<ComboBox TextSearch.TextPath="Name" ItemsSource="{Binding CollectionView.View}">
+                                <ComboBox.GroupStyle>
+                                    <GroupStyle>
+                                        <GroupStyle.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock
+                                                    Height="25"
+                                                    Margin="0,5,0,5"
+                                                    Padding="5,5,0,0"
+                                                    VerticalAlignment="Center"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding Name}" />
+                                            </DataTemplate>
+                                        </GroupStyle.HeaderTemplate>
+                                    </GroupStyle>
+                                </ComboBox.GroupStyle>
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="0,0,0,0" Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>-->
+                        </StackPanel>
+
+                    </Grid>
+                </StackPanel>
+            </MD:Card>
+            <MD:Card Grid.Row="1" Style="{StaticResource MDCard_Import_Files}">
+                <StackPanel>
+                    <Border Height="80" Style="{StaticResource Border_Import_Files}">
+                        <ScrollViewer components:DropFilesBehaviorExtension.IsEnabled="True" Style="{StaticResource Scrollviewer_Import_Files}">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontWeight="Bold"
+                                Style="{StaticResource textblock_base}"
+                                Text="Ziehen Sie die Dateien für das ausgewählte Verfahren auf dieses Feld"
+                                TextWrapping="WrapWithOverflow" />
+                        </ScrollViewer>
+                    </Border>
+                    <TextBlock
+                        Margin="0,20,0,0"
+                        Style="{StaticResource Style_Textblock_Titel_Unter2}"
+                        Text="Übersicht der zu exportierenden Dateien"
+                        Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                    <ListView
+                        x:Name="listView"
+                        Margin="0,30,0,0"
+                        ItemsSource="{Binding ImportFileList, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding SelectedAttechment, UpdateSourceTrigger=PropertyChanged}"
+                        SelectionMode="Single"
+                        Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="500"
+                                    DisplayMemberBinding="{Binding FileName}"
+                                    Header="Dateiname"
+                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                <GridViewColumn Width="Auto">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button
+                                                    x:Name="Btn_Rename"
+                                                    Command="{Binding Path=DataContext.RenameCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Button_GridView}"
+                                                    ToolTip="Als Senatsheft umbenennen">
+                                                    <MD:PackIcon Padding="0" Kind="NotebookEditOutline" />
+                                                </Button>
+                                                <Button
+                                                    x:Name="Btn_Add_Aktenzeichen"
+                                                    Command="{Binding Path=DataContext.RenameCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Button_GridView}"
+                                                    ToolTip="Aktenzeichen hinzufügen">
+                                                    <MD:PackIcon Padding="0" Kind="PlusCircle" />
+                                                </Button>
+                                                <Button
+                                                    x:Name="Btn_Umbenennen"
+                                                    Command="{Binding Path=DataContext.RenameCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Button_GridView}"
+                                                    ToolTip="Datei umbenennen">
+                                                    <MD:PackIcon Padding="0" Kind="Edit" />
+                                                </Button>
+                                                <Button
+                                                    x:Name="Btn_Open"
+                                                    Command="{Binding Path=DataContext.OpenAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Button_GridView}"
+                                                    ToolTip="Anlage öffnen">
+                                                    <MD:PackIcon Padding="0" Kind="File" />
+                                                </Button>
+                                                <Button
+                                                    x:Name="Btn_Bin"
+                                                    Command="{Binding Path=DataContext.DeleteAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Button_GridView}"
+                                                    ToolTip="Anlage löschen">
+                                                    <MD:PackIcon Padding="0" Kind="Bin" />
+                                                </Button>
+                                            </StackPanel>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
+                                                    <Setter TargetName="Btn_Rename" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Btn_Umbenennen" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Btn_Add_Aktenzeichen" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Btn_Open" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Btn_Bin" Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button
+                        Grid.Column="0"
+                        Content="Dateien auf den BSCW-Server exportieren"
+                        Style="{StaticResource Button_Menu}"
+                        Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </MD:Card>
+        </Grid>
+    </Grid>
+</UserControl>

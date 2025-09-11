@@ -1,0 +1,1295 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.Settings.SystemSettingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Classes="clr-namespace:BGH_Kompakt.Classes"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:systemsettings="clr-namespace:BGH_Kompakt.ViewModel.SystemSettings"
+    d:DataContext="{d:DesignInstance Type=systemsettings:SystemSettingViewModel}"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Textbox_Setting"
+            BasedOn="{StaticResource Textbox_Base}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="Margin" Value="15,0,0,20" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Width" Value="250" />
+        </Style>
+        <Style
+            x:Key="Style_Textbox_Settings_Small"
+            BasedOn="{StaticResource Style_Textbox_PersonChange}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="Width" Value="50" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style
+            x:Key="Style_Textbox_Settings_Large"
+            BasedOn="{StaticResource Style_Textbox_PersonChange}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="Width" Value="200" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style
+            x:Key="Button_Settings"
+            BasedOn="{StaticResource Button_Master}"
+            TargetType="Button">
+            <Setter Property="Margin" Value="0,0,15,0" />
+        </Style>
+        <Style x:Key="UserList_GridViewColumn" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="{StaticResource MaterialDesignFont}" />
+            <Setter Property="Padding" Value="10,0,0,0" />
+        </Style>
+        <Style
+            x:Key="Textblock_Members"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,15,0,10" />
+        </Style>
+
+
+    </UserControl.Resources>
+    <Grid Background="{StaticResource MaterialDesignPaper}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="6*" />
+        </Grid.ColumnDefinitions>
+        <!--  Senate  -->
+        <MD:Card
+            Grid.Row="0"
+            Grid.Column="0"
+            Style="{StaticResource MDCard_Master}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Style_Textblock_Titel_Unter1}" Text="Senate" />
+                <ListBox
+                    Padding="5,20,0,0"
+                    DisplayMemberPath="SenatName"
+                    ItemsSource="{Binding SenatList}"
+                    SelectedItem="{Binding SelectedSenat, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </MD:Card>
+        <!--  Main  -->
+        <MD:Card
+            Grid.Column="1"
+            Style="{StaticResource MDCard_Master}"
+            Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!--  Zugeordnete Personen  -->
+                    <Expander HorizontalAlignment="Stretch" IsExpanded="{Binding ShowUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource Textblock_Extender}" Text="Zugeordnete Personen" />
+                        </Expander.Header>
+                        <StackPanel Style="{StaticResource Stackpanel_Expander}">
+                            <TextBlock Style="{StaticResource Textblock_Members}" Text="Alle Benutzer" />
+                            <ListView
+                                ItemsSource="{Binding UserList, Mode=OneWay}"
+                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                SelectedItem="{Binding UserSelected, UpdateSourceTrigger=PropertyChanged}"
+                                SelectionMode="Single">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn
+                                            Width="150"
+                                            DisplayMemberBinding="{Binding NachName, TargetNullValue=[keine Angabe]}"
+                                            Header="Name"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn
+                                            Width="120"
+                                            DisplayMemberBinding="{Binding VorName, TargetNullValue=[keine Angabe]}"
+                                            Header="Vorname"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn
+                                            Width="100"
+                                            DisplayMemberBinding="{Binding Titel.TitelText, TargetNullValue=[keine Angabe]}"
+                                            Header="Titel"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn
+                                            Width="250"
+                                            DisplayMemberBinding="{Binding EMail, TargetNullValue=[keine Angabe]}"
+                                            Header="E-Mail"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn
+                                            Width="110"
+                                            DisplayMemberBinding="{Binding Geschlecht.GeschlechtText, TargetNullValue=[keine Angabe]}"
+                                            Header="Geschlecht"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn
+                                            Width="auto"
+                                            DisplayMemberBinding="{Binding Position.PositionText, TargetNullValue=[keine Angabe]}"
+                                            Header="Position"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding Dienstbezeichnung.DienstbezeichnungText, TargetNullValue=[keine Angabe]}"
+                                            Header="Diensbezeichnung"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding Status.StatusText, TargetNullValue=[keine Angabe]}"
+                                            Header="Status"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn Width="Auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button
+                                                        x:Name="Btn_Bin"
+                                                        Command="{Binding Path=DataContext.DeleteMemeberCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                        Style="{StaticResource Button_GridView}"
+                                                        ToolTip="Person aus dem Senat entfernen">
+                                                        <MD:PackIcon Padding="0" Kind="Bin" />
+                                                    </Button>
+                                                    <DataTemplate.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />
+                                                                <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.ShowAdmin}" Value="true" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <MultiDataTrigger.Setters>
+                                                                <Setter TargetName="Btn_Bin" Property="Visibility" Value="Visible" />
+                                                            </MultiDataTrigger.Setters>
+                                                        </MultiDataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+
+                                        </GridViewColumn>
+
+
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                            <TextBlock Style="{StaticResource Textblock_Members}" Text="Administratoren" />
+                            <ListView
+                                MaxWidth="480"
+                                HorizontalAlignment="Left"
+                                ItemsSource="{Binding AdminUserList, Mode=OneWay}"
+                                SelectionMode="Single">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn
+                                            Width="150"
+                                            DisplayMemberBinding="{Binding NachName, TargetNullValue=[keine Angabe]}"
+                                            Header="Name"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn
+                                            Width="120"
+                                            DisplayMemberBinding="{Binding VorName, TargetNullValue=[keine Angabe]}"
+                                            Header="Vorname"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                        <GridViewColumn
+                                            Width="100"
+                                            DisplayMemberBinding="{Binding Titel.TitelText, TargetNullValue=[keine Angabe]}"
+                                            Header="Titel"
+                                            HeaderContainerStyle="{StaticResource UserList_GridViewColumn}" />
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </StackPanel>
+                    </Expander>
+                    <Border Style="{StaticResource Expander_Border}" />
+                    <!--  Allgemeine Einstellungen  -->
+                    <Expander HorizontalAlignment="Stretch" IsExpanded="{Binding ShowAllgemeineEinstellungen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource Textblock_Extender}" Text="Allgemeine Einstellungen" />
+                        </Expander.Header>
+                        <StackPanel Style="{StaticResource Stackpanel_Expander}">
+                            <!--  Content  -->
+                            <Grid DataContext="{Binding SenatSetting, Mode=OneWay}" Row="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="420" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="300" />
+                                            <ColumnDefinition Width="50" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="40" />
+                                        </Grid.RowDefinitions>
+                                        <Label
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Anzeige Sitzungspläne
+                                        </Label>
+                                        <Classes:SliderButton
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            IsChecked="{Binding ShowSitzungsplaene}"
+                                            Style="{StaticResource styleSliderButtonSettings}" />
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Anzeige Spruchgruppen
+                                        </Label>
+                                        <Classes:SliderButton
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            IsChecked="{Binding ShowSpruchgruppen}"
+                                            Style="{StaticResource styleSliderButtonSettings}" />
+                                        <Label
+                                            Grid.Row="2"
+                                            Grid.Column="0"
+                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Anzeige Verteilung
+                                        </Label>
+                                        <Classes:SliderButton
+                                            Grid.Row="2"
+                                            Grid.Column="2"
+                                            IsChecked="{Binding ShowVerteilung}"
+                                            Style="{StaticResource styleSliderButtonSettings}" />
+                                        <Label
+                                            Grid.Row="3"
+                                            Grid.Column="0"
+                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Anzeige Verteilung
+                                        </Label>
+                                        <Classes:SliderButton
+                                            Grid.Row="3"
+                                            Grid.Column="2"
+                                            IsChecked="{Binding ShowBerichterstatter}"
+                                            Style="{StaticResource styleSliderButtonSettings}" />
+                                        <Label
+                                            Grid.Row="4"
+                                            Grid.Column="0"
+                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Anzeige Votenmappe
+                                        </Label>
+                                        <Classes:SliderButton
+                                            Grid.Row="4"
+                                            Grid.Column="2"
+                                            IsChecked="{Binding ShowVotenmappe}"
+                                            Style="{StaticResource styleSliderButtonSettings}" />
+                                        <Label
+                                            Grid.Row="5"
+                                            Grid.Column="0"
+                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Standard abgeschlossen Verfahren ausblenden
+                                        </Label>
+                                        <Classes:SliderButton
+                                            Grid.Row="5"
+                                            Grid.Column="2"
+                                            IsChecked="{Binding ShowFormerDays}"
+                                            Style="{StaticResource styleSliderButtonSettings}" />
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="280" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Label
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Datei-Pfad des Senats
+                                        </Label>
+                                        <TextBox
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            MinWidth="100"
+                                            VerticalContentAlignment="Center"
+                                            Text="{Binding Senat.Path}" />
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Buchstabe Laufwerk BSCW-Server
+                                        </Label>
+                                        <ComboBox
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            MaxWidth="100"
+                                            Margin="0,10,0,0"
+                                            HorizontalAlignment="Left"
+                                            HorizontalContentAlignment="Center"
+                                            ItemsSource="{Binding Path=DataContext.DriveList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                            SelectedItem="{Binding BSCW_Server_Drive}" />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <!--  Buttons  -->
+                            <StackPanel Grid.Column="1" Style="{StaticResource Stackpanel_Expander_Buttons}">
+                                <Button
+                                    Command="{Binding ExpanderCommand}"
+                                    CommandParameter="VorAZ"
+                                    Style="{StaticResource Button_Expander}"
+                                    ToolTip="Vor zu den Einstellungen für die Aktenzeichen">
+                                    <MD:PackIcon Kind="ChevronRight" />
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Expander>
+                    <Border Style="{StaticResource Expander_Border}" />
+                    <!--  Aktenzeichen  -->
+                    <Expander HorizontalAlignment="Stretch" IsExpanded="{Binding ShowAktenzeichen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource Textblock_Extender}" Text="Aktenzeichen" />
+                        </Expander.Header>
+                        <StackPanel Style="{StaticResource Stackpanel_Expander}">
+                            <!--  content  -->
+                            <StackPanel Grid.Row="1">
+                                <ListView
+                                    Margin="10,0,0,20"
+                                    ItemsSource="{Binding AktenzeichenList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedItem="{Binding SelectedAktenzeichen, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectionMode="Single"
+                                    Visibility="Visible">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn
+                                                Width="130"
+                                                DisplayMemberBinding="{Binding SenatAktenzeichenName, TargetNullValue=[keine Angabe]}"
+                                                Header="Bezeichnung"
+                                                HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                            <GridViewColumn
+                                                Width="100"
+                                                DisplayMemberBinding="{Binding SenatAktenzeichenOrderNumber}"
+                                                Header="Reichenfolge"
+                                                HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                                <Border />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel DataContext="{Binding EditAktenzeichen}" Orientation="Vertical">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label
+                                                Grid.Column="0"
+                                                Content="Bezeichnung"
+                                                Style="{StaticResource Style_label_PersonChange}" />
+                                            <TextBox
+                                                Grid.Column="2"
+                                                IsEnabled="{Binding Path=DataContext.EnableAZ, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                Text="{Binding SenatAktenzeichenName, TargetNullValue=[Neue Bezeichnung]}" />
+                                        </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="34*" />
+                                                <ColumnDefinition Width="67*" />
+                                                <ColumnDefinition Width="200*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label
+                                                Grid.Column="0"
+                                                Content="Reihenfolge"
+                                                Style="{StaticResource Style_label_PersonChange}" />
+                                            <TextBox
+                                                Grid.Column="1"
+                                                Grid.ColumnSpan="3"
+                                                IsEnabled="{Binding Path=DataContext.EnableAZ, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                Text="{Binding SenatAktenzeichenOrderNumber, TargetNullValue=[Zahl eintragen]}" />
+                                        </Grid>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        Margin="15,30,0,10"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding AzNewCommand}"
+                                            Content="Neu"
+                                            Style="{StaticResource Button_Settings}" />
+                                        <Button
+                                            Command="{Binding AzDeleteCommand}"
+                                            Content="Löschen"
+                                            Style="{StaticResource Button_Settings}" />
+                                        <Button
+                                            Click="Button_Click"
+                                            Command="{Binding AzSaveCommand, UpdateSourceTrigger=PropertyChanged}"
+                                            Content="{Binding AZChangeText}"
+                                            Style="{StaticResource Button_Settings}" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                            <!--  Buttons  -->
+                            <StackPanel Grid.Column="1" Style="{StaticResource Stackpanel_Expander_Buttons}">
+                                <Button
+                                    Command="{Binding ExpanderCommand}"
+                                    CommandParameter="BackSettings"
+                                    Style="{StaticResource Button_Expander}"
+                                    ToolTip="Zurück zu den allgemeinen Einstellungen">
+                                    <MD:PackIcon Kind="ChevronLeft" />
+                                </Button>
+                                <Button
+                                    Command="{Binding ExpanderCommand}"
+                                    CommandParameter="VorSpruchgruppe"
+                                    Style="{StaticResource Button_Expander}"
+                                    ToolTip="Vor zu den Spruchgruppen">
+                                    <MD:PackIcon Kind="ChevronRight" />
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Expander>
+                    <Border Style="{StaticResource Expander_Border}" />
+                    <!--  spruchgruppen  -->
+                    <Expander HorizontalAlignment="Stretch" IsExpanded="{Binding ShowSpruchgruppen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource Textblock_Extender}" Text="Spruchgruppen" />
+                        </Expander.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="3" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <DockPanel Grid.Column="0" Margin="24,0,24,16">
+                                <!--  content  -->
+                                <StackPanel DockPanel.Dock="Top">
+                                    <ListView
+                                        Margin="10,0,0,20"
+                                        ItemsSource="{Binding SpruchgruppenList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedItem="{Binding SelectedSpruchgruppe, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectionMode="Single"
+                                        Visibility="Visible">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn
+                                                    Width="130"
+                                                    DisplayMemberBinding="{Binding SenatSpruchgruppeName, TargetNullValue=[keine Angabe]}"
+                                                    Header="Bezeichnung"
+                                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                                <GridViewColumn
+                                                    Width="100"
+                                                    DisplayMemberBinding="{Binding SenatSpruchgruppeOrderNumber}"
+                                                    Header="Reichenfolge"
+                                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                    <Border />
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        Margin="15,10,0,10"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            MinWidth="90"
+                                            Command="{Binding SGNewCommand}"
+                                            Content="Neu"
+                                            Style="{StaticResource Button_Settings}" />
+                                        <Button
+                                            MinWidth="90"
+                                            Command="{Binding SGDeleteCommand}"
+                                            Content="Löschen"
+                                            Style="{StaticResource Button_Settings}" />
+
+                                    </StackPanel>
+
+                                    <!--<Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <StackPanel DataContext="{Binding EditSpruchgruppe}" Orientation="Vertical">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bezeichnung"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    IsEnabled="{Binding Path=DataContext.EnableSG, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding SenatSpruchgruppeName, TargetNullValue=[Neue Bezeichnung]}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Reihenfolge"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    IsEnabled="{Binding Path=DataContext.EnableSG, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding SenatSpruchgruppeOrderNumber, TargetNullValue=[Zahl eintragen]}" />
+                                            </Grid>
+                                        </StackPanel>
+                                        <StackPanel
+                                            Grid.Row="2"
+                                            Margin="15,30,0,10"
+                                            Orientation="Horizontal">
+                                            <Button
+                                                Command="{Binding SGNewCommand}"
+                                                Content="Neu"
+                                                Style="{StaticResource Button_Settings}" />
+                                            <Button
+                                                Command="{Binding SGDeleteCommand}"
+                                                Content="Löschen"
+                                                Style="{StaticResource Button_Settings}" />
+                                            <Button
+                                                Command="{Binding SGSaveCommand, UpdateSourceTrigger=PropertyChanged}"
+                                                Content="{Binding SGChangeText}"
+                                                Style="{StaticResource Button_Settings}" />
+                                        </StackPanel>
+                                    </Grid>-->
+                                </StackPanel>
+                                <!--  buttons  -->
+                                <StackPanel Style="{StaticResource Stackpanel_Expander_Buttons}">
+                                    <Button
+                                        Command="{Binding ExpanderCommand}"
+                                        CommandParameter="BackAZ"
+                                        Style="{StaticResource Button_Expander}"
+                                        ToolTip="Zurück zu den Aktenzeichen">
+                                        <MD:PackIcon Kind="ChevronLeft" />
+                                    </Button>
+                                    <Button
+                                        Command="{Binding ExpanderCommand}"
+                                        CommandParameter="VorImport"
+                                        Style="{StaticResource Button_Expander}"
+                                        ToolTip="Vor den Importeinstellungen">
+                                        <MD:PackIcon Kind="ChevronRight" />
+                                    </Button>
+                                </StackPanel>
+                            </DockPanel>
+                            <Border
+                                Grid.Column="1"
+                                Width="1"
+                                Margin="0,7"
+                                Style="{StaticResource Expander_Border_Vertical}" />
+                            <StackPanel Grid.Column="2">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel DataContext="{Binding EditSpruchgruppe}" Orientation="Vertical">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label
+                                                Grid.Column="0"
+                                                Content="Bezeichnung"
+                                                Style="{StaticResource Style_label_PersonChange}" />
+                                            <TextBox
+                                                Grid.Column="2"
+                                                IsEnabled="{Binding Path=DataContext.EnableSG, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                Text="{Binding SenatSpruchgruppeName, TargetNullValue=[Neue Bezeichnung]}" />
+                                        </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label
+                                                Grid.Column="0"
+                                                Content="Reihenfolge"
+                                                Style="{StaticResource Style_label_PersonChange}" />
+                                            <TextBox
+                                                Grid.Column="2"
+                                                IsEnabled="{Binding Path=DataContext.EnableSG, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                Text="{Binding SenatSpruchgruppeOrderNumber, TargetNullValue=[Zahl eintragen]}" />
+                                        </Grid>
+                                    </StackPanel>
+                                    <StackPanel
+                                        Grid.Row="1"
+                                        Margin="15,30,0,10"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding SGSaveCommand, UpdateSourceTrigger=PropertyChanged}"
+                                            Content="{Binding SGChangeText}"
+                                            Style="{StaticResource Button_Settings}" />
+                                    </StackPanel>
+                                    <Border
+                                        Grid.Row="2"
+                                        Margin="5,5"
+                                        Style="{StaticResource Expander_Border}" />
+                                    <StackPanel Grid.Row="3" Margin="15,20,0,15">
+                                        <Label
+                                            Margin="0,0,0,10"
+                                            Content="Spruchgruppenmitglieder"
+                                            FontWeight="Bold"
+                                            Style="{StaticResource Label_Base}" />
+                                        <ListView
+                                            MaxWidth="350"
+                                            HorizontalAlignment="Left"
+                                            ItemsSource="{Binding SpruchgruppenMembers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedItem="{Binding SelectedSpruchgruppenMember, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectionMode="Single"
+                                            Visibility="Visible">
+                                            <ListView.View>
+                                                <GridView>
+                                                    <GridViewColumn
+                                                        Width="160"
+                                                        DisplayMemberBinding="{Binding NachName, TargetNullValue=[keine Angabe]}"
+                                                        Header="Nachname"
+                                                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                                    <GridViewColumn
+                                                        Width="100"
+                                                        DisplayMemberBinding="{Binding VorName}"
+                                                        Header="Vorname"
+                                                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                                </GridView>
+                                            </ListView.View>
+                                        </ListView>
+                                    </StackPanel>
+                                    <Grid Grid.Row="4" Margin="15,10,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ComboBox
+                                                Margin="0,0,10,0"
+                                                VerticalAlignment="Top"
+                                                VerticalContentAlignment="Top"
+                                                MD:HintAssist.Hint="Richter:"
+                                                DisplayMemberPath="Fullname"
+                                                ItemsSource="{Binding SenatMembers}"
+                                                SelectedItem="{Binding SelectedSenatMember}"
+                                                Style="{StaticResource Combobox_Base}" />
+                                            <Button
+                                                Command="{Binding RichterSaveCommand}"
+                                                Content="Hinzufügen"
+                                                Style="{StaticResource Button_Settings}" />
+                                        </StackPanel>
+                                        <Border
+                                            Grid.Column="1"
+                                            Margin="5,5"
+                                            Style="{StaticResource Expander_Border_Vertical}" />
+                                        <StackPanel Grid.Column="2" Margin="15,2,0,0">
+                                            <Button
+                                                Command="{Binding RichterDeleteCommand}"
+                                                Content="Löschen"
+                                                Style="{StaticResource Button_Settings}" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <!--<StackPanel
+                                        Grid.Row="2"
+                                        Margin="15,30,0,10"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding SGSaveCommand, UpdateSourceTrigger=PropertyChanged}"
+                                            Content="{Binding SGChangeText}"
+                                            Style="{StaticResource Button_Settings}" />
+                                    </StackPanel>-->
+                                </Grid>
+
+                            </StackPanel>
+                        </Grid>
+                    </Expander>
+                    <Border Style="{StaticResource Expander_Border}" />
+                    <!--  Importeinstellungen  -->
+                    <Expander HorizontalAlignment="Stretch" IsExpanded="{Binding ShowImport, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Expander.Header>
+                            <TextBlock
+                                FontSize="15"
+                                FontWeight="Bold"
+                                Text="Importeinstellungen" />
+                        </Expander.Header>
+
+
+                        <StackPanel Style="{StaticResource Stackpanel_Expander}">
+                            <!--  content  -->
+                            <Grid DataContext="{Binding SenatSetting, Mode=OneWay}" Row="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="420" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Aktenzeichen voranstellen"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <Classes:SliderButton
+                                                    Grid.Column="1"
+                                                    IsChecked="{Binding AZPrefix}"
+                                                    Style="{StaticResource styleSliderButtonSettings}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Orts- und Datumsangabe"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <Classes:SliderButton
+                                                    Grid.Column="1"
+                                                    IsChecked="{Binding AZPrefixDate}"
+                                                    Style="{StaticResource styleSliderButtonSettings}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Zeichen nach dem Aktenzeichen"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Small}"
+                                                    Text="{Binding AZPrefixChar}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. AG Urteil"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportAGUrteil}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. AG Beschluss"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportAGBeschluss}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. LG Urteil"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportLGUrteil}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. LG Beschluss"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportLGBeschluss}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. LG HB"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportLGHB}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. LG ZB"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportLGZB}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. OLG Urteil"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportOLGUrteil}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. OLG Beschluss"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportOLGBeschluss}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. OLG HB"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportOLGHB}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. OLG ZB"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportOLGZB}" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. EuGH Vorlage"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportEUGHVorlage}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. EuGH Urteil"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportEUGHURteil}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. Entscheidungsentwurf"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportEUGHURteil}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. Votum"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportVotum}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. Vorvotum"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportVorVotum}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. Anlage"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportAnlage}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. Leitsatz"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportLeitsatz}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. Rechtsmittelbegründung"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportRMB}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. Rechtsmittelerwiderung"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportRME}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bez. Sonstiges"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding ImportSonstiges}" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <!--  Buttons  -->
+                            <StackPanel Grid.Column="1" Style="{StaticResource Stackpanel_Expander_Buttons}">
+                                <Button
+                                    Command="{Binding ExpanderCommand}"
+                                    CommandParameter="BackSpruchgruppen"
+                                    Style="{StaticResource Button_Expander}"
+                                    ToolTip="Zurück zu den Spruchgruppen">
+                                    <MD:PackIcon Kind="ChevronLeft" />
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+
+                    </Expander>
+                    <Border Style="{StaticResource Expander_Border}" />
+
+                </StackPanel>
+            </ScrollViewer>
+        </MD:Card>
+
+        <StackPanel
+            Grid.Row="2"
+            Margin="0,10,0,10"
+            Orientation="Horizontal">
+            <Button
+                Width="110"
+                Margin="5,12,0,0"
+                Command="{Binding SaveCommand}"
+                Content="{Binding Text, Source={x:Static ApplicationCommands.Save}}"
+                Style="{StaticResource Button_Master}" />
+        </StackPanel>
+
+    </Grid>
+
+
+
+
+
+    <!--
+
+        <MD:Card
+            Grid.Row="2"
+            Grid.Column="2"
+            Margin="10,5,10,5"
+            Padding="0,0,0,15"
+            Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Style="{StaticResource Style_Textblock_Titel_Unter1}"
+                    Text="Spruchgruppen" />
+                <Grid DataContext="{Binding SenatSetting, Mode=OneWay}" Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="60" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Style="{StaticResource Style_Textblock_AZ}">
+                        SG 1
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Style="{StaticResource Style_Textblock_AZ}">
+                        SG 2
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Style="{StaticResource Style_Textblock_AZ}">
+                        SG 3
+                    </TextBlock>
+
+
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Style="{StaticResource Style_Textbox_PersonChange}"
+                        Text="{Binding SG1}" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Style="{StaticResource Style_Textbox_PersonChange}"
+                        Text="{Binding SG2}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Style="{StaticResource Style_Textbox_PersonChange}"
+                        Text="{Binding SG3}" />
+
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Style="{StaticResource Style_Textblock_AZ}">
+                        SG 4
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Style="{StaticResource Style_Textblock_AZ}">
+                        SG 5
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Style="{StaticResource Style_Textblock_AZ}">
+                        SG 6
+                    </TextBlock>
+
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        Style="{StaticResource Style_Textbox_PersonChange}"
+                        Text="{Binding SG4}" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        Style="{StaticResource Style_Textbox_PersonChange}"
+                        Text="{Binding SG5}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="3"
+                        Style="{StaticResource Style_Textbox_PersonChange}"
+                        Text="{Binding SG6}" />
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="4"
+                        Style="{StaticResource Style_Textblock_AZ}">
+                        SG 7
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="4"
+                        Style="{StaticResource Style_Textblock_AZ}">
+                        SG 8
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="4"
+                        Style="{StaticResource Style_Textblock_AZ}">
+                        SG 9
+                    </TextBlock>
+
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="5"
+                        Style="{StaticResource Style_Textbox_PersonChange}"
+                        Text="{Binding SG7}" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="5"
+                        Style="{StaticResource Style_Textbox_PersonChange}"
+                        Text="{Binding SG8}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="5"
+                        Style="{StaticResource Style_Textbox_PersonChange}"
+                        Text="{Binding SG9}" />
+
+                </Grid>
+            </Grid>
+        </MD:Card>
+        <MD:Card
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Margin="10,5,10,5"
+            Visibility="{Binding ShowSettings, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+    -->
+    <!--<StackPanel
+          Grid.Row="1"
+          Margin="0,10,0,10"
+          Orientation="Horizontal">
+    -->
+    <!--<Button
+              Width="110"
+              Margin="5,12,0,0"
+              Command="ApplicationCommands.New"
+              Content="{Binding Text, Source={x:Static ApplicationCommands.New}}" />-->
+    <!--
+          <Button
+              Width="110"
+              Margin="5,12,0,0"
+              Command="ApplicationCommands.Save"
+              Content="{Binding Text, Source={x:Static ApplicationCommands.Save}}" />
+    -->
+    <!--<Button
+              Width="110"
+              Margin="5,12,0,0"
+              Command="ApplicationCommands.Delete"
+              Content="{Binding Text, Source={x:Static ApplicationCommands.Delete}}" />-->
+    <!--<Button
+              Width="110"
+              Margin="5,12,5,0"
+              Command="ApplicationCommands.Undo"
+              Content="{Binding Text, Source={x:Static ApplicationCommands.Undo}}" />-->
+    <!--
+      </StackPanel>-->
+    <!--</Grid>-->
+    <!--</MD:Card>-->
+    <!--</Grid>-->
+
+</UserControl>

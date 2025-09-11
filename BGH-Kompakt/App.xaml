@@ -1,0 +1,116 @@
+﻿<Application
+    x:Class="BGH_Kompakt.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Conv="clr-namespace:BGH_Kompakt.Converter"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:Slider="clr-namespace:BGH_Kompakt.Classes"
+    xmlns:SystemSettings="clr-namespace:BGH_Kompakt.ViewModel.SystemSettings"
+    xmlns:local="clr-namespace:BGH_Kompakt.ViewModel"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--  Metro Mahaps  -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Teal.xaml" />
+
+                <!--  MaterialDesign  -->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Cyan.xaml" />
+
+                <!--  Colors  -->
+                <ResourceDictionary Source="Resources\Colors\Color.xaml" />
+
+                <!--  Controls  -->
+                <ResourceDictionary Source="Resources\Controls\Button.xaml" />
+                <ResourceDictionary Source="Resources\Controls\Checkbox.xaml" />
+                <ResourceDictionary Source="Resources\Controls\Combobox.xaml" />
+                <ResourceDictionary Source="Resources\Controls\Container.xaml" />
+                <ResourceDictionary Source="Resources\Controls\DataGrid.xaml" />
+                <ResourceDictionary Source="Resources\Controls\DatePicker.xaml" />
+                <ResourceDictionary Source="Resources\Controls\Expander.xaml" />
+                <ResourceDictionary Source="Resources\Controls\NavigationButtons.xaml" />
+                <ResourceDictionary Source="Resources\Controls\Radionbutton.xaml" />
+                <ResourceDictionary Source="Resources\Controls\Sliderbutton.xaml" />
+                <ResourceDictionary Source="Resources\Controls\MaterialDesignControls.xaml" />
+                <ResourceDictionary Source="Resources\Controls\ToggleSwitch.xaml" />
+
+                <!--  Text  -->
+                <ResourceDictionary Source="Resources\Text\Textbox.xaml" />
+                <ResourceDictionary Source="Resources\Text\Textblock.xaml" />
+                <ResourceDictionary Source="Resources\Text\Label.xaml" />
+                <ResourceDictionary Source="Resources\Text\AnzeigeTextboxen.xaml" />
+
+                <!--  Images  -->
+                <ResourceDictionary Source="Resources\ImageResources\Styles\Image.xaml" />
+                <ResourceDictionary Source="Resources\ImageResources\Styles\PackIcon.xaml" />
+
+
+
+
+            </ResourceDictionary.MergedDictionaries>
+
+
+            <!--<local:PersonChangeViewModel x:Key="vm" />-->
+            <!--<SystemSettings:SystemSettings x:Key="vmSystemSetting" />-->
+            <!--<local:FilterViewModel x:Key="vmFilter" />-->
+            <!--<local:NebentaetigkeitenAnzeigeViewModel x:Key="vmNT" />-->
+            <!--<local:NebentaetigkeitenAnzeigeViewModel x:Key="vmARShow"/>-->
+
+
+
+            <sys:Double x:Key="BaseFontSize">13</sys:Double>
+
+            <Conv:BoolToVisibilityConverter x:Key="BoolToVisConverter" />
+            <Conv:BoolToStringConverter x:Key="BoolToStringConverter" />
+            <Conv:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <Conv:BoolToWidthConverter x:Key="BoolToWidthConverter" />
+
+            <!--#region Sonstiges-->
+            <Style x:Key="FocusVisual">
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Rectangle
+                                Margin="2"
+                                SnapsToDevicePixels="true"
+                                Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                StrokeDashArray="1 2"
+                                StrokeThickness="1" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="OptionMarkFocusVisual">
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Rectangle
+                                Margin="14,0,0,0"
+                                SnapsToDevicePixels="true"
+                                Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+                                StrokeDashArray="1 2"
+                                StrokeThickness="1" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--#endregion-->
+
+            <Style x:Key="Style_Card_Content" TargetType="{x:Type MD:Card}">
+                <Setter Property="Margin" Value="10" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Background" Value="LightGray" />
+                <Setter Property="BorderBrush" Value="LightGray" />
+            </Style>
+
+
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

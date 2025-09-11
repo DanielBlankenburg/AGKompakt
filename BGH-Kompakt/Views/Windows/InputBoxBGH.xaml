@@ -1,0 +1,104 @@
+﻿<Window
+    x:Class="BGH_Kompakt.Views.HelperWindows.InputBoxBGH"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.HelperWindows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Eingabe"
+    Width="Auto"
+    Height="Auto"
+    MinWidth="250"
+    AllowsTransparency="True"
+    Background="Transparent"
+    ResizeMode="CanResizeWithGrip"
+    SizeToContent="WidthAndHeight"
+    UseLayoutRounding="True"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <Style
+            x:Key="Title"
+            BasedOn="{StaticResource Label_Base}"
+            TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+            <Setter Property="Padding" Value="0,5" />
+        </Style>
+    </Window.Resources>
+    <Border BorderBrush="{StaticResource BGH-Color}" BorderThickness="1">
+        <StackPanel Background="White" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown">
+            <Label
+                x:Name="Title"
+                Content="Title"
+                Style="{StaticResource Title}" />
+            <Grid Margin="15">
+                <!--<Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>-->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label
+                    Name="lblQuestion"
+                    Grid.Column="1"
+                    Style="{StaticResource Label_Base}">
+                    Question:
+                </Label>
+                <TextBox
+                    Name="TxtAnswer"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    MinWidth="250"
+                    Style="{StaticResource MaterialDesignTextBox}" />
+                <PasswordBox
+                    x:Name="BGHPasswordBox"
+                    Grid.Row="2"
+                    Margin="0,10,0,0"
+                    MW:ControlsHelper.FocusBorderBrush="{StaticResource BGH-Color}"
+                    MW:ControlsHelper.MouseOverBorderBrush="Gray"
+                    BorderThickness="0,0,0,1"
+                    Style="{StaticResource MahApps.Styles.PasswordBox.Button.Revealed}" />
+                <WrapPanel
+                    Grid.Row="3"
+                    Grid.ColumnSpan="2"
+                    Margin="0,15,0,0"
+                    HorizontalAlignment="Center">
+                    <Button
+                        Name="BtnDialogOk"
+                        MinWidth="60"
+                        Margin="0,0,10,0"
+                        Click="BtnDialogOk_Click"
+                        Content="_OK"
+                        IsDefault="True"
+                        Style="{StaticResource Button_Master}" />
+                    <Button
+                        Name="BtnDialogOpen"
+                        MinWidth="60"
+                        Margin="0,0,10,0"
+                        Click="BtnDialogOpen_Click"
+                        Content="Ö_ffnen"
+                        IsDefault="True"
+                        Style="{StaticResource Button_Master}" />
+                    <Button
+                        x:Name="BtnCancel"
+                        MinWidth="60"
+                        Click="BtnCancel_Click"
+                        Content="_Abbrechen"
+                        IsCancel="True"
+                        Style="{StaticResource Button_Master}" />
+
+                </WrapPanel>
+            </Grid>
+        </StackPanel>
+    </Border>
+</Window>

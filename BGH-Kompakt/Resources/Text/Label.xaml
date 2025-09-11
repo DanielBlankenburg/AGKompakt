@@ -1,0 +1,25 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls">
+
+    <!--#region Label-->
+    <Style x:Key="Style_label_PersonChange" TargetType="{x:Type Label}">
+        <Setter Property="FontFamily" Value="{StaticResource MaterialDesignFont}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Margin" Value="10,10,0,0" />
+    </Style>
+
+    <Style
+        x:Key="Label_Base"
+        BasedOn="{StaticResource MahApps.Styles.Label}"
+        TargetType="Label">
+        <Setter Property="FontFamily" Value="{DynamicResource MaterialDesignFont}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="{DynamicResource BaseFontSize}" />
+    </Style>
+
+    <!--#endregion-->
+
+</ResourceDictionary>

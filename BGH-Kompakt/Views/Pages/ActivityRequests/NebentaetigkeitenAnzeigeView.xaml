@@ -1,0 +1,1741 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.NebentaetigkeitenAnzeigeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:components="clr-namespace:BGH_Kompakt.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:BGH_Kompakt.ViewModel"
+    d:DataContext="{d:DesignInstance Type=viewmodel:NebentaetigkeitenAnzeigeViewModel}"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    Language="de-DE"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Combobox_Request"
+            BasedOn="{StaticResource Combobox_Base}"
+            TargetType="{x:Type ComboBox}">
+            <Setter Property="Margin" Value="0,0,0,20" />
+            <Setter Property="Width" Value="335" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style
+            x:Key="Combobox_Request_Client"
+            BasedOn="{StaticResource Combobox_Request}"
+            TargetType="{x:Type ComboBox}">
+            <!--<Setter Property="MD:HintAssist.Hint" Value="{Binding Hint_Client}" />-->
+            <Setter Property="ItemsSource" Value="{Binding Path=Clientlist}" />
+            <Setter Property="SelectedIndex" Value="0" />
+            <Setter Property="SelectedValue" Value="{Binding SelectedClient, Mode=TwoWay}" />
+        </Style>
+
+        <Style
+            x:Key="Datepicker_Request"
+            BasedOn="{StaticResource Datepicker_Base}"
+            TargetType="{x:Type DatePicker}">
+            <Setter Property="Margin" Value="0,0,0,20" />
+            <Setter Property="Width" Value="400" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style
+            x:Key="Listbox_Request"
+            BasedOn="{StaticResource MaterialDesignFilterChipListBox}"
+            TargetType="{x:Type ListBox}" />
+        <Style
+            x:Key="Checkbox_Request"
+            BasedOn="{StaticResource Checkbox_Base}"
+            TargetType="{x:Type CheckBox}">
+            <Setter Property="Margin" Value="0,5,10,0" />
+
+        </Style>
+        <Style
+            x:Key="Textbox_Request"
+            BasedOn="{StaticResource Textbox_Base}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="Margin" Value="0,0,0,20" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Width" Value="400" />
+        </Style>
+        <Style
+            x:Key="Textbox_Request_large"
+            BasedOn="{StaticResource Textbox_Request}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="Height" Value="Auto" />
+        </Style>
+        <!--<Style
+            x:Key="Button_Expander"
+            BasedOn="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+            TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="MD:ShadowAssist.ShadowDepth" Value="Depth0" />
+            <Setter Property="Margin" Value="0,0,5,0" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>-->
+
+        <!--<Style x:Key="Stackpanel_Expander" TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin" Value="24,20,24,16" />
+            <Setter Property="MinWidth" Value="500" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Orientation" Value="Vertical" />
+        </Style>-->
+
+        <Style x:Key="Stackpanel_Vertical" TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin" Value="0,0,0,20" />
+            <Setter Property="Orientation" Value="Vertical" />
+        </Style>
+        <Style x:Key="Stackpanel_Vertical_Verguetung" TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin" Value="15,0,0,20" />
+            <Setter Property="Orientation" Value="Vertical" />
+        </Style>
+        <Style x:Key="Stackpanel_Horizontal" TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin" Value="0,0,0,20" />
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+
+        <Style
+            x:Key="Button_Add"
+            BasedOn="{StaticResource MaterialDesignRaisedButton}"
+            TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="Margin" Value="15,0,0,0" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style
+            x:Key="Button_Add_Client"
+            BasedOn="{StaticResource Button_Add}"
+            TargetType="{x:Type Button}">
+            <Setter Property="ToolTip" Value="Anlegen eines neuen Auftraggebers" />
+            <Setter Property="Command" Value="{Binding ClientCommand}" />
+        </Style>
+
+        <Style
+            x:Key="RadioButto_Verguetung"
+            BasedOn="{StaticResource RadioButton_Base}"
+            TargetType="RadioButton">
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+        <Style
+            x:Key="ExtenderStackpanelAR"
+            BasedOn="{StaticResource Stackpanel_Expander}"
+            TargetType="StackPanel">
+            <Setter Property="Margin" Value="70,10,24,16" />
+        </Style>
+        <Style
+            x:Key="ExpanderAR"
+            BasedOn="{StaticResource MaterialDesignExpander}"
+            TargetType="Expander">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Style.Triggers>
+                <Trigger Property="IsExpanded" Value="True">
+                    <Setter Property="Background" Value="{StaticResource BGHActivityRequestBackground}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Stackpanel_Anlagen" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Vertical" />
+            <Setter Property="Margin" Value="30,10,0,0" />
+        </Style>
+
+        <Style
+            x:Key="Label_AR"
+            BasedOn="{StaticResource Label_Base}"
+            TargetType="{x:Type Label}">
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style
+            x:Key="Label_Verguetung"
+            BasedOn="{StaticResource Label_Base}"
+            TargetType="{x:Type Label}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+        <Style
+            x:Key="Textblock_Hinweistext"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="0,0,0,10" />
+            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+        </Style>
+        <Style
+            x:Key="Textblock_Hinweistext_List"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="10,5,0,10" />
+            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+        </Style>
+        <Style
+            x:Key="Textblock_Hinweistext_Wrappanel"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="0,0,0,0" />
+        </Style>
+        <Style
+            x:Key="Textblock_Hinweistext_Titel"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,10,0,10" />
+            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+        </Style>
+        <Style
+            x:Key="Textblock_Hinweistext_TopTitel"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+
+    </UserControl.Resources>
+    <ScrollViewer MaxHeight="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}" VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="Grid_Main" Background="{StaticResource BGHActivityRequestBackground}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <!--#region Formular-->
+            <Grid
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,0,0,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <!--<TextBlock
+                    Grid.Row="0"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Left"
+                    d:Text="Introduction"
+                    Style="{StaticResource Style_Textblock_Eingabefenster}"
+                    Text="{Binding Introduction}"
+                    TextAlignment="Center" />-->
+                <StackPanel
+                    Grid.Row="1"
+                    Margin="0,20,0,0"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Visibility="{Binding ShowApplicant, Converter={StaticResource BoolToVisConverter}}">
+                    <ComboBox
+                        MD:HintAssist.Hint="Antragsteller/in:"
+                        ItemsSource="{Binding ApplicantList}"
+                        SelectedItem="{Binding ApplicantSelected, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource Combobox_Base}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MinWidth="150" />
+                                        <ColumnDefinition MinWidth="100" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Fullname}" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="10,0,0,0"
+                                        Text="{Binding Position.PositionText}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button
+                        Margin="30,0,0,0"
+                        Command="{Binding AddPersonCommand}"
+                        Content="Person hinzufügen"
+                        Style="{StaticResource Button_Master}" />
+                    <Button
+                        Margin="30,0,0,0"
+                        Command="{Binding AddRequestsCommand}"
+                        Content="Masseneintrag"
+                        Style="{StaticResource Button_Master}" />
+                </StackPanel>
+                <Grid
+                    Grid.Row="2"
+                    Margin="0,5,0,0"
+                    Visibility="{Binding ShowActivityRequest, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <!--<MD:Card
+                                Grid.Column="1"
+                                MinWidth="600"
+                                Margin="0,30,0,0">-->
+                        <StackPanel Grid.Column="1">
+                            <!--#region Art-->
+                            <Expander
+                                x:Name="Details"
+                                IsExpanded="{Binding Anzeige_Art, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource ExpanderAR}">
+                                <Expander.Header>
+                                    <TextBlock Style="{StaticResource Textblock_Extender}" Text="Art" />
+                                </Expander.Header>
+                                <StackPanel Style="{StaticResource ExtenderStackpanelAR}">
+                                    <!--#region Meldeart; Visibility: true-->
+                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton Content="Anzeigepflichtig" IsChecked="{Binding Anzeigepflichtig}" />
+                                            <RadioButton
+                                                Margin="10,0,0,0"
+                                                Content="Genehmigungspflichtig"
+                                                IsChecked="{Binding Genehmigungspflichtig}" />
+                                        </StackPanel>
+                                        <!--  ErrorValidation  -->
+                                        <TextBlock
+                                            Style="{StaticResource Style_Textbox_Error}"
+                                            Text="Bitte wählen Sie eine Option aus"
+                                            Visibility="{Binding ErrorRequestMeldeArt, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                    <!--#endregion-->
+                                    <!--#region Gesamt; Visibility: AnzeigeGesamt-->
+                                    <StackPanel
+                                        Margin="30,0,0,0"
+                                        Orientation="Vertical"
+                                        Visibility="{Binding AnzeigeGesamt, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                        <!--#region Auswahl Tätigkeitsart. Visibility: true-->
+                                        <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                            <ComboBox
+                                                MD:HintAssist.Hint="Tätigkeitsart"
+                                                DisplayMemberPath="ActivityRequestTypText"
+                                                ItemsSource="{Binding Path=RequestTyplist, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedItem="{Binding SelectedRequestTyp}"
+                                                SelectedValue="{Binding SelectedRequestTyp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Style="{StaticResource Combobox_Request}" />
+                                            <!--  ErrorValidation  -->
+                                            <TextBlock
+                                                Style="{StaticResource Style_Textbox_Error}"
+                                                Text="Bitte wählen Sie eine Option aus"
+                                                Visibility="{Binding ErrorRequestTyp, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <!--#endregion-->
+                                        <!--#region Details, Visibility: AnzeigeDetails-->
+                                        <StackPanel Margin="30,0,0,0" Visibility="{Binding AnzeigeDetails, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                            <!--#region Vortragstätigkeit; Visibility: AnzeigeVortragstaetigkeit-->
+                                            <StackPanel Visibility="{Binding AnzeigeVortragstaetigkeit, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                <!--  Titel  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <TextBox
+                                                        MD:HintAssist.Hint="{Binding Hint_RequestTitel}"
+                                                        Style="{StaticResource Textbox_Request}"
+                                                        Text="{Binding RequestTitel}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte geben ein Titel ein"
+                                                        Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Auftraggeber  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox
+                                                            ItemsSource="{Binding CollectionView.View}"
+                                                            Style="{StaticResource Combobox_Request_Client}"
+                                                            TextSearch.TextPath="Name">
+                                                            <ComboBox.GroupStyle>
+                                                                <GroupStyle>
+                                                                    <GroupStyle.HeaderTemplate>
+                                                                        <DataTemplate>
+                                                                            <TextBlock
+                                                                                Height="25"
+                                                                                Margin="0,5,0,5"
+                                                                                Padding="5,5,0,0"
+                                                                                VerticalAlignment="Center"
+                                                                                FontWeight="Bold"
+                                                                                Text="{Binding Name}" />
+                                                                        </DataTemplate>
+                                                                    </GroupStyle.HeaderTemplate>
+                                                                </GroupStyle>
+                                                            </ComboBox.GroupStyle>
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Margin="0,0,0,0" Text="{Binding ACName}" />
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
+                                                        </ComboBox>
+                                                        <Button Style="{StaticResource Button_Add_Client}">
+                                                            <MD:PackIcon Kind="Add" />
+                                                        </Button>
+                                                    </StackPanel>
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie einen Eintrag aus"
+                                                        Visibility="{Binding ErrorClient, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Ort  -->
+                                                <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                                                    <StackPanel Style="{StaticResource Stackpanel_Horizontal}">
+                                                        <RadioButton Content="Online" IsChecked="{Binding Online, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <RadioButton
+                                                            Margin="10,0,0,0"
+                                                            Content="Präsenz"
+                                                            IsChecked="{Binding Presence, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie eine Option aus"
+                                                        Visibility="{Binding ErrorOrtArt, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    <TextBox
+                                                        MD:HintAssist.Hint="Ortsbezeichnung"
+                                                        Style="{StaticResource Textbox_Request}"
+                                                        Text="{Binding RequestOrt}"
+                                                        Visibility="{Binding AnzeigeOrt, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie einen Ort ein"
+                                                        Visibility="{Binding ErrorOrt, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Datum  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <DatePicker
+                                                        MD:HintAssist.Hint="Datum"
+                                                        SelectedDate="{Binding RequestDate, UpdateSourceTrigger=PropertyChanged}"
+                                                        Style="{StaticResource Datepicker_Request}"
+                                                        Text="{Binding RequestDate}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie ein Datum aus"
+                                                        Visibility="{Binding ErrorDate, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <!--#endregion-->
+                                            <!--#region Wissenschaftliche Tätigkeit; Visibility: AnzeigeScience-->
+                                            <StackPanel Visibility="{Binding AnzeigeScience, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                <!--#region Art der wissenschaftlichen Tätigkeit-->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}" Visibility="{Binding AnzeigeScienceArt, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <RadioButton Content="Wissenschaftliche Veröffentlichung" IsChecked="{Binding Publication, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <RadioButton
+                                                            Margin="10,0,0,0"
+                                                            Content="Lehrtätigkeit"
+                                                            IsChecked="{Binding Education, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie eine Option aus"
+                                                        Visibility="{Binding ErrorScienceCategory, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--#endregion-->
+                                                <!--#region Veröffentlichung; Visibility: AnzeigePublication-->
+                                                <StackPanel Visibility="{Binding AnzeigePublication, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                    <!--  Art der Veröffentlichung  -->
+                                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                        <ComboBox
+                                                            MD:HintAssist.Hint="Art der Veröffentlichung"
+                                                            DisplayMemberPath="ActivityRequestScienceTypText"
+                                                            ItemsSource="{Binding Path=ScienceTypList}"
+                                                            SelectedValue="{Binding SelectedScienceTyp, Mode=TwoWay}"
+                                                            Style="{StaticResource Combobox_Request}"
+                                                            Visibility="{Binding AnzeigeScienceTyp, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <TextBlock
+                                                            Style="{StaticResource Style_Textbox_Error}"
+                                                            Text="Bitte wählen Sie eine Option aus"
+                                                            Visibility="{Binding ErrorScienceTyp, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <!--  Titel  -->
+                                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                        <TextBox
+                                                            MD:HintAssist.Hint="{Binding Hint_RequestTitel}"
+                                                            Style="{StaticResource Textbox_Request}"
+                                                            Text="{Binding RequestTitel}" />
+                                                        <!--  ErrorValidation  -->
+                                                        <TextBlock
+                                                            Style="{StaticResource Style_Textbox_Error}"
+                                                            Text="Bitte geben ein Thema ein"
+                                                            Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <!--  Auftraggeber  -->
+                                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <ComboBox
+                                                                ItemsSource="{Binding CollectionView.View}"
+                                                                Style="{StaticResource Combobox_Request_Client}"
+                                                                TextSearch.TextPath="Name">
+                                                                <ComboBox.GroupStyle>
+                                                                    <GroupStyle>
+                                                                        <GroupStyle.HeaderTemplate>
+                                                                            <DataTemplate>
+                                                                                <TextBlock
+                                                                                    Height="25"
+                                                                                    Margin="0,5,0,5"
+                                                                                    Padding="5,5,0,0"
+                                                                                    VerticalAlignment="Center"
+                                                                                    FontWeight="Bold"
+                                                                                    Text="{Binding Name}" />
+                                                                            </DataTemplate>
+                                                                        </GroupStyle.HeaderTemplate>
+                                                                    </GroupStyle>
+                                                                </ComboBox.GroupStyle>
+                                                                <ComboBox.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Margin="0,0,0,0" Text="{Binding ACName}" />
+                                                                    </DataTemplate>
+                                                                </ComboBox.ItemTemplate>
+                                                            </ComboBox>
+                                                            <Button Style="{StaticResource Button_Add_Client}">
+                                                                <MD:PackIcon Kind="Add" />
+                                                            </Button>
+                                                        </StackPanel>
+                                                        <!--  ErrorValidation  -->
+                                                        <TextBlock
+                                                            Style="{StaticResource Style_Textbox_Error}"
+                                                            Text="Bitte wählen Sie einen Eintrag aus"
+                                                            Visibility="{Binding ErrorClient, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <!--  Art der Mitwirkung  -->
+                                                    <StackPanel Margin="0,20,0,0" Visibility="{Binding AnzeigeScienceAuthor, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                        <Label Content="Art der Mitwirkung (Mehrfachnennungen sind möglich)" Style="{StaticResource Label_Base}" />
+                                                        <ListBox
+                                                            Margin="30,10,0,0"
+                                                            ItemsSource="{Binding ScienceAuthorList}"
+                                                            Style="{StaticResource Listbox_Request}">
+
+                                                            <ListBox.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel />
+                                                                </ItemsPanelTemplate>
+                                                            </ListBox.ItemsPanel>
+                                                            <ListBox.ItemContainerStyle>
+                                                                <Style BasedOn="{StaticResource MaterialDesignFilterChipListBoxItem}" TargetType="ListBoxItem">
+                                                                    <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                                                                </Style>
+                                                            </ListBox.ItemContainerStyle>
+                                                            <ListBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <Label Content="{Binding ScienceAuthorText}" Style="{StaticResource Label_Base}" />
+                                                                        <i:Interaction.Triggers>
+                                                                            <i:EventTrigger EventName="MouseDown">
+                                                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.ScienceAuthorListSelectedCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+                                                                            </i:EventTrigger>
+                                                                        </i:Interaction.Triggers>
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </ListBox.ItemTemplate>
+                                                        </ListBox>
+                                                        <TextBlock
+                                                            Style="{StaticResource Style_Textbox_Error}"
+                                                            Text="Bitte wählen Sie eine Mitwirkungsart aus"
+                                                            Visibility="{Binding ErrorScienceAuthor, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <!--#endregion-->
+                                                <!--#region Lehrtätigkeit; Visibilty: AnzeigEducation-->
+                                                <StackPanel Visibility="{Binding AnzeigeEducation, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                    <!--  Titel  -->
+                                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                        <TextBox
+                                                            MD:HintAssist.Hint="{Binding Hint_RequestTitel}"
+                                                            Style="{StaticResource Textbox_Request}"
+                                                            Text="{Binding RequestTitel}" />
+                                                        <!--  ErrorValidation  -->
+                                                        <TextBlock
+                                                            Style="{StaticResource Style_Textbox_Error}"
+                                                            Text="Bitte geben ein Thema ein"
+                                                            Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <!--#region Auftraggeber-->
+                                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <ComboBox
+                                                                ItemsSource="{Binding CollectionView.View}"
+                                                                Style="{StaticResource Combobox_Request_Client}"
+                                                                TextSearch.TextPath="Name">
+                                                                <ComboBox.GroupStyle>
+                                                                    <GroupStyle>
+                                                                        <GroupStyle.HeaderTemplate>
+                                                                            <DataTemplate>
+                                                                                <TextBlock
+                                                                                    Height="25"
+                                                                                    Margin="0,5,0,5"
+                                                                                    Padding="5,5,0,0"
+                                                                                    VerticalAlignment="Center"
+                                                                                    FontWeight="Bold"
+                                                                                    Text="{Binding Name}" />
+                                                                            </DataTemplate>
+                                                                        </GroupStyle.HeaderTemplate>
+                                                                    </GroupStyle>
+                                                                </ComboBox.GroupStyle>
+                                                                <ComboBox.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Margin="0,0,0,0" Text="{Binding ACName}" />
+                                                                    </DataTemplate>
+                                                                </ComboBox.ItemTemplate>
+                                                            </ComboBox>
+                                                            <Button Style="{StaticResource Button_Add_Client}">
+                                                                <MD:PackIcon Kind="Add" />
+                                                            </Button>
+                                                        </StackPanel>
+                                                        <!--  ErrorValidation  -->
+                                                        <TextBlock
+                                                            Style="{StaticResource Style_Textbox_Error}"
+                                                            Text="Bitte wählen Sie einen Eintrag aus"
+                                                            Visibility="{Binding ErrorClient, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <!--#endregion-->
+                                                    <!--  Datum  -->
+                                                    <StackPanel Visibility="{Binding AnzeigeDate, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                        <!--  Duration  -->
+                                                        <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                            <StackPanel Style="{StaticResource Stackpanel_Horizontal}" Visibility="{Binding AnzeigeDateRadioButton, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                                <RadioButton Content="Einmalig" IsChecked="{Binding Once}" />
+                                                                <RadioButton
+                                                                    Margin="10,0,0,0"
+                                                                    Content="Dauerhaft"
+                                                                    IsChecked="{Binding Permanent}" />
+                                                            </StackPanel>
+                                                            <!--  ErrorValidation  -->
+                                                            <TextBlock
+                                                                Style="{StaticResource Style_Textbox_Error}"
+                                                                Text="Bitte wählen Sie eine Option aus"
+                                                                Visibility="{Binding ErrorDuration, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                        </StackPanel>
+                                                        <!--  Datum  -->
+                                                        <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                            <DatePicker
+                                                                MD:HintAssist.Hint="Datum"
+                                                                SelectedDate="{Binding RequestDate, UpdateSourceTrigger=PropertyChanged}"
+                                                                Style="{StaticResource Datepicker_Request}"
+                                                                Text="{Binding RequestDate}"
+                                                                Visibility="{Binding AnzeigeDateOnce, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                            <!--  ErrorValidation  -->
+                                                            <TextBlock
+                                                                Style="{StaticResource Style_Textbox_Error}"
+                                                                Text="Bitte wählen Sie ein Datum aus"
+                                                                Visibility="{Binding ErrorDate, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                        </StackPanel>
+                                                        <!--  Durationauswahl  -->
+                                                        <Grid Visibility="{Binding AnzeigeDatePermanent, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="80" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="30" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Label
+                                                                Grid.Column="0"
+                                                                Margin="0,-30,0,0"
+                                                                VerticalAlignment="Center"
+                                                                Content="Bestellung:"
+                                                                Style="{StaticResource Label_Base}" />
+                                                            <StackPanel Grid.Column="1" Style="{StaticResource Stackpanel_Vertical}">
+                                                                <DatePicker
+                                                                    Grid.Column="1"
+                                                                    Width="100"
+                                                                    MD:HintAssist.Hint="von"
+                                                                    SelectedDate="{Binding RequestDatePermanentFrom, UpdateSourceTrigger=PropertyChanged}"
+                                                                    Style="{StaticResource Datepicker_Request}"
+                                                                    Text="{Binding RequestDatePermanentFrom}" />
+                                                                <!--  ErrorValidation  -->
+                                                                <TextBlock
+                                                                    Style="{StaticResource Style_Textbox_Error}"
+                                                                    Text="Bitte wählen Sie ein Datum aus"
+                                                                    Visibility="{Binding ErrorDatePermanentFrom, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Column="3" Style="{StaticResource Stackpanel_Vertical}">
+                                                                <DatePicker
+                                                                    Grid.Column="3"
+                                                                    Width="100"
+                                                                    MD:HintAssist.Hint="bis"
+                                                                    SelectedDate="{Binding RequestDatePermanentUntil, UpdateSourceTrigger=PropertyChanged}"
+                                                                    Style="{StaticResource Datepicker_Request}"
+                                                                    Text="{Binding RequestDatePermanentUntil}" />
+                                                                <!--  ErrorValidation  -->
+                                                                <TextBlock
+                                                                    Style="{StaticResource Style_Textbox_Error}"
+                                                                    Text="Bitte wählen Sie ein Datum aus"
+                                                                    Visibility="{Binding ErrorDatePermanentUntil, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </StackPanel>
+                                                        </Grid>
+                                                        <!--  Duration  -->
+                                                        <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                            <TextBox
+                                                                MD:HintAssist.Hint="Einsätze pro Jahr"
+                                                                Style="{StaticResource Textbox_Request}"
+                                                                Text="{Binding RequestDatePermanentDuration}"
+                                                                Visibility="{Binding AnzeigeDatePermanent, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                            <!--  ErrorValidation  -->
+                                                            <TextBlock
+                                                                Style="{StaticResource Style_Textbox_Error}"
+                                                                Text="Bitte tragen Sie einen Wert ein"
+                                                                Visibility="{Binding ErrorDatePermanentDuration, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+
+
+
+                                                </StackPanel>
+                                                <!--#endregion-->
+                                            </StackPanel>
+                                            <!--#endregion-->
+                                            <!--#region Prüfertätigkeit, Visibility: AnzeigeExam-->
+                                            <StackPanel Visibility="{Binding AnzeigeExam, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                <!--  Titel  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <TextBox
+                                                        MD:HintAssist.Hint="{Binding Hint_RequestTitel}"
+                                                        Style="{StaticResource Textbox_Request}"
+                                                        Text="{Binding RequestTitel}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte geben ein Thema ein"
+                                                        Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Auftraggeber  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox
+                                                            ItemsSource="{Binding CollectionView.View}"
+                                                            Style="{StaticResource Combobox_Request_Client}"
+                                                            TextSearch.TextPath="Name">
+                                                            <ComboBox.GroupStyle>
+                                                                <GroupStyle>
+                                                                    <GroupStyle.HeaderTemplate>
+                                                                        <DataTemplate>
+                                                                            <TextBlock
+                                                                                Height="25"
+                                                                                Margin="0,5,0,5"
+                                                                                Padding="5,5,0,0"
+                                                                                VerticalAlignment="Center"
+                                                                                FontWeight="Bold"
+                                                                                Text="{Binding Name}" />
+                                                                        </DataTemplate>
+                                                                    </GroupStyle.HeaderTemplate>
+                                                                </GroupStyle>
+                                                            </ComboBox.GroupStyle>
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Margin="0,0,0,0" Text="{Binding ACName}" />
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
+                                                        </ComboBox>
+                                                        <Button Style="{StaticResource Button_Add_Client}">
+                                                            <MD:PackIcon Kind="Add" />
+                                                        </Button>
+                                                    </StackPanel>
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie einen Eintrag aus"
+                                                        Visibility="{Binding ErrorClient, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <StackPanel Visibility="{Binding AnzeigeDate, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                    <!--  Duration  -->
+                                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                        <StackPanel Style="{StaticResource Stackpanel_Horizontal}" Visibility="{Binding AnzeigeDateRadioButton, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                            <RadioButton Content="Einmalig" IsChecked="{Binding Once}" />
+                                                            <RadioButton
+                                                                Margin="10,0,0,0"
+                                                                Content="Dauerhaft"
+                                                                IsChecked="{Binding Permanent}" />
+                                                        </StackPanel>
+                                                        <!--  ErrorValidation  -->
+                                                        <TextBlock
+                                                            Style="{StaticResource Style_Textbox_Error}"
+                                                            Text="Bitte wählen Sie eine Option aus"
+                                                            Visibility="{Binding ErrorDuration, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <!--  Datum  -->
+                                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                        <DatePicker
+                                                            MD:HintAssist.Hint="Datum"
+                                                            SelectedDate="{Binding RequestDate, UpdateSourceTrigger=PropertyChanged}"
+                                                            Style="{StaticResource Datepicker_Request}"
+                                                            Text="{Binding RequestDate}"
+                                                            Visibility="{Binding AnzeigeDateOnce, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <!--  ErrorValidation  -->
+                                                        <TextBlock
+                                                            Style="{StaticResource Style_Textbox_Error}"
+                                                            Text="Bitte wählen Sie ein Datum aus"
+                                                            Visibility="{Binding ErrorDate, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                    <!--  Durationauswahl  -->
+                                                    <Grid Visibility="{Binding AnzeigeDatePermanent, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="80" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="30" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Label
+                                                            Grid.Column="0"
+                                                            VerticalAlignment="Center"
+                                                            Content="Bestellung:"
+                                                            Style="{StaticResource Label_Base}" />
+                                                        <StackPanel Grid.Column="1" Style="{StaticResource Stackpanel_Vertical}">
+                                                            <DatePicker
+                                                                Grid.Column="1"
+                                                                Width="100"
+                                                                MD:HintAssist.Hint="von"
+                                                                SelectedDate="{Binding RequestDatePermanentFrom, UpdateSourceTrigger=PropertyChanged}"
+                                                                Style="{StaticResource Datepicker_Request}"
+                                                                Text="{Binding RequestDatePermanentFrom}" />
+                                                            <!--  ErrorValidation  -->
+                                                            <TextBlock
+                                                                Style="{StaticResource Style_Textbox_Error}"
+                                                                Text="Bitte wählen Sie ein Datum aus"
+                                                                Visibility="{Binding ErrorDatePermanentFrom, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="3" Style="{StaticResource Stackpanel_Vertical}">
+                                                            <DatePicker
+                                                                Grid.Column="3"
+                                                                Width="100"
+                                                                MD:HintAssist.Hint="bis"
+                                                                SelectedDate="{Binding RequestDatePermanentUntil, UpdateSourceTrigger=PropertyChanged}"
+                                                                Style="{StaticResource Datepicker_Request}"
+                                                                Text="{Binding RequestDatePermanentUntil}" />
+                                                            <!--  ErrorValidation  -->
+                                                            <TextBlock
+                                                                Style="{StaticResource Style_Textbox_Error}"
+                                                                Text="Bitte wählen Sie ein Datum aus"
+                                                                Visibility="{Binding ErrorDatePermanentUntil, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                    <!--  Duration  -->
+                                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                        <TextBox
+                                                            MD:HintAssist.Hint="Einsätze pro Jahr"
+                                                            Style="{StaticResource Textbox_Request}"
+                                                            Text="{Binding RequestDatePermanentDuration}"
+                                                            Visibility="{Binding AnzeigeDatePermanent, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <!--  ErrorValidation  -->
+                                                        <TextBlock
+                                                            Style="{StaticResource Style_Textbox_Error}"
+                                                            Text="Bitte tragen Sie einen Wert ein"
+                                                            Visibility="{Binding ErrorDatePermanentDuration, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <!--#endregion-->
+                                            <!--#region Arbitration-->
+                                            <StackPanel Margin="30,0,0,0" Visibility="{Binding AnzeigeArbitration, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                <!--  ArbitrationClient  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <Label
+                                                        Margin="0,30,0,10"
+                                                        Content="Parteien des Schiedsverfahrens"
+                                                        Style="{StaticResource Label_Base}" />
+                                                    <ListView
+                                                        Margin="20,0,0,0"
+                                                        ItemsSource="{Binding ArbitrationClientList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        SelectedItem="{Binding Path=SelectedArbitrationClient}"
+                                                        SelectionMode="Single"
+                                                        Visibility="{Binding AnzeigeArbitrationClientList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                        <ListView.View>
+                                                            <GridView>
+                                                                <GridViewColumn
+                                                                    Width="190"
+                                                                    DisplayMemberBinding="{Binding ActivityRequestArbitrationClientText, TargetNullValue=[keine Angabe], UpdateSourceTrigger=PropertyChanged}"
+                                                                    Header="Parteibezeichnung"
+                                                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                                                <GridViewColumn
+                                                                    Width="80"
+                                                                    Header="Löschen"
+                                                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
+                                                                    <GridViewColumn.CellTemplate>
+                                                                        <DataTemplate>
+                                                                            <Button
+                                                                                Command="{Binding Path=DataContext.ArbitrationClientAddClearCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                                Style="{StaticResource Button_Add}"
+                                                                                ToolTip="Partei löschen">
+                                                                                <MD:PackIcon Padding="0" Kind="Bin" />
+                                                                            </Button>
+                                                                        </DataTemplate>
+                                                                    </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                            </GridView>
+                                                        </ListView.View>
+                                                    </ListView>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button
+                                                            Command="{Binding ArbitrationClientAddCommand}"
+                                                            Style="{StaticResource Button_Add}"
+                                                            ToolTip="Anlegen einer neuen Partei">
+                                                            <MD:PackIcon Kind="Add" />
+                                                        </Button>
+                                                    </StackPanel>
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte tragen Sie mindestens zwei Parteien ein"
+                                                        Visibility="{Binding ErrorArbitrationCLient, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Beauftragung  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <StackPanel Orientation="Vertical">
+                                                        <Label
+                                                            Padding="0,1,0,0"
+                                                            VerticalAlignment="Top"
+                                                            Content="Beauftragung:"
+                                                            Style="{StaticResource Label_Base}" />
+                                                        <StackPanel Style="{StaticResource Stackpanel_Horizontal}">
+                                                            <RadioButton
+                                                                Margin="10,0,0,0"
+                                                                Content="durch die Parteien gemeinsam"
+                                                                IsChecked="{Binding Party}"
+                                                                Style="{StaticResource RadioButton_Base}" />
+                                                            <RadioButton
+                                                                Margin="10,0,0,0"
+                                                                Content="durch unbeteiligte Stelle"
+                                                                IsChecked="{Binding Third}"
+                                                                Style="{StaticResource RadioButton_Base}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie eine Option aus"
+                                                        Visibility="{Binding ErrorArbitrationTyp, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Benennende Stelle  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <TextBox
+                                                        MD:HintAssist.Hint="Bezeichnung der benennenden Stelle"
+                                                        Style="{StaticResource Textbox_Request}"
+                                                        Text="{Binding ActivityRequestArbitrationCaller}"
+                                                        Visibility="{Binding AnzeigeArbitrationParties, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie eine Option aus"
+                                                        Visibility="{Binding ErrorArbitrationCaller, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Titel  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <TextBox
+                                                        MD:HintAssist.Hint="Gegenstand des Schiedsverfahrens/ Rechtsmaterie"
+                                                        Style="{StaticResource Textbox_Request}"
+                                                        Text="{Binding RequestTitel}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte geben einen Gegenstand ein"
+                                                        Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <!--#endregion-->
+                                            <!--#region Schriftstellerische / Künsterliche/ Sonstige Tätigkeiten, Visibility: AnzeigeSonstiges-->
+                                            <StackPanel Margin="30,0,0,0" Visibility="{Binding AnzeigeSonstiges, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <TextBox
+                                                        MD:HintAssist.Hint="{Binding Hint_Description}"
+                                                        Style="{StaticResource Textbox_Request}"
+                                                        Text="{Binding RequestTitel}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte geben ein Thema ein"
+                                                        Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <!--#endregion-->
+                                        </StackPanel>
+                                        <!--#endregion-->
+                                    </StackPanel>
+                                    <!--#endregion-->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Margin="0,20,0,0"
+                                        VerticalAlignment="Bottom"
+                                        Orientation="Horizontal">
+
+                                        <Button
+                                            Command="{Binding ExpanderCommand}"
+                                            CommandParameter="VorArt"
+                                            Style="{StaticResource Button_Expander}"
+                                            ToolTip="Vor zur Vergütung">
+                                            <MD:PackIcon Kind="ChevronRight" />
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+                            <!--#endregion-->
+                            <Border
+                                Height="1"
+                                HorizontalAlignment="Stretch"
+                                Background="{StaticResource MaterialDesignDivider}"
+                                SnapsToDevicePixels="True" />
+                            <!--#region Vergütung-->
+                            <Expander
+                                x:Name="Vergütung"
+                                IsExpanded="{Binding Anzeige_Verguetung, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource ExpanderAR}">
+                                <Expander.Header>
+                                    <TextBlock
+                                        FontSize="15"
+                                        FontWeight="Bold"
+                                        Text="Vergütung" />
+                                </Expander.Header>
+                                <StackPanel Style="{StaticResource ExtenderStackpanelAR}">
+                                    <!--  Honorar  -->
+                                    <StackPanel>
+                                        <Label Content="Honorar" Style="{StaticResource Label_Verguetung}" />
+                                        <StackPanel Style="{StaticResource Stackpanel_Vertical_Verguetung}">
+                                            <TextBlock
+                                                Margin="0,0,0,15"
+                                                Style="{StaticResource textblock_base}"
+                                                Text="- Es ist das Honorar pro Einsatz anzugeben -"
+                                                Visibility="{Binding AnzeigeHinweisEinsatz, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                            <RadioButton
+                                                x:Name="RBVerguetung"
+                                                VerticalAlignment="Top"
+                                                Content="Erhaltene Vergütung"
+                                                IsChecked="{Binding PaymentPredicted, UpdateSourceTrigger=PropertyChanged}"
+                                                Style="{StaticResource RadioButto_Verguetung}" />
+                                            <StackPanel Margin="40,10,0,0">
+                                                <TextBox
+                                                    MD:HintAssist.Hint="Vergütung/ Honorar"
+                                                    Style="{StaticResource Textbox_Request}"
+                                                    Text="{Binding Verguetung, Mode=TwoWay, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                                <!--  ErrorValidation  -->
+                                                <TextBlock
+                                                    Margin="0,0,0,15"
+                                                    Style="{StaticResource Style_Textbox_Error}"
+                                                    Text="Bitte tragen Sie einen Wert ein"
+                                                    Visibility="{Binding ErrorVerguetung, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                <!--  Geldwerte Vorteile  -->
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ElementName=RBVerguetung, Path=IsChecked}" Value="False">
+                                                                <Setter Property="IsEnabled" Value="False" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
+                                            </StackPanel>
+                                            <RadioButton
+                                                Content="Honorarfrei"
+                                                IsChecked="{Binding PaymentNothing, UpdateSourceTrigger=PropertyChanged}"
+                                                Style="{StaticResource RadioButto_Verguetung}" />
+                                            <RadioButton
+                                                Content="derzeit unbekannt; wird nachgereicht"
+                                                IsChecked="{Binding PaymentUnknown, UpdateSourceTrigger=PropertyChanged}"
+                                                Style="{StaticResource RadioButto_Verguetung}" />
+                                            <!--  ErrorValidation  -->
+                                            <TextBlock
+                                                Style="{StaticResource Style_Textbox_Error}"
+                                                Text="Bitte wählen Sie einen Eintrag aus."
+                                                Visibility="{Binding ErrorPaymentTyp, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <!--  Geldwerte Vorteile  -->
+                                    <Border Margin="0,0,0,15" Style="{StaticResource Expander_Border}" />
+                                    <StackPanel>
+                                        <Label Content="Geldwerte Vorteile" Style="{StaticResource Label_Verguetung}" />
+                                        <StackPanel Style="{StaticResource Stackpanel_Vertical_Verguetung}">
+                                            <ListView
+                                                Margin="20,0,0,20"
+                                                ItemsSource="{Binding AdventageList, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedItem="{Binding SelectedAdventageListView}"
+                                                SelectionMode="Single"
+                                                Visibility="{Binding AnzeigeAdventageList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                <ListView.View>
+                                                    <GridView>
+                                                        <GridViewColumn
+                                                            Width="190"
+                                                            DisplayMemberBinding="{Binding ARVerguetungAdventageTyp.ARVerguetungAdventageTypText, TargetNullValue=[keine Angabe], UpdateSourceTrigger=PropertyChanged}"
+                                                            Header="Typ"
+                                                            HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                                        <GridViewColumn
+                                                            Width="130"
+                                                            Header="Betrag"
+                                                            HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ARVerguetungAdventageAmount, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                        <GridViewColumn Width="80">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Button
+                                                                        x:Name="Btn_Bin_Adventage"
+                                                                        Width="35"
+                                                                        Height="22"
+                                                                        Margin="10,0,0,5"
+                                                                        Padding="0"
+                                                                        Background="White"
+                                                                        BorderThickness="0"
+                                                                        Command="{Binding Path=DataContext.AdventageClearCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                        ToolTip="Geldwerten Vorteil löschen"
+                                                                        Visibility="Collapsed">
+                                                                        <MD:PackIcon Padding="0" Kind="Bin" />
+                                                                    </Button>
+                                                                    <DataTemplate.Triggers>
+                                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
+                                                                            <Setter TargetName="Btn_Bin_Adventage" Property="Visibility" Value="Visible" />
+                                                                        </DataTrigger>
+                                                                    </DataTemplate.Triggers>
+
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                    </GridView>
+                                                </ListView.View>
+                                            </ListView>
+                                            <Button
+                                                Width="200"
+                                                HorizontalAlignment="Left"
+                                                Command="{Binding AdventageCommand}"
+                                                Content="Neuen Vorteil eintragen"
+                                                Style="{StaticResource Button_Master}"
+                                                ToolTip="Anlegen eines neuen geldwerten Vorteils" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <!--  Navigation  -->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Margin="0,20,0,0"
+                                        VerticalAlignment="Bottom"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding ExpanderCommand}"
+                                            CommandParameter="ZurückVergütung"
+                                            Style="{StaticResource Button_Expander}"
+                                            ToolTip="Zurück zur Art">
+                                            <MD:PackIcon Kind="ChevronLeft" />
+                                        </Button>
+                                        <Button
+                                            Command="{Binding ExpanderCommand}"
+                                            CommandParameter="VorVergütung"
+                                            Style="{StaticResource Button_Expander}"
+                                            ToolTip="Vor zum Zeitaufwand">
+                                            <MD:PackIcon Kind="ChevronRight" />
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+
+                            </Expander>
+                            <!--#endregion-->
+                            <Border
+                                Height="1"
+                                HorizontalAlignment="Stretch"
+                                Background="{StaticResource MaterialDesignDivider}"
+                                SnapsToDevicePixels="True" />
+                            <!--#region Zeitaufwand-->
+                            <Expander
+                                x:Name="Zeitaufwand"
+                                IsExpanded="{Binding Anzeige_Zeitaufwand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource ExpanderAR}">
+                                <Expander.Header>
+                                    <TextBlock
+                                        FontSize="15"
+                                        FontWeight="Bold"
+                                        Text="Zeitaufwand" />
+                                </Expander.Header>
+                                <StackPanel Style="{StaticResource ExtenderStackpanelAR}">
+                                    <!--#region Einmaliger Zeitaufwand-->
+                                    <StackPanel>
+
+                                        <RadioButton
+                                            VerticalAlignment="Top"
+                                            Content="Voraussichtlicher Stundenaufwand"
+                                            IsChecked="{Binding HoursPredicted, UpdateSourceTrigger=PropertyChanged}"
+                                            Style="{StaticResource RadioButto_Verguetung}" />
+                                        <StackPanel Margin="40,0,0,0">
+                                            <TextBlock
+                                                Margin="0,0,0,15"
+                                                Style="{StaticResource textblock_base}"
+                                                Text="- Es ist der Aufwand pro Einsatz anzugeben -"
+                                                Visibility="{Binding AnzeigeHinweisEinsatz, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+
+                                            <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                <TextBox
+                                                    MD:HintAssist.Hint="Zeitaufwand der Vorbereitung (in vollen Stunden)"
+                                                    Style="{StaticResource Textbox_Request}"
+                                                    Text="{Binding HoursPrep}" />
+                                                <!--  Error-Validation  -->
+                                                <TextBlock
+                                                    Style="{StaticResource Style_Textbox_Error}"
+                                                    Text="{Binding ErrorHoursMainText, UpdateSourceTrigger=PropertyChanged, FallbackValue=Errortext}"
+                                                    Visibility="{Binding ErrorHoursPrep, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                            </StackPanel>
+                                            <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                <TextBox
+                                                    MD:HintAssist.Hint="Zeitaufwand der Nebentätigkeit (in vollen Stunden)"
+                                                    Style="{StaticResource Textbox_Request}"
+                                                    Text="{Binding HoursMain}" />
+                                                <!--  Error-Validation  -->
+                                                <TextBlock
+                                                    Style="{StaticResource Style_Textbox_Error}"
+                                                    Text="{Binding ErrorHoursMainText, UpdateSourceTrigger=PropertyChanged, FallbackValue=Errortext}"
+                                                    Visibility="{Binding ErrorHoursMain, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <RadioButton
+                                            VerticalAlignment="Top"
+                                            Content="derzeit unbekannt; wird nachgereicht"
+                                            IsChecked="{Binding HoursUnknown, UpdateSourceTrigger=PropertyChanged}"
+                                            Style="{StaticResource RadioButto_Verguetung}" />
+                                        <TextBlock
+                                            Style="{StaticResource Style_Textbox_Error}"
+                                            Text="Bitte wählen Sie einen Eintrag aus."
+                                            Visibility="{Binding ErrorHourTyp, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                    <!--#endregion-->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Margin="0,20,0,0"
+                                        VerticalAlignment="Bottom"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding ExpanderCommand}"
+                                            CommandParameter="ZurückZeitaufwand"
+                                            Style="{StaticResource Button_Expander}"
+                                            ToolTip="Zurück zur Vergütung">
+                                            <MD:PackIcon Kind="Chevronleft" />
+                                        </Button>
+                                        <Button
+                                            Command="{Binding ExpanderCommand}"
+                                            CommandParameter="VorZeitaufwand"
+                                            Style="{StaticResource Button_Expander}"
+                                            ToolTip="Vor zu Erklärungen/Anlagen">
+                                            <MD:PackIcon Kind="ChevronRight" />
+                                        </Button>
+
+                                    </StackPanel>
+                                </StackPanel>
+
+                            </Expander>
+                            <!--#endregion-->
+                            <Border
+                                Height="1"
+                                HorizontalAlignment="Stretch"
+                                Background="{StaticResource MaterialDesignDivider}"
+                                SnapsToDevicePixels="True" />
+                            <!--#region Erklärungen und Anlagen-->
+                            <Expander
+                                x:Name="Anlagen"
+                                IsExpanded="{Binding Anzeige_Anlagen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource ExpanderAR}">
+                                <Expander.Header>
+                                    <TextBlock
+                                        FontSize="15"
+                                        FontWeight="Bold"
+                                        Text="Erklärungen/ Anlagen" />
+                                </Expander.Header>
+                                <StackPanel Style="{StaticResource ExtenderStackpanelAR}">
+                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                        <Label Content="Anlagen:" Style="{StaticResource Label_AR}" />
+                                        <StackPanel Style="{StaticResource Stackpanel_Anlagen}">
+                                            <Border Style="{StaticResource Border_Import_Files}">
+                                                <ScrollViewer components:DropFilesBehaviorExtension.IsEnabled="True" Style="{StaticResource Scrollviewer_Import_Files}">
+                                                    <StackPanel HorizontalAlignment="Center">
+                                                        <TextBlock
+                                                            FontWeight="Bold"
+                                                            Style="{StaticResource textblock_base}"
+                                                            Text="Ziehen Sie die Anlagen, die Sie anfügen wollen, auf dieses Feld"
+                                                            TextWrapping="WrapWithOverflow" />
+                                                    </StackPanel>
+                                                </ScrollViewer>
+                                            </Border>
+                                            <ListView
+                                                x:Name="listView"
+                                                Grid.Row="1"
+                                                Margin="0,30,0,0"
+                                                ItemsSource="{Binding ImportFileList, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedItem="{Binding SelectedAttechment, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectionMode="Single"
+                                                Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                <ListView.View>
+                                                    <GridView>
+                                                        <GridViewColumn
+                                                            Width="500"
+                                                            DisplayMemberBinding="{Binding FileName}"
+                                                            Header="Dateiname"
+                                                            HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                                        <GridViewColumn Width="Auto">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <Button
+                                                                            x:Name="Btn_Open"
+                                                                            Command="{Binding Path=DataContext.OpenAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                            Style="{StaticResource Button_GridView}"
+                                                                            ToolTip="Anlage öffnen">
+                                                                            <MD:PackIcon Padding="0" Kind="File" />
+                                                                        </Button>
+                                                                        <Button
+                                                                            x:Name="Btn_Bin"
+                                                                            Command="{Binding Path=DataContext.DeleteAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                            Style="{StaticResource Button_GridView}"
+                                                                            ToolTip="Anlage löschen">
+                                                                            <MD:PackIcon Padding="0" Kind="Bin" />
+                                                                        </Button>
+                                                                    </StackPanel>
+                                                                    <DataTemplate.Triggers>
+                                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
+                                                                            <Setter TargetName="Btn_Open" Property="Visibility" Value="Visible" />
+                                                                            <Setter TargetName="Btn_Bin" Property="Visibility" Value="Visible" />
+                                                                        </DataTrigger>
+                                                                    </DataTemplate.Triggers>
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                    </GridView>
+                                                </ListView.View>
+                                            </ListView>
+                                            <Button
+                                                Width="200"
+                                                Margin="0,20,0,0"
+                                                Command="{Binding ImportListClearCommand}"
+                                                Content="Liste leeren"
+                                                Style="{StaticResource Button_Master}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Border Margin="0,0,0,15" Style="{StaticResource Expander_Border}" />
+                                    <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                        <Label Content="Erklärung:" Style="{StaticResource Label_AR}" />
+                                        <StackPanel Orientation="Horizontal" Style="{StaticResource Stackpanel_Anlagen}">
+                                            <CheckBox
+                                                Margin="0,0,8,0"
+                                                VerticalAlignment="Top"
+                                                IsChecked="{Binding ARAssurance, UpdateSourceTrigger=PropertyChanged}"
+                                                Style="{StaticResource Checkbox_Base}" />
+                                            <TextBlock
+                                                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                                                MaxWidth="750"
+                                                Style="{StaticResource textblock_base}"
+                                                Text="{Binding Instruction, FallbackValue=Instruction}"
+                                                TextWrapping="WrapWithOverflow" />
+                                        </StackPanel>
+                                        <!--  ErrorValidation  -->
+                                        <TextBlock
+                                            Margin="32,0,0,0"
+                                            Style="{StaticResource Style_Textbox_Error}"
+                                            Text="Bitte wählen Sie eine Option aus"
+                                            Visibility="{Binding ErrorInstruction, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Margin="0,20,0,0"
+                                        VerticalAlignment="Bottom"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Command="{Binding ExpanderCommand}"
+                                            CommandParameter="ZurückAnlagen"
+                                            Style="{StaticResource Button_Expander}"
+                                            ToolTip="Zurück zum Zeitaufwand">
+                                            <MD:PackIcon Kind="Chevronleft" />
+                                        </Button>
+                                    </StackPanel>
+
+                                </StackPanel>
+
+                            </Expander>
+                            <!--#endregion-->
+                            <Border
+                                Height="1"
+                                HorizontalAlignment="Stretch"
+                                Background="{StaticResource MaterialDesignDivider}"
+                                SnapsToDevicePixels="True" />
+                        </StackPanel>
+                        <!--</MD:Card>-->
+                    </Grid>
+                    <Grid Grid.Row="1" Margin="0,50,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <!--<ComboBox
+                                    Width="150"
+                                    ItemsSource="{Binding Items}"
+                                    SelectedItem="{Binding SelectedItem}" />-->
+                            <Button
+                                Margin="0,0,10,0"
+                                Command="{Binding NewCommand}"
+                                Content="Felder Leeren"
+                                Style="{StaticResource Button_Master}"
+                                Visibility="{Binding ShowClear, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button
+                                Margin="0,0,10,0"
+                                Command="{Binding ApplyCommand}"
+                                Content="{Binding SaveLabel}"
+                                Style="{StaticResource Button_Master}" />
+                            <Button
+                                Margin="0,0,10,0"
+                                Command="{Binding QuitCommand}"
+                                Content="Zur Übersichtsliste"
+                                Style="{StaticResource Button_Master}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <!--#region Client Add-->
+                <Grid
+                    Grid.Row="3"
+                    Grid.RowSpan="2"
+                    Margin="0,259,0,0"
+                    Visibility="{Binding ShowClient, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="863*" />
+                        <ColumnDefinition Width="537*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" Margin="0,20,0,0">
+                            <TextBox
+                                MD:HintAssist.Hint="Bezeichnung"
+                                Style="{StaticResource Textbox_Request}"
+                                Text="{Binding RequestClientName, UpdateSourceTrigger=PropertyChanged}" />
+                            <ComboBox
+                                Margin="0,0,10,0"
+                                MD:HintAssist.Hint="Typ"
+                                DisplayMemberPath="ActivityClientTypText"
+                                ItemsSource="{Binding Path=ClientTyplist}"
+                                SelectedIndex="0"
+                                SelectedValue="{Binding SelectedClientTyp, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource Combobox_Request}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="0,50,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding ClientApplyCommand}"
+                                Content="Eintragen"
+                                Style="{StaticResource Button_Master}" />
+                            <Button
+                                Margin="10,0,0,0"
+                                Command="{Binding ClientBackCommand}"
+                                Content="Zurück"
+                                Style="{StaticResource Button_Master}" />
+                        </StackPanel>
+                    </Grid>
+
+                </Grid>
+                <!--#endregion-->
+                <!--#region Adventage Add-->
+                <Grid
+                    Grid.Row="4"
+                    Grid.RowSpan="3"
+                    Margin="0,196,0,176"
+                    Visibility="{Binding ShowAdventage, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" Margin="0,20,0,0">
+                            <StackPanel>
+                                <ComboBox
+                                    MD:HintAssist.Hint="Typ"
+                                    DisplayMemberPath="ARVerguetungAdventageTypText"
+                                    ItemsSource="{Binding Path=AdventageTypList}"
+                                    SelectedIndex="0"
+                                    SelectedValue="{Binding SelectedAdventageTyp, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{StaticResource Combobox_Request}" />
+                                <TextBlock
+                                    Style="{StaticResource Style_Textbox_Error}"
+                                    Text="Bitte wählen Sie einen Typ aus"
+                                    Visibility="{Binding ErrorAdventageTyp, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBox
+                                    MD:HintAssist.Hint="Betrag"
+                                    Style="{StaticResource Textbox_Request}"
+                                    Text="{Binding AdventageAmount, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock
+                                    Style="{StaticResource Style_Textbox_Error}"
+                                    Text="Bitte tragen Sie einen Wert ein"
+                                    Visibility="{Binding ErrorAdventageAmount, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" Margin="0,50,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding AdventageApplyCommand}"
+                                Content="Eintragen"
+                                Style="{StaticResource Button_Master}" />
+                            <Button
+                                Margin="10,0,0,0"
+                                Command="{Binding ClientBackCommand}"
+                                Content="Zurück"
+                                Style="{StaticResource Button_Master}" />
+                        </StackPanel>
+                    </Grid>
+
+                </Grid>
+                <!--#endregion-->
+                <!--#region ArbitrationClientAdd-->
+                <Grid Grid.Row="5" Visibility="{Binding ShowArbitrationClientAdd, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" Margin="0,20,0,0">
+                            <TextBox
+                                MD:HintAssist.Hint="Bezeichnung der Partei"
+                                Style="{StaticResource Textbox_Request}"
+                                Text="{Binding ActivityRequestArbitrationClientText, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" Margin="0,50,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding ArbitrationClientAddApplyCommand}"
+                                Content="Eintragen"
+                                Style="{StaticResource Button_Master}" />
+                            <Button
+                                Margin="10,0,0,0"
+                                Command="{Binding ClientBackCommand}"
+                                Content="Zurück"
+                                Style="{StaticResource Button_Master}" />
+                        </StackPanel>
+                    </Grid>
+
+                </Grid>
+                <!--#endregion-->
+            </Grid>
+            <!--#endregion-->
+            <Border Grid.Column="1" Style="{StaticResource Expander_Border_Vertical}" />
+            <!--#region Vermerk-->
+            <Grid
+                Grid.Column="2"
+                Width="400"
+                Visibility="{Binding ShowVermerk, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                <StackPanel Margin="10,0,10,0">
+                    <TextBlock Style="{StaticResource Textblock_Hinweistext_TopTitel}" Text="Vermerk:" />
+                    <TextBox
+                        MinHeight="300"
+                        Background="WhiteSmoke"
+                        Style="{StaticResource MaterialDesignTextBox}"
+                        Text="{Binding ARNoteAdmin}"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+                <Button
+                    Margin="0,15,0,0"
+                    HorizontalAlignment="Center"
+                    Content="Vermerk leeren"
+                    Style="{StaticResource Button_Master}" />
+            </Grid>
+            <!--#endregion-->
+            <!--#region Hinweise-->
+            <Grid
+                Grid.Column="2"
+                Width="400"
+                Visibility="{Binding ShowHinweis, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                <StackPanel Margin="10,0,10,0">
+                    <TextBlock Style="{StaticResource Textblock_Hinweistext_TopTitel}" Text="Bearbeitungshinweise:" />
+                    <!--#region Text Art-->
+                    <StackPanel Visibility="{Binding Anzeige_Art, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}" TextWrapping="WrapWithOverflow">
+                            Genehmigungspflicht:
+                        </TextBlock>
+                        <WrapPanel Orientation="Horizontal">
+                            <TextBlock
+                                xml:space="preserve"
+                                Style="{StaticResource Textblock_Hinweistext_Wrappanel}"
+                                TextWrapping="WrapWithOverflow">Entgeltliche Tätigkeiten sind nach § 99 Abs. 1 BBG grundsätzlich genehmigungspflichtig.</TextBlock>
+                            <TextBlock Style="{StaticResource Textblock_Hinweistext_Wrappanel}">
+                                <Hyperlink>
+                                    (§ 99 Abs. 1 BBG
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.HyperLinkCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="§ 99 BBG" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Hyperlink>
+                            </TextBlock>
+                            <TextBlock
+                                xml:space="preserve"
+                                Style="{StaticResource Textblock_Hinweistext_Wrappanel}"
+                                TextWrapping="WrapWithOverflow"> iVm</TextBlock>
+                            <TextBlock Style="{StaticResource Textblock_Hinweistext_Wrappanel}">
+                                <Hyperlink>
+                                    § 46 DRiG)
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.HyperLinkCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="§ 46 DRiG" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Hyperlink>
+                            </TextBlock>
+                        </WrapPanel>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}" TextWrapping="WrapWithOverflow">
+                            Anzeigepflichtig:
+                        </TextBlock>
+                        <WrapPanel Orientation="Horizontal">
+                            <TextBlock
+                                xml:space="preserve"
+                                Style="{StaticResource Textblock_Hinweistext_Wrappanel}"
+                                TextWrapping="WrapWithOverflow">Nicht genehmigungspflichtig, sondern nur anzeigepflichtig sind nach § 100 Abs. 1 BBG u.a. folgende Tätigkeiten:</TextBlock>
+                            <TextBlock Style="{StaticResource Textblock_Hinweistext_Wrappanel}">
+                                <Hyperlink>
+                                    (§ 100 Abs. 1 BBG
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.HyperLinkCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="§ 100 BBG" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Hyperlink>
+                            </TextBlock>
+                            <TextBlock
+                                xml:space="preserve"
+                                Style="{StaticResource Textblock_Hinweistext_Wrappanel}"
+                                TextWrapping="WrapWithOverflow"> iVm </TextBlock>
+                            <TextBlock Style="{StaticResource Textblock_Hinweistext_Wrappanel}">
+                                <Hyperlink>
+                                    § 46 DRiG)
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.HyperLinkCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="§ 46 DRiG" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Hyperlink>
+                            </TextBlock>
+                        </WrapPanel>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_List}">
+                            - schriftstellerische, wissenschaftliche, künstlerische oder Vortragstätigkeiten
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_List}">
+                            - Tätigkeiten zur Wahrung von Berufsinteressen in Gewerkschaften oder Berufsverbänden oder in Selbsthilfeeinrichtungen der Beamtinnen und Beamten
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}" TextWrapping="WrapWithOverflow">
+                            Abgrenzung Vortragstätigkeiten/ Referententätigkeit:
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext}">
+                            Eine Vortragstätigkeit liegt dann vor, wenn der Vortrag selbst die Dauer von 2 Stunden nicht überschreitet.
+                        </TextBlock>
+                    </StackPanel>
+                    <!--#endregion-->
+                    <!--#region Text Vergütung-->
+                    <StackPanel Visibility="{Binding Anzeige_Verguetung, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}">
+                            Honorar:
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext}">
+                            Tragen Sie bitte das Honoar ein, das Sie für die Tätigkeit erhalten.
+                            Sollte Ihnen das Honorar derzeit unbekannt sein, wählen Sie bitte die Option "derzeit unbekannt; wird nachgereicht" aus.
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext}">
+                            Bei einer dauerhaften Tätigkeit ist das Honorar pro Einsatz einzutragen.
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}">
+                            Geldwerte Vorteile:
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext}">
+                            Bei den geldwerten Vorteile sind sämtliche Zuwendungen anzugeben, durch die Aufwendungen erspart wurden.
+                        </TextBlock>
+                    </StackPanel>
+                    <!--#endregion-->
+                    <!--#region Text Zeitaufwand-->
+                    <StackPanel Visibility="{Binding Anzeige_Zeitaufwand, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}">
+                            Zeitaufwand der Vorbereitung:
+                        </TextBlock>
+                        <TextBlock xml:space="preserve" Style="{StaticResource Textblock_Hinweistext}">Es ist der Zeitaufwand in <Bold>vollen Stunden</Bold> anzugeben, der für die Vorbereitung der eigentlichen Tätigkeit voraussichtlich anfallen wird. Der Aufwand ist zunächst zu schätzen. Sollte dieser später signifikant höher ausfallen als angenommen, muss dieser nachträglich korrigiert werden</TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}">
+                            Zeitaufwand der Nebentätigkeit:
+                        </TextBlock>
+                        <TextBlock xml:space="preserve" Style="{StaticResource Textblock_Hinweistext}">Es ist der Zeitaufwand in <Bold>vollen Stunden</Bold> anzugeben, der für die eigentliche Tätigkeit anfallen wird.</TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}">
+                            Zeitaufwand bei Dauertätigkeiten:
+                        </TextBlock>
+                        <TextBlock xml:space="preserve" Style="{StaticResource Textblock_Hinweistext}">Wird eine Tätigkeit dauerhaft ausgeführt, sind die Stunden anzugeben, die durchschnittlich pro Einsatz anfallen.</TextBlock>
+                    </StackPanel>
+                    <!--#endregion-->
+                    <!--#region Text Anlagen-->
+                    <StackPanel Visibility="{Binding Anzeige_Anlagen, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}">
+                            Anlage:
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext}">
+                            Um Anlagen hinzufügen, öffnen Sie zunächst den Dateiexplorer (<Italic>Windows-Tast + e</Italic>
+                            ). Wählen Sie dort die Dateien aus, die Sie anfügen wollen.
+                            Anschließend klicken Sie die ausgewählten Dateien an (<Italic>für mehrere Dateien die STRG-Taste gedrückt halten</Italic>
+                            ). Halten Sie die linke Maustaste gedrückt.
+                            Ziehen Sie dann die Dateien auf das blaue Feld. Die übergebenen Dateien werden anschließend in der Übersicht aufgeführt</TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext_Titel}">
+                            Erklärung:
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource Textblock_Hinweistext}">
+                            Die Erklärung über die Vollständigkeit und Nachreichungspflicht ist aktiv anzuwählen.
+                        </TextBlock>
+                    </StackPanel>
+                    <!--#endregion-->
+                </StackPanel>
+            </Grid>
+            <!--#endregion-->
+        </Grid>
+    </ScrollViewer>
+</UserControl>

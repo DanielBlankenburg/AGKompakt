@@ -1,0 +1,34 @@
+﻿<Window
+    x:Class="BGH_Kompakt.Views.UserLogin.UserSwitchWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.UserLogin"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="UserSwitchWindow"
+    Width="250"
+    Height="450"
+    mc:Ignorable="d">
+    <Grid Background="{StaticResource MaterialDesignPaper}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="90" />
+        </Grid.RowDefinitions>
+        <ListView
+            x:Name="Lst_User"
+            Margin="5"
+            DisplayMemberPath="NachName" />
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            <Button
+                x:Name="Btn_Change"
+                Margin="5"
+                Click="Btn_Change_Click"
+                Content="Benutzer wechseln" />
+            <Button
+                x:Name="btn_back"
+                Margin="5"
+                Click="btn_back_Click"
+                Content="Abbrechen" />
+        </StackPanel>
+    </Grid>
+</Window>

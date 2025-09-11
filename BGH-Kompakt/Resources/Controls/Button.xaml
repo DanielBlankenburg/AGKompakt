@@ -1,0 +1,156 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <!--#region Button-->
+
+    <Style
+        x:Key="Button_Master"
+        BasedOn="{StaticResource MaterialDesignOutlinedDarkButton}"
+        TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="SlateGray" />
+    </Style>
+
+    <Style x:Key="Style_Button_Menu" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Padding" Value="15,0,0,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <StackPanel x:Name="BtnStackpanel">
+                        <ContentPresenter Margin="15,5,0,0" HorizontalAlignment="left" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="FontSize" Value="24" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="Cursor" Value="Hand" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="BtnStackpanel" Property="Panel.Background" Value="Gray" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Style_Button_Sitzungsunterlagen" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Height" Value="50" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontWeight" Value="Normal" />
+    </Style>
+
+    <Style x:Key="Style_Button_Sitzungsunterlagen_Neu" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <StackPanel x:Name="BtnStackpanel">
+                        <ContentPresenter Margin="15,5,0,5" HorizontalAlignment="Left" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="BtnStackpanel" Property="Background" Value="Crimson" />
+                            <Setter Property="Cursor" Value="Hand" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="BtnStackpanel" Property="Background" Value="Teal" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Style_Button_Listen" TargetType="{x:Type Button}">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <StackPanel x:Name="BtnStackpanel">
+                        <ContentPresenter Margin="0,0,0,0" HorizontalAlignment="center" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="BtnStackpanel" Property="Panel.Background" Value="White" />
+                            <Setter Property="Cursor" Value="Hand" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Style_Button_Listview_Header" TargetType="{x:Type Button}">
+        <Setter Property="FrameworkElement.Height" Value="25" />
+        <Setter Property="FrameworkElement.Width" Value="50" />
+    </Style>
+
+    <Style x:Key="Button_Mainwindow" TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="300" />
+        <Setter Property="Height" Value="300" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Margin" Value="0,0,20,20" />
+    </Style>
+
+    <Style x:Key="Button_Mainwindow_Lower" TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="200" />
+        <Setter Property="Height" Value="200" />
+        <Setter Property="Control.Padding" Value="0" />
+        <Setter Property="Control.Background" Value="Transparent" />
+    </Style>
+
+    <Style
+        x:Key="Button_Standalone"
+        BasedOn="{StaticResource MahApps.Styles.Button.Dialogs}"
+        TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="190" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style
+        x:Key="Button_Expander"
+        BasedOn="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+        TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="25" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Margin" Value="0,0,5,0" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style
+        x:Key="Button_GridView"
+        BasedOn="{StaticResource MaterialDesignRaisedButton}"
+        TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Width" Value="35" />
+        <Setter Property="Margin" Value="0,0,10,0" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Visibility" Value="Hidden" />
+    </Style>
+
+
+    <!--#endregion-->
+
+
+</ResourceDictionary>

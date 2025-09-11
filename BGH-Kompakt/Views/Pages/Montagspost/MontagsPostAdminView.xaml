@@ -1,0 +1,96 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.Pages.Montagspost.MontagsPostAdminView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Ctrl="clr-namespace:BGH_Kompakt.Components"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:components="clr-namespace:BGH_Kompakt.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.Pages.Montagspost"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="TabItem_AR"
+            BasedOn="{StaticResource MaterialDesignTabItem}"
+            TargetType="TabItem">
+            <Setter Property="Height" Value="60" />
+            <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" Background="Transparent">
+                            <ContentPresenter
+                                x:Name="ContentSite"
+                                Margin="10,2"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                ContentSource="Header" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="LightBlue" />
+                                <Setter Property="FontWeight" Value="Medium" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="LavenderBlush" />
+                                <Setter TargetName="Border" Property="Opacity" Value="0.7" />
+                            </Trigger>
+                            <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="Lavender" />
+                                <Setter TargetName="Border" Property="Cursor" Value="Hand" />
+                                <Setter TargetName="Border" Property="Opacity" Value="1" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style
+            x:Key="TabItemHeaderText_AR"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style
+            x:Key="TabItemHeaderTextTop_AR"
+            BasedOn="{StaticResource TabItemHeaderText_AR}"
+            TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,0,0,5" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource BGHActivityRequestBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource Style_Textblock_Titel}" Text="Montagspost Admin" />
+        <TabControl
+            Grid.Row="1"
+            Background="{StaticResource BGHActivityRequestBackground}"
+            SelectionChanged="TabControl_SelectionChanged"
+            Style="{StaticResource MahApps.Styles.TabControl}">
+            <TabItem x:Name="AddKW" Style="{StaticResource TabItem_AR}">
+                <TabItem.Header>
+                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Kalenderwoche einlesen" />
+                </TabItem.Header>
+            </TabItem>
+            <TabItem x:Name="Search" Style="{StaticResource TabItem_AR}">
+                <TabItem.Header>
+                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Entscheidung suchen" />
+                </TabItem.Header>
+            </TabItem>
+        </TabControl>
+        <Border
+            Grid.Row="2"
+            Grid.Column="0"
+            BorderThickness="0,1,0,0">
+            <Ctrl:AnimatedContentControl x:Name="AnimatedContentControl" />
+        </Border>
+    </Grid>
+</UserControl>
+

@@ -1,0 +1,69 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.Settings.SettingViewStart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Button_Settings"
+            BasedOn="{StaticResource Button_Mainwindow}"
+            TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="40,30,0,0" />
+        </Style>
+    </UserControl.Resources>
+    <WrapPanel Margin="30,30,30,30" Background="{StaticResource MaterialDesignPaper}">
+        <Button
+            x:Name="Btn_Senatseinstellungen"
+            Click="OpenPageOnMain"
+            Style="{StaticResource Button_Settings}">
+            <StackPanel>
+                <Image
+                    Source="/Resources/ImageResources/Images/List.jpg"
+                    Stretch="Fill"
+                    Style="{StaticResource Button_Mainwindow_Image}" />
+                <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Senatseinstellung" />
+            </StackPanel>
+        </Button>
+        <Button
+            x:Name="Btn_Montagspost"
+            Click="OpenPageOnMain"
+            Style="{StaticResource Button_Settings}">
+            <StackPanel>
+                <Image
+                    Source="/Resources/ImageResources/Images/Montagspost.jpg"
+                    Stretch="Fill"
+                    Style="{StaticResource Button_Mainwindow_Image}" />
+                <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Einstellungen Montagspost" />
+            </StackPanel>
+        </Button>
+        <Button
+            x:Name="Btn_Admineinstellung"
+            Click="OpenPageOnMain"
+            Style="{StaticResource Button_Settings}">
+            <StackPanel>
+                <Image
+                    Source="/Resources/ImageResources/Images/Admin.jpg"
+                    Stretch="Fill"
+                    Style="{StaticResource Button_Mainwindow_Image}" />
+                <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="User-Verwaltung" />
+            </StackPanel>
+        </Button>
+        <Button
+            x:Name="Btn_ProgrammSettings"
+            Click="OpenPageOnMain"
+            Style="{StaticResource Button_Settings}">
+            <StackPanel>
+                <Image
+                    Source="/Resources/ImageResources/Images/typewriter-2653187_1280.jpg"
+                    Stretch="Fill"
+                    Style="{StaticResource Button_Mainwindow_Image}" />
+                <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Programmeinstellungen" />
+            </StackPanel>
+        </Button>
+    </WrapPanel>
+</UserControl>

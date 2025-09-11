@@ -1,0 +1,16 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls">
+
+    <!--#region PackIcon-->
+    <Style x:Key="MD_SignDiscription" TargetType="{x:Type MD:PackIcon}">
+        <Setter Property="Control.Foreground" Value="White" />
+        <Setter Property="FrameworkElement.Margin" Value="5,0,0,0" />
+    </Style>
+
+
+    <!--#endregion-->
+
+</ResourceDictionary>

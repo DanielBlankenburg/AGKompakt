@@ -1,0 +1,268 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.UserLogin.UserLoginView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Classes="clr-namespace:BGH_Kompakt.Classes"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.UserLogin"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:userlogin="clr-namespace:BGH_Kompakt.ViewModel.Userlogin"
+    d:DataContext="{d:DesignInstance Type=userlogin:UserLoginViewModel}"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Combobox_Login"
+            BasedOn="{StaticResource Combobox_Base}"
+            TargetType="{x:Type ComboBox}">
+            <Setter Property="Margin" Value="10,30,0,0" />
+        </Style>
+        <Style
+            x:Key="Textbox_Login"
+            BasedOn="{StaticResource Textbox_Base}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="Margin" Value="10,20,0,0" />
+        </Style>
+        <Style
+            x:Key="Button_PackIcon"
+            BasedOn="{StaticResource MaterialDesignRaisedButton}"
+            TargetType="{x:Type Button}">
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Margin" Value="10,10,10,5" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style x:Key="Border_Login" TargetType="{x:Type Border}">
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="10,10,10,0" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource MaterialDesignPaper}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            Grid.Row="0"
+            d:Text="Titel"
+            Style="{StaticResource Style_Textblock_Titel}"
+            Text="{Binding Titel}" />
+        <TextBlock
+            Grid.Row="1"
+            d:Text="Introduction"
+            Style="{StaticResource Style_Textblock_Eingabefenster}"
+            Text="{Binding Introduction}"
+            TextAlignment="Center" />
+        <Separator Grid.Row="2" />
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <MD:Card
+                x:Name="Card_Person"
+                Grid.Column="1"
+                MinWidth="600"
+                Margin="0,10,0,0">
+                <StackPanel>
+                    <Expander MaxHeight="570" IsExpanded="{Binding Show_PersonData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource Textblock_Extender}" Text="Personenangaben" />
+                        </Expander.Header>
+                        <ScrollViewer Height="{Binding ElementName=Card_Person, Path=ActualHeight}" VerticalScrollBarVisibility="Auto">
+
+                            <StackPanel Style="{StaticResource Stackpanel_Expander}">
+                                <ComboBox
+                                    MD:HintAssist.Hint="Titel"
+                                    DisplayMemberPath="TitelText"
+                                    ItemsSource="{Binding Path=Titellist}"
+                                    SelectedIndex="0"
+                                    SelectedValue="{Binding SelectedTitel, Mode=TwoWay}"
+                                    Style="{StaticResource Combobox_Login}" />
+                                <TextBox
+                                    MD:HintAssist.Hint="Vorname"
+                                    Style="{StaticResource Textbox_Login}"
+                                    Text="{Binding Vorname}" />
+                                <TextBox
+                                    MD:HintAssist.Hint="Nachname"
+                                    Style="{StaticResource Textbox_Login}"
+                                    Text="{Binding Nachname}" />
+                                <TextBox
+                                    MD:HintAssist.Hint="EMail-Adresse"
+                                    Style="{StaticResource Textbox_Login}"
+                                    Text="{Binding EMail, UpdateSourceTrigger=PropertyChanged}" />
+                                <ComboBox
+                                    MD:HintAssist.Hint="Geschlecht"
+                                    DisplayMemberPath="GeschlechtText"
+                                    ItemsSource="{Binding Path=GeschlechtList}"
+                                    SelectedValue="{Binding SelectedGeschlecht, Mode=TwoWay}"
+                                    Style="{StaticResource Combobox_Login}" />
+                                <ComboBox
+                                    MD:HintAssist.Hint="Dienstgruppe"
+                                    DisplayMemberPath="PositionText"
+                                    ItemsSource="{Binding Path=PositionList}"
+                                    SelectedValue="{Binding SelectedPosition, Mode=TwoWay}"
+                                    Style="{StaticResource Combobox_Login}" />
+                                <ComboBox
+                                    MD:HintAssist.Hint="Dienstbezeichnung"
+                                    DisplayMemberPath="DienstbezeichnungText"
+                                    ItemsSource="{Binding Path=DienstbezeichungList}"
+                                    SelectedValue="{Binding SelectedDienstbezeichnung, Mode=TwoWay}"
+                                    Style="{StaticResource Combobox_Login}"
+                                    Visibility="{Binding ShowDienstbezeichnung, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                <!--<ComboBox
+                                    MD:HintAssist.Hint="Status"
+                                    DisplayMemberPath="StatusText"
+                                    ItemsSource="{Binding Path=StatusList}"
+                                    SelectedIndex="0"
+                                    SelectedValue="{Binding SelectedStatus, Mode=TwoWay}"
+                                    Style="{StaticResource Combobox_Login}" />-->
+                                <StackPanel>
+                                    <Button
+                                        Margin="15,20"
+                                        HorizontalAlignment="left"
+                                        Command="{Binding ExpanderCommand}"
+                                        CommandParameter="VorData"
+                                        Style="{StaticResource Button_Expander}"
+                                        ToolTip="Vor zur Senatseintragung">
+                                        <MD:PackIcon Kind="ChevronRight" />
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                    </Expander>
+                    <Expander IsExpanded="{Binding Show_SenatData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Expander.Header>
+                            <TextBlock Style="{StaticResource Textblock_Extender}" Text="Senatszugehörigkeit" />
+                        </Expander.Header>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel
+                                    Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,15,0"
+                                        Style="{StaticResource Style_Textblock_Eingabefenster}"
+                                        Text="Sind Sie einem Senat zugeordnet?" />
+                                    <Classes:SliderButton
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        IsChecked="{Binding Show_SenatsChoise, UpdateSourceTrigger=PropertyChanged}"
+                                        OffLabel="Nein"
+                                        OnLabel="Ja"
+                                        Style="{StaticResource styleSliderButtonSettings}" />
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Style="{StaticResource Style_Textblock_Eingabefenster}"
+                                    Text="Wählen Sie die Senate aus, denen Sie angehören "
+                                    Visibility="{Binding Show_SenatsChoise, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                <Grid
+                                    Grid.Row="2"
+                                    MaxHeight="500"
+                                    Visibility="{Binding Show_SenatsChoise, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Style="{StaticResource Border_Login}">
+                                        <ListBox
+                                            MinWidth="150"
+                                            VerticalAlignment="Bottom"
+                                            DisplayMemberPath="SenatName"
+                                            ItemsSource="{Binding SenatListAll}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            SelectedItem="{Binding SelectedSenatAll}" />
+                                    </Border>
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        MinWidth="50"
+                                        VerticalAlignment="Center"
+                                        Orientation="Vertical">
+                                        <Button
+                                            Command="{Binding AddCommand}"
+                                            Style="{StaticResource Button_PackIcon}"
+                                            ToolTip="Hinzufügen eines Senats">
+                                            <MD:PackIcon Kind="Share" />
+                                        </Button>
+                                        <Button
+                                            Command="{Binding RemoveCommand}"
+                                            Style="{StaticResource Button_PackIcon}"
+                                            ToolTip="Entfernen eines Senats">
+                                            <MD:PackIcon Kind="Reply" />
+                                        </Button>
+                                    </StackPanel>
+                                    <Border
+                                        Grid.Row="2"
+                                        Grid.Column="2"
+                                        Style="{StaticResource Border_Login}">
+                                        <ListBox
+                                            MinWidth="150"
+                                            DisplayMemberPath="SenatName"
+                                            ItemsSource="{Binding SenatListUser}"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            SelectedItem="{Binding SelectedSenatUser}" />
+                                    </Border>
+                                </Grid>
+                                <StackPanel Grid.Row="3">
+                                    <Button
+                                        Margin="15,20"
+                                        HorizontalAlignment="left"
+                                        Command="{Binding ExpanderCommand}"
+                                        CommandParameter="BackData"
+                                        Style="{StaticResource Button_Expander}"
+                                        ToolTip="Zurück zu den Personendaten">
+                                        <MD:PackIcon Kind="ChevronLeft" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </Expander>
+                </StackPanel>
+            </MD:Card>
+        </Grid>
+        <Grid Grid.Row="4" Margin="0,20,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Orientation="Horizontal">
+                <Button
+                    Command="{Binding QuitCommand}"
+                    Content="Programm beenden"
+                    Style="{StaticResource Button_Master}" />
+                <Button
+                    Margin="10,0,0,0"
+                    Command="{Binding LoginCommand}"
+                    Content="Registrieren"
+                    Style="{StaticResource Button_Master}" />
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+</UserControl>

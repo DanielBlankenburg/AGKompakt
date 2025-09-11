@@ -1,0 +1,1023 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.NebentaetigkeitenListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:BGH_Kompakt.ViewModel"
+    d:DataContext="{d:DesignInstance Type=viewmodel:NebentaetigkeitenListViewModel}"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style
+                x:Key="Button_GridView"
+                BasedOn="{StaticResource MaterialDesignRaisedButton}"
+                TargetType="Button">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="Width" Value="35" />
+                <Setter Property="Margin" Value="0,0,10,0" />
+                <Setter Property="Height" Value="22" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Style>
+            <Style
+                x:Key="Combobox_ARList"
+                BasedOn="{StaticResource Combobox_Base}"
+                TargetType="{x:Type ComboBox}">
+                <Setter Property="Margin" Value="15,0" />
+                <Setter Property="Width" Value="170" />
+            </Style>
+            <Style
+                x:Key="TextboxMenu"
+                BasedOn="{StaticResource textblock_base}"
+                TargetType="{x:Type TextBlock}">
+                <Setter Property="Grid.Row" Value="0" />
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Margin" Value="0,0,0,20" />
+            </Style>
+            <Style x:Key="GridMenu" TargetType="Grid">
+                <Setter Property="Margin" Value="0,10,15,20" />
+            </Style>
+            <Style x:Key="ARListCard" TargetType="{x:Type MD:Card}">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+            <Style x:Key="ItemHeaderIcon" TargetType="MD:PackIcon">
+                <Setter Property="Width" Value="25" />
+                <Setter Property="Height" Value="25" />
+                <Setter Property="Foreground" Value="DarkSlateGray" />
+            </Style>
+            <Style x:Key="ItemArrowUp" TargetType="MD:PackIcon">
+                <Setter Property="Margin" Value="0,0,10,0" />
+                <Setter Property="Kind" Value="ArrowUpward" />
+            </Style>
+            <Style x:Key="ItemArrowDown" TargetType="MD:PackIcon">
+                <Setter Property="Margin" Value="0,0,10,0" />
+                <Setter Property="Kind" Value="ArrowDownward" />
+            </Style>
+            <Style x:Key="PackIcon_AR" TargetType="MD:PackIcon">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource BGHActivityRequestBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
+            <Menu>
+                <MenuItem>
+                    <MenuItem.Header>
+                        <MD:PackIcon Kind="Sort" Style="{StaticResource ItemHeaderIcon}" />
+                    </MenuItem.Header>
+                    <!--#region Date-->
+                    <MenuItem Header="Eintragungsdatum">
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="DatumAbsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowDown}" />
+                                    <TextBlock Text="Absteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingDate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="DatumAufsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowUp}" />
+                                    <TextBlock Text="Aufsteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingDate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="false" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.SortingDate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                    <!--#endregion-->
+                    <!--#region Title-->
+                    <MenuItem Header="Titel">
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="TitelAbsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowDown}" />
+                                    <TextBlock Text="Absteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingTitle, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="TitelAufsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowUp}" />
+                                    <TextBlock Text="Aufsteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingTitle, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="false" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.SortingTitle, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                    <!--#endregion-->
+                    <!--#region Meldeart-->
+                    <MenuItem Header="Meldeart">
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="MeldeartAbsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowDown}" />
+                                    <TextBlock Text="Absteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingMeldeart, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="MeldeartAufsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowUp}" />
+                                    <TextBlock Text="Aufsteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingMeldeart, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="false" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.SortingMeldeart, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                    <!--#endregion-->
+                    <!--#region Tätigkeitsart-->
+                    <MenuItem Header="Tätigkeitsart">
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="TaetigkeitsartAbsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowDown}" />
+                                    <TextBlock Text="Absteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingTaetigkeitsart, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="TaetigkeitsartAufsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowUp}" />
+                                    <TextBlock Text="Aufsteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingTaetigkeitsart, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="false" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.SortingTaetigkeitsart, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                    <!--#endregion-->
+                    <!--#region Vergütung-->
+                    <MenuItem Header="Vergütung">
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="VerguetungAbsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowDown}" />
+                                    <TextBlock Text="Absteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingVerguetung, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="VerguetungAufsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowUp}" />
+                                    <TextBlock Text="Aufsteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingVerguetung, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="false" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.SortingVerguetung, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                    <!--#endregion-->
+                    <!--#region Zeitaufwand-->
+                    <MenuItem Header="Zeitaufwand">
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="ZeitaufwandAbsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowDown}" />
+                                    <TextBlock Text="Absteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingZeitaufwand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="ZeitaufwandAufsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowUp}" />
+                                    <TextBlock Text="Aufsteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingZeitaufwand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="false" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.SortingZeitaufwand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                    <!--#endregion-->
+                    <!--#region Status-->
+                    <MenuItem Header="Status">
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="StatusAbsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowDown}" />
+                                    <TextBlock Text="Absteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingStatus, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding SortingCommand}"
+                            CommandParameter="StatusAufsteigend"
+                            FontWeight="Normal">
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon Style="{StaticResource ItemArrowUp}" />
+                                    <TextBlock Text="Aufsteigend" />
+                                </StackPanel>
+                            </MenuItem.Header>
+                            <MenuItem.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.SortingStatus, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.SortingAscanding, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="false" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource BGH-Color}" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </MenuItem.Style>
+                        </MenuItem>
+                        <MenuItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignMenuItem}" TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.SortingStatus, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+                    <!--#endregion-->
+                </MenuItem>
+            </Menu>
+            <Menu>
+                <MenuItem>
+                    <MenuItem.Header>
+                        <MD:PackIcon
+                            Width="25"
+                            Height="25"
+                            Foreground="DarkSlateGray"
+                            Kind="Filter" />
+                    </MenuItem.Header>
+                    <MenuItem Visibility="{Binding ShowUser, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <MenuItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Column="0"
+                                    Margin="0,0,15,0"
+                                    Content="Antragsteller:" />
+                                <ComboBox
+                                    Grid.Column="1"
+                                    DisplayMemberPath="Item"
+                                    ItemsSource="{Binding FilterAntragstellerList}"
+                                    SelectedItem="{Binding FilterAntragstellerSelected}" />
+                            </Grid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Column="0"
+                                    Margin="0,0,15,0"
+                                    Content="Meldeart:" />
+                                <ComboBox
+                                    Grid.Column="1"
+                                    DisplayMemberPath="Item"
+                                    ItemsSource="{Binding FilterMeldeartList}"
+                                    SelectedItem="{Binding FilterMeldeartSelected}" />
+                            </Grid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Column="0"
+                                    Margin="0,0,15,0"
+                                    Content="Tätigkeitsart:" />
+                                <ComboBox
+                                    Grid.Column="1"
+                                    DisplayMemberPath="Item"
+                                    ItemsSource="{Binding FilterTaetigkeitsartList}"
+                                    SelectedItem="{Binding FilterTaetigkeitsartSelected}" />
+                            </Grid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Column="0"
+                                    Margin="0,0,15,0"
+                                    Content="Status:" />
+                                <ComboBox
+                                    Grid.Column="1"
+                                    DisplayMemberPath="Item"
+                                    ItemsSource="{Binding FilterStatusList}"
+                                    SelectedItem="{Binding FilterStatusSelected}" />
+                            </Grid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Margin="0,10,0,0">
+                        <MenuItem.Header>
+                            <Button
+                                Command="{Binding ReSetFilterCommand}"
+                                Content="Filter zurücksetzen"
+                                Style="{StaticResource Button_Master}" />
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+        </StackPanel>
+        <!--<TextBlock
+            Grid.Row="0"
+            Margin="0,0,0,15"
+            Style="{StaticResource Style_Textblock_Titel_Unter1}"
+            Text="{Binding Titel}" />-->
+        <!--<Grid Grid.Row="1" Margin="0,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+        -->
+        <!--<MD:Card Grid.Column="0" Style="{StaticResource ARListCard}">-->
+        <!--
+            <Grid HorizontalAlignment="Center" Style="{StaticResource GridMenu}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource TextboxMenu}" Text="SORTIERUNG" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    MD:HintAssist.Hint="Kriterium:"
+                    DisplayMemberPath="Item"
+                    ItemsSource="{Binding SortingList}"
+                    SelectedItem="{Binding SelectedSorting, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource Combobox_ARList}" />
+                <StackPanel
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="15,0,0,0">
+                    <RadioButton
+                        Margin="0,0,0,10"
+                        Content="Aufsteigend"
+                        IsChecked="{Binding RBAscending, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource RadioButton_Base}" />
+                    <RadioButton
+                        Content="Absteigend"
+                        IsChecked="{Binding RBDescanding, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource RadioButton_Base}" />
+                </StackPanel>
+
+            </Grid>
+        -->
+        <!--</MD:Card>-->
+        <!--<MD:Card Grid.Column="1" Style="{StaticResource ARListCard}">-->
+        <!--
+            <Grid
+                Grid.Column="2"
+                HorizontalAlignment="Center"
+                Style="{StaticResource GridMenu}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource TextboxMenu}" Text="FILTER" />
+                <WrapPanel Grid.Row="1">
+                    <ComboBox
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Top"
+                        MD:HintAssist.Hint="Tätigkeitsart:"
+                        Style="{StaticResource Combobox_ARList}" />
+                    <ComboBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalAlignment="Top"
+                        MD:HintAssist.Hint="Status:"
+                        Style="{StaticResource Combobox_ARList}" />
+                    <ComboBox
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        VerticalAlignment="Top"
+                        MD:HintAssist.Hint="Meldeart:"
+                        Style="{StaticResource Combobox_ARList}" />
+
+
+                </WrapPanel>
+            </Grid>
+        -->
+        <!--</MD:Card>-->
+        <!--
+            <Border
+                Grid.Column="1"
+                Margin="0,0"
+                Style="{StaticResource Expander_Border_Vertical}" />
+
+        </Grid>-->
+
+        <!--<MD:Card Grid.Row="2" Style="{StaticResource ARListCard}">-->
+        <ListView
+            x:Name="listView"
+            Grid.Row="1"
+            Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualHeight}"
+            MaxHeight="550"
+            Margin="0,30,0,0"
+            ItemsSource="{Binding ActivityRequestsView, UpdateSourceTrigger=PropertyChanged}"
+            ScrollViewer.HorizontalScrollBarVisibility="Visible"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            SelectedItem="{Binding SelectedActivityRequest, UpdateSourceTrigger=PropertyChanged}"
+            SelectionMode="Single">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding EditCommand}" CommandParameter="{Binding ElementName=ListViewUser, Path=SelectedItem}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <ListView.View>
+                <GridView>
+                    <!--<GridViewColumn
+                        Width="20"
+                        DisplayMemberBinding="{Binding Changed}"
+                        Header="" />-->
+                    <GridViewColumn
+                        Width="{Binding Path=DataContext.WidthUser, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
+                        DisplayMemberBinding="{Binding ARUser.Fullname, TargetNullValue=[keine Angabe]}"
+                        Header="Antragsteller"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="130"
+                        DisplayMemberBinding="{Binding ARTitel, TargetNullValue=[keine Angabe]}"
+                        Header="Titel"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="150"
+                        DisplayMemberBinding="{Binding ActivityRequestMeldeArt.ActivityRequestMeldeArtText, TargetNullValue=[keine Angabe]}"
+                        Header="Meldeart"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="150"
+                        DisplayMemberBinding="{Binding ActivityRequestTyp.ActivityRequestTypText, TargetNullValue=[keine Angabe]}"
+                        Header="Tätigkeitsart"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="150"
+                        DisplayMemberBinding="{Binding ARDatum, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}"
+                        Header="Eintragungsdatum"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="130"
+                        DisplayMemberBinding="{Binding ARVerguetung, TargetNullValue=[keine Angabe], StringFormat={}{0:c}, ConverterCulture=de-DE}"
+                        Header="Vergütung"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="80"
+                        DisplayMemberBinding="{Binding AdventagesCount, TargetNullValue=[keine Angabe], ConverterCulture=de-DE}"
+                        Header="Vorteile"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="130"
+                        DisplayMemberBinding="{Binding Gesamtzeitaufwand, TargetNullValue=[keine Angabe], ConverterCulture=de-DE}"
+                        Header="Zeitaufwand"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="150"
+                        DisplayMemberBinding="{Binding Status, TargetNullValue=[keine Angabe], ConverterCulture=de-DE}"
+                        Header="Status"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <MD:PackIcon
+                                        x:Name="PI_Check"
+                                        Foreground="Green"
+                                        Kind="Check"
+                                        Style="{StaticResource PackIcon_AR}" />
+                                    <MD:PackIcon
+                                        x:Name="PI_Exclamation"
+                                        Foreground="Black"
+                                        Kind="Exclamation"
+                                        Style="{StaticResource PackIcon_AR}" />
+                                    <MD:PackIcon
+                                        x:Name="PI_Reject"
+                                        Foreground="Red"
+                                        Kind="Close"
+                                        Style="{StaticResource PackIcon_AR}" />
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ARCheck}" Value="true" />
+                                            <Condition Binding="{Binding Path=DataContext.ShowSign, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="PI_Check" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ARExclamation}" Value="true" />
+                                            <Condition Binding="{Binding Path=DataContext.ShowSign, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="PI_Exclamation" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ARRejected}" Value="true" />
+                                            <Condition Binding="{Binding Path=DataContext.ShowSign, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="PI_Reject" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ARCheck}" Value="true" />
+                                            <Condition Binding="{Binding ARZustaendigkeitsbereich}" Value="5" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="PI_Check" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ARRejected}" Value="true" />
+                                            <Condition Binding="{Binding ARZustaendigkeitsbereich}" Value="5" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="PI_Reject" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+
+
+
+                                    <!--<DataTrigger Binding="{Binding ARCheck}" Value="true">
+                                        <Setter TargetName="PI_Check" Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ARExclamation}" Value="true">
+                                        <Setter TargetName="PI_Exclamation" Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ARRejected}" Value="true">
+                                        <Setter TargetName="PI_Reject" Property="Visibility" Value="Visible" />
+                                    </DataTrigger>-->
+
+
+                                    <!--<MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />
+                                            <Condition Binding="{Binding Path=DataContext.ShowEdit, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="Btn_Check" Property="Visibility" Value="Visible" />
+                                            <Setter TargetName="Btn_Exclamation" Property="Visibility" Value="Visible" />
+                                            <Setter TargetName="Btn_Reject" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>-->
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="250">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button
+                                        x:Name="Btn_Edit"
+                                        Command="{Binding Path=DataContext.EditCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                        Style="{StaticResource Button_GridView}"
+                                        ToolTip="Anzeige/Antrag-Details anzeigen">
+                                        <MD:PackIcon Padding="0" Kind="TextSearchVariant" />
+                                    </Button>
+                                    <Button
+                                        x:Name="Btn_Bin"
+                                        Command="{Binding Path=DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                        Style="{StaticResource Button_GridView}"
+                                        ToolTip="Anzeige/Antrag löschen">
+                                        <MD:PackIcon Padding="0" Kind="Bin" />
+                                    </Button>
+                                    <Button
+                                        x:Name="Btn_Duplicate"
+                                        Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                        Style="{StaticResource Button_GridView}"
+                                        ToolTip="Kopie als neue/n Anzeige/Antrag anlegen">
+                                        <MD:PackIcon Padding="0" Kind="ContentDuplicate" />
+                                    </Button>
+                                    <Button
+                                        x:Name="Btn_Reject"
+                                        Command="{Binding Path=DataContext.RejectCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
+                                        Style="{StaticResource Button_GridView}"
+                                        ToolTip="Antrag ablehnen">
+                                        <MD:PackIcon Padding="0" Kind="CloseOctagon" />
+                                    </Button>
+                                    <Button
+                                        x:Name="Btn_Send"
+                                        Command="{Binding Path=DataContext.SendCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
+                                        Style="{StaticResource Button_GridView}"
+                                        ToolTip="{Binding Path=DataContext.ToolTipSend, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}">
+                                        <MD:PackIcon Padding="0" Kind="EmailAdd" />
+                                    </Button>
+                                    <Button
+                                        x:Name="Btn_Word"
+                                        Command="{Binding Path=DataContext.WordCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
+                                        Style="{StaticResource Button_GridView}"
+                                        ToolTip="{Binding Path=DataContext.ToolTipSend, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}">
+                                        <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
+                                    </Button>
+
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
+                                        <Setter TargetName="Btn_Edit" Property="Visibility" Value="Visible" />
+                                        <Setter TargetName="Btn_Duplicate" Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />
+                                            <Condition Binding="{Binding Path=DataContext.ShowSend, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="Btn_Send" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />
+                                            <Condition Binding="{Binding Path=DataContext.ShowReject, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="Btn_Reject" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />
+                                            <Condition Binding="{Binding Path=DataContext.ShowWord, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="Btn_Word" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />
+                                            <Condition Binding="{Binding Path=DataContext.ShowBin, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="Btn_Bin" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+
+                                    <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
+                                        <Setter TargetName="Btn_Bin" Property="Visibility" Value="Visible" />
+                                        <Setter TargetName="Btn_Edit" Property="Visibility" Value="Visible" />
+                                        <Setter TargetName="Btn_Send" Property="Visibility" Value="Visible" />
+                                    </DataTrigger>-->
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <!--</MD:Card>-->
+        <Button
+            Grid.Row="4"
+            Margin="30,20,0,10"
+            HorizontalAlignment="Left"
+            Command="{Binding NewRequestCommand}"
+            Content="Neuer Antrag"
+            Style="{StaticResource Button_Master}"
+            Visibility="Collapsed" />
+    </Grid>
+</UserControl>

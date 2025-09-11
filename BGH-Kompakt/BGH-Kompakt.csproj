@@ -1,0 +1,1070 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5B8A83A6-7C27-4D8A-8EE7-1AC5ED39C87F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>BGH_Kompakt</RootNamespace>
+    <AssemblyName>BGH-Kompakt</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <LangVersion>8.0</LangVersion>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>3.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <!--<Nullable>enable</Nullable>-->
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>LogoBGH.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
+      <HintPath>..\packages\ControlzEx.4.3.0\lib\net462\ControlzEx.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=51482d6f650b2b3f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.2.0.0\lib\net47\MahApps.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignColors, Version=2.0.6.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.2.0.6\lib\net452\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.MahApps, Version=0.2.2.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.MahApps.0.2.2\lib\net452\MaterialDesignThemes.MahApps.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=4.5.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.4.5.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.8.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.8.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.6.0.0\lib\net461\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\lib\net461\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Options.6.0.0\lib\net461\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.6.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp, Version=6.1.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.6.1.1\lib\netstandard2.0\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting, Version=6.1.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.6.1.1\lib\netstandard2.0\PdfSharp.Charting.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Quality, Version=6.1.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.6.1.1\lib\netstandard2.0\PdfSharp.Quality.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Snippets, Version=6.1.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.6.1.1\lib\netstandard2.0\PdfSharp.Snippets.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.System, Version=6.1.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.6.1.1\lib\netstandard2.0\PdfSharp.System.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.WPFonts, Version=6.1.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.6.1.1\lib\netstandard2.0\PdfSharp.WPFonts.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.8.0.7\lib\net462\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Pkcs, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Pkcs.8.0.0\lib\net462\System.Security.Cryptography.Pkcs.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AttchedProperties\WebBrowserBehaviors.cs" />
+    <Compile Include="Classes\ActivityRequestClasses\ActivityRequestDataFile.cs" />
+    <Compile Include="Classes\BereichMP.cs" />
+    <Compile Include="Classes\ComboboxItems.cs" />
+    <Compile Include="Classes\Helper\ComboboxItem.cs" />
+    <Compile Include="Classes\Helper\ScienceAuthor.cs" />
+    <Compile Include="Classes\SystemSettings\PageInfo.cs" />
+    <Compile Include="Classes\Test\FileData.cs" />
+    <Compile Include="Classes\Test\TestItem.cs" />
+    <Compile Include="Classes\_LookUp\MP\MPEMail.cs" />
+    <Compile Include="Classes\_LookUp\MP\MPSetting.cs" />
+    <Compile Include="Classes\_LookUp\MP\MPVermerk.cs" />
+    <Compile Include="Converter\BoolToWidthConverter.cs" />
+    <Compile Include="Dtos\EMailResponse.cs" />
+    <Compile Include="Enums\AREnums.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202507030418003_InitialAR.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202507030418003_InitialAR.Designer.cs">
+      <DependentUpon>202507030418003_InitialAR.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202507041314112_Assurance.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202507041314112_Assurance.Designer.cs">
+      <DependentUpon>202507041314112_Assurance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202507280722052_ARNoteAdmin.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202507280722052_ARNoteAdmin.Designer.cs">
+      <DependentUpon>202507280722052_ARNoteAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202508181137426_DataFiles.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202508181137426_DataFiles.Designer.cs">
+      <DependentUpon>202508181137426_DataFiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202508190621526_ARVerguetungType.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202508190621526_ARVerguetungType.Designer.cs">
+      <DependentUpon>202508190621526_ARVerguetungType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202508252043560_ARRejected.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202508252043560_ARRejected.Designer.cs">
+      <DependentUpon>202508252043560_ARRejected.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202509030634241_ScienceAuthor.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202509030634241_ScienceAuthor.Designer.cs">
+      <DependentUpon>202509030634241_ScienceAuthor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202509040422173_HasOptionalARClient.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202509040422173_HasOptionalARClient.Designer.cs">
+      <DependentUpon>202509040422173_HasOptionalARClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202509091651228_3_014_0.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202509091651228_3_014_0.Designer.cs">
+      <DependentUpon>202509091651228_3_014_0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.cs" />
+    <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.Designer.cs">
+      <DependentUpon>202507090547129_MPEMailMPSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202507091539261_Vermerke.cs" />
+    <Compile Include="Migrartions\MP\202507091539261_Vermerke.Designer.cs">
+      <DependentUpon>202507091539261_Vermerke.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202507110630070_SortingMP.cs" />
+    <Compile Include="Migrartions\Users\202507110630070_SortingMP.Designer.cs">
+      <DependentUpon>202507110630070_SortingMP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202507140325575_FilterLS.cs" />
+    <Compile Include="Migrartions\Users\202507140325575_FilterLS.Designer.cs">
+      <DependentUpon>202507140325575_FilterLS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202508191535020_BSCWSubFolders.cs" />
+    <Compile Include="Migrartions\Users\202508191535020_BSCWSubFolders.Designer.cs">
+      <DependentUpon>202508191535020_BSCWSubFolders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202509050913148_Update3_013.cs" />
+    <Compile Include="Migrartions\Users\202509050913148_Update3_013.Designer.cs">
+      <DependentUpon>202509050913148_Update3_013.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ActivityRequestService\ActivityRequestManager.cs" />
+    <Compile Include="Services\Extentions\DirectoryInfoExtensions.cs" />
+    <Compile Include="Classes\Helper\ActionStatus.cs" />
+    <Compile Include="Classes\Helper\CompareBSCW.cs" />
+    <Compile Include="Classes\Helper\MailAttechment.cs" />
+    <Compile Include="Classes\Helper\StringContainer.cs" />
+    <Compile Include="Classes\MP\MPDecisionFile.cs" />
+    <Compile Include="Classes\MP\MPDecisionImportWord.cs" />
+    <Compile Include="Classes\MP\MPDecisionImport.cs" />
+    <Compile Include="Classes\Helper\SelectableItemWrapper.cs" />
+    <Compile Include="Classes\Kalenderwoche.cs" />
+    <Compile Include="Classes\MP\MPDecision.cs" />
+    <Compile Include="Classes\MP\MPEMailRecipient.cs" />
+    <Compile Include="Classes\MP\MPImportFile.cs" />
+    <Compile Include="Classes\MP\MPImportHelper.cs" />
+    <Compile Include="Classes\MP\MPImportResult.cs" />
+    <Compile Include="Classes\MP\MPUserDecision.cs" />
+    <Compile Include="Classes\MP\MPWeek.cs" />
+    <Compile Include="Classes\Senate\Senat.cs" />
+    <Compile Include="Classes\Senate\SenatAktenzeichen.cs" />
+    <Compile Include="Classes\Senate\SenatSpruchgruppe.cs" />
+    <Compile Include="Classes\Sitzungsunterlagen\Helper\CompareFile.cs" />
+    <Compile Include="Classes\Sitzungsunterlagen\VerfahrenVotenmappe.cs" />
+    <Compile Include="Classes\SystemSettings\ProgrammSetting.cs" />
+    <Compile Include="Classes\Test\ItemPresenter.cs" />
+    <Compile Include="Classes\Senate\SenatSetting.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityClientTyp.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestArbitrationClient.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestArbitrationTyp.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestFrequency.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestOrtArt.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestScienceAuthorName.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestScienceCategorie.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestMeldeArt.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestScienceTyp.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestTyp.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ARVerguetungAdventage.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ARVerguetungAdventageTyp.cs" />
+    <Compile Include="Classes\_LookUp\MP\MPBE.cs" />
+    <Compile Include="Classes\_LookUp\MP\MPCategory.cs" />
+    <Compile Include="Classes\_LookUp\MP\MPSenat.cs" />
+    <Compile Include="Classes\_LookUp\MP\MPSenatAbbreviation.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\AdminStatus.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\Dienstbezeichnung.cs" />
+    <Compile Include="Classes\UserClasses\UserFilterMP.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\Geschlecht.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\Position.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\Status.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\Titel.cs" />
+    <Compile Include="Classes\MontagspostFilter.cs" />
+    <Compile Include="Classes\ActivityRequestClasses\ActivityClient.cs" />
+    <Compile Include="Classes\ActivityRequestClasses\ActivityRequest.cs" />
+    <Compile Include="Classes\Person.cs" />
+    <Compile Include="Classes\Postions.cs" />
+    <Compile Include="Classes\SenatKW.cs" />
+    <Compile Include="Classes\SliderButton.cs" />
+    <Compile Include="Classes\SystemSetting.cs" />
+    <Compile Include="Classes\UnterlagenMP.cs" />
+    <Compile Include="Classes\UserClasses\User.cs" />
+    <Compile Include="Classes\Voten.cs" />
+    <Compile Include="Command\RelayCommand.cs" />
+    <Compile Include="Components\AnimatedContentControl.xaml.cs">
+      <DependentUpon>AnimatedContentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\DragDropExtention.cs" />
+    <Compile Include="Components\DropFilesBehaviorExtension.cs" />
+    <Compile Include="Components\WebBrowser.cs" />
+    <Compile Include="Converter\BoolToColorConverter.cs" />
+    <Compile Include="Converter\BoolToStringConverter.cs" />
+    <Compile Include="Converter\DocxToPDFConverter.cs" />
+    <Compile Include="Converter\SenatsConverter.cs" />
+    <Compile Include="Dtos\DBResponse.cs" />
+    <Compile Include="EntityConfigurations\ActivityRequestDBContext\ActivityClientConfigurations.cs" />
+    <Compile Include="EntityConfigurations\ActivityRequestDBContext\ActivityRequestConfigurations.cs" />
+    <Compile Include="EntityConfigurations\ActivityRequestDBContext\ActivityRequestSeeder.cs" />
+    <Compile Include="EntityConfigurations\MP\MPConfiguration.cs" />
+    <Compile Include="EntityConfigurations\MP\MPSeed.cs" />
+    <Compile Include="EntityConfigurations\MP\MPSenatConfiguration.cs" />
+    <Compile Include="EntityConfigurations\UserDBContext\UserSeeder.cs" />
+    <Compile Include="EntityConfigurations\UserDBContext\UserConfiguration.cs" />
+    <Compile Include="Enums\MPEnums.cs" />
+    <Compile Include="Enums\UserEnums.cs" />
+    <Compile Include="Enums\SettingEnums.cs" />
+    <Compile Include="Enums\SitzungsunterlagenEnums.cs" />
+    <Compile Include="Migrartions\ActivityRequests\ConfigurationActivityRequest.cs" />
+    <Compile Include="Migrartions\MP\202501301414587_InitialMP.cs" />
+    <Compile Include="Migrartions\MP\202501301414587_InitialMP.Designer.cs">
+      <DependentUpon>202501301414587_InitialMP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202501310518185_TypAnzeige.cs" />
+    <Compile Include="Migrartions\MP\202501310518185_TypAnzeige.Designer.cs">
+      <DependentUpon>202501310518185_TypAnzeige.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202502060918051_MPUserStage.cs" />
+    <Compile Include="Migrartions\MP\202502060918051_MPUserStage.Designer.cs">
+      <DependentUpon>202502060918051_MPUserStage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202502170421086_MPBE.cs" />
+    <Compile Include="Migrartions\MP\202502170421086_MPBE.Designer.cs">
+      <DependentUpon>202502170421086_MPBE.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202502170624273_MPBEString.cs" />
+    <Compile Include="Migrartions\MP\202502170624273_MPBEString.Designer.cs">
+      <DependentUpon>202502170624273_MPBEString.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202502171814099_MPVermerk.cs" />
+    <Compile Include="Migrartions\MP\202502171814099_MPVermerk.Designer.cs">
+      <DependentUpon>202502171814099_MPVermerk.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202503031407468_VermerkAnzeige.cs" />
+    <Compile Include="Migrartions\MP\202503031407468_VermerkAnzeige.Designer.cs">
+      <DependentUpon>202503031407468_VermerkAnzeige.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202505090944265_EMail.cs" />
+    <Compile Include="Migrartions\MP\202505090944265_EMail.Designer.cs">
+      <DependentUpon>202505090944265_EMail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\ConfigurationMP.cs" />
+    <Compile Include="Migrartions\Users\202506152030562_InitialUser.cs" />
+    <Compile Include="Migrartions\Users\202506152030562_InitialUser.Designer.cs">
+      <DependentUpon>202506152030562_InitialUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202506161009483_TestZahl.cs" />
+    <Compile Include="Migrartions\Users\202506161009483_TestZahl.Designer.cs">
+      <DependentUpon>202506161009483_TestZahl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202506200435117_AktenzeichenNameRaw.cs" />
+    <Compile Include="Migrartions\Users\202506200435117_AktenzeichenNameRaw.Designer.cs">
+      <DependentUpon>202506200435117_AktenzeichenNameRaw.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202506230328565_EMailDokstelle.cs" />
+    <Compile Include="Migrartions\Users\202506230328565_EMailDokstelle.Designer.cs">
+      <DependentUpon>202506230328565_EMailDokstelle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202506240927088_MPEMailNotification.cs" />
+    <Compile Include="Migrartions\Users\202506240927088_MPEMailNotification.Designer.cs">
+      <DependentUpon>202506240927088_MPEMailNotification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\ConfigurationUser.cs" />
+    <Compile Include="MigrationsSave_SQLStrings\SaveConfigurations.cs" />
+    <Compile Include="MigrationsSave_SQLStrings\SaveSQL-Strings.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\DBContexts\ActivityRequestDBContext.cs" />
+    <Compile Include="Services\Extentions\FileInfoExtensions.cs" />
+    <Compile Include="Services\Fillclasses\UserFill.cs" />
+    <Compile Include="Services\DBContexts\MPDBContext.cs" />
+    <Compile Include="Services\DBContexts\UserDBContext.cs" />
+    <Compile Include="Services\DBUnit.cs" />
+    <Compile Include="Services\DBUnitBase.cs" />
+    <Compile Include="Services\EMailVersand.cs" />
+    <Compile Include="Services\Extentions\Stringextentions.cs" />
+    <Compile Include="Services\FillKlassen.cs" />
+    <Compile Include="Services\Interfaces\DropInterface.cs" />
+    <Compile Include="Services\MontagspostService\MontagsPostManager.cs" />
+    <Compile Include="Services\SystemComponents\BGHKompaktSystemInfo.cs" />
+    <Compile Include="Services\SystemComponents\Logger.cs" />
+    <Compile Include="Services\SystemComponents\ViewManager.cs" />
+    <Compile Include="Services\UserService\UserManager.cs" />
+    <Compile Include="ViewModel\MainWindow\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\FilterViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\MontagsPostBEViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\MontagsPostFilterViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\MontagspostImportViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\MontagsPostVermerkViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\MontagsPostViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetgkeitenViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenAnzeigeViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenListViewModel.cs" />
+    <Compile Include="ViewModel\PersonChangeViewModel.cs" />
+    <Compile Include="ViewModel\PersonenViewModel.cs" />
+    <Compile Include="ViewModel\PString.cs" />
+    <Compile Include="ViewModel\Sitzungsunterlagen\BSCWServerViewModel.cs" />
+    <Compile Include="ViewModel\Sitzungsunterlagen\SitzungsunterlagenStrafViewModel.cs" />
+    <Compile Include="ViewModel\Sitzungsunterlagen\SitzungsunterlagenViewModel.cs" />
+    <Compile Include="ViewModel\Sitzungsunterlagen\VotenMappeViewModel.cs" />
+    <Compile Include="ViewModel\Start\StartViewModel.cs" />
+    <Compile Include="ViewModel\SystemSettings\AdminViewModel.cs" />
+    <Compile Include="ViewModel\SystemSettings\MPSettingsViewModel.cs" />
+    <Compile Include="ViewModel\SystemSettings\ProgrammSettingViewModel.cs" />
+    <Compile Include="ViewModel\SystemSettings\SystemSettingViewModel.cs" />
+    <Compile Include="ViewModel\TestViewModel.cs" />
+    <Compile Include="ViewModel\Userlogin\UserLoginViewModel.cs" />
+    <Compile Include="ViewModel\Userlogin\UserPropertyViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="ViewModel\VotenViewModel.cs" />
+    <Compile Include="Views\Pages\Anwaltsauswahl\AnwaltswahlView.xaml.cs">
+      <DependentUpon>AnwaltswahlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml.cs">
+      <DependentUpon>MontagsPostAdminView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Sitzungsunterlagen\SitzungsunterlagenStrafView.xaml.cs">
+      <DependentUpon>SitzungsunterlagenStrafView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Start\InstructionsView.xaml.cs">
+      <DependentUpon>InstructionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\TestDesign\StartTest.xaml.cs">
+      <DependentUpon>StartTest.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\InputBoxBGH.xaml.cs">
+      <DependentUpon>InputBoxBGH.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Sitzungsunterlagen\Kanzleiunterlagen.xaml.cs">
+      <DependentUpon>Kanzleiunterlagen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagsPostBE.xaml.cs">
+      <DependentUpon>MontagsPostBE.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagsPostFilterView.xaml.cs">
+      <DependentUpon>MontagsPostFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagspostImportView.xaml.cs">
+      <DependentUpon>MontagspostImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagsPostVermerkView.xaml.cs">
+      <DependentUpon>MontagsPostVermerkView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagsPostView.xaml.cs">
+      <DependentUpon>MontagsPostView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenAnzeigeView.xaml.cs">
+      <DependentUpon>NebentaetigkeitenAnzeigeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenListView.xaml.cs">
+      <DependentUpon>NebentaetigkeitenListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenView.xaml.cs">
+      <DependentUpon>NebentaetigkeitenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Settings\MPSettingsView.xaml.cs">
+      <DependentUpon>MPSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Settings\ProgrammSettingsView.xaml.cs">
+      <DependentUpon>ProgrammSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Settings\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Settings\SettingViewStart.xaml.cs">
+      <DependentUpon>SettingViewStart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Settings\SystemSettingView.xaml.cs">
+      <DependentUpon>SystemSettingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Sitzungsunterlagen\SitzungsplaeneView.xaml.cs">
+      <DependentUpon>SitzungsplaeneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Sitzungsunterlagen\BSCWServerView.xaml.cs">
+      <DependentUpon>BSCWServerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Sitzungsunterlagen\SitzungsunterlagenView.xaml.cs">
+      <DependentUpon>SitzungsunterlagenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Sitzungsunterlagen\VotenMappeView.xaml.cs">
+      <DependentUpon>VotenMappeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Sitzungsunterlagen\SpruchgruppenView.xaml.cs">
+      <DependentUpon>SpruchgruppenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Settings\AdminView.xaml.cs">
+      <DependentUpon>AdminView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Start\StartView.xaml.cs">
+      <DependentUpon>StartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\UserLogin\UserLoginView.xaml.cs">
+      <DependentUpon>UserLoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\UserLogin\UserPropertyView.xaml.cs">
+      <DependentUpon>UserPropertyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\UserLogin\UserSwitchWindow.xaml.cs">
+      <DependentUpon>UserSwitchWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\PreviewEMail.xaml.cs">
+      <DependentUpon>PreviewEMail.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Components\AnimatedContentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Sitzungsunterlagen\SitzungsunterlagenStrafView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Start\InstructionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\TestDesign\StartTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Richter.cs" />
+    <Compile Include="Classes\Sitzungsdienste.cs" />
+    <Compile Include="Classes\Sitzungsunterlagen\Sitzungstage.cs" />
+    <Compile Include="Classes\Spruchgruppe.cs" />
+    <Compile Include="Classes\SpruchgruppeAnzeige.cs" />
+    <Compile Include="Classes\Sitzungsunterlagen\Unterlagen.cs" />
+    <Compile Include="Classes\Sitzungsunterlagen\Verfahren.cs" />
+    <Compile Include="Classes\Vintages.cs" />
+    <Compile Include="Converter\BoolToVisibilityConverter.cs" />
+    <Compile Include="Views\Windows\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Resources\Colors\Color.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Controls\Checkbox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Controls\Button.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Controls\Combobox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Controls\Container.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Controls\Datepicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Controls\DataGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Controls\MaterialDesignControls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Controls\Expander.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Controls\NavigationButtons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Resources\Controls\Radionbutton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Controls\Sliderbutton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Controls\ToggleSwitch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ImageResources\Styles\Image.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ImageResources\Styles\PackIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Text\AnzeigeTextboxen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Resources\Text\Label.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Text\Textblock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Text\Textbox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Anwaltsauswahl\AnwaltswahlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\InputBoxBGH.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Sitzungsunterlagen\Kanzleiunterlagen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagsPostBE.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagsPostFilterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagspostImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagsPostVermerkView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagsPostView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityRequests\NebentaetigkeitenAnzeigeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityRequests\NebentaetigkeitenListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityRequests\NebentaetigkeitenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Settings\MPSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Settings\ProgrammSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Settings\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Settings\SettingViewStart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Settings\SystemSettingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Sitzungsunterlagen\SitzungsplaeneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Sitzungsunterlagen\BSCWServerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Sitzungsunterlagen\SitzungsunterlagenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Sitzungsunterlagen\VotenMappeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Sitzungsunterlagen\SpruchgruppenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Settings\AdminView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Start\StartView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\UserLogin\UserLoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\UserLogin\UserPropertyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\UserLogin\UserSwitchWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\PreviewEMail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202507030418003_InitialAR.resx">
+      <DependentUpon>202507030418003_InitialAR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202507041314112_Assurance.resx">
+      <DependentUpon>202507041314112_Assurance.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202507280722052_ARNoteAdmin.resx">
+      <DependentUpon>202507280722052_ARNoteAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202508181137426_DataFiles.resx">
+      <DependentUpon>202508181137426_DataFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202508190621526_ARVerguetungType.resx">
+      <DependentUpon>202508190621526_ARVerguetungType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202508252043560_ARRejected.resx">
+      <DependentUpon>202508252043560_ARRejected.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202509030634241_ScienceAuthor.resx">
+      <DependentUpon>202509030634241_ScienceAuthor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202509040422173_HasOptionalARClient.resx">
+      <DependentUpon>202509040422173_HasOptionalARClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202509091651228_3_014_0.resx">
+      <DependentUpon>202509091651228_3_014_0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202501301414587_InitialMP.resx">
+      <DependentUpon>202501301414587_InitialMP.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202501310518185_TypAnzeige.resx">
+      <DependentUpon>202501310518185_TypAnzeige.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202502060918051_MPUserStage.resx">
+      <DependentUpon>202502060918051_MPUserStage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202502170421086_MPBE.resx">
+      <DependentUpon>202502170421086_MPBE.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202502170624273_MPBEString.resx">
+      <DependentUpon>202502170624273_MPBEString.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202502171814099_MPVermerk.resx">
+      <DependentUpon>202502171814099_MPVermerk.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202503031407468_VermerkAnzeige.resx">
+      <DependentUpon>202503031407468_VermerkAnzeige.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202505090944265_EMail.resx">
+      <DependentUpon>202505090944265_EMail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202507090547129_MPEMailMPSetting.resx">
+      <DependentUpon>202507090547129_MPEMailMPSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202507091539261_Vermerke.resx">
+      <DependentUpon>202507091539261_Vermerke.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202506152030562_InitialUser.resx">
+      <DependentUpon>202506152030562_InitialUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202506161009483_TestZahl.resx">
+      <DependentUpon>202506161009483_TestZahl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202506200435117_AktenzeichenNameRaw.resx">
+      <DependentUpon>202506200435117_AktenzeichenNameRaw.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202506230328565_EMailDokstelle.resx">
+      <DependentUpon>202506230328565_EMailDokstelle.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202506240927088_MPEMailNotification.resx">
+      <DependentUpon>202506240927088_MPEMailNotification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202507110630070_SortingMP.resx">
+      <DependentUpon>202507110630070_SortingMP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202507140325575_FilterLS.resx">
+      <DependentUpon>202507140325575_FilterLS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202508191535020_BSCWSubFolders.resx">
+      <DependentUpon>202508191535020_BSCWSubFolders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202509050913148_Update3_013.resx">
+      <DependentUpon>202509050913148_Update3_013.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="ConnectionString.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\BGH.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\chairs-2181916_1280.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\holzhammer-und-buecher-auf-holztisch.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Stühle.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\typewriter-2653187_1280.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Unterlagen.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Outlook">
+      <Guid>{00062FFF-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>9</VersionMajor>
+      <VersionMinor>6</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Word">
+      <Guid>{00020905-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\hope-house-press-leather-diary-studio-PJzc7LOt2Ig-unsplash.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\notepad-1130743_1280.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\first.png" />
+    <Resource Include="Images\first_dis.png" />
+    <Resource Include="Images\last.png" />
+    <Resource Include="Images\last_dis.png" />
+    <Resource Include="Images\next.png" />
+    <Resource Include="Images\next_dis.png" />
+    <Resource Include="Images\previous.png" />
+    <Resource Include="Images\previous_dis.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Anleitung.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Einstellungen.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Montagspost.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Nebentaetigkeiten.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Trennungsgeld.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Bundesadler.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\List.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Admin.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LogoBGHIco.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LogoBGH.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\pen-2398693_1280.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Nebentätigkeit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Nebentaetigkeiten-stift-Admin.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Nebentaetigkeiten-stift.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Montagspost-Admin.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Resources\ImageResources\Images\Splashscreen.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </SplashScreen>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets" Condition="Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" />
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+</Project>

@@ -1,0 +1,43 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.AnwaltswahlView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Background="White">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                FontWeight="Bold"
+                Text="Anwaltswahl" />
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <Button
+                    x:Name="Btn_pdf_wandlung"
+                    Grid.Row="0"
+                    Width="250"
+                    Click="Btn_pdf_wandlung_Click"
+                    Content="Docx in pdf wandeln" />
+                <Button
+                    x:Name="Btn_Gesamtpdf_erstellen"
+                    Grid.Row="1"
+                    Width="250"
+                    Click="Btn_Gesamtpdf_erstellen_Click"
+                    Content="Gesamt-Pdf erstellen" />
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

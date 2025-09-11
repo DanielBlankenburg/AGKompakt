@@ -1,0 +1,14 @@
+﻿1;Blankenburg;Daniel;Dr.;blankenburg-daniel@bgh.bund.de";RiAG;2;1
+2;Langer;Nicole;;langer-nicole@bgh.bund.de;RinAG;2;1
+3;Schoppmeyer;Heinrich;Prof. Dr.;heinrich-Schoppmeyer@bgh.bund.de;VRiBGH;1;1
+4;Lohmann;Ilse;;Lohmann-Ilse@bgh.bund.de;RinBGH;1;2
+5;Möhring;Praxedis;;Moehring-Praxedis@bgh.bund.de;RinBGH;1;1
+6;Röhl;Christian;;Roehl-Christian@bgh.bund.de;RiBGH;1;1
+7;Schultz;Volker;Dr.;Schultz-Volker@bgh.bund.de;RiBGH;1;1
+8;Selbmann;Dorit;Dr.;Selbmann-Dorit@bgh.bund.de;RinBGH;1;1
+9;Harms;Sven;Dr.;Harms-Sven@bgh.bund.de;RiBGH;1;1
+10;Weinland;Alexander;;Weinland-Alexander@bgh.bund.de;RiBGH;1;1
+11;Labigne;Leonie;;Labigne-Leonie@bgh.bund.de;RinLG;2;1
+12;Hidding;Katharin;Dr.;Hidding-Katharina@bgh.bund.de;RinOLG;2;2
+13;Dittrich;Jöran;;Dittrich-Joeran@bgh.bund.de;RiLG;2;1
+14;Kunnes;Christian;;Kunnes-Christian@bgh.bund.de;RiBGH;2;1

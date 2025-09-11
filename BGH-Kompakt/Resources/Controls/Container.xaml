@@ -1,0 +1,58 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--#region Border-->
+    <Style x:Key="Style_Border_Color" TargetType="{x:Type Border}">
+        <Setter Property="Border.BorderBrush" Value="LightGray" />
+    </Style>
+
+    <Style
+        x:Key="Style_Border_Mainmenu"
+        BasedOn="{StaticResource Style_Border_Color}"
+        TargetType="{x:Type Border}">
+        <Setter Property="Padding" Value="0,20,0,20" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+    </Style>
+
+    <Style x:Key="Border_Import_Files" TargetType="Border">
+        <Setter Property="Margin" Value="0,10,0,0" />
+        <Setter Property="Padding" Value="10,15" />
+        <Setter Property="Background" Value="AliceBlue" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+
+    <Style x:Key="Style_Card_Content_Border" TargetType="{x:Type Border}">
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Stackpanel-->
+    <Style x:Key="Style_Stackpanel_Montagspost_Titel" TargetType="StackPanel">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="Margin" Value="10,10,0,0" />
+    </Style>
+
+    <Style x:Key="Style_Stackpanel_Montagspost_Under" TargetType="StackPanel">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="Margin" Value="30,10,0,0" />
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region Scrollviewer-->
+    <Style x:Key="Scrollviewer_Import_Files" TargetType="ScrollViewer">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="AllowDrop" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{StaticResource MaterialDesignFont}" />
+        <Setter Property="FontSize" Value="{DynamicResource BaseFontSize}" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+    </Style>
+    <!--#endregion-->
+
+
+</ResourceDictionary>

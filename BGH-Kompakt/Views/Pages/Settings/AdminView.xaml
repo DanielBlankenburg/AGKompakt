@@ -1,0 +1,265 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.SystemSettingsView.AdminView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.SystemSettingsView"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:systemsettings="clr-namespace:BGH_Kompakt.ViewModel.SystemSettings"
+    d:DataContext="{d:DesignInstance Type=systemsettings:AdminViewModel}"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Button_PackIcon"
+            BasedOn="{StaticResource MaterialDesignRaisedButton}"
+            TargetType="{x:Type Button}">
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Margin" Value="10,10,10,5" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style x:Key="Text_Header" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,10,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="Border_Login" TargetType="{x:Type Border}">
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="0,10,10,0" />
+            <Setter Property="MinHeight" Value="300" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource MaterialDesignPaper}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <MD:Card
+            Grid.Column="0"
+            Margin="20,10"
+            Padding="10">
+            <ListView
+                Name="ListViewUser"
+                ItemsSource="{Binding UserList, Mode=OneWay}"
+                SelectedItem="{Binding SelectedUser}"
+                SelectionMode="Single">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding ListViewDblClickCommand}" CommandParameter="{Binding ElementName=ListViewUser, Path=SelectedItem}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn
+                            Width="150"
+                            DisplayMemberBinding="{Binding NachName, TargetNullValue=[keine Angabe]}"
+                            Header="Nachname"
+                            HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                        <GridViewColumn
+                            Width="150"
+                            DisplayMemberBinding="{Binding VorName, TargetNullValue=[keine Angabe]}"
+                            Header="Vorname"
+                            HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </MD:Card>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <MD:Card
+                Grid.Row="0"
+                MaxHeight="500"
+                Margin="20,10"
+                Padding="10"
+                VerticalAlignment="Top">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.ColumnSpan="3"
+                        Style="{StaticResource Style_Textblock_Eingabefenster}"
+                        Text="Rollen" />
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Vertical">
+                            <TextBlock Style="{StaticResource Text_Header}" Text="Mögliche Rollen" />
+                            <Border Style="{StaticResource Border_Login}">
+                                <ListBox
+                                    MinWidth="150"
+                                    MaxHeight="280"
+                                    VerticalAlignment="Top"
+                                    DisplayMemberPath="AdminStatusText"
+                                    ItemsSource="{Binding AdminAll}"
+                                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                    SelectedItem="{Binding SelectedAdminAll}" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Column="1"
+                            MinWidth="50"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical">
+                            <Button
+                                Command="{Binding AddCommand}"
+                                Style="{StaticResource Button_PackIcon}"
+                                ToolTip="Hinzufügen einer Rolle">
+                                <MD:PackIcon Kind="Share" />
+                            </Button>
+                            <Button
+                                Command="{Binding RemoveCommand}"
+                                Style="{StaticResource Button_PackIcon}"
+                                ToolTip="Entfernen einer Rolle">
+                                <MD:PackIcon Kind="Reply" />
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Style="{StaticResource Text_Header}" Text="Auswählte Rollen" />
+                            <Border Style="{StaticResource Border_Login}">
+                                <ListBox
+                                    MinWidth="150"
+                                    MaxHeight="280"
+                                    VerticalAlignment="Top"
+                                    DisplayMemberPath="AdminStatusText"
+                                    ItemsSource="{Binding AdminUser}"
+                                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                    SelectedItem="{Binding SelectedAdminUser}" />
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                    <Grid
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Margin="0,20,0,0">
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding SaveCommand}"
+                                Content="Speichern"
+                                Style="{StaticResource Button_Master}" />
+                            <Button
+                                Margin="10,0,0,0"
+                                Command="{Binding QuitCommand}"
+                                Content="Abbrechen"
+                                Style="{StaticResource Button_Master}" />
+                        </StackPanel>
+
+                    </Grid>
+
+                </Grid>
+
+            </MD:Card>
+            <MD:Card
+                Grid.Row="1"
+                MaxHeight="500"
+                Margin="20,10"
+                Padding="10"
+                VerticalAlignment="Top">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Style="{StaticResource Style_Textblock_Eingabefenster}"
+                        Text="Senatsadminstration" />
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Vertical">
+                            <TextBlock Style="{StaticResource Text_Header}" Text="Mögliche Senate" />
+                            <Border Style="{StaticResource Border_Login}">
+                                <ListBox
+                                    MinWidth="150"
+                                    MaxHeight="280"
+                                    VerticalAlignment="Top"
+                                    DisplayMemberPath="SenatName"
+                                    ItemsSource="{Binding SenatAdminAll}"
+                                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                    SelectedItem="{Binding SelectedSenatAdminAll}" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical">
+                            <Button
+                                Command="{Binding SenatAddCommand}"
+                                Style="{StaticResource Button_PackIcon}"
+                                ToolTip="Hinzufügen eines Senats">
+                                <MD:PackIcon Kind="Share" />
+                            </Button>
+                            <Button
+                                Command="{Binding SenatRemoveCommand}"
+                                Style="{StaticResource Button_PackIcon}"
+                                ToolTip="Entfernen eines Senats">
+                                <MD:PackIcon Kind="Reply" />
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Style="{StaticResource Text_Header}" Text="Auswählte Senate" />
+                            <Border Style="{StaticResource Border_Login}">
+                                <ListBox
+                                    MinWidth="150"
+                                    MaxHeight="280"
+                                    VerticalAlignment="Top"
+                                    DisplayMemberPath="SenatName"
+                                    ItemsSource="{Binding SenatAdminUser}"
+                                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                    SelectedItem="{Binding SelectedSenatAdminUser}" />
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="2" Margin="0,20,0,0">
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding SaveCommand}"
+                                Content="Speichern"
+                                Style="{StaticResource Button_Master}" />
+                            <Button
+                                Margin="10,0,0,0"
+                                Command="{Binding QuitCommand}"
+                                Content="Abbrechen"
+                                Style="{StaticResource Button_Master}" />
+                        </StackPanel>
+
+                    </Grid>
+
+                </Grid>
+
+            </MD:Card>
+        </Grid>
+
+
+
+    </Grid>
+</UserControl>
