@@ -36,13 +36,13 @@ namespace BGH_Kompakt.Views.Pages.Start
                 switch (button.Name)
                 {
                     case "Allgemein":
-                        fileName = "Anleitung BGH-Kompakt-Sitzungsunterlagen.pdf";
+                        fileName = "Anleitung BGHKompaktSitzungsunterlagen.pdf";
                         break;
                     case "Montagspost":
-                        fileName = "Anleitung BGH-Kompakt-Montagspost.pdf";
+                        fileName = "Anleitung BGHKompaktMontagspost.pdf";
                         break;
                     case "Nebentätigkeiten":
-                        fileName = "Anleitung BGH-Kompakt-Nebentätigkeiten.pdf";
+                        fileName = "Anleitung BGHKompaktNebentaetigkeiten.pdf";
                         break;
                     default:
                         break;

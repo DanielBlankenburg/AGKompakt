@@ -176,7 +176,10 @@
                                 Style="{StaticResource RadioButton_Montagspost}" />
                         </WrapPanel>
                     </Grid>
-                    <Grid Grid.Row="1" Style="{StaticResource Option_Grid}">
+                    <Grid
+                        Grid.Row="1"
+                        Style="{StaticResource Option_Grid}"
+                        Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="150" />
                             <ColumnDefinition Width="*" />
