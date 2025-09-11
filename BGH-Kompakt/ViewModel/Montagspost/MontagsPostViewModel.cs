@@ -63,8 +63,8 @@ namespace BGH_Kompakt.ViewModel
                 }
                 SelectedMPWeekIndex = counter;
             }
-
-            SenateFill();
+            if (SelectedOutlineSenate) SenateFill();
+            else if (SelectedOutlineAll) DecisionFill();
         }
 
         private int _SelectedMPWeekIndex;
@@ -413,9 +413,6 @@ namespace BGH_Kompakt.ViewModel
             {
                 SetProperty<bool>(ref _showSelectedDetailsPdf, value);
                 if (value) ShowDetailArea(showDetailsPdf: value);
-                //ShowDetailsData = !value;
-                //ShowDetailsPdf = value;
-                //ShowWebbrowser = value;
             }
         }
 
@@ -1112,44 +1109,63 @@ namespace BGH_Kompakt.ViewModel
         private void DecisionFill()
         {
             MPDecisionList.Clear();
-            if (SelectedMPSenat != null)
+            List<MPDecision> mPDecisions = new List<MPDecision>();
+            if (SelectedOutlineSenate && SelectedMPSenat != null)
             {
                 if (SelectedMPSenat.MPDecisions.Count > 0)
                 {
-                    try
-                    {
-                        var mPDecisions = SelectedMPSenat.MPDecisions;
-                        foreach (MPDecision dec in mPDecisions)
-                        {
-                            switch (dec.Typ)
-                            {
-                                case 1:
-                                    if (FilterMP.Urteile)
-                                    {
-                                        if (dec.Leitsatz == string.Empty) {if (AnzeigeSenatLS(dec.SenatID)) MPDecisionList.Add(dec);}
-                                        else MPDecisionList.Add(dec);
-                                    }
-                                    break;
-                                case 2:
-                                    if (FilterMP.Beschluesse)
-                                    {
-                                        if (dec.Leitsatz == string.Empty) { if (AnzeigeSenatLS(dec.SenatID)) MPDecisionList.Add(dec); }
-                                        else MPDecisionList.Add(dec);
-                                    }
-                                    break;
-                                case 0:
-                                    MPDecisionList.Add(dec);
-                                    break;
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler ausgetreten: {ex.Message}", false);
-                    }
+                    mPDecisions = SelectedMPSenat.MPDecisions.ToList();
+                    DBResponse response = AddToDecisionList(mPDecisions);
+                    if (!response.Success) ViewManager.ShowMainInfoFlyout(response.Message, false);
+                }
+            }
+            else if (SelectedOutlineAll && SelectedMPWeek !=  null)
+            {
+                if (SelectedMPWeek.MPDecisions.Count > 0)
+                {
+                    mPDecisions = SelectedMPWeek.MPDecisions.ToList();
+                    DBResponse response = AddToDecisionList(mPDecisions);
+                    if (!response.Success) ViewManager.ShowMainInfoFlyout(response.Message, false);
                 }
             }
             ShowWebbrowser = false;
+        }
+
+        private DBResponse AddToDecisionList(List<MPDecision> mPDecisions)
+        {
+            DBResponse dBResponse = new DBResponse();
+            try
+            {
+                foreach (MPDecision dec in mPDecisions)
+                {
+                    switch (dec.Typ)
+                    {
+                        case 1:
+                            if (FilterMP.Urteile)
+                            {
+                                if (dec.Leitsatz == string.Empty) { if (AnzeigeSenatLS(dec.SenatID)) MPDecisionList.Add(dec); }
+                                else MPDecisionList.Add(dec);
+                            }
+                            break;
+                        case 2:
+                            if (FilterMP.Beschluesse)
+                            {
+                                if (dec.Leitsatz == string.Empty) { if (AnzeigeSenatLS(dec.SenatID)) MPDecisionList.Add(dec); }
+                                else MPDecisionList.Add(dec);
+                            }
+                            break;
+                        case 0:
+                            MPDecisionList.Add(dec);
+                            break;
+                    }
+                }
+                dBResponse.Success = true;
+            }
+            catch (Exception ex)
+            {
+                dBResponse.Message = ex.Message;
+            }
+            return dBResponse;
         }
 
         private bool AnzeigeSenatLS(int senatsID)
