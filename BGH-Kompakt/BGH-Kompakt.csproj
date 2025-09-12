@@ -1054,9 +1054,9 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="Resources\ImageResources\Images\Splashscreen.jpg">
+    <Resource Include="Resources\ImageResources\Images\Splashscreen.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </SplashScreen>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />
