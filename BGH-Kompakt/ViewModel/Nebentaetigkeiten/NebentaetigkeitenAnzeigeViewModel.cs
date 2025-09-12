@@ -1517,14 +1517,7 @@ namespace BGH_Kompakt.ViewModel
         {
             try
             {
-                string[] directories = Assembly.GetExecutingAssembly().Location.Split('\\');
-                string pathApp = string.Empty;
-                for (int i = 0; i < directories.Length - 1; i++) pathApp += directories[i] + "\\";
-
-                string tempDir = $"{pathApp}temp\\";
-                if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
-
-                System.IO.File.WriteAllBytes($"{tempDir}{SelectedAttechment.FileName}", SelectedAttechment.Data);
+                System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttechment.FileName}", SelectedAttechment.Data);
 
                 Process.Start(new ProcessStartInfo($"{tempDir}{SelectedAttechment.FileName}") { UseShellExecute = true });
             }
