@@ -46,7 +46,8 @@ namespace BGH_Kompakt.ViewModel
             set
             {
                 SetProperty<MPWeek>(ref _SelectedMPWeek, value);
-                showSenate = (_SelectedMPWeek != null);
+                if (SelectedOutlineSenate) showSenate = (_SelectedMPWeek != null);
+                else if (SelectedOutlineAll) showSenate = false;
                 SetMPWeek();
             }
         }
@@ -63,8 +64,8 @@ namespace BGH_Kompakt.ViewModel
                 }
                 SelectedMPWeekIndex = counter;
             }
-            if (SelectedOutlineSenate) SenateFill();
-            else if (SelectedOutlineAll) DecisionFill();
+            SenateFill();
+            if (SelectedOutlineAll) DecisionFill();
         }
 
         private int _SelectedMPWeekIndex;
@@ -512,12 +513,11 @@ namespace BGH_Kompakt.ViewModel
 
         private void ShowDetailArea(bool showDetailsPdf = false, bool showDetailsData = false)
         {
-            if (SelectedMPSenat != null)
-            {
-                ShowDetailsPdf = showDetailsPdf;
-                ShowDetailsData = showDetailsData;
-                ShowWebbrowser = (showDetailsPdf && SelectedMPDecision != null);
-            }
+            if (SelectedOutlineSenate && SelectedMPSenat == null) return;
+            
+            ShowDetailsPdf = showDetailsPdf;
+            ShowDetailsData = showDetailsData;
+            ShowWebbrowser = (showDetailsPdf && SelectedMPDecision != null);
         }
 
         private bool _showWebbrowserData = true;
@@ -539,8 +539,16 @@ namespace BGH_Kompakt.ViewModel
         {
             get { return _SelectedOutlineAll; }
             set { 
-                SetProperty<bool>(ref _SelectedOutlineAll, value); 
-                if (value) showSenate = false;
+                SetProperty<bool>(ref _SelectedOutlineAll, value);
+                if (value)
+                {
+                    if (SelectedMPWeek != null) SetMPWeek();
+                    showSenate = false;
+                    ShowBereiche = false;
+                    ShowDetailsData = ShowSelectedDetailsData;
+                    ShowDetailsPdf = ShowSelectedDetailsPdf;
+
+                }
             }
         }
 
@@ -550,7 +558,25 @@ namespace BGH_Kompakt.ViewModel
             get { return _SelectedOutlineSenate; }
             set { 
                 SetProperty<bool>(ref _SelectedOutlineSenate, value); 
-                if (value) showSenate = true;
+                if (value)
+                {
+                    if (SelectedMPWeek != null) SetMPWeek();
+                    showSenate = true;
+                    ShowBereiche = true;
+                    ShowDetailsData = false;
+                    ShowDetailsPdf = false;
+                    ShowWebbrowser = false;
+                }
+            }
+        }
+
+        private bool _ShowBereiche = true;
+        public bool ShowBereiche
+        {
+            get { return _ShowBereiche; }
+            set 
+            {
+                SetProperty<bool>(ref _ShowBereiche, value);
             }
         }
 
@@ -1114,7 +1140,7 @@ namespace BGH_Kompakt.ViewModel
             {
                 if (SelectedMPSenat.MPDecisions.Count > 0)
                 {
-                    mPDecisions = SelectedMPSenat.MPDecisions.ToList();
+                    mPDecisions = SelectedMPSenat.MPDecisions.OrderBy(d => d.SenatID).ThenBy(d => d.LaufendeNummer).ToList();
                     DBResponse response = AddToDecisionList(mPDecisions);
                     if (!response.Success) ViewManager.ShowMainInfoFlyout(response.Message, false);
                 }
@@ -1123,7 +1149,7 @@ namespace BGH_Kompakt.ViewModel
             {
                 if (SelectedMPWeek.MPDecisions.Count > 0)
                 {
-                    mPDecisions = SelectedMPWeek.MPDecisions.ToList();
+                    mPDecisions = SelectedMPWeek.MPDecisions.OrderBy(d => d.SenatID).ThenBy(d => d.LaufendeNummer).ToList();
                     DBResponse response = AddToDecisionList(mPDecisions);
                     if (!response.Success) ViewManager.ShowMainInfoFlyout(response.Message, false);
                 }
