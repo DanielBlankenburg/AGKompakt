@@ -1519,7 +1519,7 @@ namespace BGH_Kompakt.ViewModel
             {
                 System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttechment.FileName}", SelectedAttechment.Data);
 
-                Process.Start(new ProcessStartInfo($"{tempDir}{SelectedAttechment.FileName}") { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttechment.FileName}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
