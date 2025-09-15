@@ -778,6 +778,11 @@
                         HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
                     <GridViewColumn
                         Width="150"
+                        DisplayMemberBinding="{Binding ActivityClient.ACName, TargetNullValue=[keine Angabe]}"
+                        Header="Veranstalter"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="150"
                         DisplayMemberBinding="{Binding ActivityRequestMeldeArt.ActivityRequestMeldeArtText, TargetNullValue=[keine Angabe]}"
                         Header="Meldeart"
                         HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
@@ -790,6 +795,11 @@
                         Width="150"
                         DisplayMemberBinding="{Binding ARDatum, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}"
                         Header="Eintragungsdatum"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                    <GridViewColumn
+                        Width="150"
+                        DisplayMemberBinding="{Binding ARActivityDate, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}"
+                        Header="Tätigkeitsdatum"
                         HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
                     <GridViewColumn
                         Width="130"

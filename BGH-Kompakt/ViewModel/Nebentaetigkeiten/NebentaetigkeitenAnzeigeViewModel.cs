@@ -169,6 +169,7 @@ namespace BGH_Kompakt.ViewModel
         public bool ErrorCRUD { get; set; } = false;
         public string SaveLabel { get; set; } = string.Empty;
         private bool setRequestDate = false;
+        private bool setActivityRequest = false;
         #endregion
         #region Show/Anzeige
         private bool _ShowClientTyp = false;
@@ -895,10 +896,17 @@ namespace BGH_Kompakt.ViewModel
             set
             {
                 ErrorDate = false;
-                if (setRequestDate)
+                if (setActivityRequest)
+                {
+                    if (setRequestDate)
+                    {
+                        SetProperty<DateTime?>(ref _RequestDate, value);
+                        setRequestDate = false;
+                    }
+                }
+                else
                 {
                     SetProperty<DateTime?>(ref _RequestDate, value);
-                    setRequestDate = false;
                 }
 
             }
@@ -1741,12 +1749,35 @@ namespace BGH_Kompakt.ViewModel
                 if (HoursPredicted == true) hourTyp = 1;
                 else hourTyp = 2;
                 newActivityRequest.ActivityRequestHourTypId = hourTyp;
-                ValidationHoursMain(ref newActivityRequest);
-                ValidationHoursPrep(ref newActivityRequest);
+
+                string ErrorText = "Bitte tragen Sie eine Stundenzahl ein.";
+
+                //Prüfung, ob in beiden Feldern was eingetragen ist
+                if (HoursMain == null) { ErrorHoursMainText = ErrorText; ErrorHoursMain = true; ErrorCRUD = true; }
+                if (HoursPrep == null) { ErrorHoursMainText = ErrorText; ErrorHoursPrep = true; ErrorCRUD = true; }
+                if (ErrorCRUD) return;
+
+                //Prüfung, ob Zahlen über Null und nur ganze Zahllen eingetragen sind
+                Regex numericRegex = new Regex(@"^[0-9]*$");
+                if (numericRegex.IsMatch(HoursMain.ToString())) newActivityRequest.ARZeitaufwandMain = (float)HoursMain;
+                else { ErrorHoursMainText = "Bitte tragen Sie eine ganze Stundenzahl ein."; ErrorHoursMain = true; ErrorCRUD = true; }
+                if (numericRegex.IsMatch(HoursPrep.ToString())) newActivityRequest.ARZeitaufwandPrep = (float)HoursPrep;
+                else { ErrorHoursMainText = "Bitte tragen Sie eine ganze Stundenzahl ein."; ErrorHoursPrep = true; ErrorCRUD = true; }
+                if (ErrorCRUD) return;
+
+                if (HoursMain < 1) { ErrorHoursMainText = "Bitte tragen Sie mindestens eine Stunde ein."; ErrorHoursMain = true; ErrorCRUD = true; }
+                if (HoursPrep < 0) { ErrorHoursMainText = "Bitte tragen Sie null oder eine positive Zahl ein."; ErrorHoursPrep = true; ErrorCRUD = true; }
+                if (ErrorCRUD) return;
+
+                //Prüfen, ob Referententätigkeit über 2 Stunden liegt
+                if (SelectedRequestTyp.ActivityRequestTypId == 5)
+                    if (HoursMain < 3) { ErrorHoursMainText = "Bei der Referententätigkeit darf die Stundenzahl nicht unter 3 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
+                else if (SelectedRequestTyp.ActivityRequestTypId == 1)
+                    if (HoursMain > 2) { ErrorHoursMainText = "Bei der Vortragstätigkeit darf die Stundenzahl nicht über 2 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
 
             }
         }
-        private void ValidationHoursMain(ref ActivityRequest newActivityRequest)
+        private void ValidationHours(ref ActivityRequest newActivityRequest)
         {
             Regex numericRegex = new Regex(@"^[0-9]*$");
             if (numericRegex.IsMatch(HoursMain.ToString()) && HoursMain > 0) newActivityRequest.ARZeitaufwandMain = (float)HoursMain;
@@ -1759,7 +1790,8 @@ namespace BGH_Kompakt.ViewModel
         }
         private void ValidationHoursPrep(ref ActivityRequest newActivityRequest)
         {
-            if (HoursPrep > 0) { newActivityRequest.ARZeitaufwandPrep = (float)HoursPrep; }
+            Regex numericRegex = new Regex(@"^[0-9]*$");
+            if (numericRegex.IsMatch(HoursPrep.ToString()) && HoursPrep > 0) newActivityRequest.ARZeitaufwandPrep = (float)HoursPrep;
             else { ErrorHoursMainText = "Bitte tragen Sie eine ganze Stundenzahl ein."; ErrorHoursPrep = true; ErrorCRUD = true; }
         }
         private void ValidationInstruction(ref ActivityRequest newActivityRequest)
@@ -1948,6 +1980,7 @@ namespace BGH_Kompakt.ViewModel
         #endregion
         private void SetActivityRequest(ActivityRequest iActivityRequest = null)
         {
+            setActivityRequest = true;
             if (iActivityRequest != null)
             {
                 RequestUserID = iActivityRequest.ARUserID;
@@ -1956,7 +1989,7 @@ namespace BGH_Kompakt.ViewModel
                 RequestTitel = iActivityRequest.ARTitel;
                 RequestOrt = iActivityRequest.AROrt;
                 setRequestDate = true;
-                RequestDate = iActivityRequest.ARDatum;
+                RequestDate = iActivityRequest.ARActivityDate;
                 Verguetung = iActivityRequest.ARVerguetung;
                 HoursMain = iActivityRequest.ARZeitaufwandMain;
                 HoursPrep = iActivityRequest.ARZeitaufwandPrep;
@@ -1971,12 +2004,12 @@ namespace BGH_Kompakt.ViewModel
                 ARAssurance = iActivityRequest.Assurance;
                 //AdventageList füllen
                 SelectedScienceTyp = iActivityRequest.ActivityRequestScienceTyp;
-                Online = iActivityRequest.ActivityRequestOrtArtId == 1;
-                Presence = iActivityRequest.ActivityRequestOrtArtId == 2;
+                Online = iActivityRequest.ActivityRequestOrtArtId == 2;
+                Presence = iActivityRequest.ActivityRequestOrtArtId == 1;
                 Publication = iActivityRequest.ActivityRequestScienceCategorieId == 1;
                 Education = iActivityRequest.ActivityRequestScienceCategorieId == 2;
-                Permanent = iActivityRequest.ActivityRequestFrequencyId == 1;
-                Once = iActivityRequest.ActivityRequestFrequencyId == 2;
+                Permanent = iActivityRequest.ActivityRequestFrequencyId == 2;
+                Once = iActivityRequest.ActivityRequestFrequencyId == 1;
                 Party = iActivityRequest.ActivityRequestArbitrationTypId == 1;
                 Third = iActivityRequest.ActivityRequestArbitrationTypId == 2;
                 PaymentPredicted = iActivityRequest.ActivityRequestVerguetungTypId == 1;
@@ -2033,6 +2066,7 @@ namespace BGH_Kompakt.ViewModel
                 PaymentUnknown = false;
                 SetScienceAuthor(null);
             }
+            setActivityRequest = false;
         }
         private void SetScienceAuthor(ActivityRequest iActivityRequest)
         {
