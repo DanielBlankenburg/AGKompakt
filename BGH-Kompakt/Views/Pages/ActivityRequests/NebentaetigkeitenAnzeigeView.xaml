@@ -353,9 +353,10 @@
                                                 <!--  Auftraggeber  -->
                                                 <StackPanel Style="{StaticResource Stackpanel_Vertical}">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <ComboBox
+                                                        <!--<ComboBox
                                                             ItemsSource="{Binding CollectionView.View}"
                                                             SelectedIndex="{Binding SelectedClientIndex, UpdateSourceTrigger=PropertyChanged}"
+                                                            SelectedValue="{Binding SelectedClient}"
                                                             Style="{StaticResource Combobox_Request_Client}"
                                                             TextSearch.TextPath="Name">
                                                             <ComboBox.GroupStyle>
@@ -376,6 +377,29 @@
                                                             <ComboBox.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <TextBlock Margin="0,0,0,0" Text="{Binding ACName}" />
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
+                                                        </ComboBox>-->
+                                                        <ComboBox
+                                                            MD:HintAssist.Hint="Veranstalter"
+                                                            ItemsSource="{Binding Clientlist}"
+                                                            SelectedValue="{Binding SelectedClient}"
+                                                            Style="{StaticResource Combobox_Request_Client}"
+                                                            TextSearch.TextPath="ACName">
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel>
+                                                                        <TextBlock
+                                                                            Grid.Column="0"
+                                                                            Margin="0,0,0,0"
+                                                                            Text="{Binding ACName}" />
+                                                                        <TextBlock
+                                                                            Grid.Column="1"
+                                                                            Margin="0,0,0,0"
+                                                                            FontSize="10"
+                                                                            FontStyle="Italic"
+                                                                            Text="{Binding ActivityClientTyp.ActivityClientTypText}" />
+                                                                    </StackPanel>
                                                                 </DataTemplate>
                                                             </ComboBox.ItemTemplate>
                                                         </ComboBox>

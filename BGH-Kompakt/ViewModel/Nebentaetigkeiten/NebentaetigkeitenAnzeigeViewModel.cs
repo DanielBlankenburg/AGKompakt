@@ -44,7 +44,10 @@ namespace BGH_Kompakt.ViewModel
         private readonly ObservableCollection<ActivityRequestDataFile> _ImportFileList = new ObservableCollection<ActivityRequestDataFile>();
         public ObservableCollection<ActivityRequestDataFile> ImportFileList { get { return _ImportFileList; } }
         public ObservableCollection<ActivityClient> Items { get; set; }
-        public CollectionViewSource CollectionView { get; set; }
+        public CollectionViewSource CollectionView { 
+            get; 
+            set; 
+        }
         public ObservableCollection<ActivityClient> Clientlist { get; set; }
 
         private ActivityClient _selectedClient;
@@ -1056,6 +1059,7 @@ namespace BGH_Kompakt.ViewModel
         public ICommand AddRequestsCommand { get; set; }
         public ICommand ScienceAuthorListSelectedCommand { get; set; }
         public ICommand HyperLinkCommand { get; set; }
+        public ICommand TestCommand { get; set; }
         #endregion
         public NebentaetigkeitenAnzeigeViewModel()
         {
@@ -1113,7 +1117,16 @@ namespace BGH_Kompakt.ViewModel
             AddRequestsCommand = new RelayCommand(AddRequestExecute);
             ScienceAuthorListSelectedCommand = new RelayCommand(ScienceAuthorSelctionExecute);
             HyperLinkCommand = new RelayCommand(HyperLinkExecute);
+            TestCommand = new RelayCommand(TextExecute);
         }
+
+        private void TextExecute(object obj)
+        {
+            SelectedClient = ActivityRequestManager.SelectedActivityRequest.ActivityClient;
+            SelectedClientIndex = 3;
+            
+        }
+
         private void Fill_ComboBoxes()
         {
             ActivityRequestDBContext activityRequestDBcontext = new ActivityRequestDBContext();

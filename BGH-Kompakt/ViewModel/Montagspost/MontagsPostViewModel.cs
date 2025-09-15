@@ -1198,7 +1198,6 @@ namespace BGH_Kompakt.ViewModel
         {
             if (senatsID > 1 && senatsID < 16) //Zivilsenate
             {
-                if (FilterMP.ZivilGesamtLS) return false;
                 switch (senatsID)
                 {
                     case 2:
@@ -1233,7 +1232,6 @@ namespace BGH_Kompakt.ViewModel
             }
             else if (senatsID >= 16 && senatsID < 22) //Strafsenate
             {
-                if (FilterMP.StrafGesamtLS) return false;
                 switch (senatsID)
                 {
                     case 16:
@@ -1253,7 +1251,6 @@ namespace BGH_Kompakt.ViewModel
             }
             else if (senatsID >= 22)// Sondersenate
             {
-                if (FilterMP.SonderGesamtLS) return false;
                 switch (senatsID)
                 {
                     case 22:
