@@ -47,15 +47,21 @@ namespace BGH_Kompakt.ViewModel
         public CollectionViewSource CollectionView { get; set; }
         public ObservableCollection<ActivityClient> Clientlist { get; set; }
 
-        private ActivityClient selectedClient;
+        private ActivityClient _selectedClient;
         public ActivityClient SelectedClient
         {
-            get { return selectedClient; }
+            get { return _selectedClient; }
             set
             {
-                selectedClient = value;
+                _selectedClient = value;
                 ErrorClient = false;
             }
+        }
+        private int _SelectedClientIndex;
+        public int SelectedClientIndex
+        {
+            get { return _SelectedClientIndex; }
+            set { _SelectedClientIndex = value; }
         }
         public int SelectedIndexClient { get; set; } = 0;
         private readonly ObservableCollection<ActivityRequestTyp> _RequestTypList = new ObservableCollection<ActivityRequestTyp>();
@@ -1073,20 +1079,19 @@ namespace BGH_Kompakt.ViewModel
             {
                 SetActivityRequest();
             }
+            SelectedClientIndex = 2;
             Startprozedur = false;
             ShowApplicant = ActivityRequestManager.LoginType == 2 && ActivityRequestManager.ActionType == 1;
             Anzeige_Art = true;
             ShowChanges = FuncShowChanges();
 
         }
-
         private bool FuncShowChanges()
         {
             if (ActivityRequestManager.SelectedActivityRequest == null) return true;
             if (ActivityRequestManager.LoginType == 1 && ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich > 1) return false;
             return true;
         }
-
         private void SetExecutes()
         {
             QuitCommand = new RelayCommand(QuitExecute);
@@ -1109,7 +1114,6 @@ namespace BGH_Kompakt.ViewModel
             ScienceAuthorListSelectedCommand = new RelayCommand(ScienceAuthorSelctionExecute);
             HyperLinkCommand = new RelayCommand(HyperLinkExecute);
         }
-
         private void Fill_ComboBoxes()
         {
             ActivityRequestDBContext activityRequestDBcontext = new ActivityRequestDBContext();

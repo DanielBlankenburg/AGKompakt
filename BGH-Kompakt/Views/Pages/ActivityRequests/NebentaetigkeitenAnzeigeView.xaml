@@ -355,6 +355,7 @@
                                                     <StackPanel Orientation="Horizontal">
                                                         <ComboBox
                                                             ItemsSource="{Binding CollectionView.View}"
+                                                            SelectedIndex="{Binding SelectedClientIndex, UpdateSourceTrigger=PropertyChanged}"
                                                             Style="{StaticResource Combobox_Request_Client}"
                                                             TextSearch.TextPath="Name">
                                                             <ComboBox.GroupStyle>
