@@ -502,27 +502,25 @@
                                                     <StackPanel Style="{StaticResource Stackpanel_Vertical}">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ComboBox
-                                                                ItemsSource="{Binding CollectionView.View}"
+                                                                MD:HintAssist.Hint="Veranstalter"
+                                                                ItemsSource="{Binding Clientlist}"
+                                                                SelectedValue="{Binding SelectedClient}"
                                                                 Style="{StaticResource Combobox_Request_Client}"
-                                                                TextSearch.TextPath="Name">
-                                                                <ComboBox.GroupStyle>
-                                                                    <GroupStyle>
-                                                                        <GroupStyle.HeaderTemplate>
-                                                                            <DataTemplate>
-                                                                                <TextBlock
-                                                                                    Height="25"
-                                                                                    Margin="0,5,0,5"
-                                                                                    Padding="5,5,0,0"
-                                                                                    VerticalAlignment="Center"
-                                                                                    FontWeight="Bold"
-                                                                                    Text="{Binding Name}" />
-                                                                            </DataTemplate>
-                                                                        </GroupStyle.HeaderTemplate>
-                                                                    </GroupStyle>
-                                                                </ComboBox.GroupStyle>
+                                                                TextSearch.TextPath="ACName">
                                                                 <ComboBox.ItemTemplate>
                                                                     <DataTemplate>
-                                                                        <TextBlock Margin="0,0,0,0" Text="{Binding ACName}" />
+                                                                        <StackPanel>
+                                                                            <TextBlock
+                                                                                Grid.Column="0"
+                                                                                Margin="0,0,0,0"
+                                                                                Text="{Binding ACName}" />
+                                                                            <TextBlock
+                                                                                Grid.Column="1"
+                                                                                Margin="0,0,0,0"
+                                                                                FontSize="10"
+                                                                                FontStyle="Italic"
+                                                                                Text="{Binding ActivityClientTyp.ActivityClientTypText}" />
+                                                                        </StackPanel>
                                                                     </DataTemplate>
                                                                 </ComboBox.ItemTemplate>
                                                             </ComboBox>
@@ -592,27 +590,25 @@
                                                     <StackPanel Style="{StaticResource Stackpanel_Vertical}">
                                                         <StackPanel Orientation="Horizontal">
                                                             <ComboBox
-                                                                ItemsSource="{Binding CollectionView.View}"
+                                                                MD:HintAssist.Hint="Veranstalter"
+                                                                ItemsSource="{Binding Clientlist}"
+                                                                SelectedValue="{Binding SelectedClient}"
                                                                 Style="{StaticResource Combobox_Request_Client}"
-                                                                TextSearch.TextPath="Name">
-                                                                <ComboBox.GroupStyle>
-                                                                    <GroupStyle>
-                                                                        <GroupStyle.HeaderTemplate>
-                                                                            <DataTemplate>
-                                                                                <TextBlock
-                                                                                    Height="25"
-                                                                                    Margin="0,5,0,5"
-                                                                                    Padding="5,5,0,0"
-                                                                                    VerticalAlignment="Center"
-                                                                                    FontWeight="Bold"
-                                                                                    Text="{Binding Name}" />
-                                                                            </DataTemplate>
-                                                                        </GroupStyle.HeaderTemplate>
-                                                                    </GroupStyle>
-                                                                </ComboBox.GroupStyle>
+                                                                TextSearch.TextPath="ACName">
                                                                 <ComboBox.ItemTemplate>
                                                                     <DataTemplate>
-                                                                        <TextBlock Margin="0,0,0,0" Text="{Binding ACName}" />
+                                                                        <StackPanel>
+                                                                            <TextBlock
+                                                                                Grid.Column="0"
+                                                                                Margin="0,0,0,0"
+                                                                                Text="{Binding ACName}" />
+                                                                            <TextBlock
+                                                                                Grid.Column="1"
+                                                                                Margin="0,0,0,0"
+                                                                                FontSize="10"
+                                                                                FontStyle="Italic"
+                                                                                Text="{Binding ActivityClientTyp.ActivityClientTypText}" />
+                                                                        </StackPanel>
                                                                     </DataTemplate>
                                                                 </ComboBox.ItemTemplate>
                                                             </ComboBox>
@@ -740,27 +736,25 @@
                                                 <StackPanel Style="{StaticResource Stackpanel_Vertical}">
                                                     <StackPanel Orientation="Horizontal">
                                                         <ComboBox
-                                                            ItemsSource="{Binding CollectionView.View}"
+                                                            MD:HintAssist.Hint="Veranstalter"
+                                                            ItemsSource="{Binding Clientlist}"
+                                                            SelectedValue="{Binding SelectedClient}"
                                                             Style="{StaticResource Combobox_Request_Client}"
-                                                            TextSearch.TextPath="Name">
-                                                            <ComboBox.GroupStyle>
-                                                                <GroupStyle>
-                                                                    <GroupStyle.HeaderTemplate>
-                                                                        <DataTemplate>
-                                                                            <TextBlock
-                                                                                Height="25"
-                                                                                Margin="0,5,0,5"
-                                                                                Padding="5,5,0,0"
-                                                                                VerticalAlignment="Center"
-                                                                                FontWeight="Bold"
-                                                                                Text="{Binding Name}" />
-                                                                        </DataTemplate>
-                                                                    </GroupStyle.HeaderTemplate>
-                                                                </GroupStyle>
-                                                            </ComboBox.GroupStyle>
+                                                            TextSearch.TextPath="ACName">
                                                             <ComboBox.ItemTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBlock Margin="0,0,0,0" Text="{Binding ACName}" />
+                                                                    <StackPanel>
+                                                                        <TextBlock
+                                                                            Grid.Column="0"
+                                                                            Margin="0,0,0,0"
+                                                                            Text="{Binding ACName}" />
+                                                                        <TextBlock
+                                                                            Grid.Column="1"
+                                                                            Margin="0,0,0,0"
+                                                                            FontSize="10"
+                                                                            FontStyle="Italic"
+                                                                            Text="{Binding ActivityClientTyp.ActivityClientTypText}" />
+                                                                    </StackPanel>
                                                                 </DataTemplate>
                                                             </ComboBox.ItemTemplate>
                                                         </ComboBox>

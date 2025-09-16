@@ -67,6 +67,8 @@
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="Visibility" Value="Collapsed" />
             </Style>
+           
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="{StaticResource BGHActivityRequestBackground}">
@@ -806,15 +808,15 @@
                         DisplayMemberBinding="{Binding ARVerguetung, TargetNullValue=[keine Angabe], StringFormat={}{0:c}, ConverterCulture=de-DE}"
                         Header="Vergütung"
                         HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
-                    <GridViewColumn
+                    <!--<GridViewColumn
                         Width="80"
                         DisplayMemberBinding="{Binding AdventagesCount, TargetNullValue=[keine Angabe], ConverterCulture=de-DE}"
                         Header="Vorteile"
-                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />-->
                     <GridViewColumn
-                        Width="130"
+                        Width="80"
                         DisplayMemberBinding="{Binding Gesamtzeitaufwand, TargetNullValue=[keine Angabe], ConverterCulture=de-DE}"
-                        Header="Zeitaufwand"
+                        Header="Aufwand"
                         HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
                     <GridViewColumn
                         Width="150"

@@ -1213,10 +1213,10 @@ namespace BGH_Kompakt.ViewModel
             }
 
             ActivityRequestDBContext activityRequestDBcontext = new ActivityRequestDBContext();
-            ARVerguetungAdventageTyp addAdventage = activityRequestDBcontext.ARVerguetungAdventageTyps.FirstOrDefault(a => a.ARVerguetungAdventageTypId == selectedAdventageTyp.ARVerguetungAdventageTypId);
+            ARVerguetungAdventageTyp addAdventageTyp = activityRequestDBcontext.ARVerguetungAdventageTyps.FirstOrDefault(a => a.ARVerguetungAdventageTypId == selectedAdventageTyp.ARVerguetungAdventageTypId);
             ARVerguetungAdventage newAdventage = new ARVerguetungAdventage
             {               
-                ARVerguetungAdventageTyp = addAdventage,
+                ARVerguetungAdventageTyp = addAdventageTyp,
                 ARVerguetungAdventageTypId = SelectedAdventageTyp.ARVerguetungAdventageTypId,
                 ARVerguetungAdventageAmount = decimal.Parse(AdventageAmount)
             };
@@ -1600,7 +1600,7 @@ namespace BGH_Kompakt.ViewModel
         #region Validations
         private void ValidationDuration(ref ActivityRequest newActivityRequest)
         {
-            if (Once || Permanent) newActivityRequest.ActivityRequestFrequencyId = Once == true ? 2 : 1;
+            if (Once || Permanent) newActivityRequest.ActivityRequestFrequencyId = Once == true ? 1 : 2;
             else { ErrorDuration = true; ErrorCRUD = true; }
         }
         private void ValidationOrtArt(ref ActivityRequest newActivityRequest)
@@ -1662,10 +1662,10 @@ namespace BGH_Kompakt.ViewModel
                                 if (listNames[i].ActivityRequestScienceAuthorText == item.ScienceAuthorText && item.IsSelected) newActivityRequest.SciencenAuthorAuthor = true;
                                 break;
                             case 1:
-                                if (listNames[i].ActivityRequestScienceAuthorText == item.ScienceAuthorText && item.IsSelected) newActivityRequest.SciencenAuthorHerausgeber = true;
+                                if (listNames[i].ActivityRequestScienceAuthorText == item.ScienceAuthorText && item.IsSelected) newActivityRequest.SciencenAuthorSchriftleitung = true;
                                 break;
                             case 2:
-                                if (listNames[i].ActivityRequestScienceAuthorText == item.ScienceAuthorText && item.IsSelected) newActivityRequest.SciencenAuthorSchriftleitung = true;
+                                if (listNames[i].ActivityRequestScienceAuthorText == item.ScienceAuthorText && item.IsSelected) newActivityRequest.SciencenAuthorHerausgeber = true;
                                 break;
                             case 3:
                                 if (listNames[i].ActivityRequestScienceAuthorText == item.ScienceAuthorText && item.IsSelected) newActivityRequest.SciencenAuthorWissenschaftlicherBeirat = true;
@@ -1750,53 +1750,39 @@ namespace BGH_Kompakt.ViewModel
                 else hourTyp = 2;
                 newActivityRequest.ActivityRequestHourTypId = hourTyp;
 
-                string ErrorText = "Bitte tragen Sie eine Stundenzahl ein.";
+                if (hourTyp == 1)
+                {
+                    string ErrorText = "Bitte tragen Sie eine Stundenzahl ein.";
 
-                //Prüfung, ob in beiden Feldern was eingetragen ist
-                if (HoursMain == null) { ErrorHoursMainText = ErrorText; ErrorHoursMain = true; ErrorCRUD = true; }
-                if (HoursPrep == null) { ErrorHoursMainText = ErrorText; ErrorHoursPrep = true; ErrorCRUD = true; }
-                if (ErrorCRUD) return;
+                    //Prüfung, ob in beiden Feldern was eingetragen ist
+                    if (HoursMain == null) { ErrorHoursMainText = ErrorText; ErrorHoursMain = true; ErrorCRUD = true; }
+                    if (HoursPrep == null) { ErrorHoursMainText = ErrorText; ErrorHoursPrep = true; ErrorCRUD = true; }
+                    if (ErrorCRUD) return;
 
-                //Prüfung, ob Zahlen über Null und nur ganze Zahllen eingetragen sind
-                Regex numericRegex = new Regex(@"^[0-9]*$");
-                if (numericRegex.IsMatch(HoursMain.ToString())) newActivityRequest.ARZeitaufwandMain = (float)HoursMain;
-                else { ErrorHoursMainText = "Bitte tragen Sie eine ganze Stundenzahl ein."; ErrorHoursMain = true; ErrorCRUD = true; }
-                if (numericRegex.IsMatch(HoursPrep.ToString())) newActivityRequest.ARZeitaufwandPrep = (float)HoursPrep;
-                else { ErrorHoursMainText = "Bitte tragen Sie eine ganze Stundenzahl ein."; ErrorHoursPrep = true; ErrorCRUD = true; }
-                if (ErrorCRUD) return;
+                    //Prüfung, ob Zahlen über Null und nur ganze Zahllen eingetragen sind
+                    Regex numericRegex = new Regex(@"^[0-9]*$");
+                    if (numericRegex.IsMatch(HoursMain.ToString())) newActivityRequest.ARZeitaufwandMain = (float)HoursMain;
+                    else { ErrorHoursMainText = "Bitte tragen Sie eine ganze Stundenzahl ein."; ErrorHoursMain = true; ErrorCRUD = true; }
+                    if (numericRegex.IsMatch(HoursPrep.ToString())) newActivityRequest.ARZeitaufwandPrep = (float)HoursPrep;
+                    else { ErrorHoursMainText = "Bitte tragen Sie eine ganze Stundenzahl ein."; ErrorHoursPrep = true; ErrorCRUD = true; }
+                    if (ErrorCRUD) return;
 
-                if (HoursMain < 1) { ErrorHoursMainText = "Bitte tragen Sie mindestens eine Stunde ein."; ErrorHoursMain = true; ErrorCRUD = true; }
-                if (HoursPrep < 0) { ErrorHoursMainText = "Bitte tragen Sie null oder eine positive Zahl ein."; ErrorHoursPrep = true; ErrorCRUD = true; }
-                if (ErrorCRUD) return;
+                    if (HoursMain < 1) { ErrorHoursMainText = "Bitte tragen Sie mindestens eine Stunde ein."; ErrorHoursMain = true; ErrorCRUD = true; }
+                    if (HoursPrep < 0) { ErrorHoursMainText = "Bitte tragen Sie null oder eine positive Zahl ein."; ErrorHoursPrep = true; ErrorCRUD = true; }
+                    if (ErrorCRUD) return;
 
-                //Prüfen, ob Referententätigkeit über 2 Stunden liegt
-                if (SelectedRequestTyp.ActivityRequestTypId == 5)
-                    if (HoursMain < 3) { ErrorHoursMainText = "Bei der Referententätigkeit darf die Stundenzahl nicht unter 3 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
-                else if (SelectedRequestTyp.ActivityRequestTypId == 1)
-                    if (HoursMain > 2) { ErrorHoursMainText = "Bei der Vortragstätigkeit darf die Stundenzahl nicht über 2 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
+                    //Prüfen, ob Referententätigkeit über 2 Stunden liegt
+                    if (SelectedRequestTyp.ActivityRequestTypId == 5)
+                        if (HoursMain < 3) { ErrorHoursMainText = "Bei der Referententätigkeit darf die Stundenzahl nicht unter 3 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
+                    else if (SelectedRequestTyp.ActivityRequestTypId == 1)
+                        if (HoursMain > 2) { ErrorHoursMainText = "Bei der Vortragstätigkeit darf die Stundenzahl nicht über 2 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
+                }
 
             }
         }
-        private void ValidationHours(ref ActivityRequest newActivityRequest)
-        {
-            Regex numericRegex = new Regex(@"^[0-9]*$");
-            if (numericRegex.IsMatch(HoursMain.ToString()) && HoursMain > 0) newActivityRequest.ARZeitaufwandMain = (float)HoursMain;
-            else { ErrorHoursMainText = "Bitte tragen Sie eine ganze Stundenzahl ein."; ErrorHoursMain = true; ErrorCRUD = true; }
-            //Prüfen, ob Referententätigkeit über 2 Stunden liegt
-            if (SelectedRequestTyp.ActivityRequestTypId == 5) 
-                if(HoursMain < 3) { ErrorHoursMainText = "Bei der Referententätigkeit darf die Stundenzahl nicht unter 3 Stunden liegen.";  ErrorHoursMain = true; ErrorCRUD = true; }
-            else if (SelectedRequestTyp.ActivityRequestTypId == 1)
-                if (HoursMain > 2) { ErrorHoursMainText = "Bei der Vortragstätigkeit darf die Stundenzahl nicht über 2 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
-        }
-        private void ValidationHoursPrep(ref ActivityRequest newActivityRequest)
-        {
-            Regex numericRegex = new Regex(@"^[0-9]*$");
-            if (numericRegex.IsMatch(HoursPrep.ToString()) && HoursPrep > 0) newActivityRequest.ARZeitaufwandPrep = (float)HoursPrep;
-            else { ErrorHoursMainText = "Bitte tragen Sie eine ganze Stundenzahl ein."; ErrorHoursPrep = true; ErrorCRUD = true; }
-        }
         private void ValidationInstruction(ref ActivityRequest newActivityRequest)
         {
-            if (ARAssurance == true) newActivityRequest.ARZeitaufwandPrep = (float)HoursPrep;
+            if (ARAssurance == true) newActivityRequest.Assurance = ARAssurance;
             else { ErrorInstruction = true; ErrorCRUD = true; }
         }
         private void AdventagesAdd(ref ActivityRequest newActivityRequest)
@@ -2010,6 +1996,12 @@ namespace BGH_Kompakt.ViewModel
                 Education = iActivityRequest.ActivityRequestScienceCategorieId == 2;
                 Permanent = iActivityRequest.ActivityRequestFrequencyId == 2;
                 Once = iActivityRequest.ActivityRequestFrequencyId == 1;
+                if (Permanent)
+                {
+                    RequestDatePermanentFrom = iActivityRequest.ActivityRequestDatePermanentFrom;
+                    RequestDatePermanentUntil = iActivityRequest.ActivityRequestDatePermanentUntil;
+                    RequestDatePermanentDuration = iActivityRequest.ActivityRequestDatePermantenDuration;
+                }
                 Party = iActivityRequest.ActivityRequestArbitrationTypId == 1;
                 Third = iActivityRequest.ActivityRequestArbitrationTypId == 2;
                 PaymentPredicted = iActivityRequest.ActivityRequestVerguetungTypId == 1;
