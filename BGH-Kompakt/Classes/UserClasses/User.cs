@@ -128,7 +128,7 @@ namespace BGH_Kompakt.Classes.UserClasses
                     if (adminstatustext == UserEnums.EnumAdminStatus.NebentätigkeitenAdmin.ToString()) IsARAdmin = true;
                     if (adminstatustext == UserEnums.EnumAdminStatus.Vorzimmer.ToString()) IsARVorzimmer = true;
                     if (adminstatustext == UserEnums.EnumAdminStatus.Präsidialrichter.ToString()) IsARPraesdialrichter = true;
-                    if (adminstatustext == UserEnums.EnumAdminStatus.Präsidentin.ToString()) IsARAdmin = true;
+                    if (adminstatustext == UserEnums.EnumAdminStatus.Präsidentin.ToString()) IsARPraesident = true;
                     if (adminstatustext == UserEnums.EnumAdminStatus.MontagspostAdmin.ToString()) IsMPAdmin = true;
                     if (adminstatustext == UserEnums.EnumAdminStatus.MontagspostShow.ToString()) ShowMontagspost = true;
                     if (adminstatustext == UserEnums.EnumAdminStatus.NebentätigkeitenShow.ToString()) ShowActivityRequests = true;
