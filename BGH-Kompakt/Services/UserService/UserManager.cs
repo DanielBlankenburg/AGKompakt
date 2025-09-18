@@ -147,40 +147,44 @@ namespace BGH_Kompakt.Services.UserService
         private static bool SenatSettingSet(Senat senat)
         {
             SenatSetting senatsetting = userDBContext.SenatSettings.Include(s => s.Senat).Include(sg => sg.Spruchgruppen).FirstOrDefault(x => x.SenatID == senat.SenatID);
-            if (senatsetting != null)
+            if (senatsetting != null) 
             {
-                SenatSettings.SenatID = senatsetting.SenatID;
-                SenatSettings.Senat = senatsetting.Senat;
-                SenatSettings.ShowSitzungsplaene = senatsetting.ShowSitzungsplaene;
-                SenatSettings.ShowVerteilung = senatsetting.ShowVerteilung;
-                SenatSettings.ShowVotenmappe = senatsetting.ShowVotenmappe;
-                SenatSettings.ShowSpruchgruppen = senatsetting.ShowSpruchgruppen;
-                SenatSettings.ShowFormerDays = senatsetting.ShowFormerDays;
-                SenatSettings.BSCW_Server_Drive = senatsetting.BSCW_Server_Drive;
-                SenatSettings.AZPrefix = senatsetting.AZPrefix;
-                SenatSettings.AZPrefixDate = senatsetting.AZPrefixDate;
-                SenatSettings.AZPrefixChar = senatsetting.AZPrefixChar;
-                SenatSettings.ImportAGUrteil = senatsetting.ImportAGUrteil;
-                SenatSettings.ImportAGBeschluss = senatsetting.ImportAGBeschluss;
-                SenatSettings.ImportLGUrteil = senatsetting.ImportLGUrteil;
-                SenatSettings.ImportLGBeschluss = senatsetting.ImportLGBeschluss;
-                SenatSettings.ImportLGHB = senatsetting.ImportLGHB;
-                SenatSettings.ImportLGZB = senatsetting.ImportLGZB;
-                SenatSettings.ImportOLGUrteil = senatsetting.ImportOLGUrteil;
-                SenatSettings.ImportOLGBeschluss = senatsetting.ImportOLGBeschluss;
-                SenatSettings.ImportOLGHB = senatsetting.ImportOLGHB;
-                SenatSettings.ImportOLGZB = senatsetting.ImportOLGZB;
-                SenatSettings.ImportEUGHVorlage = senatsetting.ImportEUGHVorlage;
-                SenatSettings.ImportEUGHURteil = senatsetting.ImportEUGHURteil;
-                SenatSettings.ImportEntwurf = senatsetting.ImportEntwurf;
-                SenatSettings.ImportVotum = senatsetting.ImportVotum;
-                SenatSettings.ImportVorVotum = senatsetting.ImportVorVotum;
-                SenatSettings.ImportAnlage = senatsetting.ImportAnlage;
-                SenatSettings.ImportLeitsatz = senatsetting.ImportLeitsatz;
-                SenatSettings.ImportRMB = senatsetting.ImportRMB;
-                SenatSettings.ImportRME = senatsetting.ImportRME;
-                SenatSettings.ImportSonstiges = senatsetting.ImportSonstiges;
-                SenatSettings.Spruchgruppen = senatsetting.Spruchgruppen;
+                //SenatSettings.SenatID = senatsetting.SenatID;
+                //SenatSettings.Senat = senatsetting.Senat;
+                //SenatSettings.ShowSitzungsplaene = senatsetting.ShowSitzungsplaene;
+                //SenatSettings.ShowVerteilung = senatsetting.ShowVerteilung;
+                //SenatSettings.ShowVotenmappe = senatsetting.ShowVotenmappe;
+                //SenatSettings.ShowSpruchgruppen = senatsetting.ShowSpruchgruppen;
+                //SenatSettings.ShowFormerDays = senatsetting.ShowFormerDays;
+                //SenatSettings.BSCW_Server_Drive = senatsetting.BSCW_Server_Drive;
+                //SenatSettings.AZPrefix = senatsetting.AZPrefix;
+                //SenatSettings.AZPrefixDate = senatsetting.AZPrefixDate;
+                //SenatSettings.AZPrefixChar = senatsetting.AZPrefixChar;
+                //SenatSettings.ImportAGUrteil = senatsetting.ImportAGUrteil;
+                //SenatSettings.ImportAGBeschluss = senatsetting.ImportAGBeschluss;
+                //SenatSettings.ImportLGUrteil = senatsetting.ImportLGUrteil;
+                //SenatSettings.ImportLGBeschluss = senatsetting.ImportLGBeschluss;
+                //SenatSettings.ImportLGHB = senatsetting.ImportLGHB;
+                //SenatSettings.ImportLGZB = senatsetting.ImportLGZB;
+                //SenatSettings.ImportOLGUrteil = senatsetting.ImportOLGUrteil;
+                //SenatSettings.ImportOLGBeschluss = senatsetting.ImportOLGBeschluss;
+                //SenatSettings.ImportOLGHB = senatsetting.ImportOLGHB;
+                //SenatSettings.ImportOLGZB = senatsetting.ImportOLGZB;
+                //SenatSettings.ImportEUGHVorlage = senatsetting.ImportEUGHVorlage;
+                //SenatSettings.ImportEUGHURteil = senatsetting.ImportEUGHURteil;
+                //SenatSettings.ImportEntwurf = senatsetting.ImportEntwurf;
+                //SenatSettings.ImportVotum = senatsetting.ImportVotum;
+                //SenatSettings.ImportVorVotum = senatsetting.ImportVorVotum;
+                //SenatSettings.ImportAnlage = senatsetting.ImportAnlage;
+                //SenatSettings.ImportLeitsatz = senatsetting.ImportLeitsatz;
+                //SenatSettings.ImportRMB = senatsetting.ImportRMB;
+                //SenatSettings.ImportRME = senatsetting.ImportRME;
+                //SenatSettings.ImportSonstiges = senatsetting.ImportSonstiges;
+                //SenatSettings.Spruchgruppen = senatsetting.Spruchgruppen;
+                //SenatSettings.StrafFolderSenat = senatsetting.StrafFolderSenat;
+
+
+                SenatSettings = senatsetting;
                 return true;
             }
             else

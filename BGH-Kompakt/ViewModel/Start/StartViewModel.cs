@@ -11,6 +11,7 @@ namespace BGH_Kompakt.ViewModel.Start
     public class StartViewModel : ViewModelBase
     {
         public string Title { get; set; } = string.Empty;
+        public string SenatsText { get; set; } = string.Empty;
 
         #region Show
 
@@ -68,19 +69,15 @@ namespace BGH_Kompakt.ViewModel.Start
         public StartViewModel()
         {
             Title = (UserManager.SenatSettings.Senat != null) ? UserManager.SenatSettings.Senat.SenatName : "kein Senat ausgewählt";
-
             ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
+            SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
             ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
             ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
             ShowMontagspostAdmin = UserManager.RegistratedUser.ShowMontagspostAdmin;
             ShowSitzungsplaene = UserManager.SenatSettings.ShowSitzungsplaene;
             ShowSpruchgruppen = UserManager.SenatSettings.ShowSpruchgruppen;
-
             ShowKanzlei = false;
             ShowAnwaltsauswahl = false;
-
         }
-
-
     }
 }

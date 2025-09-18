@@ -9,15 +9,19 @@ using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.Interfaces;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
+using BGH_Kompakt.Views.Sitzungsunterlagen;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -28,9 +32,12 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
         private readonly UserDBContext userDBContext = new UserDBContext();
         private DBResponse resp = new DBResponse();
 
+        public ICommand SenatsheftCommand { get; set; }
+        public ICommand AZCommand { get; set; }
         public ICommand RenameCommand { get; set; }
         public ICommand DeleteAttechmentCommand { get; set; }
         public ICommand OpenAttechmentCommand { get; set; }
+        public ICommand ExportCommand { get; set; }
 
         #region Test-Grouping
         public ObservableCollection<TestItem> Items { get; set; }
@@ -41,9 +48,12 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
 
         public SitzungsunterlagenStrafViewModel()
         {
+            SenatsheftCommand = new RelayCommand(SenatsheftExecute);
+            AZCommand = new RelayCommand(AZExecute);
             RenameCommand = new RelayCommand(RenameExecute);
             DeleteAttechmentCommand = new RelayCommand(DeleteAttechmentExecute);
             OpenAttechmentCommand = new RelayCommand(OpenAttechmentExecute);
+            ExportCommand = new RelayCommand(ExportExecute);
 
             string year = DateTime.Now.Year.ToString();
             TextJahr = year.Substring(2);
@@ -53,7 +63,7 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             List<TestItem> clients = new List<TestItem>();
             ActivityRequestDBContext activityRequestDBContext = new ActivityRequestDBContext();
             var Client_Query = activityRequestDBContext.ActivityClients.Include(t => t.ActivityClientTyp).OrderBy(ac => ac.ActivityClientTypID).ThenBy(ac => ac.ACName);
-            foreach (var item in Client_Query) clients.Add(new TestItem() { Name = item.ACName, Category= item.ActivityClientTyp.ActivityClientTypText});
+            foreach (var item in Client_Query) clients.Add(new TestItem() { Name = item.ACName, Category = item.ActivityClientTyp.ActivityClientTypText });
             Items = new ObservableCollection<TestItem>(clients);
             var view = new CollectionViewSource();
             view.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
@@ -68,14 +78,14 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             resp = Cbo_Senat_Fill(SenatList);
             if (!resp.Success)
             {
-                ViewManager.ShowMainInfoFlyout(resp.Message, false); 
+                ViewManager.ShowMainInfoFlyout(resp.Message, false);
                 return;
             }
             //Aktenzeichen füllen
             resp = Cbo_Aktenzeichen_Fill(AZList);
             if (!resp.Success)
             {
-                ViewManager.ShowMainInfoFlyout(resp.Message, false); 
+                ViewManager.ShowMainInfoFlyout(resp.Message, false);
                 return;
             }
 
@@ -83,18 +93,13 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             resp = Cbo_Beisitzer_Fill(ListBeisitzer);
             if (!resp.Success)
             {
-                ViewManager.ShowMainInfoFlyout(resp.Message, false); 
+                ViewManager.ShowMainInfoFlyout(resp.Message, false);
                 return;
             }
-
-
         }
-
         private ObservableCollection<MPImportFile> _ImportFileList = new ObservableCollection<MPImportFile>();
         public ObservableCollection<MPImportFile> ImportFileList { get { return _ImportFileList; } }
-
         public ObservableCollection<User> ListBeisitzer { get; set; } = new ObservableCollection<User>();
-
         private User _SelectedBeisitzer;
         public User SelectedBeisitzer
         {
@@ -104,7 +109,6 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                 SetProperty(ref _SelectedBeisitzer, value);
             }
         }
-
         public ObservableCollection<Senat> SenatList { get; set; } = new ObservableCollection<Senat>();
         private Senat _SelectedSenat;
         public Senat SelectedSenat
@@ -124,17 +128,13 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                 //}
             }
         }
-
         public ObservableCollection<SenatAktenzeichen> AZList { get; set; } = new ObservableCollection<SenatAktenzeichen>();
         private SenatAktenzeichen _SelectedAZ;
         public SenatAktenzeichen SelectedAZ
         {
             get { return _SelectedAZ; }
-            set {SetProperty(ref _SelectedAZ, value);}
+            set { SetProperty(ref _SelectedAZ, value); }
         }
-
-
-
         private bool _ShowAttechmentList = false;
         public bool ShowAttechmentList
         {
@@ -167,38 +167,86 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                 }
             }
         }
-
         private string _TextLaufendeNummer = string.Empty;
         public string TextLaufendeNummer
         {
             get { return _TextLaufendeNummer; }
             set { SetProperty(ref _TextLaufendeNummer, value); }
         }
-
-
         public void OnFilesDropped(string[] files)
         {
             foreach (string file in files) ImportFileList.Add(new MPImportFile(file));
             ShowAttechmentList = true;
         }
-
         #region Executes
-        private void RenameExecute(object obj)
+        private void AZExecute(object obj)
         {
             if (ValidateInput())
             {
-                string newFileName = $"Aktenauszug_1_StR_{TextLaufendeNummer}_{TextJahr}{SelectedAttechment.FileExtention}";
+                string newFileName = string.Empty;
+
+                if (UserManager.SenatSettings.StrafFileAzPrefix)
+                {
+                    if (UserManager.SenatSettings.StrafFileSenat) newFileName += $"{SelectedSenat.SenatShort} {SelectedAZ.SenatAktenzeichenName} ";
+                    newFileName += $"{TextLaufendeNummer} {TextJahr}";
+                }
+                else
+                {
+                    if (UserManager.SenatSettings.StrafFileSenat) newFileName += $"{SelectedSenat.SenatShort} {SelectedAZ.SenatAktenzeichenName} ";
+                    newFileName += $"{TextLaufendeNummer} {TextJahr}";
+                }
+
+                newFileName = newFileName.Replace(" ", UserManager.SenatSettings.StrafFileWhiteSpaceFill);
+                newFileName += $"{UserManager.SenatSettings.StrafFileWhiteSpaceFill}{SelectedAttechment.FileName}{SelectedAttechment.FileExtention}";
                 MPImportFile selectedFile = SelectedAttechment;
                 ObservableCollection<MPImportFile> templist = new ObservableCollection<MPImportFile>();
                 foreach (MPImportFile item in ImportFileList) templist.Add(item);
                 ImportFileList.Clear();
-                foreach(MPImportFile item in templist)
+                foreach (MPImportFile item in templist)
                 {
                     if (item.FileName == selectedFile.FileName) item.FileName = newFileName;
                     ImportFileList.Add(item);
-                } 
+                }
             }
-            
+        }
+
+        private void SenatsheftExecute(object obj)
+        {
+            if (ValidateInput())
+            {
+
+                string newFileName = string.Empty;
+
+                if (UserManager.SenatSettings.StrafFileAzPrefix)
+                {
+                    if (UserManager.SenatSettings.StrafFileSenat) newFileName += $"{SelectedSenat.SenatShort} {SelectedAZ.SenatAktenzeichenName} ";
+                    newFileName += $"{TextLaufendeNummer} {TextJahr}";
+                    newFileName += $"{UserManager.SenatSettings.StrafFileSenatsheftText}";
+                }
+                else
+                {
+                    newFileName += $"{UserManager.SenatSettings.StrafFileSenatsheftText} ";
+                    if (UserManager.SenatSettings.StrafFileSenat) newFileName += $"{SelectedSenat.SenatShort} {SelectedAZ.SenatAktenzeichenName} ";
+                    newFileName += $"{TextLaufendeNummer} {TextJahr}";
+                }
+
+                newFileName += $"{SelectedAttechment.FileExtention}";
+                newFileName = newFileName.Replace(" ", UserManager.SenatSettings.StrafFileWhiteSpaceFill);
+                MPImportFile selectedFile = SelectedAttechment;
+                ObservableCollection<MPImportFile> templist = new ObservableCollection<MPImportFile>();
+                foreach (MPImportFile item in ImportFileList) templist.Add(item);
+                ImportFileList.Clear();
+                foreach (MPImportFile item in templist)
+                {
+                    if (item.FileName == selectedFile.FileName) item.FileName = newFileName;
+                    ImportFileList.Add(item);
+                }
+            }
+        }
+
+        private void RenameExecute(object obj)
+        {
+
         }
 
         private void OpenAttechmentExecute(object obj)
@@ -214,10 +262,7 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             {
                 ViewManager.ShowMainInfoFlyout($"Das Dokument konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
             }
-
         }
-
-
         private bool ValidateInput()
         {
             string Message = string.Empty;
@@ -231,13 +276,146 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             else return true;
 
         }
-
+        private bool ValidateBE()
+        {
+            if (!UserManager.SenatSettings.StrafFolderBerichterstatter) return true;
+            if (SelectedBeisitzer != null) return true;
+            ViewManager.ShowMainInfoFlyout("Bitte wählen Sie einen Beisitzer aus.", false);
+            return false;
+        }
         private void DeleteAttechmentExecute(object obj)
         {
             ImportFileList.Remove(SelectedAttechment);
         }
+        private void ExportExecute(object obj)
+        {
+            ExportToBSCWServer();
+        }
+
+        private async void ExportToBSCWServer()
+        {
+            if (ValidateInput())
+            {
+                if (ValidateBE())
+                {
+                    string actionName = "Übertragung BSCW-Server";
+                    if (ImportFileList.Count > 0)
+                    {
+                        if (Directory.Exists($"{UserManager.SenatSettings.BSCW_Server_Drive}:\\"))
+                        {
+                            Task<DBResponse> task = BSCWTransferFiles(ImportFileList);
+                            ViewManager.ShowMainInfoFlyout($"Die Daten werden eingelesen und übertragen. Bitte warten Sie.", false);
+                            ViewManager.ActionlistAdd(actionName);
+                            await task;
+                            ViewManager.ActionlistRemove(actionName);
+                            if (task.Result.Success)
+                            {
+                                ImportFileList.Clear();
+                                ViewManager.ShowMainInfoFlyout("Die Dateien wurden exportiert", false);
+                            }
+                            else ViewManager.ShowMainInfoFlyout(task.Result.Message, false);
+                        }
+                        else ViewManager.ShowMainInfoFlyout($"Der BSCW-Server konnte unter dem Laufwerk {UserManager.SenatSettings.BSCW_Server_Drive}:\\ nicht gefunden werden. Binden Sie bitte den BSCW-Server als Laufwerk ein.", false);
+                    }
+                    else ViewManager.ShowMainInfoFlyout("Bitte fügen Sie mindestens eine Datei an.", false);
+
+                }
+
+            }
+
+        }
+
+        private Task<DBResponse> BSCWTransferFiles(ObservableCollection<MPImportFile> importFileList)
+        {
+            Task<DBResponse> task = Task.Run<DBResponse>(() =>
+            {
+                DBResponse resp = new DBResponse();
+                string BSCW_Server_Path = $"{UserManager.SenatSettings.BSCW_Server_Drive}:\\";
+                string BSCW_Server_SubFolder = BSCW_Server_Path;
+                #region Unterordner angelegen
+                if (UserManager.SenatSettings.StrafFolderSubFolder)
+                {
+                    if (!string.IsNullOrWhiteSpace(UserManager.SenatSettings.StrafFolderSubFolderText))
+                    {
+                        BSCW_Server_SubFolder = $"{BSCW_Server_Path}{UserManager.SenatSettings.StrafFolderSubFolderText}\\";
+                        if (!Directory.Exists(BSCW_Server_SubFolder))
+                        {
+                            try
+                            {
+                                Directory.CreateDirectory(BSCW_Server_SubFolder);
+                            }
+                            catch (Exception)
+                            {
+                                resp.Success = false;
+                                resp.Message = $"Der Jahrgang konnte auf dem Laufwerk {UserManager.SenatSettings.BSCW_Server_Drive}:\\ nicht erstellt werden. Bitte prüfen Sie, ob Sie die hinreichenden Rechte haben.";
+                                return resp;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        resp.Success = false;
+                        resp.Message = $"Bitte tragen Sie eine Bezeichnung für den Unterordner ein, der nach den Einstellungen für den Senat angelegt werden soll oder ändern Sie die Einstellungen ab.";
+                        return resp;
+                    }
+                }
+
+                #endregion
+                #region Jahrgang anlegen
+                string exportYearDir = $"{BSCW_Server_SubFolder}20{TextJahr}\\";
+                if (!Directory.Exists(exportYearDir))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(exportYearDir);
+                    }
+                    catch (Exception)
+                    {
+                        resp.Success = false;
+                        resp.Message = $"Der Jahrgang konnte auf dem Laufwerk {UserManager.SenatSettings.BSCW_Server_Drive}:\\ nicht erstellt werden. Bitte prüfen Sie, ob Sie die hinreichenden Rechte haben.";
+                        return resp;
+                    }
+                }
+
+                #endregion
+                #region Verfahrensordner angelegen
+                string verfahren = string.Empty;
+                if (UserManager.SenatSettings.StrafFolderSenat) verfahren = $"{SelectedSenat.SenatShort} {SelectedAZ.SenatAktenzeichenName} ";
+                verfahren += (UserManager.SenatSettings.StrafFolderYearFirst) ? $"{TextJahr}-{TextLaufendeNummer}" : $"{TextLaufendeNummer}-{TextJahr}";
+                if (UserManager.SenatSettings.StrafFolderBerichterstatter)
+                {
+                    if (!string.IsNullOrWhiteSpace(UserManager.RegistratedUser.Initials)) verfahren += $"-{UserManager.RegistratedUser.Initials}";
+                    else verfahren += $"-{UserManager.RegistratedUser.NachName.Substring(0, 3)}";
+                }
+                string ExportFolder = $"{exportYearDir}{verfahren}\\";
+                if (!Directory.Exists(ExportFolder))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(ExportFolder);
+                    }
+                    catch (Exception)
+                    {
+                        resp.Success = false;
+                        resp.Message = $"Der Verfahrensordner konnte auf dem Laufwerk {UserManager.SenatSettings.BSCW_Server_Drive}:\\ nicht erstellt werden. Bitte prüfen Sie, ob Sie die hinreichenden Rechte haben.";
+                        return resp;
+                    }
+                }
 
 
+                #endregion
+                #region Dateien übertragen
+                foreach (MPImportFile file in importFileList)
+                {
+                    File.Copy(file.FileFullPath, $"{ExportFolder}{file.FileName}");
+                }
+                resp.Success = true;
+                return resp;
+
+                #endregion
+            });
+            return task;
+        }
         #endregion
 
         #region Fill-Functions

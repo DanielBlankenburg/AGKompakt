@@ -60,6 +60,9 @@
             <Setter Property="OnContent" Value="An" />
             <!--<Setter Property="Margin" Value="0,0,10,0" />-->
         </Style>
+        <Style x:Key="StackOptionStraf" TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin" Value="25,0,0,0" />
+        </Style>
 
 
     </UserControl.Resources>
@@ -209,10 +212,7 @@
                     <Border Style="{StaticResource Expander_Border}" />
                     <!--#endregion-->
                     <!--#region Allgemeine Einstellungen-->
-                    <Expander
-                        HorizontalAlignment="Stretch"
-                        IsExpanded="{Binding ShowAllgemeineEinstellungen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Visibility="{Binding ShowZivilsenate, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <Expander HorizontalAlignment="Stretch" IsExpanded="{Binding ShowAllgemeineEinstellungen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <Expander.Header>
                             <TextBlock Style="{StaticResource Textblock_Extender}" Text="Allgemeine Einstellungen" />
                         </Expander.Header>
@@ -240,69 +240,81 @@
                                         <Label
                                             Grid.Row="0"
                                             Grid.Column="0"
-                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Style="{StaticResource Style_label_PersonChange}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                             Anzeige Sitzungspläne
                                         </Label>
                                         <MW:ToggleSwitch
                                             Grid.Row="0"
                                             Grid.Column="1"
                                             IsOn="{Binding ShowSitzungsplaene, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource ToggleSwitchSetting}" />
+                                            Style="{StaticResource ToggleSwitchSetting}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                         <Label
                                             Grid.Row="1"
                                             Grid.Column="0"
-                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Style="{StaticResource Style_label_PersonChange}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                             Anzeige Spruchgruppen
                                         </Label>
                                         <MW:ToggleSwitch
                                             Grid.Row="1"
                                             Grid.Column="2"
                                             IsOn="{Binding ShowSpruchgruppen, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource ToggleSwitchSetting}" />
+                                            Style="{StaticResource ToggleSwitchSetting}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                         <Label
                                             Grid.Row="2"
                                             Grid.Column="0"
-                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Style="{StaticResource Style_label_PersonChange}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                             Anzeige Verteilung
                                         </Label>
                                         <MW:ToggleSwitch
                                             Grid.Row="2"
                                             Grid.Column="2"
                                             IsOn="{Binding ShowVerteilung, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource ToggleSwitchSetting}" />
+                                            Style="{StaticResource ToggleSwitchSetting}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                         <Label
                                             Grid.Row="3"
                                             Grid.Column="0"
-                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Style="{StaticResource Style_label_PersonChange}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                             Anzeige Verteilung
                                         </Label>
                                         <MW:ToggleSwitch
                                             Grid.Row="3"
                                             Grid.Column="2"
                                             IsOn="{Binding ShowBerichterstatter, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource ToggleSwitchSetting}" />
+                                            Style="{StaticResource ToggleSwitchSetting}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                         <Label
                                             Grid.Row="4"
                                             Grid.Column="0"
-                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Style="{StaticResource Style_label_PersonChange}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                             Anzeige Votenmappe
                                         </Label>
                                         <MW:ToggleSwitch
                                             Grid.Row="4"
                                             Grid.Column="2"
                                             IsOn="{Binding ShowVotenmappe, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource ToggleSwitchSetting}" />
+                                            Style="{StaticResource ToggleSwitchSetting}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                         <Label
                                             Grid.Row="5"
                                             Grid.Column="0"
-                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Style="{StaticResource Style_label_PersonChange}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                             Standard abgeschlossen Verfahren ausblenden
                                         </Label>
                                         <MW:ToggleSwitch
                                             Grid.Row="5"
                                             Grid.Column="2"
                                             IsOn="{Binding ShowFormerDays, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource ToggleSwitchSetting}" />
+                                            Style="{StaticResource ToggleSwitchSetting}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
@@ -319,7 +331,8 @@
                                         <Label
                                             Grid.Row="0"
                                             Grid.Column="0"
-                                            Style="{StaticResource Style_label_PersonChange}">
+                                            Style="{StaticResource Style_label_PersonChange}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                             Datei-Pfad des Senats
                                         </Label>
                                         <TextBox
@@ -327,7 +340,8 @@
                                             Grid.Column="1"
                                             MinWidth="100"
                                             VerticalContentAlignment="Center"
-                                            Text="{Binding Senat.Path}" />
+                                            Text="{Binding Senat.Path}"
+                                            Visibility="{Binding Path=DataContext.ShowZivilsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                         <Label
                                             Grid.Row="1"
                                             Grid.Column="0"
@@ -1097,211 +1111,89 @@
                                 DataContext="{Binding SenatSetting, Mode=OneWay}"
                                 Row="1"
                                 Visibility="{Binding Path=DataContext.ShowStrafsenate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="420" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid Grid.Column="0">
-                                        <StackPanel>
-                                            <!--#region Ordnereinstellungen-->
-                                            <Label Content="Ordnereinstellungen" Style="{StaticResource Style_label_PersonChange}" />
-                                            <StackPanel Margin="25,0,0,0">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Label
-                                                        Grid.Column="0"
-                                                        Content="Aktenzeichen im Ordner"
-                                                        Style="{StaticResource Style_label_PersonChange}" />
-                                                    <MW:ToggleSwitch
-                                                        Grid.Column="1"
-                                                        IsOn="{Binding AZPrefix, UpdateSourceTrigger=PropertyChanged}"
-                                                        Style="{StaticResource ToggleSwitchSetting}" />
-                                                </Grid>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Label
-                                                        Grid.Column="0"
-                                                        Content="Unterordner verwenden"
-                                                        Style="{StaticResource Style_label_PersonChange}" />
-                                                    <MW:ToggleSwitch
-                                                        Grid.Column="1"
-                                                        IsOn="{Binding AZPrefixDate, UpdateSourceTrigger=PropertyChanged}"
-                                                        Style="{StaticResource ToggleSwitchSetting}" />
-                                                </Grid>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Label
-                                                        Grid.Column="0"
-                                                        Content="Bezeichnung Unterordner"
-                                                        Style="{StaticResource Style_label_PersonChange}" />
-                                                    <TextBox
-                                                        Grid.Column="2"
-                                                        Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                        Text="{Binding AZPrefixChar}" />
-                                                </Grid>
-                                            </StackPanel>
-                                            <!--#endregion-->
+                                <Grid Grid.Column="0">
+                                    <StackPanel>
+                                        <!--#region Ordnereinstellungen-->
+                                        <Label Content="Ordnereinstellungen" Style="{StaticResource Style_label_PersonChange}" />
+                                        <StackPanel Style="{StaticResource StackOptionStraf}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Senatsbezeichnung im Ordner"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <MW:ToggleSwitch
+                                                    Grid.Column="1"
+                                                    IsOn="{Binding StrafFolderSenat, UpdateSourceTrigger=PropertyChanged}"
+                                                    Style="{StaticResource ToggleSwitchSetting}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Unterordner verwenden"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <MW:ToggleSwitch
+                                                    Grid.Column="1"
+                                                    IsOn="{Binding StrafFolderSubFolder, UpdateSourceTrigger=PropertyChanged}"
+                                                    Style="{StaticResource ToggleSwitchSetting}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bezeichnung Unterordner"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <TextBox
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
+                                                    Text="{Binding StrafFolderSubFolderText}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Anzeige Berichterstatter"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <MW:ToggleSwitch
+                                                    Grid.Column="1"
+                                                    IsOn="{Binding StrafFolderBerichterstatter, UpdateSourceTrigger=PropertyChanged}"
+                                                    Style="{StaticResource ToggleSwitchSetting}" />
+                                            </Grid>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Führender Parameter"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <MW:ToggleSwitch
+                                                    Grid.Column="1"
+                                                    IsOn="{Binding StrafFolderYearFirst, UpdateSourceTrigger=PropertyChanged}"
+                                                    OffContent="Aktenzeichen" OnContent="Jahr" />
+                                            </Grid>
 
 
-                                            <!--#region Dateieinstellungen-->
-                                            <Label Content="Dateieinstellungen" Style="{StaticResource Style_label_PersonChange}" />
-                                            <StackPanel>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Label
-                                                        Grid.Column="0"
-                                                        Content="Aktenzeichen im Ordner"
-                                                        Style="{StaticResource Style_label_PersonChange}" />
-                                                    <MW:ToggleSwitch
-                                                        Grid.Column="1"
-                                                        IsOn="{Binding AZPrefixDate, UpdateSourceTrigger=PropertyChanged}"
-                                                        Style="{StaticResource ToggleSwitchSetting}" />
-                                                </Grid>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Label
-                                                        Grid.Column="0"
-                                                        Content="Bez. AG Beschluss"
-                                                        Style="{StaticResource Style_label_PersonChange}" />
-                                                    <TextBox
-                                                        Grid.Column="2"
-                                                        Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                        Text="{Binding ImportAGBeschluss}" />
-                                                </Grid>
-                                            </StackPanel>
-                                            <!--#endregion-->
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. LG Urteil"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportLGUrteil}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. LG Beschluss"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportLGBeschluss}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. LG HB"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportLGHB}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. LG ZB"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportLGZB}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. OLG Urteil"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportOLGUrteil}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. OLG Beschluss"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportOLGBeschluss}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. OLG HB"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportOLGHB}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. OLG ZB"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportOLGZB}" />
-                                            </Grid>
+
                                         </StackPanel>
-                                    </Grid>
-                                    <Grid Grid.Column="1">
-                                        <StackPanel>
+                                        <!--#endregion-->
+                                        <!--#region Dateieinstellungen-->
+                                        <Label Content="Dateieinstellungen" Style="{StaticResource Style_label_PersonChange}" />
+                                        <StackPanel Style="{StaticResource StackOptionStraf}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="200" />
@@ -1309,12 +1201,12 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label
                                                     Grid.Column="0"
-                                                    Content="Bez. EuGH Vorlage"
+                                                    Content="Aktenzeichen voranstellen"
                                                     Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportEUGHVorlage}" />
+                                                <MW:ToggleSwitch
+                                                    Grid.Column="1"
+                                                    IsOn="{Binding StrafFileAzPrefix, UpdateSourceTrigger=PropertyChanged}"
+                                                    Style="{StaticResource ToggleSwitchSetting}" />
                                             </Grid>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -1323,12 +1215,27 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label
                                                     Grid.Column="0"
-                                                    Content="Bez. EuGH Urteil"
+                                                    Content="Senatsbezeichnung im Datei"
+                                                    Style="{StaticResource Style_label_PersonChange}" />
+                                                <MW:ToggleSwitch
+                                                    Grid.Column="1"
+                                                    IsOn="{Binding StrafFileSenat, UpdateSourceTrigger=PropertyChanged}"
+                                                    Style="{StaticResource ToggleSwitchSetting}" />
+                                            </Grid>
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label
+                                                    Grid.Column="0"
+                                                    Content="Bezeichnung Senatsheft"
                                                     Style="{StaticResource Style_label_PersonChange}" />
                                                 <TextBox
                                                     Grid.Column="2"
                                                     Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportEUGHURteil}" />
+                                                    Text="{Binding StrafFileSenatsheftText}" />
                                             </Grid>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -1337,113 +1244,17 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label
                                                     Grid.Column="0"
-                                                    Content="Bez. Entscheidungsentwurf"
+                                                    Content="Füllung Leerräume"
                                                     Style="{StaticResource Style_label_PersonChange}" />
                                                 <TextBox
                                                     Grid.Column="2"
                                                     Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportEUGHURteil}" />
+                                                    Text="{Binding StrafFileWhiteSpaceFill}" />
                                             </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. Votum"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportVotum}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. Vorvotum"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportVorVotum}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. Anlage"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportAnlage}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. Leitsatz"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportLeitsatz}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. Rechtsmittelbegründung"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportRMB}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. Rechtsmittelerwiderung"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportRME}" />
-                                            </Grid>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="200" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Content="Bez. Sonstiges"
-                                                    Style="{StaticResource Style_label_PersonChange}" />
-                                                <TextBox
-                                                    Grid.Column="2"
-                                                    Style="{StaticResource Style_Textbox_Settings_Large}"
-                                                    Text="{Binding ImportSonstiges}" />
-                                            </Grid>
+
                                         </StackPanel>
-                                    </Grid>
+                                        <!--#endregion-->
+                                    </StackPanel>
                                 </Grid>
                             </Grid>
                             <!--#endregion-->

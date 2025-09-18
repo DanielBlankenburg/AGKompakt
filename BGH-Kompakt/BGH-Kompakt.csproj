@@ -258,6 +258,14 @@
     <Compile Include="Migrartions\Users\202509050913148_Update3_013.Designer.cs">
       <DependentUpon>202509050913148_Update3_013.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrartions\Users\202509180626522_3_016_Straf.cs" />
+    <Compile Include="Migrartions\Users\202509180626522_3_016_Straf.Designer.cs">
+      <DependentUpon>202509180626522_3_016_Straf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202509180632435_UserInitials.cs" />
+    <Compile Include="Migrartions\Users\202509180632435_UserInitials.Designer.cs">
+      <DependentUpon>202509180632435_UserInitials.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\ActivityRequestService\ActivityRequestManager.cs" />
     <Compile Include="Services\Extentions\DirectoryInfoExtensions.cs" />
     <Compile Include="Classes\Helper\ActionStatus.cs" />
@@ -864,6 +872,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202509050913148_Update3_013.resx">
       <DependentUpon>202509050913148_Update3_013.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202509180626522_3_016_Straf.resx">
+      <DependentUpon>202509180626522_3_016_Straf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202509180632435_UserInitials.resx">
+      <DependentUpon>202509180632435_UserInitials.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -45,6 +45,7 @@ namespace BGH_Kompakt.Classes.UserClasses
         public Drives? MPBSCW_Server_Drive { get; set; } = new Drives();
         public bool MPEMailNotification { get; set; } = false;
         public bool MPBSCWSubFolders { get; set; } = false;
+        public string Initials {  get; set; } = string.Empty;
         public string Testfield { get; set; } = string.Empty;
         public int Testzahl { get; set; }
 

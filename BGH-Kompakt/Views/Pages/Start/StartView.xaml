@@ -114,7 +114,7 @@
                                             <ImageBrush ImageSource="/Resources/ImageResources/Images/Unterlagen.jpg" Stretch="Fill" />
                                         </Border.Background>
                                     </Border>
-                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Sitzungsunterlagen" />
+                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="{Binding SenatsText}" />
                                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                         <TextBlock
                                             Margin="0,5,40,0"

@@ -89,7 +89,7 @@
                                     Style="{StaticResource Textbox_Verfahren}"
                                     Text="{Binding TextLaufendeNummer, UpdateSourceTrigger=LostFocus}" />
                                 <TextBox
-                                    MD:HintAssist.Hint="Jahr:"
+                                    MD:HintAssist.Hint="Jahrgang:"
                                     Style="{StaticResource Textbox_Verfahren}"
                                     Text="{Binding TextJahr, UpdateSourceTrigger=LostFocus}" />
                             </StackPanel>
@@ -173,21 +173,21 @@
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
                                                 <Button
-                                                    x:Name="Btn_Rename"
-                                                    Command="{Binding Path=DataContext.RenameCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    x:Name="Btn_Add_Senatsheft"
+                                                    Command="{Binding Path=DataContext.SenatsheftCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Style="{StaticResource Button_GridView}"
                                                     ToolTip="Als Senatsheft umbenennen">
                                                     <MD:PackIcon Padding="0" Kind="NotebookEditOutline" />
                                                 </Button>
                                                 <Button
                                                     x:Name="Btn_Add_Aktenzeichen"
-                                                    Command="{Binding Path=DataContext.RenameCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding Path=DataContext.AZCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Style="{StaticResource Button_GridView}"
                                                     ToolTip="Aktenzeichen hinzufügen">
                                                     <MD:PackIcon Padding="0" Kind="PlusCircle" />
                                                 </Button>
                                                 <Button
-                                                    x:Name="Btn_Umbenennen"
+                                                    x:Name="Btn_Rename"
                                                     Command="{Binding Path=DataContext.RenameCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Style="{StaticResource Button_GridView}"
                                                     ToolTip="Datei umbenennen">
@@ -211,7 +211,7 @@
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
                                                     <Setter TargetName="Btn_Rename" Property="Visibility" Value="Visible" />
-                                                    <Setter TargetName="Btn_Umbenennen" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Btn_Add_Senatsheft" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="Btn_Add_Aktenzeichen" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="Btn_Open" Property="Visibility" Value="Visible" />
                                                     <Setter TargetName="Btn_Bin" Property="Visibility" Value="Visible" />
@@ -226,6 +226,7 @@
                     </ListView>
                     <Button
                         Grid.Column="0"
+                        Command="{Binding ExportCommand}"
                         Content="Dateien auf den BSCW-Server exportieren"
                         Style="{StaticResource Button_Menu}"
                         Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
