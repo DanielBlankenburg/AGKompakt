@@ -20,9 +20,15 @@ namespace BGH_Kompakt.ViewModel.MainWindow
     public partial class MainWindowViewModel : ViewModelBase
     {
         //private UserDBContext userDBContext = new UserDBContext();
+        private string _SenatsText;
+        public string SenatsText
+        {
+            get { return _SenatsText; }
+            set { SetProperty<string>(ref _SenatsText, value); }
+        }
+
         private string _loginUser;
-        private UserDBContext userContext = new UserDBContext();
-        private MPDBContext mpContext = new MPDBContext();
+        private readonly UserDBContext userContext = new UserDBContext();
         //String suchText = string.Empty;
 
         public string LoginUser 
@@ -41,6 +47,7 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 selectedSenat = value; 
                 UserManager.Set_SenatSettings(UserManager.RegistratedUser.Senate, SelectedSenat);
                 ViewManager.ShowPageOnMainView<StartView>();
+                SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
             }
         }
 
@@ -117,11 +124,11 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 LoginUser = UserManager.RegistratedUser.Fullname;
                 SenatListFill(UserManager.RegistratedUser);
                 ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
+                SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
                 ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
                 ShowMontagspostAdmin = UserManager.RegistratedUser.IsMPAdmin;
                 ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
             }
-
             if (UserManager.RegistratedUser != null)
             {
                 Logger.WriteLog($"logTime: {DateTime.Now}; {UserManager.RegistratedUser.Fullname} hat sich eingeloggt.");
@@ -130,13 +137,8 @@ namespace BGH_Kompakt.ViewModel.MainWindow
             {
                 Logger.WriteLog($"logTime: {DateTime.Now}; Es konnte kein User eingeloggt werden.");
             }
-
             Version = $"Version: {ConfigurationManager.AppSettings["Version"]}";
-
-            
-
             SeedUserDB();
-            //LoginUser = "Title"; 
         }
 
         private void SeedUserDB()

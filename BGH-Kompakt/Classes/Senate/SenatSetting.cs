@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using static BGH_Kompakt.Enums.SettingEnums;
 
 namespace BGH_Kompakt.Classes.Senate
@@ -49,6 +50,14 @@ namespace BGH_Kompakt.Classes.Senate
         public string ImportRMB { get; set; } = "Rechtsmittelbegründung";
         public string ImportRME { get; set; } = "Rechtsmittelerwiderung";
         public string ImportSonstiges { get; set; } = "Sonstiges";
-
+        public bool StrafFolderSenat { get; set; } = true;
+        public bool StrafFolderSubFolder { get; set; } = true; 
+        public string StrafFolderSubFolderText { get; set; } = "Senatshefte";
+        public bool StrafFolderBerichterstatter { get; set; } = false;
+        public bool StrafFolderYearFirst { get; set; } = false;
+        public bool StrafFileAzPrefix { get; set; } = false;
+        public bool StrafFileSenat { get; set; } = true;
+        public string StrafFileSenatsheftText { get; set; } = "Aktenauszug";
+        public string StrafFileWhiteSpaceFill { get; set; } = "_";
     }
 }

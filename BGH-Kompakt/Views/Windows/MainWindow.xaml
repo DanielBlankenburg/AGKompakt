@@ -177,7 +177,7 @@
                         <Button
                             x:Name="btn_Sitzungsunterlagen"
                             Click="OpenPageOnMain"
-                            Content="Sitzungsunterlagen"
+                            Content="{Binding SenatsText, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource Style_Button_Menu}"
                             Visibility="{Binding ShowSitzungsunterlagen, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                         <Button

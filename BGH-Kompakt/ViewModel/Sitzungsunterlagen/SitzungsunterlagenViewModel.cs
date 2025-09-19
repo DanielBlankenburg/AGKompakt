@@ -1787,14 +1787,8 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                             ViewManager.ActionlistAdd(actionName);
                             await task;
                             ViewManager.ActionlistRemove(actionName);
-                            if (task.Result.Success)
-                            {
-                                ViewManager.ShowPageOnMainView<BSCWServerView>();
-                            }
-                            else
-                            {
-                                ViewManager.ShowMainInfoFlyout(task.Result.Message, false);
-                            }
+                            if (task.Result.Success) ViewManager.ShowPageOnMainView<BSCWServerView>();
+                                else ViewManager.ShowMainInfoFlyout(task.Result.Message, false);
                             break;
                         case 2:
                             ViewManager.ShowMainInfoFlyout("Der ausgewählte Ordner wird auf den BSCW-Server kopiert", false);
@@ -1820,18 +1814,10 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                             break;
                     }
                 }
-                else
-                {
-                    ViewManager.ShowMainInfoFlyout($"Der BSCW-Server konnte unter dem Laufwerk {UserManager.SenatSettings.BSCW_Server_Drive}:\\ nicht gefunden werden. Binden Sie bitte den BSCW-Server als Laufwerk ein.", false);
-                }
+                else ViewManager.ShowMainInfoFlyout($"Der BSCW-Server konnte unter dem Laufwerk {UserManager.SenatSettings.BSCW_Server_Drive}:\\ nicht gefunden werden. Binden Sie bitte den BSCW-Server als Laufwerk ein.", false);
             }
-            else
-            {
-                ViewManager.ShowMainInfoFlyout("Bitte wählen Sie einen Sitzungstag aus.", false);
-            }
+            else ViewManager.ShowMainInfoFlyout("Bitte wählen Sie einen Sitzungstag aus.", false);
         }
-
-
         private Task<DBResponse> BSCWCheckFilesCompletedAsync()
         {
             Task<DBResponse> task = Task.Run<DBResponse>(() =>
@@ -1843,20 +1829,12 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                     ViewManager.Filelist.Clear();
                     List<CompareBSCW> Filelist = new List<CompareBSCW>();
                     foreach (FileInfo file in new DirectoryInfo(SelectedSitzungstage.FullDirectory).GetFiles(searchPattern: "*.*", searchOption: SearchOption.AllDirectories))
-                    {
                         Filelist.Add(new CompareBSCW { FilePath = file.FullName, FileName = file.Name });
-                    }
-
                     List<CompareFile> FilelistBSCW = new List<CompareFile>();
                     foreach (FileInfo file in new DirectoryInfo(BSCW_Server_Path).GetFiles(searchPattern: "*.*", searchOption: SearchOption.AllDirectories))
-                    {
                         FilelistBSCW.Add(new CompareFile { FilePath = file.FullName, FileName = file.Name });
-                    }
-
                     foreach (CompareBSCW file in Filelist)
-                    {
                         file.FileExists = (FilelistBSCW.FirstOrDefault(x => x.FileName == file.FileName) != null);
-                    }
                     ViewManager.Filelist = Filelist;
                     resp.Success = true;
                 }

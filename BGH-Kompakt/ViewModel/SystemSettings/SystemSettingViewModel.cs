@@ -44,7 +44,22 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             get { return _selectedSenat; }
             set 
             { 
-                _selectedSenat = value; 
+                _selectedSenat = value;
+                switch (SelectedSenat.SenatArt)
+                {
+                    case 1:
+                        ShowZivilsenate = true;
+                        ShowStrafsenate = false;
+                        break;
+                    case 2:
+                        ShowZivilsenate = false;
+                        ShowStrafsenate = true;
+                        break;
+                    case 3:
+                        ShowZivilsenate = false;
+                        ShowStrafsenate = false;
+                        break;
+                }
                 SenatSetting newSenatSetting = userDBContext.SenatSettings.Include(x => x.Aktenzeichen).Include(x => x.Spruchgruppen).FirstOrDefault(x => x.SenatID == SelectedSenat.SenatID);
                 if (newSenatSetting != null) SenatSetting = newSenatSetting;
                 if (SenatSetting.Aktenzeichen != null)
@@ -311,6 +326,18 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
         {
             get { return _ShowAktenzeichenList; }
             set { SetProperty(ref _ShowAktenzeichenList, value); }
+        }
+        private bool _ShowZivilsenate = false;
+        public bool ShowZivilsenate
+        {
+            get { return _ShowZivilsenate; }
+            set { SetProperty(ref _ShowZivilsenate, value); }
+        }
+        private bool _ShowStrafsenate = false;
+        public bool ShowStrafsenate
+        {
+            get { return _ShowStrafsenate; }
+            set { SetProperty(ref _ShowStrafsenate, value); }
         }
 
         #endregion
