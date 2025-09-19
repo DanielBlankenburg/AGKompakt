@@ -1479,6 +1479,7 @@ namespace BGH_Kompakt.ViewModel
                         }
                         activityRequestDBcontext.ActivityRequests.AddOrUpdate(newActivityRequest);
                         activityRequestDBcontext.SaveChanges();
+                        LogChanges(newActivityRequest);
                         //Anlagen prüfen
                         if (ImportFileList.Count > 0)
                         {
@@ -1509,6 +1510,15 @@ namespace BGH_Kompakt.ViewModel
             return task;
         }
 
+        private void LogChanges(ActivityRequest newActivityRequest)
+        {
+            ActivityRequest SelectedAR = ActivityRequestManager.SelectedActivityRequest;
+            foreach (PropertyInfo propertyInfo in newActivityRequest.GetType().GetProperties())
+            {
+                //if (newActivityRequest.GetType().GetProperty(propertyInfo.Name).GetValue(newActivityRequest) != SelectedAR.GetType().GetProperty(propertyInfo.Name).GetValue(SelectedAR)) Debug.WriteLine($"Abweichung in: {propertyInfo.Name}");
+                Debug.WriteLine($"{propertyInfo.Name} = New Value: {newActivityRequest.GetType().GetProperty(propertyInfo.Name).GetValue(newActivityRequest)}; old value: {SelectedAR.GetType().GetProperty(propertyInfo.Name).GetValue(SelectedAR)}");
+            }
+        }
 
         private void NewExecute(object obj)
         {

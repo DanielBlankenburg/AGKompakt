@@ -38,6 +38,7 @@ namespace BGH_Kompakt.Services
         public DbSet<ARVerguetungAdventageTyp> ARVerguetungAdventageTyps { get; set; }
         public virtual DbSet<ActivityRequest> ActivityRequests { get; set; }
         public DbSet<ActivityRequestDataFile> ActivityRequestDataFiles { get; set; }
+        public DbSet<ActivityRequestChangeHistory> ActivityRequestChangeHistories { get; set; }
 
         public ActivityRequestDBContext() :base("name=Main")
         {

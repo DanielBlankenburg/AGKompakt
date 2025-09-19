@@ -60,6 +60,9 @@ namespace BGH_Kompakt.Classes.ActivityRequestClasses
         //public  ICollection<ActivityRequestScienceAuthorName>? ActivityRequestScienceAuthors {  get; set; }
         public int ARZustaendigkeitsbereich { get; set; } = 1; //1 = Zuständigkeit beim Einreichenden; 2 = Zuständigkeit Präsidialrichter; 3 = Zuständigkeit Präsidentin; 4 = Zuständigkeit Vorzimmer; 5 = Archiv; 6 = Vorsitzender
         public bool ARRejected { get; set; } = false;
+        public ICollection<ActivityRequestChangeHistory>? ActivityRequestChangeHistories { get; set; }
+
+
         [NotMapped]
         public string Status
         {

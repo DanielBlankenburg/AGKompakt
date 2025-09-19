@@ -94,8 +94,8 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 List = new List<String> { "Wissenschaftliche Veröffentlichung", "Lehr- oder sonstige wissenschaftliche Tätigkeit" };
                 foreach (string suchText in List)
                 {
-                    ActivityRequestScienceCategorie test = arDBContext.ActivityRequestScienceCategories.FirstOrDefault(x => x.ActivityRequestScienceCategorieText == suchText);
-                    Debug.WriteLine(test.ActivityRequestScienceCategorieText);
+                    //ActivityRequestScienceCategorie test = arDBContext.ActivityRequestScienceCategories.FirstOrDefault(x => x.ActivityRequestScienceCategorieText == suchText);
+                    //Debug.WriteLine(test.ActivityRequestScienceCategorieText);
                     if (arDBContext.ActivityRequestScienceCategories.FirstOrDefault(x => x.ActivityRequestScienceCategorieText == suchText) == null)
                         arDBContext.ActivityRequestScienceCategories.AddOrUpdate(a => a.ActivityRequestScienceCategorieText, new ActivityRequestScienceCategorie { ActivityRequestScienceCategorieText = suchText });
                 };
