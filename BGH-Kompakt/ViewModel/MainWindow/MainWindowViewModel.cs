@@ -20,7 +20,13 @@ namespace BGH_Kompakt.ViewModel.MainWindow
     public partial class MainWindowViewModel : ViewModelBase
     {
         //private UserDBContext userDBContext = new UserDBContext();
-        public string SenatsText;
+        private string _SenatsText;
+        public string SenatsText
+        {
+            get { return _SenatsText; }
+            set { SetProperty<string>(ref _SenatsText, value); }
+        }
+
         private string _loginUser;
         private readonly UserDBContext userContext = new UserDBContext();
         //String suchText = string.Empty;
@@ -41,6 +47,7 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 selectedSenat = value; 
                 UserManager.Set_SenatSettings(UserManager.RegistratedUser.Senate, SelectedSenat);
                 ViewManager.ShowPageOnMainView<StartView>();
+                SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
             }
         }
 

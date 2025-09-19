@@ -32,7 +32,7 @@
             <Button
                 x:Name="Allgemein"
                 Click="Button_Click"
-                Content="Allgemeine Funktionen"
+                Content="Geschäftsstellenbereich"
                 Style="{StaticResource Button_Anleitungen}" />
             <Button
                 x:Name="Montagspost"
