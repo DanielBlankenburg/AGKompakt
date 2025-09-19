@@ -1,26 +1,28 @@
-﻿using BGH_Kompakt.Classes.Helper;
+﻿using BGH_Kompakt.Classes.ActivityRequestClasses;
+using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.Senate;
+using BGH_Kompakt.Classes.SystemSettings;
 using BGH_Kompakt.Components;
 using BGH_Kompakt.Enums;
+using BGH_Kompakt.Services.ActivityRequestService;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.UserService;
 using BGH_Kompakt.ViewModel.MainWindow;
 using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.HelperWindows;
+using BGH_Kompakt.Views.Pages.Montagspost;
+using BGH_Kompakt.Views.Pages.Sitzungsunterlagen;
+using BGH_Kompakt.Views.Pages.Start;
 using BGH_Kompakt.Views.Settings;
 using BGH_Kompakt.Views.Sitzungsunterlagen;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
-using BGH_Kompakt.Services.ActivityRequestService;
-using BGH_Kompakt.Classes.SystemSettings;
-using BGH_Kompakt.Views.Pages.Sitzungsunterlagen;
-using BGH_Kompakt.Views.Pages.Montagspost;
-using BGH_Kompakt.Views.Pages.Start;
 
 namespace BGH_Kompakt.Services.SystemComponents
 {
@@ -123,7 +125,11 @@ namespace BGH_Kompakt.Services.SystemComponents
             inputbox.ShowDialog();
             return inputbox.Inputtext;
         }
-
+        public static bool ShowActivityRequestChangeHistory(ActivityRequest request)
+        {
+            //return new InputBoxBGH(iMessage, SettingEnums.BGHKompaktDialogType.Information).ShowDialog() ?? false;
+            return false;
+        }
         public static void OpenMainMenu(string button)
         {
             MainView.MainMenu.Visibility = Visibility.Visible;

@@ -467,6 +467,9 @@
     <Compile Include="Views\Pages\TestDesign\StartTest.xaml.cs">
       <DependentUpon>StartTest.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Windows\ActivityRequestChangeListView.xaml.cs">
+      <DependentUpon>ActivityRequestChangeListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\InputBoxBGH.xaml.cs">
       <DependentUpon>InputBoxBGH.xaml</DependentUpon>
     </Compile>
@@ -562,6 +565,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\TestDesign\StartTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\ActivityRequestChangeListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

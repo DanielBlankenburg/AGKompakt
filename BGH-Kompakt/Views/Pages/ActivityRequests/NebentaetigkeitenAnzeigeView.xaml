@@ -1409,6 +1409,11 @@
                                 Style="{StaticResource Button_Master}" />
                             <Button
                                 Margin="0,0,10,0"
+                                Command="{Binding ChangeHistoryCommand}"
+                                Content="Änderungshistorie"
+                                Style="{StaticResource Button_Master}" />
+                            <Button
+                                Margin="0,0,10,0"
                                 Command="{Binding QuitCommand}"
                                 Content="Zur Übersichtsliste"
                                 Style="{StaticResource Button_Master}" />

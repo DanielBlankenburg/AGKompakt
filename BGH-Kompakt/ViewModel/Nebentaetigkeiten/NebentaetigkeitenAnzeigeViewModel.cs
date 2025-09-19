@@ -12,6 +12,7 @@ using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
 using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.UserLogin;
+using BGH_Kompakt.Views.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,9 +45,10 @@ namespace BGH_Kompakt.ViewModel
         private readonly ObservableCollection<ActivityRequestDataFile> _ImportFileList = new ObservableCollection<ActivityRequestDataFile>();
         public ObservableCollection<ActivityRequestDataFile> ImportFileList { get { return _ImportFileList; } }
         public ObservableCollection<ActivityClient> Items { get; set; }
-        public CollectionViewSource CollectionView { 
-            get; 
-            set; 
+        public CollectionViewSource CollectionView
+        {
+            get;
+            set;
         }
         public ObservableCollection<ActivityClient> Clientlist { get; set; }
 
@@ -124,7 +126,8 @@ namespace BGH_Kompakt.ViewModel
         public ARVerguetungAdventageTyp SelectedAdventageTyp
         {
             get { return selectedAdventageTyp; }
-            set { 
+            set
+            {
                 selectedAdventageTyp = value;
                 if (value != null) ErrorAdventageTyp = false;
             }
@@ -615,7 +618,7 @@ namespace BGH_Kompakt.ViewModel
         public bool PaymentPredicted
         {
             get { return _PaymentPredicted; }
-            set 
+            set
             {
                 SetProperty<bool>(ref _PaymentPredicted, value);
                 if (_PaymentPredicted)
@@ -688,13 +691,13 @@ namespace BGH_Kompakt.ViewModel
         public bool AnzeigeHinweisEinsatz
         {
             get { return _AnzeigeHinweisEinsatz; }
-            set { SetProperty<bool>(ref _AnzeigeHinweisEinsatz, value);}
+            set { SetProperty<bool>(ref _AnzeigeHinweisEinsatz, value); }
         }
         private bool _ShowChanges = false;
         public bool ShowChanges
         {
             get { return _ShowChanges; }
-            set { SetProperty<bool>(ref _ShowChanges, value);}
+            set { SetProperty<bool>(ref _ShowChanges, value); }
         }
 
 
@@ -945,7 +948,8 @@ namespace BGH_Kompakt.ViewModel
         public string AdventageAmount
         {
             get { return _AdventageAmount; }
-            set {  
+            set
+            {
                 SetProperty<string>(ref _AdventageAmount, value);
                 if (value != null) ErrorAdventageAmount = false;
             }
@@ -1012,7 +1016,8 @@ namespace BGH_Kompakt.ViewModel
         public bool ARAssurance
         {
             get { return _ARAssurance; }
-            set { 
+            set
+            {
                 SetProperty(ref _ARAssurance, value);
                 ErrorInstruction = false;
             }
@@ -1067,6 +1072,7 @@ namespace BGH_Kompakt.ViewModel
         public ICommand AddRequestsCommand { get; set; }
         public ICommand ScienceAuthorListSelectedCommand { get; set; }
         public ICommand HyperLinkCommand { get; set; }
+        public ICommand ChangeHistoryCommand { get; set; }
         public ICommand TestCommand { get; set; }
         #endregion
         public NebentaetigkeitenAnzeigeViewModel()
@@ -1125,14 +1131,31 @@ namespace BGH_Kompakt.ViewModel
             AddRequestsCommand = new RelayCommand(AddRequestExecute);
             ScienceAuthorListSelectedCommand = new RelayCommand(ScienceAuthorSelctionExecute);
             HyperLinkCommand = new RelayCommand(HyperLinkExecute);
+            ChangeHistoryCommand = new RelayCommand(ChangeHistoryExecute, ChangeHistoryCanExecute);
             TestCommand = new RelayCommand(TextExecute);
+        }
+
+        private bool ChangeHistoryCanExecute(object obj)
+        {
+            if (ActivityRequestManager.SelectedActivityRequest != null)
+                return ActivityRequestManager.SelectedActivityRequest.ActivityRequestChangeHistories != null && ActivityRequestManager.SelectedActivityRequest.ActivityRequestChangeHistories.Count > 0;
+            return false;
+        }
+
+        private void ChangeHistoryExecute(object obj)
+        {
+            ActivityRequestChangeListView listView = new ActivityRequestChangeListView(ActivityRequestManager.SelectedActivityRequest);
+            listView.ShowDialog();
+
+
+            //ViewManager.ShowInputWindow();
         }
 
         private void TextExecute(object obj)
         {
             SelectedClient = ActivityRequestManager.SelectedActivityRequest.ActivityClient;
             SelectedClientIndex = 3;
-            
+
         }
 
         private void Fill_ComboBoxes()
@@ -1215,7 +1238,7 @@ namespace BGH_Kompakt.ViewModel
             ActivityRequestDBContext activityRequestDBcontext = new ActivityRequestDBContext();
             ARVerguetungAdventageTyp addAdventageTyp = activityRequestDBcontext.ARVerguetungAdventageTyps.FirstOrDefault(a => a.ARVerguetungAdventageTypId == selectedAdventageTyp.ARVerguetungAdventageTypId);
             ARVerguetungAdventage newAdventage = new ARVerguetungAdventage
-            {               
+            {
                 ARVerguetungAdventageTyp = addAdventageTyp,
                 ARVerguetungAdventageTypId = SelectedAdventageTyp.ARVerguetungAdventageTypId,
                 ARVerguetungAdventageAmount = decimal.Parse(AdventageAmount)
@@ -1479,7 +1502,8 @@ namespace BGH_Kompakt.ViewModel
                         }
                         activityRequestDBcontext.ActivityRequests.AddOrUpdate(newActivityRequest);
                         activityRequestDBcontext.SaveChanges();
-                        LogChanges(newActivityRequest);
+                        if (ActivityRequestManager.SelectedActivityRequest != null && newActivityRequest.ARZustaendigkeitsbereich > 1)
+                            LogChanges(newActivityRequest);
                         //Anlagen prüfen
                         if (ImportFileList.Count > 0)
                         {
@@ -1512,12 +1536,110 @@ namespace BGH_Kompakt.ViewModel
 
         private void LogChanges(ActivityRequest newActivityRequest)
         {
-            ActivityRequest SelectedAR = ActivityRequestManager.SelectedActivityRequest;
-            foreach (PropertyInfo propertyInfo in newActivityRequest.GetType().GetProperties())
+            ActivityRequest selectedAR = ActivityRequestManager.SelectedActivityRequest;
+            List<ActivityRequestChangeHistory> changeList = new List<ActivityRequestChangeHistory>();
+
+            if (newActivityRequest.ARTitel != selectedAR.ARTitel) changeList.Add(AddChangeHistory($"Der Titel wurde in {newActivityRequest.ARTitel} geändert.", newActivityRequest));
+            if (newActivityRequest.ARVerguetung != selectedAR.ARVerguetung) changeList.Add(AddChangeHistory($"Die Vergütung wurde in {newActivityRequest.ARVerguetung} € geändert.", newActivityRequest));
+            if (newActivityRequest.ARZeitaufwandMain != selectedAR.ARZeitaufwandMain) changeList.Add(AddChangeHistory($"Der Zeitaufwand (Haupttätigkeit) wurde in {newActivityRequest.ARZeitaufwandMain} geändert.", newActivityRequest));
+            if (newActivityRequest.ARZeitaufwandPrep != selectedAR.ARZeitaufwandPrep) changeList.Add(AddChangeHistory($"Der Zeitaufwand (Vorbereitung) wurde in {newActivityRequest.ARZeitaufwandPrep} geändert.", newActivityRequest));
+            if (newActivityRequest.AROrt != selectedAR.AROrt) changeList.Add(AddChangeHistory($"Der Ort wurde in {newActivityRequest.AROrt} geändert.", newActivityRequest));
+            if (newActivityRequest.ARActivityDate != selectedAR.ARActivityDate) changeList.Add(AddChangeHistory($"Das Veranstaltungdatum wurde in {newActivityRequest.ARActivityDate} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestDatePermanentFrom != selectedAR.ActivityRequestDatePermanentFrom) changeList.Add(AddChangeHistory($"Das Startdatum wurde in {newActivityRequest.ActivityRequestDatePermanentFrom} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestDatePermanentUntil != selectedAR.ActivityRequestDatePermanentUntil) changeList.Add(AddChangeHistory($"Das Enddatum wurde in {newActivityRequest.ActivityRequestDatePermanentUntil} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestDatePermantenDuration != selectedAR.ActivityRequestDatePermantenDuration) changeList.Add(AddChangeHistory($"Die Anzahl der Einsätze wurde in {newActivityRequest.ActivityRequestDatePermantenDuration} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestArbitrationCaller != selectedAR.ActivityRequestArbitrationCaller) changeList.Add(AddChangeHistory($"Die Bezeichnung der benennenden Stelle wurde in {newActivityRequest.ActivityRequestArbitrationCaller} geändert.", newActivityRequest));
+            if (newActivityRequest.Assurance != selectedAR.Assurance) changeList.Add(AddChangeHistory($"Der Eintrag zur Einwilligung wurde geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestTyp.ActivityRequestTypText != selectedAR.ActivityRequestTyp.ActivityRequestTypText) changeList.Add(AddChangeHistory($"Die Tätigkeitsart wurde in {newActivityRequest.ActivityRequestTyp.ActivityRequestTypText} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestMeldeArt.ActivityRequestMeldeArtText != selectedAR.ActivityRequestMeldeArt.ActivityRequestMeldeArtText) changeList.Add(AddChangeHistory($"Die Meldeart wurde in {newActivityRequest.ActivityRequestMeldeArt.ActivityRequestMeldeArtText} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityClient.ACName != selectedAR.ActivityClient.ACName) changeList.Add(AddChangeHistory($"Der Veranstalter/Auftraggeber wurde in {newActivityRequest.ActivityClient.ACName} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestScienceTyp != null && selectedAR.ActivityRequestScienceTyp != null && newActivityRequest.ActivityRequestScienceTyp.ActivityRequestScienceTypText != selectedAR.ActivityRequestScienceTyp.ActivityRequestScienceTypText) changeList.Add(AddChangeHistory($"Die Art der Veröffentlichung wurde in {newActivityRequest.ActivityRequestScienceTyp.ActivityRequestScienceTypText} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestScienceCategorie != null && selectedAR.ActivityRequestScienceCategorie != null && newActivityRequest.ActivityRequestScienceCategorie.ActivityRequestScienceCategorieText != selectedAR.ActivityRequestScienceCategorie.ActivityRequestScienceCategorieText) changeList.Add(AddChangeHistory($"Die Art der wissenschaftlichen Tätigkeit wurde in {newActivityRequest.ActivityRequestScienceCategorie.ActivityRequestScienceCategorieText} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestOrtArt != null && selectedAR.ActivityRequestOrtArt != null && newActivityRequest.ActivityRequestOrtArt.ActivityRequestOrtArtText != selectedAR.ActivityRequestOrtArt.ActivityRequestOrtArtText) changeList.Add(AddChangeHistory($"Die Einordung Online/Präsenz wurde in {newActivityRequest.ActivityRequestOrtArt.ActivityRequestOrtArtText} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestFrequency != null && selectedAR.ActivityRequestFrequency != null && newActivityRequest.ActivityRequestFrequency.ActivityRequestFrequencyText != selectedAR.ActivityRequestFrequency.ActivityRequestFrequencyText) changeList.Add(AddChangeHistory($"Die Einordug Einmalig/pro Jahr wurde in {newActivityRequest.ActivityRequestFrequency.ActivityRequestFrequencyText} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestArbitrationTyp != null && selectedAR.ActivityRequestArbitrationTyp != null && newActivityRequest.ActivityRequestArbitrationTyp.ActivityRequestArbitrationTypText != selectedAR.ActivityRequestArbitrationTyp.ActivityRequestArbitrationTypText) changeList.Add(AddChangeHistory($"Die Art der Beauftragung wurde in {newActivityRequest.ActivityRequestArbitrationTyp.ActivityRequestArbitrationTypText} geändert.", newActivityRequest));
+            if (newActivityRequest.ActivityRequestVerguetungTypId != selectedAR.ActivityRequestVerguetungTypId)
             {
-                //if (newActivityRequest.GetType().GetProperty(propertyInfo.Name).GetValue(newActivityRequest) != SelectedAR.GetType().GetProperty(propertyInfo.Name).GetValue(SelectedAR)) Debug.WriteLine($"Abweichung in: {propertyInfo.Name}");
-                Debug.WriteLine($"{propertyInfo.Name} = New Value: {newActivityRequest.GetType().GetProperty(propertyInfo.Name).GetValue(newActivityRequest)}; old value: {SelectedAR.GetType().GetProperty(propertyInfo.Name).GetValue(SelectedAR)}");
+                string TypText = string.Empty;
+                switch (newActivityRequest.ActivityRequestVerguetungTypId)
+                {
+                    case 1:
+                        TypText = "erhaltene Vergütung";
+                        break;
+                    case 2:
+                        TypText = "Honorarfrei";
+                        break;
+                    case 3:
+                        TypText = "Unbekannt";
+                        break;
+                }
+                changeList.Add(AddChangeHistory($"Die Vergütungsart wurde in {TypText} geändert.", newActivityRequest));
             }
+            if (newActivityRequest.ActivityRequestHourTypId != selectedAR.ActivityRequestHourTypId)
+            {
+                string TypText = string.Empty;
+                switch (newActivityRequest.ActivityRequestHourTypId)
+                {
+                    case 1:
+                        TypText = "Schätzung";
+                        break;
+                    case 2:
+                        TypText = "unbekannt";
+                        break;
+                }
+                changeList.Add(AddChangeHistory($"Die Zeitaufwandsart wurde in {TypText} geändert.", newActivityRequest));
+            }
+            if (newActivityRequest.SciencenAuthorAuthor != selectedAR.SciencenAuthorAuthor) changeList.Add(AddChangeHistory($"Die Art Author wurde {(newActivityRequest.SciencenAuthorAuthor ? "aktiviert" : "deaktiviert")} geändert.", newActivityRequest));
+            if (newActivityRequest.SciencenAuthorSchriftleitung != selectedAR.SciencenAuthorSchriftleitung) changeList.Add(AddChangeHistory($"Die Art Schriftleitung wurde {(newActivityRequest.SciencenAuthorSchriftleitung ? "aktiviert" : "deaktiviert")} geändert.", newActivityRequest));
+            if (newActivityRequest.SciencenAuthorHerausgeber != selectedAR.SciencenAuthorHerausgeber) changeList.Add(AddChangeHistory($"Die Art Herausgeber wurde {(newActivityRequest.SciencenAuthorHerausgeber ? "aktiviert" : "deaktiviert")} geändert.", newActivityRequest));
+            if (newActivityRequest.SciencenAuthorWissenschaftlicherBeirat != selectedAR.SciencenAuthorWissenschaftlicherBeirat) changeList.Add(AddChangeHistory($"Die Art wissenschaftlicher Beirat wurde {(newActivityRequest.SciencenAuthorWissenschaftlicherBeirat ? "aktiviert" : "deaktiviert")} geändert.", newActivityRequest));
+            if (newActivityRequest.SciencenAuthorSonstiges != selectedAR.SciencenAuthorSonstiges) changeList.Add(AddChangeHistory($"Die Art Sonstiges wurde {(newActivityRequest.SciencenAuthorSonstiges ? "aktiviert" : "deaktiviert")} geändert.", newActivityRequest));
+            if (newActivityRequest.ARVerguetungAdventages != null && selectedAR.ARVerguetungAdventages != null)
+            {
+                if (newActivityRequest.ARVerguetungAdventages.Count != selectedAR.ARVerguetungAdventages.Count)
+                {
+                    if (newActivityRequest.ARVerguetungAdventages.Count < selectedAR.ARVerguetungAdventages.Count) changeList.Add(AddChangeHistory($"Es wurde ein geldwerter Vorteil gelöscht.", newActivityRequest));
+                    else changeList.Add(AddChangeHistory($"Es wurde ein geldwerter Vorteil hinzugefügt.", newActivityRequest));
+                }
+            }
+            if (newActivityRequest.ActivityRequestArbitrationClients != null && selectedAR.ActivityRequestArbitrationClients != null)
+            {
+                if (newActivityRequest.ActivityRequestArbitrationClients.Count != selectedAR.ActivityRequestArbitrationClients.Count)
+                {
+                    if (newActivityRequest.ActivityRequestArbitrationClients.Count < selectedAR.ActivityRequestArbitrationClients.Count) changeList.Add(AddChangeHistory($"Es wurde eine Partei gelöscht.", newActivityRequest));
+                    else changeList.Add(AddChangeHistory($"Es wurde eine Partei hinzugefügt.", newActivityRequest));
+                }
+            }
+            if (newActivityRequest.ActivityRequestDataFiles != null && selectedAR.ActivityRequestDataFiles != null)
+            {
+                if (newActivityRequest.ActivityRequestDataFiles.Count != selectedAR.ActivityRequestDataFiles.Count)
+                {
+                    if (newActivityRequest.ActivityRequestDataFiles.Count < selectedAR.ActivityRequestDataFiles.Count) changeList.Add(AddChangeHistory($"Es wurde eine Anlage gelöscht.", newActivityRequest));
+                    else changeList.Add(AddChangeHistory($"Es wurde eine Anlage hinzugefügt.", newActivityRequest));
+                }
+            }
+
+            //Attechments
+
+            if (changeList.Count > 0)
+                foreach (ActivityRequestChangeHistory item in changeList) newActivityRequest.ActivityRequestChangeHistories.Add(item);
+            activityRequestDBcontext.ActivityRequests.AddOrUpdate(newActivityRequest);
+            activityRequestDBcontext.SaveChanges();
+        }
+
+        private ActivityRequestChangeHistory AddChangeHistory(string text, ActivityRequest newActivityRequest)
+        {
+            ActivityRequestChangeHistory newChange = new ActivityRequestChangeHistory
+            {
+                ActivityRequestChangeHistoryText = text,
+                ActivityRequestChangeHistoryDate = DateTime.Now,
+                ActivityRequestChangeHistoryAuthor = UserManager.RegistratedUser.Fullname,
+                ActivityRequest = newActivityRequest,
+                ActivityRequestId = newActivityRequest.ActivityRequestId
+            };
+            activityRequestDBcontext.ActivityRequestChangeHistories.Add(newChange);
+            activityRequestDBcontext.SaveChanges();
+            return newChange;
         }
 
         private void NewExecute(object obj)
@@ -1539,7 +1661,7 @@ namespace BGH_Kompakt.ViewModel
         }
         private bool ImportListClearCanExecute(object obj) => ImportFileList.Count > 0;
         private void ImportListClearExecute(object obj)
-        { 
+        {
             ImportFileList.Clear();
             ShowAttechmentList = false;
         }
@@ -1664,7 +1786,7 @@ namespace BGH_Kompakt.ViewModel
                 List<ActivityRequestScienceAuthorName> listNames = activityRequestDBcontext.ActivityRequestScienceAuthorNames.ToList();
                 foreach (ScienceAuthor item in ScienceAuthorList)
                 {
-                    for (int i = 0; i < listNames.Count - 1;i++)
+                    for (int i = 0; i < listNames.Count - 1; i++)
                     {
                         switch (i)
                         {
@@ -1724,7 +1846,7 @@ namespace BGH_Kompakt.ViewModel
             if (ArbitrationClientList.Count > 0)
             {
                 newActivityRequest.ActivityRequestArbitrationClients = new Collection<ActivityRequestArbitrationClient>();
-                foreach (var item in ArbitrationClientList) 
+                foreach (var item in ArbitrationClientList)
                 {
                     ActivityRequestArbitrationClient dbItem = activityRequestDBcontext.ActivityRequestArbitrationClients.FirstOrDefault(ac => ac.ActivityRequestArbitrationClientId == item.ActivityRequestArbitrationClientId);
                     newActivityRequest.ActivityRequestArbitrationClients.Add(dbItem);
@@ -1734,7 +1856,7 @@ namespace BGH_Kompakt.ViewModel
         }
         private void ValidationVerguetung(ref ActivityRequest newActivityRequest)
         {
-            if (!PaymentPredicted && !PaymentNothing && !PaymentUnknown) { ErrorPaymentTyp = true; ErrorCRUD = true; return;}
+            if (!PaymentPredicted && !PaymentNothing && !PaymentUnknown) { ErrorPaymentTyp = true; ErrorCRUD = true; return; }
             else
             {
                 int paymentTyp = 0;
@@ -1752,7 +1874,7 @@ namespace BGH_Kompakt.ViewModel
         }
         private void ValidationHoursSelect(ref ActivityRequest newActivityRequest)
         {
-            if (!HoursPredicted && !HoursUnknown ) { ErrorHourTyp = true; ErrorCRUD = true; return; }
+            if (!HoursPredicted && !HoursUnknown) { ErrorHourTyp = true; ErrorCRUD = true; return; }
             else
             {
                 int hourTyp;
@@ -1784,8 +1906,8 @@ namespace BGH_Kompakt.ViewModel
                     //Prüfen, ob Referententätigkeit über 2 Stunden liegt
                     if (SelectedRequestTyp.ActivityRequestTypId == 5)
                         if (HoursMain < 3) { ErrorHoursMainText = "Bei der Referententätigkeit darf die Stundenzahl nicht unter 3 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
-                    else if (SelectedRequestTyp.ActivityRequestTypId == 1)
-                        if (HoursMain > 2) { ErrorHoursMainText = "Bei der Vortragstätigkeit darf die Stundenzahl nicht über 2 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
+                        else if (SelectedRequestTyp.ActivityRequestTypId == 1)
+                            if (HoursMain > 2) { ErrorHoursMainText = "Bei der Vortragstätigkeit darf die Stundenzahl nicht über 2 Stunden liegen."; ErrorHoursMain = true; ErrorCRUD = true; }
                 }
 
             }
@@ -1805,7 +1927,7 @@ namespace BGH_Kompakt.ViewModel
 
                 newActivityRequest.ARVerguetungAdventages = new Collection<ARVerguetungAdventage>();
                 foreach (ARVerguetungAdventage item in AdventageList)
-                {                   
+                {
                     ARVerguetungAdventage dbItem = activityRequestDBcontext.ARVerguetungAdventages.FirstOrDefault(a => a.ARVerguetungAdventageId == item.ARVerguetungAdventageId);
                     if (dbItem == null)
                     {
@@ -2019,11 +2141,11 @@ namespace BGH_Kompakt.ViewModel
                 PaymentUnknown = iActivityRequest.ActivityRequestVerguetungTypId == 3;
                 SetScienceAuthor(iActivityRequest);
                 //VerguetungsAdventages füllen
-                if (iActivityRequest.ARVerguetungAdventages != null) 
+                if (iActivityRequest.ARVerguetungAdventages != null)
                     foreach (ARVerguetungAdventage adventage in iActivityRequest.ARVerguetungAdventages) AdventageList.Add(adventage);
                 AnzeigeAdventageList = AdventageList.Count > 0;
                 //Anlagen füllen
-                if (iActivityRequest.ActivityRequestDataFiles != null) 
+                if (iActivityRequest.ActivityRequestDataFiles != null)
                     foreach (ActivityRequestDataFile file in iActivityRequest.ActivityRequestDataFiles) ImportFileList.Add(file);
                 ShowAttechmentList = ImportFileList.Count > 0;
 

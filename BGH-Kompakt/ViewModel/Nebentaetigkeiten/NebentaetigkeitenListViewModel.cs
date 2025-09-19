@@ -297,6 +297,7 @@ namespace BGH_Kompakt.ViewModel
                                         .Where(u => u.ARUserID == UserManager.RegistratedUser.UserId)
                                         .Include(a => a.ARVerguetungAdventages)
                                         .Include(x => x.ActivityRequestDataFiles)
+                                        .Include(c => c.ActivityRequestChangeHistories)
                                         .OrderBy(x => x.ARDatum);
                         foreach (var activityRequest in query)
                         {
@@ -324,6 +325,7 @@ namespace BGH_Kompakt.ViewModel
                                     .Where(u => u.ARZustaendigkeitsbereich == ActivityRequestManager.AblageArt)
                                     .Include(a => a.ARVerguetungAdventages)
                                     .Include(x => x.ActivityRequestDataFiles)
+                                    .Include(c => c.ActivityRequestChangeHistories)
                                     .OrderBy(x => x.ARDatum);
                     foreach (var activityRequest in query2)
                     {
