@@ -39,6 +39,7 @@ namespace BGH_Kompakt.Services
         public virtual DbSet<ActivityRequest> ActivityRequests { get; set; }
         public DbSet<ActivityRequestDataFile> ActivityRequestDataFiles { get; set; }
         public DbSet<ActivityRequestChangeHistory> ActivityRequestChangeHistories { get; set; }
+        public DbSet<ActivityRequestStatus> ActivityRequestStatuses { get; set; }
 
         public ActivityRequestDBContext() :base("name=Main")
         {

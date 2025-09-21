@@ -1,6 +1,7 @@
 ﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
 using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
+using BGH_Kompakt.Classes.MP;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Dtos;
@@ -658,6 +659,19 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                         }
                     }
+                    string docName = $"Nebentätigkeit-{SelectedActivityRequest.ARUser.NachName}.docx";
+                    string dirTemp = $"{BGHKompaktSystemInfo.PathTemp}\\docAR\\";
+                    if (!Directory.Exists(dirTemp)) Directory.CreateDirectory(dirTemp);
+                    wordDoc.SaveAs2($"{dirTemp}{docName}");
+                    //wordDoc.Close();
+
+                    //string docFilePath = $"{dirTemp}{docName}";
+                    //byte[] bytes = System.IO.File.ReadAllBytes(docFilePath);
+
+                    //ActivityRequestDataFile file = new ActivityRequestDataFile { FileName = $"{docName}", Data = bytes, ActivityRequestId = SelectedActivityRequest.ActivityRequestId };
+                    //dBContext.ActivityRequestDataFiles.Add(file);
+                    //dBContext.SaveChanges();
+                    //wordDoc = wordApp.Documents.Add(docFilePath);
                     wordApp.Visible = true;
                     response.Success = true;
                 }

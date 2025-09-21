@@ -1,0 +1,17 @@
+﻿using BGH_Kompakt.Classes.ActivityRequestClasses;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps
+{
+    public class ActivityRequestStatus
+    {
+        public int ActivityRequestStatusId { get; set; }
+        public string ActivityRequestStatusText { get; set; }
+        public IList<ActivityRequest> ActivityRequests { get; set; }
+
+    }
+}

@@ -67,7 +67,7 @@
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="Visibility" Value="Collapsed" />
             </Style>
-           
+
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -784,25 +784,46 @@
                         Header="Veranstalter"
                         HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
                     <GridViewColumn
-                        Width="150"
-                        DisplayMemberBinding="{Binding ActivityRequestMeldeArt.ActivityRequestMeldeArtText, TargetNullValue=[keine Angabe]}"
-                        Header="Meldeart"
-                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                        Width="180"
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <StackPanel >
+                                        <TextBlock  Text="{Binding ActivityRequestMeldeArt.ActivityRequestMeldeArtText, TargetNullValue=[keine Angabe]}"></TextBlock>
+                                        <TextBlock Text="{Binding ActivityRequestTyp.ActivityRequestTypText, TargetNullValue=[keine Angabe]}"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                        <GridViewColumnHeader>
+                            <StackPanel>
+                                <TextBlock Text="Meldeart"></TextBlock>
+                                <TextBlock Text="Tätigkeitsart"></TextBlock>
+                            </StackPanel>
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
                     <GridViewColumn
-                        Width="150"
-                        DisplayMemberBinding="{Binding ActivityRequestTyp.ActivityRequestTypText, TargetNullValue=[keine Angabe]}"
-                        Header="Tätigkeitsart"
-                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
-                    <GridViewColumn
-                        Width="150"
-                        DisplayMemberBinding="{Binding ARDatum, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}"
-                        Header="Eintragungsdatum"
-                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
-                    <GridViewColumn
-                        Width="150"
-                        DisplayMemberBinding="{Binding ARActivityDate, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}"
-                        Header="Tätigkeitsdatum"
-                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                        Width="130"                        
+                        
+                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <StackPanel >
+                                        <TextBlock Text="{Binding ARDatum, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}"></TextBlock>
+                                        <TextBlock Text="{Binding ARActivityDate, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                        <GridViewColumnHeader>
+                            <StackPanel>
+                                <TextBlock Text="Eintragungsdatum"></TextBlock>
+                                <TextBlock Text="Tätigkeitsdatum"></TextBlock>
+                            </StackPanel>
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
                     <GridViewColumn
                         Width="130"
                         DisplayMemberBinding="{Binding ARVerguetung, TargetNullValue=[keine Angabe], StringFormat={}{0:c}, ConverterCulture=de-DE}"
@@ -957,13 +978,13 @@
                                         ToolTip="{Binding Path=DataContext.ToolTipSend, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}">
                                         <MD:PackIcon Padding="0" Kind="EmailAdd" />
                                     </Button>
-                                    <Button
+                                    <!--<Button
                                         x:Name="Btn_Word"
                                         Command="{Binding Path=DataContext.WordCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
                                         Style="{StaticResource Button_GridView}"
                                         ToolTip="{Binding Path=DataContext.ToolTipSend, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}">
                                         <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
-                                    </Button>
+                                    </Button>-->
 
                                 </StackPanel>
                                 <DataTemplate.Triggers>
@@ -990,7 +1011,7 @@
                                             <Setter TargetName="Btn_Reject" Property="Visibility" Value="Visible" />
                                         </MultiDataTrigger.Setters>
                                     </MultiDataTrigger>
-                                    <MultiDataTrigger>
+                                    <!--<MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />
                                             <Condition Binding="{Binding Path=DataContext.ShowWord, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
@@ -998,7 +1019,7 @@
                                         <MultiDataTrigger.Setters>
                                             <Setter TargetName="Btn_Word" Property="Visibility" Value="Visible" />
                                         </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
+                                    </MultiDataTrigger>-->
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />

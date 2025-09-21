@@ -60,9 +60,9 @@ namespace BGH_Kompakt.EntityConfigurations
             .WithMany(a => a.ActivityRequests)
             .HasForeignKey(x => x.ActivityRequestArbitrationTypId);
 
-            //HasOptional(x => x.ActivityRequestVerguetungTyps)
-            //.WithMany(a => a.ActivityRequests)
-            //.HasForeignKey(x => x.ActivityRequestVerguetungTypId);
+            HasOptional(x => x.ActivityRequestStatus)
+            .WithMany(a => a.ActivityRequests)
+            .HasForeignKey(x => x.ActivityRequestStatusID);
 
             HasMany(x => x.ActivityRequestDataFiles)
                 .WithRequired(x => x.ActivityRequest)

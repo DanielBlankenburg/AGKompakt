@@ -193,6 +193,7 @@
     <Compile Include="Classes\SystemSettings\PageInfo.cs" />
     <Compile Include="Classes\Test\FileData.cs" />
     <Compile Include="Classes\Test\TestItem.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestStatus.cs" />
     <Compile Include="Classes\_LookUp\MP\MPEMail.cs" />
     <Compile Include="Classes\_LookUp\MP\MPSetting.cs" />
     <Compile Include="Classes\_LookUp\MP\MPVermerk.cs" />
@@ -238,6 +239,10 @@
     <Compile Include="Migrartions\ActivityRequests\202509181328450_ARChangeHistory.cs" />
     <Compile Include="Migrartions\ActivityRequests\202509181328450_ARChangeHistory.Designer.cs">
       <DependentUpon>202509181328450_ARChangeHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202509212013463_ARStatus.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202509212013463_ARStatus.Designer.cs">
+      <DependentUpon>202509212013463_ARStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.cs" />
     <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.Designer.cs">
@@ -827,6 +832,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\ActivityRequests\202509181328450_ARChangeHistory.resx">
       <DependentUpon>202509181328450_ARChangeHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202509212013463_ARStatus.resx">
+      <DependentUpon>202509212013463_ARStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\MP\202501301414587_InitialMP.resx">
       <DependentUpon>202501301414587_InitialMP.cs</DependentUpon>

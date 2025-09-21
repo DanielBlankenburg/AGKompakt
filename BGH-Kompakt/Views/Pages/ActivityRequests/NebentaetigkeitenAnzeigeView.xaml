@@ -1597,20 +1597,137 @@
                 Grid.Column="2"
                 Width="400"
                 Visibility="{Binding ShowVermerk, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                <StackPanel Margin="10,0,10,0">
-                    <TextBlock Style="{StaticResource Textblock_Hinweistext_TopTitel}" Text="Vermerk:" />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10,0,10,0">
+                    <!--<TextBlock Style="{StaticResource Textblock_Hinweistext_TopTitel}" Text="Vermerk:" />-->
                     <TextBox
-                        MinHeight="300"
-                        Background="WhiteSmoke"
-                        Style="{StaticResource MaterialDesignTextBox}"
+                        MinHeight="100"
+                        Padding="10"
+                        MD:HintAssist.Hint="Vermerk:"
+                        AcceptsReturn="True"
+                        Background="Snow"
+                        Style="{StaticResource Textbox_Base}"
                         Text="{Binding ARNoteAdmin}"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
                 <Button
+                    Grid.Row="1"
                     Margin="0,15,0,0"
                     HorizontalAlignment="Center"
                     Content="Vermerk leeren"
                     Style="{StaticResource Button_Master}" />
+                <Border
+                    Grid.Row="2"
+                    Margin="0,20"
+                    Style="{StaticResource Expander_Border}" />
+                <StackPanel
+                    Grid.Row="3"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="Btn_1"
+                        Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        Style="{StaticResource Button_GridView}"
+                        ToolTip="Antrag/Anzeige als genehmigt weiterleiten"
+                        Visibility="Visible">
+                        <MD:PackIcon Padding="0" Kind="Check" />
+                    </Button>
+                    <Button
+                        x:Name="Btn_2"
+                        Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        Style="{StaticResource Button_GridView}"
+                        ToolTip="Antrag/Anzeige als abgelehnt weiterleiten"
+                        Visibility="Visible">
+                        <MD:PackIcon Padding="0" Kind="CloseOctagon" />
+                    </Button>
+                </StackPanel>
+                <Border
+                    Grid.Row="4"
+                    Margin="0,20"
+                    Style="{StaticResource Expander_Border}" />
+                <StackPanel Grid.Row="5">
+                    <StackPanel
+                        Grid.Row="3"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="Btn_3"
+                            Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Style="{StaticResource Button_GridView}"
+                            ToolTip="Genehmigung erstellen"
+                            Visibility="Visible">
+                            <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
+                        </Button>
+                        <Button
+                            x:Name="Btn_4"
+                            Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Style="{StaticResource Button_GridView}"
+                            ToolTip="Genehmigung versenden"
+                            Visibility="Visible">
+                            <MD:PackIcon Padding="0" Kind="EmailSend" />
+                        </Button>
+                    </StackPanel>
+                    <ListView
+                        Margin="0,30,0,0"
+                        ItemsSource="{Binding ImportFileList, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding SelectedAttechment, UpdateSourceTrigger=PropertyChanged}"
+                        SelectionMode="Single"
+                        Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="220"
+                                    DisplayMemberBinding="{Binding FileName}"
+                                    Header="Dateiname"
+                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                <GridViewColumn Width="Auto">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button
+                                                    x:Name="Btn_Open"
+                                                    Command="{Binding Path=DataContext.OpenAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Button_GridView}"
+                                                    ToolTip="Schreiben öffnen">
+                                                    <MD:PackIcon Padding="0" Kind="File" />
+                                                </Button>
+                                                <Button
+                                                    x:Name="Btn_Save"
+                                                    Command="{Binding Path=DataContext.DeleteAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Button_GridView}"
+                                                    ToolTip="Schreiben speichern">
+                                                    <MD:PackIcon Padding="0" Kind="ContentSave" />
+                                                </Button>
+                                                <Button
+                                                    x:Name="Btn_Bin"
+                                                    Command="{Binding Path=DataContext.DeleteAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Style="{StaticResource Button_GridView}"
+                                                    ToolTip="Schreiben löschen">
+                                                    <MD:PackIcon Padding="0" Kind="Bin" />
+                                                </Button>
+                                            </StackPanel>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
+                                                    <Setter TargetName="Btn_Open" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Btn_Save" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Btn_Bin" Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+
             </Grid>
             <!--#endregion-->
             <!--#region Hinweise-->
