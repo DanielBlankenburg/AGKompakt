@@ -783,44 +783,39 @@
                         DisplayMemberBinding="{Binding ActivityClient.ACName, TargetNullValue=[keine Angabe]}"
                         Header="Veranstalter"
                         HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
-                    <GridViewColumn
-                        Width="180"
-                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
+                    <GridViewColumn Width="180" HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel>
-                                    <StackPanel >
-                                        <TextBlock  Text="{Binding ActivityRequestMeldeArt.ActivityRequestMeldeArtText, TargetNullValue=[keine Angabe]}"></TextBlock>
-                                        <TextBlock Text="{Binding ActivityRequestTyp.ActivityRequestTypText, TargetNullValue=[keine Angabe]}"></TextBlock>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding ActivityRequestMeldeArt.ActivityRequestMeldeArtText, TargetNullValue=[keine Angabe]}" />
+                                        <TextBlock Text="{Binding ActivityRequestTyp.ActivityRequestTypText, TargetNullValue=[keine Angabe]}" />
                                     </StackPanel>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                         <GridViewColumnHeader>
                             <StackPanel>
-                                <TextBlock Text="Meldeart"></TextBlock>
-                                <TextBlock Text="Tätigkeitsart"></TextBlock>
+                                <TextBlock Text="Meldeart" />
+                                <TextBlock Text="Tätigkeitsart" />
                             </StackPanel>
                         </GridViewColumnHeader>
                     </GridViewColumn>
-                    <GridViewColumn
-                        Width="130"                        
-                        
-                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
+                    <GridViewColumn Width="130" HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel>
-                                    <StackPanel >
-                                        <TextBlock Text="{Binding ARDatum, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}"></TextBlock>
-                                        <TextBlock Text="{Binding ARActivityDate, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}"></TextBlock>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding ARDatum, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}" />
+                                        <TextBlock Text="{Binding ARActivityDate, TargetNullValue=[keine Angabe], StringFormat=d, ConverterCulture=de-DE}" />
                                     </StackPanel>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                         <GridViewColumnHeader>
                             <StackPanel>
-                                <TextBlock Text="Eintragungsdatum"></TextBlock>
-                                <TextBlock Text="Tätigkeitsdatum"></TextBlock>
+                                <TextBlock Text="Eintragungsdatum" />
+                                <TextBlock Text="Tätigkeitsdatum" />
                             </StackPanel>
                         </GridViewColumnHeader>
                     </GridViewColumn>
@@ -847,7 +842,7 @@
                     <GridViewColumn Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
                                     <MD:PackIcon
                                         x:Name="PI_Check"
                                         Foreground="Green"
@@ -942,7 +937,7 @@
                     <GridViewColumn Width="250">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
                                     <Button
                                         x:Name="Btn_Edit"
                                         Command="{Binding Path=DataContext.EditCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
@@ -990,7 +985,6 @@
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
                                         <Setter TargetName="Btn_Edit" Property="Visibility" Value="Visible" />
-                                        <Setter TargetName="Btn_Duplicate" Property="Visibility" Value="Visible" />
                                     </DataTrigger>
 
                                     <MultiDataTrigger>
@@ -1002,6 +996,16 @@
                                             <Setter TargetName="Btn_Send" Property="Visibility" Value="Visible" />
                                         </MultiDataTrigger.Setters>
                                     </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />
+                                            <Condition Binding="{Binding Path=DataContext.ShowDuplicate, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter TargetName="Btn_Duplicate" Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />

@@ -1626,11 +1626,13 @@
                 <Border
                     Grid.Row="2"
                     Margin="0,20"
-                    Style="{StaticResource Expander_Border}" />
+                    Style="{StaticResource Expander_Border}"
+                    Visibility="{Binding ShowAcceptence, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel
                     Grid.Row="3"
                     HorizontalAlignment="Center"
-                    Orientation="Horizontal">
+                    Orientation="Horizontal"
+                    Visibility="{Binding ShowAcceptence, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                     <Button
                         x:Name="Btn_1"
                         Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
@@ -1651,12 +1653,14 @@
                 <Border
                     Grid.Row="4"
                     Margin="0,20"
-                    Style="{StaticResource Expander_Border}" />
+                    Style="{StaticResource Expander_Border}"
+                    Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Grid.Row="5">
                     <StackPanel
                         Grid.Row="3"
                         HorizontalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                         <Button
                             x:Name="Btn_3"
                             Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"

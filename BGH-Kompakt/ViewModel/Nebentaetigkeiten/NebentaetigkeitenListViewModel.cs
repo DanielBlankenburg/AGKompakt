@@ -67,6 +67,12 @@ namespace BGH_Kompakt.ViewModel
             get => _ShowSend;
             set { SetProperty<bool>(ref _ShowSend, value); }
         }
+        private bool _ShowDuplicate = true;
+        public bool ShowDuplicate
+        {
+            get => _ShowDuplicate;
+            set { SetProperty<bool>(ref _ShowDuplicate, value); }
+        }
         private bool _ShowReject = false;
         public bool ShowReject
         {
@@ -807,18 +813,21 @@ namespace BGH_Kompakt.ViewModel
                             ShowBin = SelectedActivityRequest.ARZustaendigkeitsbereich == 1;
                             ShowReject = false;
                             ShowSend = SelectedActivityRequest.ARZustaendigkeitsbereich == 1;
+                            ShowDuplicate = true;
                             ShowWord = false;
                             break;
                         case 2: //Präsdialrichter/in; Präsident/in; Vorzimmer
                             ShowBin = SelectedActivityRequest.ARZustaendigkeitsbereich == 2;
                             ShowReject = SelectedActivityRequest.ARZustaendigkeitsbereich == 2 || SelectedActivityRequest.ARZustaendigkeitsbereich == 3;
-                            ShowSend = true;
+                            ShowSend = false;
+                            ShowDuplicate = false;
                             ShowWord = SelectedActivityRequest.ARZustaendigkeitsbereich == 4;
                             break;
                         case 3: //Archiv
                             ShowBin = false;
                             ShowReject = false;
                             ShowSend = false;
+                            ShowDuplicate = false;
                             ShowWord = false;
                             break;
 

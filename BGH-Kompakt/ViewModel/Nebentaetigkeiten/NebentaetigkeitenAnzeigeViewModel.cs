@@ -223,6 +223,18 @@ namespace BGH_Kompakt.ViewModel
             get => _ShowHinweis;
             set { SetProperty<bool>(ref _ShowHinweis, value); }
         }
+        private bool _ShowWordSend = false;
+        public bool ShowWordSend
+        {
+            get => _ShowWordSend;
+            set { SetProperty<bool>(ref _ShowWordSend, value); }
+        }
+        private bool _ShowAcceptence = true;
+        public bool ShowAcceptence
+        {
+            get => _ShowAcceptence;
+            set { SetProperty<bool>(ref _ShowAcceptence, value); }
+        }
         private bool _anzeigeGesamt = false;
         public bool AnzeigeGesamt
         {
@@ -1082,6 +1094,11 @@ namespace BGH_Kompakt.ViewModel
             SaveLabel = ActivityRequestManager.ActionType == 1 ? "Eintragen" : "Änderung speichern";
             ShowClear = ActivityRequestManager.ActionType == 1;
             ShowVermerk = ActivityRequestManager.ActionType == 2 && ActivityRequestManager.LoginType == 2;
+            if (ShowVermerk)
+            {
+                ShowWordSend = ActivityRequestManager.AblageArt == 4;
+                ShowAcceptence = !ShowWordSend;
+            }
             ShowHinweis = !ShowVermerk;
             _Introduction = "Bitte füllen Sie das Formular vollständig aus.";
             SetExecutes();
@@ -1165,8 +1182,6 @@ namespace BGH_Kompakt.ViewModel
             try
             {
                 //Client füllen
-                //var Client_Query = activityRequestDBcontext.ActivityClients.OrderBy(ac => ac.ACName);
-                //foreach (var item in Client_Query) _ClientList.Add(item);
                 List<ActivityClient> clients = new List<ActivityClient>();
                 ActivityRequestDBContext activityRequestDBContext = new ActivityRequestDBContext();
                 var Client_Query = activityRequestDBContext.ActivityClients.Include(t => t.ActivityClientTyp).OrderBy(ac => ac.ActivityClientTypID).ThenBy(ac => ac.ACName);
@@ -1183,9 +1198,6 @@ namespace BGH_Kompakt.ViewModel
                 var RequestTyp_Query = activityRequestDBcontext.ActivityRequestTyps;
                 foreach (var item in RequestTyp_Query) _RequestTypList.Add(item);
                 //Adventage füllen
-                //var Adventage_Query = activityRequestDBcontext.ActivityRequests.Include(x => x.ARVerguetungAdventages).to;
-                //foreach (var item in Adventage_Query) _AdventageList.Add(item);
-                //AdventageTyp füllen
                 var AdventageTyp_Query = activityRequestDBcontext.ARVerguetungAdventageTyps;
                 foreach (var item in AdventageTyp_Query) _AdventageTypList.Add(item);
                 //ScienceTyps füllen
@@ -1201,6 +1213,7 @@ namespace BGH_Kompakt.ViewModel
                                         .ThenBy(x => x.VorName)
                                         .ToList();
                 foreach (var item in ApplicantQuery) ApplicantList.Add(item);
+                
             }
             catch (System.Exception ex)
             {
