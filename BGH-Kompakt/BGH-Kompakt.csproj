@@ -1099,7 +1099,7 @@
   </ItemGroup>
   <ItemGroup>
     <SplashScreen Include="Resources\ImageResources\Images\Splashscreen.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </SplashScreen>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
