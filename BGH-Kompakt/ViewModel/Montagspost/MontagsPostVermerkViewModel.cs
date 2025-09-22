@@ -86,7 +86,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         {
             DBResponse resp = CreateEMail();
             EMailResponse email = (EMailResponse)resp.Data;
-            PreviewEMail previewEMail = new PreviewEMail(email) { Owner = Application.Current.MainWindow };
+            PreviewEMail previewEMail = new PreviewEMail(email) { Owner = Application.Current.MainWindow};
             previewEMail.ShowDialog();
         }
 
