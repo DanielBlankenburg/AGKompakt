@@ -202,13 +202,17 @@ namespace BGH_Kompakt.ViewModel.Userlogin
                     if (SelectedPosition.PositionId == 1)
                     {
                         CurrenUser.DienstbezeichnungId = SelectedDienstbezeichnung.DienstbezeichnungId;
-                        CurrenUser.Dienstbezeichnung = DienstbezeichnungList.FirstOrDefault(d => d.DienstbezeichnungId == CurrenUser.DienstbezeichnungId);
+                        //Dienstbezeichnung dienstbezeichnung = DienstbezeichnungList.FirstOrDefault(d => d.DienstbezeichnungId == CurrenUser.DienstbezeichnungId);
+                        //if (dienstbezeichnung != null)
+                        //    CurrenUser.Dienstbezeichnung = dienstbezeichnung;
                     }
                 }
                 if (SelectedStatus != null)
                 {
                     CurrenUser.StatusId = SelectedStatus.StatusId;
-                    CurrenUser.Status= StatusList.FirstOrDefault(g => g.StatusId == CurrenUser.StatusId);
+                    Status status = StatusList.FirstOrDefault(g => g.StatusId == CurrenUser.StatusId);
+                    if (status != null)
+                        CurrenUser.Status= StatusList.FirstOrDefault(g => g.StatusId == CurrenUser.StatusId);
                 }
                 if (SenatListUser != null)
                 {

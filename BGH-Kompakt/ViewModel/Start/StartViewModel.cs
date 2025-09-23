@@ -70,7 +70,8 @@ namespace BGH_Kompakt.ViewModel.Start
         {
             Title = (UserManager.SenatSettings.Senat != null) ? UserManager.SenatSettings.Senat.SenatName : "kein Senat ausgewählt";
             ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
-            SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
+            if (UserManager.SenatSettings.Senat != null)
+                SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
             ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
             ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
             ShowMontagspostAdmin = UserManager.RegistratedUser.ShowMontagspostAdmin;

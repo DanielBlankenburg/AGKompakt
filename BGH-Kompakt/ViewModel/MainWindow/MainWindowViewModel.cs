@@ -126,7 +126,8 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                     LoginUser = UserManager.RegistratedUser.Fullname;
                     SenatListFill(UserManager.RegistratedUser);
                     ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
-                    SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
+                    if (UserManager.SenatSettings.Senat != null)
+                        SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
                     ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
                     ShowMontagspostAdmin = UserManager.RegistratedUser.IsMPAdmin;
                     ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
