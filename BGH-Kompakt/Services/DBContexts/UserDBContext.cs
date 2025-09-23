@@ -96,7 +96,7 @@ namespace BGH_Kompakt.Services.DBContexts
             }
             catch (Exception)
             {
-                MessageBox.Show("Zugriff auf die Datenbank Montagspost nicht möglich");
+                MessageBox.Show("Zugriff auf die Datenbank MontagspostUser nicht möglich");
             }
         }
     }

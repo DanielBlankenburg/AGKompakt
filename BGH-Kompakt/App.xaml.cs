@@ -71,6 +71,7 @@ namespace BGH_Kompakt
             catch (Exception)
             {
                 MessageBox.Show("Die Verbindung zur Datenbank konnte nicht hergestellt werden. Das Programm wird geschlossen. Bitte wenden Sie sich an den Administrator.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Threading.Thread.Sleep(1000);
                 Logger.WriteLog($"logTime: {DateTime.Now}; Die Verbindung zur Datenbank konnte nicht hergestellt werden");
             }
             base.OnStartup(e);

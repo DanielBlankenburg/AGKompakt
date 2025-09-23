@@ -113,21 +113,30 @@ namespace BGH_Kompakt
             //}
 
             //Seed SenatsSettings for each Senat
-            UserFill.SenatSettingFill();
-
-            //if (!BGHKompaktSystemInfo.ShowSitzungsplaene) btn_Sitzungplaene.Visibility = Visibility.Collapsed;
-            //if (!BGHKompaktSystemInfo.ShowKanzlei) btn_Kanzleiunterlagen.Visibility = Visibility.Collapsed;
-            //if (!BGHKompaktSystemInfo.ShowSpruchgruppen) btn_Spruchgruppen.Visibility = Visibility.Collapsed;
-
-            if (UserManager.RegistratedUser != null)
+            try
             {
-                MainMenu.Visibility = Visibility.Collapsed;
-                ViewManager.ShowPageOnMainView<StartView>();
+                UserFill.SenatSettingFill();
+
+                //if (!BGHKompaktSystemInfo.ShowSitzungsplaene) btn_Sitzungplaene.Visibility = Visibility.Collapsed;
+                //if (!BGHKompaktSystemInfo.ShowKanzlei) btn_Kanzleiunterlagen.Visibility = Visibility.Collapsed;
+                //if (!BGHKompaktSystemInfo.ShowSpruchgruppen) btn_Spruchgruppen.Visibility = Visibility.Collapsed;
+
+                if (UserManager.RegistratedUser != null)
+                {
+                    MainMenu.Visibility = Visibility.Collapsed;
+                    ViewManager.ShowPageOnMainView<StartView>();
+                }
+                else
+                {
+                    MainMenu.Visibility = Visibility.Collapsed;
+                    ViewManager.ShowPageOnMainView<UserLoginView>();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MainMenu.Visibility = Visibility.Collapsed;
-                ViewManager.ShowPageOnMainView<UserLoginView>();
+                MessageBox.Show($"Es ist folgender Fehler beim Laden der Anwendung (Mainwindow) aufgetreten. Bitte wenden Sie sich an den Administrator. \n\n{ex.Message}", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Logger.WriteLog($"logTime: {DateTime.Now}; Fehler beim Laden der Anwendung (Mainwindow): {ex.Message}");
+                System.Threading.Thread.Sleep(1000);
             }
         }
 

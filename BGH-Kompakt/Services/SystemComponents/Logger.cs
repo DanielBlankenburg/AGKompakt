@@ -14,12 +14,13 @@ namespace BGH_Kompakt.Services.SystemComponents
         {
             try
             {
-                using StreamWriter writer = new StreamWriter($"{BGHKompaktSystemInfo.PathLoggingData}log_{Environment.UserName}.txt", true);
+                using StreamWriter writer = new StreamWriter($"{System.Environment.GetEnvironmentVariable("TEMP")}\\LoggingData\\log_{Environment.UserName}.txt", true);
                 writer.WriteLine(Message);
             }
             catch (Exception)
             {
                 MessageBox.Show("Das Logging ist fehlgeschlagen. Die Log-Datei konnte nicht geschrieben werden.", "Logging-Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Threading.Thread.Sleep(1000);
             }
         }
     }
