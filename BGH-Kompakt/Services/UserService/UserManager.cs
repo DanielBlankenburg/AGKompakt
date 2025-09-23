@@ -5,6 +5,7 @@ using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Dtos;
 using BGH_Kompakt.Enums;
 using BGH_Kompakt.Services.DBContexts;
+using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Views;
 using Microsoft.Office.Interop.Word;
 using System;
@@ -46,8 +47,9 @@ namespace BGH_Kompakt.Services.UserService
                 else { return false; }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.WriteLog($"logTime: {DateTime.Now}; Es ist folgender Fehler beim einloggen des Users aufgetreten: {ex.Message}.");
                 return false;
             }
         }

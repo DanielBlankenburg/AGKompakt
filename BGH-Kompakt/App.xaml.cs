@@ -34,9 +34,17 @@ namespace BGH_Kompakt
         public App()
         {
             Logger.WriteLog($"logTime: {DateTime.Now}; Starting App");
-            ServiceCollection _serviceCollection = new ServiceCollection();
-            ConfigureSerive(_serviceCollection);
-            _ServiceProvider = _serviceCollection.BuildServiceProvider();
+            try
+            {
+                ServiceCollection _serviceCollection = new ServiceCollection();
+                ConfigureSerive(_serviceCollection);
+                _ServiceProvider = _serviceCollection.BuildServiceProvider();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"Die App konnte nicht gestartet werden. Es ist folgender Fehler aufgetreten: {ex.Message}");
+                throw;
+            }
             //Aktivierung bei jedem erneuten Aufspielen der Datenbank MP erforderlich
         }
 
@@ -68,11 +76,11 @@ namespace BGH_Kompakt
                 ViewManager.InitViewManagerData(mainView, mainViewModel, settingView, nebentaetigkeiten, _ServiceProvider);
                 mainView.Show();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 MessageBox.Show("Die Verbindung zur Datenbank konnte nicht hergestellt werden. Das Programm wird geschlossen. Bitte wenden Sie sich an den Administrator.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                 System.Threading.Thread.Sleep(1000);
-                Logger.WriteLog($"logTime: {DateTime.Now}; Die Verbindung zur Datenbank konnte nicht hergestellt werden");
+                Logger.WriteLog($"logTime: {DateTime.Now}; Die Verbindung zur Datenbank konnte nicht hergestellt werden. Es ist folgender Fehler aufgetreten: {ex.Message}");
             }
             base.OnStartup(e);
         }

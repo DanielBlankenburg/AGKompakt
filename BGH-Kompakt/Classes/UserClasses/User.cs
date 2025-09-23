@@ -3,7 +3,9 @@ using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.SystemSettings;
 using BGH_Kompakt.Enums;
 using BGH_Kompakt.Services.DBContexts;
+using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -121,42 +123,50 @@ namespace BGH_Kompakt.Classes.UserClasses
 
         public void SetStatus()
         {
-            if (AdminStatus != null)
+            try
             {
-                foreach (AdminStatus adminStatus in AdminStatus)
+                if (AdminStatus != null)
                 {
-                    string adminstatustext = adminStatus.AdminStatusText;
-                    if (adminstatustext == UserEnums.EnumAdminStatus.NebentätigkeitenAdmin.ToString()) IsARAdmin = true;
-                    if (adminstatustext == UserEnums.EnumAdminStatus.Vorzimmer.ToString()) IsARVorzimmer = true;
-                    if (adminstatustext == UserEnums.EnumAdminStatus.Präsidialrichter.ToString()) IsARPraesdialrichter = true;
-                    if (adminstatustext == UserEnums.EnumAdminStatus.Präsidentin.ToString()) IsARPraesident = true;
-                    if (adminstatustext == UserEnums.EnumAdminStatus.MontagspostAdmin.ToString()) IsMPAdmin = true;
-                    if (adminstatustext == UserEnums.EnumAdminStatus.MontagspostShow.ToString()) ShowMontagspost = true;
-                    if (adminstatustext == UserEnums.EnumAdminStatus.NebentätigkeitenShow.ToString()) ShowActivityRequests = true;
-                }
+                    foreach (AdminStatus adminStatus in AdminStatus)
+                    {
+                        string adminstatustext = adminStatus.AdminStatusText;
+                        if (adminstatustext == UserEnums.EnumAdminStatus.NebentätigkeitenAdmin.ToString()) IsARAdmin = true;
+                        if (adminstatustext == UserEnums.EnumAdminStatus.Vorzimmer.ToString()) IsARVorzimmer = true;
+                        if (adminstatustext == UserEnums.EnumAdminStatus.Präsidialrichter.ToString()) IsARPraesdialrichter = true;
+                        if (adminstatustext == UserEnums.EnumAdminStatus.Präsidentin.ToString()) IsARPraesident = true;
+                        if (adminstatustext == UserEnums.EnumAdminStatus.MontagspostAdmin.ToString()) IsMPAdmin = true;
+                        if (adminstatustext == UserEnums.EnumAdminStatus.MontagspostShow.ToString()) ShowMontagspost = true;
+                        if (adminstatustext == UserEnums.EnumAdminStatus.NebentätigkeitenShow.ToString()) ShowActivityRequests = true;
+                    }
 
-                UserDBContext userDBContext = new UserDBContext();
-                ProgrammSetting programmSettings = userDBContext.ProgrammSettings.FirstOrDefault();
+                    UserDBContext userDBContext = new UserDBContext();
+                    ProgrammSetting programmSettings = userDBContext.ProgrammSettings.FirstOrDefault();
 
-                if (programmSettings != null)
-                {
-                    if (programmSettings.MontagspostActivated == true) if (!ShowMontagspost) ShowMontagspost = PositionId == 1 || PositionId == 2;
+                    if (programmSettings != null)
+                    {
+                        if (programmSettings.MontagspostActivated == true) if (!ShowMontagspost) ShowMontagspost = PositionId == 1 || PositionId == 2;
+                    }
+                    if (!ShowMontagspost) ShowMontagspost = IsMPAdmin;
+                    if (!ShowMontagspostAdmin) ShowMontagspostAdmin = IsMPAdmin;
+                    //
+                    if (programmSettings != null)
+                    {
+                        if (programmSettings.ActivityRequestActivated == true) if (!ShowActivityRequests) ShowActivityRequests = PositionId == 1 || PositionId == 2;
+                    }
+                    if (!ShowActivityRequests) ShowActivityRequests = IsARAdmin || IsARPraesdialrichter || IsARPraesident;
+                    if (Senate != null) ShowSitzungsunterlagen = Senate.Count > 0;
                 }
-                if (!ShowMontagspost) ShowMontagspost = IsMPAdmin;
-                if (!ShowMontagspostAdmin) ShowMontagspostAdmin = IsMPAdmin;
-                //
-                if (programmSettings != null)
+                //Bestimmung, ob User VorsitzenderRichter ist
+                if (Dienstbezeichnung != null)
                 {
-                    if (programmSettings.ActivityRequestActivated == true) if (!ShowActivityRequests) ShowActivityRequests = PositionId == 1 || PositionId == 2;
+                    if (Dienstbezeichnung.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VRiBGH.ToString() ||
+                        Dienstbezeichnung.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VRinBGH.ToString()) IsVorsitzenderRichter = true;
                 }
-                if (!ShowActivityRequests) ShowActivityRequests = IsARAdmin || IsARPraesdialrichter || IsARPraesident;
-                if (Senate != null) ShowSitzungsunterlagen = Senate.Count > 0;
             }
-            //Bestimmung, ob User VorsitzenderRichter ist
-            if (Dienstbezeichnung != null)
+            catch (System.Exception ex)
             {
-                if (Dienstbezeichnung.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VRiBGH.ToString() ||
-                    Dienstbezeichnung.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VRinBGH.ToString()) IsVorsitzenderRichter = true;
+                Logger.WriteLog($"logTime: {DateTime.Now}; Es konnte folgender Fehler beim Erstellen des Status aufgetreten: {ex.Message}.");
+                throw;
             }
         }
 

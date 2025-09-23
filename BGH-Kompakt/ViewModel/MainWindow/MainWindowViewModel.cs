@@ -118,27 +118,34 @@ namespace BGH_Kompakt.ViewModel.MainWindow
         public MainWindowViewModel() 
         {
 
-            Logger.WriteLog($"logTime: {DateTime.Now}; Loading MainWindow");
-            if (UserManager.LoginUser(Environment.UserName))
+            try
             {
-                LoginUser = UserManager.RegistratedUser.Fullname;
-                SenatListFill(UserManager.RegistratedUser);
-                ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
-                SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
-                ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
-                ShowMontagspostAdmin = UserManager.RegistratedUser.IsMPAdmin;
-                ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
+                Logger.WriteLog($"logTime: {DateTime.Now}; Loading MainWindow");
+                if (UserManager.LoginUser(Environment.UserName))
+                {
+                    LoginUser = UserManager.RegistratedUser.Fullname;
+                    SenatListFill(UserManager.RegistratedUser);
+                    ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
+                    SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
+                    ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
+                    ShowMontagspostAdmin = UserManager.RegistratedUser.IsMPAdmin;
+                    ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
+                }
+                if (UserManager.RegistratedUser != null)
+                {
+                    Logger.WriteLog($"logTime: {DateTime.Now}; {UserManager.RegistratedUser.Fullname} hat sich eingeloggt.");
+                }
+                else
+                {
+                    Logger.WriteLog($"logTime: {DateTime.Now}; Es konnte kein User eingeloggt werden.");
+                }
+                Version = $"Version: {ConfigurationManager.AppSettings["Version"]}";
+                SeedUserDB();
             }
-            if (UserManager.RegistratedUser != null)
+            catch (Exception ex)
             {
-                Logger.WriteLog($"logTime: {DateTime.Now}; {UserManager.RegistratedUser.Fullname} hat sich eingeloggt.");
+                Logger.WriteLog($"logTime: {DateTime.Now}; Es ist folgender Fehler beim Erstellen des MainWindowsViewModels aufgetreten: {ex.Message}.");
             }
-            else
-            {
-                Logger.WriteLog($"logTime: {DateTime.Now}; Es konnte kein User eingeloggt werden.");
-            }
-            Version = $"Version: {ConfigurationManager.AppSettings["Version"]}";
-            SeedUserDB();
         }
 
         private void SeedUserDB()
@@ -285,7 +292,10 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 userContext.SaveChanges();
                 #endregion
             }
-            catch (Exception) { }
+            catch (Exception ex) 
+            {
+                Logger.WriteLog($"logTime: {DateTime.Now}; Es konnte folgender Fehler beim Füllen der User-Werte aufgetreten: {ex.Message}.");
+            }
         }
         public void SenatListFill(User RegistratedUser)
         {
