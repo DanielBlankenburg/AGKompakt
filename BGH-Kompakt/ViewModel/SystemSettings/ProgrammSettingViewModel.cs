@@ -170,6 +170,16 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                         arDBContext.ActivityRequestTyps.AddOrUpdate(a => a.ActivityRequestTypText, new ActivityRequestTyp { ActivityRequestTypText = suchText.ActivityRequestTypText, ActivityRequestTypMeldeArt = suchText.ActivityRequestTypMeldeArt });
                 };
 
+                List.Clear();
+                List = new List<String> { "durch Antragsteller/in eingereicht", "durch Präsidialrichter/in als genehmigungsfähig weiterleitet", "durch Präsidialrichter/in als ablehnungsreif", "durch Präsident/in genehmigung", "durch Präsident/in abgelehnt" };
+                foreach (string suchText in List)
+                {
+                    if (arDBContext.ActivityRequestStatuses.FirstOrDefault(x => x.ActivityRequestStatusText == suchText) == null)
+                        arDBContext.ActivityRequestStatuses.AddOrUpdate(a => a.ActivityRequestStatusText, new ActivityRequestStatus { ActivityRequestStatusText = suchText });
+                }
+                ;
+
+
                 //List.Clear();
                 //List = new List<String> { "Erhaltene Vergütung", "Honorarfrei", "derzeit unbekannte Vergütung" };
                 //foreach (string suchText in List)
@@ -177,7 +187,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 //    if (arDBContext.ActivityRequestVerguetungTypes.FirstOrDefault(x => x.ARVerguetungTypText == suchText) == null)
                 //        arDBContext.ActivityRequestVerguetungTypes.AddOrUpdate(a => a.ARVerguetungTypText, new ARVerguetungTyp { ARVerguetungTypText = suchText });
                 //}
-                
+
 
                 arDBContext.SaveChanges();
                 ViewManager.ShowMainInfoFlyout($"Die Werte für die Nebentätigkeiten wurden gesetzt.", false);

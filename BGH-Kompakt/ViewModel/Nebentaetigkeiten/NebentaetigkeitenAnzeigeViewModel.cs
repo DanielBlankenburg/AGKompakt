@@ -153,11 +153,11 @@ namespace BGH_Kompakt.ViewModel
             get { return _ApplicantSelected; }
             set { _ApplicantSelected = value; }
         }
-        private ActivityRequestDataFile _selectedAttechment;
-        public ActivityRequestDataFile SelectedAttechment
+        private ActivityRequestDataFile _selectedAttachment;
+        public ActivityRequestDataFile SelectedAttachment
         {
-            get { return _selectedAttechment; }
-            set { _selectedAttechment = value; }
+            get { return _selectedAttachment; }
+            set { _selectedAttachment = value; }
         }
         #endregion
         #region Eventhandler
@@ -620,11 +620,11 @@ namespace BGH_Kompakt.ViewModel
             get { return _ShowApplicant; }
             set { SetProperty(ref _ShowApplicant, value); }
         }
-        private bool _ShowAttechmentList = false;
-        public bool ShowAttechmentList
+        private bool _ShowAttachmentList = false;
+        public bool ShowAttachmentList
         {
-            get { return _ShowAttechmentList; }
-            set { SetProperty(ref _ShowAttechmentList, value); }
+            get { return _ShowAttachmentList; }
+            set { SetProperty(ref _ShowAttachmentList, value); }
         }
         private bool _PaymentPredicted = true;
         public bool PaymentPredicted
@@ -1034,6 +1034,18 @@ namespace BGH_Kompakt.ViewModel
                 ErrorInstruction = false;
             }
         }
+        private int _ARStatus;
+        public int ARStatus
+        {
+            get { return _ARStatus; }
+            set { SetProperty(ref _ARStatus, value);}
+        }
+        private int _ActivityRequestAccepted;
+        public int ActivityRequestAccepted
+        {
+            get { return _ActivityRequestAccepted; }
+            set { SetProperty(ref _ActivityRequestAccepted, value); }
+        }
         private string _HinweisText;
         public string HinweisText
         {
@@ -1079,13 +1091,14 @@ namespace BGH_Kompakt.ViewModel
         public ICommand NewCommand { get; set; }
         public ICommand AddPersonCommand { get; set; }
         public ICommand ImportListClearCommand { get; set; }
-        public ICommand OpenAttechmentCommand { get; set; }
-        public ICommand DeleteAttechmentCommand { get; set; }
+        public ICommand OpenAttachmentCommand { get; set; }
+        public ICommand DeleteAttachmentCommand { get; set; }
         public ICommand AddRequestsCommand { get; set; }
         public ICommand ScienceAuthorListSelectedCommand { get; set; }
         public ICommand HyperLinkCommand { get; set; }
         public ICommand ChangeHistoryCommand { get; set; }
         public ICommand TestCommand { get; set; }
+        public ICommand PermissionCommand { get; set; }
         #endregion
         public NebentaetigkeitenAnzeigeViewModel()
         {
@@ -1141,15 +1154,67 @@ namespace BGH_Kompakt.ViewModel
             ArbitrationClientAddApplyCommand = new RelayCommand(ArbitrationClientAddApplyExecute);
             ArbitrationClientAddCommand = new RelayCommand(ArbitrationClientAddExecute);
             ImportListClearCommand = new RelayCommand(ImportListClearExecute, ImportListClearCanExecute);
-            OpenAttechmentCommand = new RelayCommand(OpenAttechmentExecute);
-            DeleteAttechmentCommand = new RelayCommand(DeleteAttechmentExecute);
+            OpenAttachmentCommand = new RelayCommand(OpenAttachmentExecute);
+            DeleteAttachmentCommand = new RelayCommand(DeleteAttachmentExecute);
             NewCommand = new RelayCommand(NewExecute);
             AddPersonCommand = new RelayCommand(AddPersonExecute);
             AddRequestsCommand = new RelayCommand(AddRequestExecute);
             ScienceAuthorListSelectedCommand = new RelayCommand(ScienceAuthorSelctionExecute);
             HyperLinkCommand = new RelayCommand(HyperLinkExecute);
             ChangeHistoryCommand = new RelayCommand(ChangeHistoryExecute, ChangeHistoryCanExecute);
+            PermissionCommand = new RelayCommand(PermissionExecute);
             TestCommand = new RelayCommand(TextExecute);
+        }
+
+        private void PermissionExecute(object obj)
+        {
+            String MessageText = string.Empty;
+            String MessageText2 = string.Empty;
+            int AblageArtExport = 0;
+
+            if (obj != null)
+            {
+                switch ((string)obj)
+                {
+                    case "Genehmigt":
+                        break;
+                    case "Abgelehnt":
+                        break;
+                }
+            }
+
+            switch (ActivityRequestManager.AblageArt)
+            {
+                case 2: //Präsidialbereich
+                    MessageText = $"Soll der Eintrag {((string)obj == "Genehmigt" ? "als genehmigungsfähig " : "als ablehnungsreif ")} zur Präsidentin weitergeleitet werden?";
+                    MessageText2 = "Der Eintrag wurde an die Präsidentin weitergeleitet.";
+                    AblageArtExport = 3;
+                    break;
+                case 3: //Präsidentinnenbereich
+                    MessageText = $"Soll der Eintrag {((string)obj == "Genehmigt" ? "genehmigt " : "abgelehnt ")} werden?";
+                    MessageText2 = $"Der Eintrag wurde {((string)obj == "Genehmigt" ? "genehmigt " : "abgelehnt ")}.";
+                    AblageArtExport = 4;
+                    break;
+            }
+
+            bool Antwort = ViewManager.ShowQuestionWindow(MessageText, "Ja");
+            if (Antwort == true)
+            {
+                try
+                {
+                    ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich = AblageArtExport;
+                    activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
+                    activityRequestDBcontext.SaveChanges();
+                    //Liste neu füllen
+                    ViewManager.ShowMainInfoFlyout(MessageText2, false);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: " + ex.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+
         }
 
         private bool ChangeHistoryCanExecute(object obj)
@@ -1504,6 +1569,8 @@ namespace BGH_Kompakt.ViewModel
                     {
                         newActivityRequest.ARNoteAdmin = ARNoteAdmin;
                         newActivityRequest.Assurance = ARAssurance;
+                        newActivityRequest.ActivityRequestStatusID = ARStatus;
+                        newActivityRequest.ActivityRequestAccepted = ActivityRequestAccepted;
                         if (ActivityRequestManager.ActionType == 1) //Create
                         {
                             newActivityRequest.ARUserID = ActivityRequestManager.LoginType == 2 ? ApplicantSelected.UserId : UserManager.RegistratedUser.UserId;
@@ -1632,7 +1699,7 @@ namespace BGH_Kompakt.ViewModel
                 }
             }
 
-            //Attechments
+            //Attachments
 
             if (changeList.Count > 0)
                 foreach (ActivityRequestChangeHistory item in changeList) newActivityRequest.ActivityRequestChangeHistories.Add(item);
@@ -1676,20 +1743,20 @@ namespace BGH_Kompakt.ViewModel
         private void ImportListClearExecute(object obj)
         {
             ImportFileList.Clear();
-            ShowAttechmentList = false;
+            ShowAttachmentList = false;
         }
-        private void DeleteAttechmentExecute(object obj)
+        private void DeleteAttachmentExecute(object obj)
         {
-            ImportFileList.Remove(SelectedAttechment);
-            ShowAttechmentList = ImportFileList.Count > 0;
+            ImportFileList.Remove(SelectedAttachment);
+            ShowAttachmentList = ImportFileList.Count > 0;
         }
-        private void OpenAttechmentExecute(object obj)
+        private void OpenAttachmentExecute(object obj)
         {
             try
             {
-                System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttechment.FileName}", SelectedAttechment.Data);
+                System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttachment.FileName}", SelectedAttachment.Data);
 
-                Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttechment.FileName}") { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttachment.FileName}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
@@ -2160,8 +2227,9 @@ namespace BGH_Kompakt.ViewModel
                 //Anlagen füllen
                 if (iActivityRequest.ActivityRequestDataFiles != null)
                     foreach (ActivityRequestDataFile file in iActivityRequest.ActivityRequestDataFiles) ImportFileList.Add(file);
-                ShowAttechmentList = ImportFileList.Count > 0;
-
+                ShowAttachmentList = ImportFileList.Count > 0;
+                ARStatus = iActivityRequest.ActivityRequestStatusID ?? 1;
+                ActivityRequestAccepted = iActivityRequest.ActivityRequestAccepted;
             }
             else
             {
@@ -2202,6 +2270,8 @@ namespace BGH_Kompakt.ViewModel
                 PaymentNothing = false;
                 PaymentUnknown = false;
                 SetScienceAuthor(null);
+                ARStatus = 1;
+                ActivityRequestAccepted = 0;
             }
             setActivityRequest = false;
         }
@@ -2245,7 +2315,7 @@ namespace BGH_Kompakt.ViewModel
                 ActivityRequestDataFile importFile = new ActivityRequestDataFile { FileName = fileInfo.Name, Data = bytes };
                 ImportFileList.Add(importFile);
             }
-            ShowAttechmentList = true;
+            ShowAttachmentList = true;
         }
     }
 }

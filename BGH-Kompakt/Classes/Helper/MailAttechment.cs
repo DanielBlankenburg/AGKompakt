@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BGH_Kompakt.Classes.Helper
 {
-    public class CustomMailAttechment
+    public class CustomMailAttachment
     {
         public string AttachmentPath { get; set; }
         public string AttachmentName { get; set; }

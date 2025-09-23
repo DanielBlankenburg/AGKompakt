@@ -1031,13 +1031,13 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                     string Text = $"{mpSetting.MPSettingEMailAnrede}, <br> <br>{mpEMail.MPEMailBody}<br> <br> {mpSetting.MPSettingEMailSchluss}<br> <br>{mpSetting.MPSettingDatenschutzhinweis}";
                     Text = Regex.Replace(Text, "'KW'", $"{SelectedKW}/{jahr}");
 
-                    List<CustomMailAttechment> attachmentListpfd = new List<CustomMailAttechment>();
+                    List<CustomMailAttachment> attachmentListpfd = new List<CustomMailAttachment>();
 
                     foreach (MPImportFile file in ImportFileList)
                     {
                         if (file.ImportSuccessfull)
                         {
-                            attachmentListpfd.Add(new CustomMailAttechment { AttachmentPath = file.FileFullPath, AttachmentName = file.FileName });
+                            attachmentListpfd.Add(new CustomMailAttachment { AttachmentPath = file.FileFullPath, AttachmentName = file.FileName });
                         }
                     }
 
@@ -1066,7 +1066,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 EMails_Versenden(AddressList, strSubject, Text, null);
             }
         }
-        private void EMails_Versenden(ObservableCollection<MPEMailRecipient> List, string strSubject, string text, List<CustomMailAttechment> attachmentListpfd)
+        private void EMails_Versenden(ObservableCollection<MPEMailRecipient> List, string strSubject, string text, List<CustomMailAttachment> attachmentListpfd)
         {
             string strEMailAdresses = string.Empty;
             foreach (MPEMailRecipient Member in List)

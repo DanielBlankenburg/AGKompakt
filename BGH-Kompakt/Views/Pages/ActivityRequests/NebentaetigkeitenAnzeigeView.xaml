@@ -1285,9 +1285,9 @@
                                                 Grid.Row="1"
                                                 Margin="0,30,0,0"
                                                 ItemsSource="{Binding ImportFileList, UpdateSourceTrigger=PropertyChanged}"
-                                                SelectedItem="{Binding SelectedAttechment, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedItem="{Binding SelectedAttachment, UpdateSourceTrigger=PropertyChanged}"
                                                 SelectionMode="Single"
-                                                Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                Visibility="{Binding ShowAttachmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                                 <ListView.View>
                                                     <GridView>
                                                         <GridViewColumn
@@ -1301,14 +1301,14 @@
                                                                     <StackPanel Orientation="Horizontal">
                                                                         <Button
                                                                             x:Name="Btn_Open"
-                                                                            Command="{Binding Path=DataContext.OpenAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                            Command="{Binding Path=DataContext.OpenAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                                             Style="{StaticResource Button_GridView}"
                                                                             ToolTip="Anlage öffnen">
                                                                             <MD:PackIcon Padding="0" Kind="File" />
                                                                         </Button>
                                                                         <Button
                                                                             x:Name="Btn_Bin"
-                                                                            Command="{Binding Path=DataContext.DeleteAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                            Command="{Binding Path=DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                                             Style="{StaticResource Button_GridView}"
                                                                             ToolTip="Anlage löschen">
                                                                             <MD:PackIcon Padding="0" Kind="Bin" />
@@ -1634,17 +1634,17 @@
                     Orientation="Horizontal"
                     Visibility="{Binding ShowAcceptence, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                     <Button
-                        x:Name="Btn_1"
-                        Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        Command="{Binding Path=DataContext.PermissionCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        CommandParameter="Genehmigt"
                         Style="{StaticResource Button_GridView}"
                         ToolTip="Antrag/Anzeige als genehmigt weiterleiten"
                         Visibility="Visible">
                         <MD:PackIcon Padding="0" Kind="Check" />
                     </Button>
                     <Button
-                        x:Name="Btn_2"
-                        Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        Command="{Binding Path=DataContext.PermissionCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                         Style="{StaticResource Button_GridView}"
+                        CommandParameter="Abgelehnt"
                         ToolTip="Antrag/Anzeige als abgelehnt weiterleiten"
                         Visibility="Visible">
                         <MD:PackIcon Padding="0" Kind="CloseOctagon" />
@@ -1681,9 +1681,9 @@
                     <ListView
                         Margin="0,30,0,0"
                         ItemsSource="{Binding ImportFileList, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedItem="{Binding SelectedAttechment, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding SelectedAttachment, UpdateSourceTrigger=PropertyChanged}"
                         SelectionMode="Single"
-                        Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        Visibility="{Binding ShowAttachmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
@@ -1697,21 +1697,21 @@
                                             <StackPanel Orientation="Horizontal">
                                                 <Button
                                                     x:Name="Btn_Open"
-                                                    Command="{Binding Path=DataContext.OpenAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding Path=DataContext.OpenAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Style="{StaticResource Button_GridView}"
                                                     ToolTip="Schreiben öffnen">
                                                     <MD:PackIcon Padding="0" Kind="File" />
                                                 </Button>
                                                 <Button
                                                     x:Name="Btn_Save"
-                                                    Command="{Binding Path=DataContext.DeleteAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding Path=DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Style="{StaticResource Button_GridView}"
                                                     ToolTip="Schreiben speichern">
                                                     <MD:PackIcon Padding="0" Kind="ContentSave" />
                                                 </Button>
                                                 <Button
                                                     x:Name="Btn_Bin"
-                                                    Command="{Binding Path=DataContext.DeleteAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding Path=DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Style="{StaticResource Button_GridView}"
                                                     ToolTip="Schreiben löschen">
                                                     <MD:PackIcon Padding="0" Kind="Bin" />
