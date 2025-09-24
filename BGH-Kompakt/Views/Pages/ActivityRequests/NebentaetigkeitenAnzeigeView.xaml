@@ -1671,7 +1671,7 @@
                     Command="{Binding Path=DataContext.WordCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                     Style="{StaticResource Button_Master}"
                     ToolTip="Genehmigung erstellen"
-                    Visibility="Visible">
+                    Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                     <StackPanel Orientation="Horizontal">
                         <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
                         <TextBlock

@@ -1225,7 +1225,27 @@ namespace BGH_Kompakt.ViewModel
 
         private void DeleteDocFileExecute(object obj)
         {
-            throw new NotImplementedException();
+            bool Antwort = ViewManager.ShowQuestionWindow("Möchten Sie die ausgewählte Datei wirklich löschen?", "Ja");
+            if (Antwort == true)
+            {
+                try
+                {
+                    ActivityRequestDataFile delelefile = activityRequestDBcontext.ActivityRequestDataFiles.FirstOrDefault(x => x.ActivityRequestDataFileID == SelectedDocFile.ActivityRequestDataFileID);
+                    activityRequestDBcontext.ActivityRequestDataFiles.Remove(delelefile);
+                    activityRequestDBcontext.SaveChanges();
+                    ActivityRequestManager.SelectedActivityRequest.ActivityRequestDataFiles.Remove(SelectedDocFile);
+                    if (SelectedDocFileTable != null) DocFileList.Remove(SelectedDocFile);
+                    SelectedDocFile = null;
+                    if (ActivityRequestManager.SelectedActivityRequest.ActivityRequestDataFiles.Count == 0) ShowDocFileList = false;
+                    ViewManager.ShowMainInfoFlyout("Die Datei wurde gelöscht.", false);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Es ist folgender Fehler beim Löschen der Datei aufgetreten: " + ex.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+            
         }
 
         private void SendDocFileExecute(object obj)
@@ -1235,7 +1255,19 @@ namespace BGH_Kompakt.ViewModel
 
         private void SaveDocFileExecute(object obj)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string docFilePath = $"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}";
+                byte[] bytes = System.IO.File.ReadAllBytes(docFilePath);
+                SelectedDocFile.Data = bytes;
+                activityRequestDBcontext.ActivityRequestDataFiles.Add(SelectedDocFile);
+                activityRequestDBcontext.SaveChanges();
+                ViewManager.ShowMainInfoFlyout("Die Datei wurde gespeichert.", false);
+            }
+            catch (Exception ex)
+            {
+                ViewManager.ShowMainInfoFlyout($"Die Datei konnte nicht gespeichert werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
+            }
         }
 
         private void OpenDocFileExecute(object obj)
@@ -1255,51 +1287,68 @@ namespace BGH_Kompakt.ViewModel
 
         private void PermissionExecute(object obj)
         {
-            String MessageText = string.Empty;
-            String MessageText2 = string.Empty;
-            int AblageArtExport = 0;
-
-            if (obj != null)
+            try
             {
-                switch ((string)obj)
+
+                String MessageText = string.Empty;
+                String MessageText2 = string.Empty;
+                int AblageArtExport = 0;
+                int Bearbeitungsstatus = 0;
+                bool Genehmigt = false;
+
+                if (obj != null)
                 {
-                    case "Genehmigt":
+                    switch ((string)obj)
+                    {
+                        case "Genehmigt":
+                            Genehmigt = true;
+                            break;
+                        case "Abgelehnt":
+                            Genehmigt = false;
+                            break;
+                    }
+                }
+
+                switch (ActivityRequestManager.AblageArt)
+                {
+                    case 2: //Präsidialbereich
+                        MessageText = $"Soll der Eintrag {((string)obj == "Genehmigt" ? "als genehmigungsfähig " : "als ablehnungsreif ")} zur Präsidentin weitergeleitet werden?";
+                        MessageText2 = "Der Eintrag wurde an die Präsidentin weitergeleitet.";
+                        Bearbeitungsstatus = Genehmigt ? 2 : 3;
+                        AblageArtExport = 3;
                         break;
-                    case "Abgelehnt":
+                    case 3: //Präsidentinnenbereich
+                        MessageText = $"Soll der Eintrag {((string)obj == "Genehmigt" ? "genehmigt " : "abgelehnt ")} werden?";
+                        MessageText2 = $"Der Eintrag wurde {((string)obj == "Genehmigt" ? "genehmigt " : "abgelehnt ")}.";
+                        Bearbeitungsstatus = Genehmigt ? 4 : 5;
+                        AblageArtExport = 4;
                         break;
+                }
+
+                bool Antwort = ViewManager.ShowQuestionWindow(MessageText, "Ja");
+                if (Antwort == true)
+                {
+                    try
+                    {
+                        ActivityRequestStatus status = activityRequestDBcontext.ActivityRequestStatuses.FirstOrDefault(x => x.ActivityRequestStatusId == Bearbeitungsstatus);
+                        if (status != null) ActivityRequestManager.SelectedActivityRequest.ActivityRequestStatus = status;
+                        ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich = AblageArtExport;
+                        activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
+                        activityRequestDBcontext.SaveChanges();
+                        //Liste neu füllen
+                        ViewManager.ShowMainInfoFlyout(MessageText2, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: " + ex.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                 }
             }
-
-            switch (ActivityRequestManager.AblageArt)
+            catch (Exception ex)
             {
-                case 2: //Präsidialbereich
-                    MessageText = $"Soll der Eintrag {((string)obj == "Genehmigt" ? "als genehmigungsfähig " : "als ablehnungsreif ")} zur Präsidentin weitergeleitet werden?";
-                    MessageText2 = "Der Eintrag wurde an die Präsidentin weitergeleitet.";
-                    AblageArtExport = 3;
-                    break;
-                case 3: //Präsidentinnenbereich
-                    MessageText = $"Soll der Eintrag {((string)obj == "Genehmigt" ? "genehmigt " : "abgelehnt ")} werden?";
-                    MessageText2 = $"Der Eintrag wurde {((string)obj == "Genehmigt" ? "genehmigt " : "abgelehnt ")}.";
-                    AblageArtExport = 4;
-                    break;
-            }
-
-            bool Antwort = ViewManager.ShowQuestionWindow(MessageText, "Ja");
-            if (Antwort == true)
-            {
-                try
-                {
-                    ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich = AblageArtExport;
-                    activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
-                    activityRequestDBcontext.SaveChanges();
-                    //Liste neu füllen
-                    ViewManager.ShowMainInfoFlyout(MessageText2, false);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: " + ex.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+                ViewManager.ShowMainInfoFlyout($"Der Vorgang konnte nicht weitergeleitet werden. Es ist folgender Fehler aufgetreten: {ex.Message}.", false);
+                throw;
             }
         }
 
@@ -1399,11 +1448,11 @@ namespace BGH_Kompakt.ViewModel
                     DateTime date = new DateTime();
                     date = DateTime.Now;
                     string docName = $"Nebentätigkeit-{ActivityRequestManager.SelectedActivityRequest.ARUser.NachName}_{date:d}.docx";
-                    string dirTemp = $"{BGHKompaktSystemInfo.PathTemp}\\docAR\\";
-                    Directory.Delete(dirTemp);
+                    string dirTemp = $"{BGHKompaktSystemInfo.PathTempARDOC}";
+                    Directory.Delete(dirTemp,true);
                     Directory.CreateDirectory(dirTemp);
-                    if (!Directory.Exists(dirTemp)) Directory.CreateDirectory(dirTemp);
                     wordDoc.SaveAs2($"{dirTemp}{docName}");
+                    SelectedDocFile = new ActivityRequestDataFile { FileName = docName, ActivityRequestId = ActivityRequestManager.SelectedActivityRequest.ActivityRequestId, FileTyp = 2 };
                     //wordDoc.Close();
 
                     //string docFilePath = $"{dirTemp}{docName}";
@@ -1416,10 +1465,10 @@ namespace BGH_Kompakt.ViewModel
                     wordApp.Visible = true;
                     response.Success = true;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     response.Success = false;
-                    response.Message = "Die Textmarken konnte nicht eingefügt werden";
+                    response.Message = $"Das Schreiben konnte nicht erstellt werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
                 }
                 return response;
             });

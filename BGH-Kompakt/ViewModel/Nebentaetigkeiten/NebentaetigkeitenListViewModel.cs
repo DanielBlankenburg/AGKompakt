@@ -301,6 +301,7 @@ namespace BGH_Kompakt.ViewModel
                                         .Include(a => a.ARVerguetungAdventages)
                                         .Include(x => x.ActivityRequestDataFiles)
                                         .Include(c => c.ActivityRequestChangeHistories)
+                                        .Include(u => u.ActivityRequestStatus)
                                         .OrderBy(x => x.ARDatum);
                         foreach (var activityRequest in query)
                         {
@@ -329,6 +330,7 @@ namespace BGH_Kompakt.ViewModel
                                     .Include(a => a.ARVerguetungAdventages)
                                     .Include(x => x.ActivityRequestDataFiles)
                                     .Include(c => c.ActivityRequestChangeHistories)
+                                    .Include(u => u.ActivityRequestStatus)
                                     .OrderBy(x => x.ARDatum);
                     foreach (var activityRequest in query2)
                     {
