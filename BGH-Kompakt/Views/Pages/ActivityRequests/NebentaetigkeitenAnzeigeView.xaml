@@ -201,6 +201,19 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="16" />
         </Style>
+        <Style
+            x:Key="Textblock_File"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style
+            x:Key="Textblock_Status"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Foreground" Value="{StaticResource BGHActivityRequestBackground}" />
+        </Style>
 
     </UserControl.Resources>
     <ScrollViewer MaxHeight="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}" VerticalScrollBarVisibility="Auto">
@@ -1593,19 +1606,20 @@
             <!--#endregion-->
             <Border Grid.Column="1" Style="{StaticResource Expander_Border_Vertical}" />
             <!--#region Vermerk-->
-            <Grid
+            <StackPanel
                 Grid.Column="2"
                 Width="400"
                 Visibility="{Binding ShowVermerk, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Margin="10,0,10,0">
+                <StackPanel Background="Gray">
+                    <StackPanel
+                        Margin="5,10"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Textblock_Status}" Text="Status: " />
+                        <TextBlock Style="{StaticResource Textblock_Status}" Text="{Binding ARStatusText}" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Margin="10,0,10,0">
                     <!--<TextBlock Style="{StaticResource Textblock_Hinweistext_TopTitel}" Text="Vermerk:" />-->
                     <TextBox
                         MinHeight="100"
@@ -1618,18 +1632,15 @@
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
                 <Button
-                    Grid.Row="1"
                     Margin="0,15,0,0"
                     HorizontalAlignment="Center"
                     Content="Vermerk leeren"
                     Style="{StaticResource Button_Master}" />
                 <Border
-                    Grid.Row="2"
                     Margin="0,20"
                     Style="{StaticResource Expander_Border}"
                     Visibility="{Binding ShowAcceptence, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel
-                    Grid.Row="3"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal"
                     Visibility="{Binding ShowAcceptence, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
@@ -1643,96 +1654,131 @@
                     </Button>
                     <Button
                         Command="{Binding Path=DataContext.PermissionCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                        Style="{StaticResource Button_GridView}"
                         CommandParameter="Abgelehnt"
+                        Style="{StaticResource Button_GridView}"
                         ToolTip="Antrag/Anzeige als abgelehnt weiterleiten"
                         Visibility="Visible">
                         <MD:PackIcon Padding="0" Kind="CloseOctagon" />
                     </Button>
                 </StackPanel>
                 <Border
-                    Grid.Row="4"
                     Margin="0,20"
                     Style="{StaticResource Expander_Border}"
                     Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <StackPanel Grid.Row="5">
-                    <StackPanel
-                        Grid.Row="3"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal"
-                        Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                        <Button
-                            x:Name="Btn_3"
-                            Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                            Style="{StaticResource Button_GridView}"
-                            ToolTip="Genehmigung erstellen"
-                            Visibility="Visible">
-                            <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
-                        </Button>
-                        <Button
-                            x:Name="Btn_4"
-                            Command="{Binding Path=DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                            Style="{StaticResource Button_GridView}"
-                            ToolTip="Genehmigung versenden"
-                            Visibility="Visible">
-                            <MD:PackIcon Padding="0" Kind="EmailSend" />
-                        </Button>
+                <Button
+                    x:Name="Btn_3"
+                    Width="170"
+                    Command="{Binding Path=DataContext.WordCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                    Style="{StaticResource Button_Master}"
+                    ToolTip="Genehmigung erstellen"
+                    Visibility="Visible">
+                    <StackPanel Orientation="Horizontal">
+                        <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
+                        <TextBlock
+                            Margin="10,0,0,0"
+                            Style="{StaticResource textblock_base}"
+                            Text="Schreiben erstellen" />
                     </StackPanel>
-                    <ListView
-                        Margin="0,30,0,0"
-                        ItemsSource="{Binding ImportFileList, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedItem="{Binding SelectedAttachment, UpdateSourceTrigger=PropertyChanged}"
-                        SelectionMode="Single"
-                        Visibility="{Binding ShowAttachmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn
-                                    Width="220"
-                                    DisplayMemberBinding="{Binding FileName}"
-                                    Header="Dateiname"
-                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
-                                <GridViewColumn Width="Auto">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Button
-                                                    x:Name="Btn_Open"
-                                                    Command="{Binding Path=DataContext.OpenAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                    Style="{StaticResource Button_GridView}"
-                                                    ToolTip="Schreiben öffnen">
-                                                    <MD:PackIcon Padding="0" Kind="File" />
-                                                </Button>
-                                                <Button
+                </Button>
+                <Border
+                    Margin="0,20"
+                    Style="{StaticResource Expander_Border}"
+                    Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                <ListView
+                    ItemsSource="{Binding DocFileList, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedItem="{Binding SelectedDocFileTable, UpdateSourceTrigger=PropertyChanged}"
+                    SelectionMode="Single"
+                    Visibility="{Binding ShowDocFileList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+                                DisplayMemberBinding="{Binding FileName}"
+                                Header="Dateiname"
+                                HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                            <!--<GridViewColumn Width="Auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button
+                                                x:Name="Btn_Open"
+                                                Command="{Binding Path=DataContext.OpenAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Style="{StaticResource Button_GridView}"
+                                                ToolTip="Schreiben öffnen">
+                                                <MD:PackIcon Padding="0" Kind="File" />
+                                            </Button>
+                            -->
+                            <!--<Button
                                                     x:Name="Btn_Save"
                                                     Command="{Binding Path=DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Style="{StaticResource Button_GridView}"
                                                     ToolTip="Schreiben speichern">
                                                     <MD:PackIcon Padding="0" Kind="ContentSave" />
-                                                </Button>
-                                                <Button
-                                                    x:Name="Btn_Bin"
-                                                    Command="{Binding Path=DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                    Style="{StaticResource Button_GridView}"
-                                                    ToolTip="Schreiben löschen">
-                                                    <MD:PackIcon Padding="0" Kind="Bin" />
-                                                </Button>
-                                            </StackPanel>
-                                            <DataTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
-                                                    <Setter TargetName="Btn_Open" Property="Visibility" Value="Visible" />
-                                                    <Setter TargetName="Btn_Save" Property="Visibility" Value="Visible" />
-                                                    <Setter TargetName="Btn_Bin" Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                            </DataTemplate.Triggers>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                                                </Button>-->
+                            <!--<Button
+                                                x:Name="Btn_Bin"
+                                                Command="{Binding Path=DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Style="{StaticResource Button_GridView}"
+                                                ToolTip="Schreiben löschen">
+                                                <MD:PackIcon Padding="0" Kind="Bin" />
+                                            </Button>-->
+                            <!--
+                                        </StackPanel>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
+                                                <Setter TargetName="Btn_Open" Property="Visibility" Value="Visible" />
+                            -->
+                            <!--<Setter TargetName="Btn_Save" Property="Visibility" Value="Visible" />-->
+                            <!--<Setter TargetName="Btn_Bin" Property="Visibility" Value="Visible" />-->
+                            <!--
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>-->
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <StackPanel Visibility="{Binding ShowWordOptions, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <StackPanel Margin="0,20">
+                        <TextBlock Style="{StaticResource Textblock_File}" Text="Ausgewählte Datei:" />
+                        <TextBlock Style="{StaticResource Textblock_File}" Text="{Binding SelectedDocFile.FileName}" />
+                    </StackPanel>
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <Button
+                            Command="{Binding Path=DataContext.OpenDocFileCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Style="{StaticResource Button_GridView}"
+                            ToolTip="Schreiben öffnen"
+                            Visibility="Visible">
+                            <MD:PackIcon Padding="0" Kind="File" />
+                        </Button>
+                        <Button
+                            Command="{Binding Path=DataContext.SaveDocFileCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Style="{StaticResource Button_GridView}"
+                            ToolTip="Schreiben in der Datenbank speichern"
+                            Visibility="Visible">
+                            <MD:PackIcon Padding="0" Kind="ContentSave" />
+                        </Button>
+                        <Button
+                            Command="{Binding Path=DataContext.SendDocFileCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Style="{StaticResource Button_GridView}"
+                            ToolTip="Genehmigung versenden"
+                            Visibility="Visible">
+                            <MD:PackIcon Padding="0" Kind="EmailSend" />
+                        </Button>
+                        <Button
+                            Command="{Binding Path=DataContext.DeleteDocFileCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Style="{StaticResource Button_GridView}"
+                            ToolTip="Schreiben löschen"
+                            Visibility="Visible">
+                            <MD:PackIcon Padding="0" Kind="Bin" />
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
 
-            </Grid>
+            </StackPanel>
             <!--#endregion-->
             <!--#region Hinweise-->
             <Grid

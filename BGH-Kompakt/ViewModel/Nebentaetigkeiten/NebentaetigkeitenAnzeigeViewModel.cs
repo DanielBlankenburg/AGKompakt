@@ -1,4 +1,5 @@
 ﻿using BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps;
+using BGH_Kompakt.Classes._LookUp.UserLookUps;
 using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.UserClasses;
@@ -13,6 +14,7 @@ using BGH_Kompakt.Services.UserService;
 using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.UserLogin;
 using BGH_Kompakt.Views.Windows;
+using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,6 +29,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using Task = System.Threading.Tasks.Task;
+using MSWord = Microsoft.Office.Interop.Word;
+using Document = Microsoft.Office.Interop.Word.Document;
+
+
 
 namespace BGH_Kompakt.ViewModel
 {
@@ -44,6 +51,8 @@ namespace BGH_Kompakt.ViewModel
         #region ObvervableCollections/SelectedItems
         private readonly ObservableCollection<ActivityRequestDataFile> _ImportFileList = new ObservableCollection<ActivityRequestDataFile>();
         public ObservableCollection<ActivityRequestDataFile> ImportFileList { get { return _ImportFileList; } }
+        private readonly ObservableCollection<ActivityRequestDataFile> _DocFileList = new ObservableCollection<ActivityRequestDataFile>();
+        public ObservableCollection<ActivityRequestDataFile> DocFileList { get { return _DocFileList; } }
         public ObservableCollection<ActivityClient> Items { get; set; }
         public CollectionViewSource CollectionView
         {
@@ -158,6 +167,26 @@ namespace BGH_Kompakt.ViewModel
         {
             get { return _selectedAttachment; }
             set { _selectedAttachment = value; }
+        }
+        private ActivityRequestDataFile _selectedDocFileTable;
+        public ActivityRequestDataFile SelectedDocFileTable
+        {
+            get { return _selectedDocFileTable; }
+            set 
+            { 
+                SetProperty(ref _selectedDocFileTable, value); 
+                if (value != null) SelectedDocFile = value;
+            }
+        }
+        private ActivityRequestDataFile _selectedDocFile;
+        public ActivityRequestDataFile SelectedDocFile
+        {
+            get { return _selectedDocFile; }
+            set
+            {
+                SetProperty(ref _selectedDocFile, value);
+                ShowWordOptions = (value != null);
+            }
         }
         #endregion
         #region Eventhandler
@@ -626,6 +655,18 @@ namespace BGH_Kompakt.ViewModel
             get { return _ShowAttachmentList; }
             set { SetProperty(ref _ShowAttachmentList, value); }
         }
+        private bool _ShowDocFileList = false;
+        public bool ShowDocFileList
+        {
+            get { return _ShowDocFileList; }
+            set { SetProperty(ref _ShowDocFileList, value); }
+        }
+        private bool _ShowWordOptions = false;
+        public bool ShowWordOptions
+        {
+            get { return _ShowWordOptions; }
+            set { SetProperty(ref _ShowWordOptions, value); }
+        }
         private bool _PaymentPredicted = true;
         public bool PaymentPredicted
         {
@@ -1038,7 +1079,13 @@ namespace BGH_Kompakt.ViewModel
         public int ARStatus
         {
             get { return _ARStatus; }
-            set { SetProperty(ref _ARStatus, value);}
+            set { SetProperty(ref _ARStatus, value); }
+        }
+        private string _ARStatusText;
+        public string ARStatusText
+        {
+            get { return _ARStatusText; }
+            set { SetProperty(ref _ARStatusText, value); }
         }
         private int _ActivityRequestAccepted;
         public int ActivityRequestAccepted
@@ -1097,8 +1144,13 @@ namespace BGH_Kompakt.ViewModel
         public ICommand ScienceAuthorListSelectedCommand { get; set; }
         public ICommand HyperLinkCommand { get; set; }
         public ICommand ChangeHistoryCommand { get; set; }
-        public ICommand TestCommand { get; set; }
         public ICommand PermissionCommand { get; set; }
+        public ICommand WordCommand { get; set; }
+        public ICommand OpenDocFileCommand { get; set; }
+        public ICommand SaveDocFileCommand { get; set; }
+        public ICommand SendDocFileCommand { get; set; }
+        public ICommand DeleteDocFileCommand { get; set; }
+        public ICommand TestCommand { get; set; }
         #endregion
         public NebentaetigkeitenAnzeigeViewModel()
         {
@@ -1163,7 +1215,42 @@ namespace BGH_Kompakt.ViewModel
             HyperLinkCommand = new RelayCommand(HyperLinkExecute);
             ChangeHistoryCommand = new RelayCommand(ChangeHistoryExecute, ChangeHistoryCanExecute);
             PermissionCommand = new RelayCommand(PermissionExecute);
+            WordCommand = new RelayCommand(WordExecute);
+            OpenDocFileCommand = new RelayCommand(OpenDocFileExecute);
+            SaveDocFileCommand = new RelayCommand(SaveDocFileExecute);
+            SendDocFileCommand = new RelayCommand(SendDocFileExecute);
+            DeleteDocFileCommand = new RelayCommand(DeleteDocFileExecute);
             TestCommand = new RelayCommand(TextExecute);
+        }
+
+        private void DeleteDocFileExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SendDocFileExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveDocFileExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OpenDocFileExecute(object obj)
+        {
+            try
+            {
+                if (Directory.Exists(BGHKompaktSystemInfo.PathTempARDOC)) Directory.Delete(BGHKompaktSystemInfo.PathTempARDOC);
+                Directory.CreateDirectory(BGHKompaktSystemInfo.PathTempARDOC);
+                System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}", SelectedDocFile.Data);
+                Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                ViewManager.ShowMainInfoFlyout($"Das Dokument konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
+            }
         }
 
         private void PermissionExecute(object obj)
@@ -1214,8 +1301,132 @@ namespace BGH_Kompakt.ViewModel
                     return;
                 }
             }
+        }
+
+        private async void WordExecute(object obj)
+        {
+            string actionName = "Schreiben erstellen";
+            Task<DBResponse> task = CreateWordDocumnent();
+            ViewManager.ShowMainInfoFlyout("Das Schreiben wird erstellt", false);
+            ViewManager.ActionlistAdd(actionName);
+            await task;
+            string message = task.Result.Success ? "Das Schreiben wurde erstellt." : task.Result.Message;
+            ViewManager.ShowMainInfoFlyout(message, false);
+            ViewManager.ActionlistRemove(actionName);
 
         }
+
+        private Task<DBResponse> CreateWordDocumnent()
+        {
+            Task<DBResponse> task = Task.Run<DBResponse>(() =>
+            {
+                DBResponse response = new DBResponse();
+                MSWord.Application wordApp = new MSWord.Application();
+                Document wordDoc = null;
+
+                string[] directories = Assembly.GetExecutingAssembly().Location.Split('\\');
+                string pathApp = string.Empty;
+                for (int i = 0; i < directories.Length - 1; i++) pathApp += directories[i] + "\\";
+                string DocDir = $"{pathApp}Documents\\";
+                object oTemplate = $"{DocDir}\\Vorlage BGHKompaktAR.dotx";
+
+                try
+                {
+                    if (!File.Exists(oTemplate.ToString()))
+                    {
+                        //MessageBox.Show(oTemplate.ToString());
+                        response.Success = false;
+                        response.Message = $"Die Vorlage \"Vorlage BGHKompaktAR.dotx\" wurde im Pfad {DocDir} nicht gefunden";
+                        return response;
+                    }
+                    wordDoc = wordApp.Documents.Add(oTemplate);
+                }
+                catch (Exception ex)
+                {
+                    response.Success = false;
+                    response.Message = $"Die Vorlage \"Vorlage BGHKompaktAR.dotx\" im Pfad {DocDir} konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
+                    return response;
+                }
+                try
+                {
+                    foreach (Bookmark bM in wordDoc.Bookmarks)
+                    {
+                        Range range = null;
+                        switch (bM.Name)
+                        {
+                            case "BGHKompaktAdresseAnrede":
+                                range = bM.Range;
+                                UserDBContext userDBContext = new UserDBContext();
+                                Dienstbezeichnung dienstbezeichnung = userDBContext.Dienstbezeichnungen.FirstOrDefault(d => d.DienstbezeichnungId == ActivityRequestManager.SelectedActivityRequest.ARUser.DienstbezeichnungId);
+                                range.Text = $"{(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "Herrn" : "Frau")} {(dienstbezeichnung != null ? dienstbezeichnung.DienstbezeichnungText : "")}";
+                                break;
+                            case "BGHKompaktAdresseName":
+                                range = bM.Range;
+                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ARUser.FullSurname}";
+                                break;
+                            case "BGHKompaktDatum":
+                                range = bM.Range;
+                                range.Text = $"Karlsruhe, den {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()}";
+                                break;
+                            case "BGHKompaktBetreff":
+                                range = bM.Range;
+                                range.Text = $"{(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 1 ? "Genehmigung" : "Anzeige")} einer Nebentätigkeit";
+                                break;
+                            case "BGHKompaktTitel":
+                                range = bM.Range;
+                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ARTitel}";
+                                break;
+                            case "BGHKompaktBezug":
+                                range = bM.Range;
+                                range.Text = $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()}";
+                                break;
+                            case "BGHKompaktBodyAnrede":
+                                range = bM.Range;
+                                range.Text = $"Sehr {(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "geehrter Herr" : "geehrte Frau")} {ActivityRequestManager.SelectedActivityRequest.ARUser.FullSurname},";
+                                break;
+                            case "BGHKompaktBodyText":
+                                range = bM.Range;
+                                range.Text = $"ich genehmige die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()} bezeichnete Nebentätigkeit.";
+                                break;
+                            case "Genehmigungstext":
+                                range = bM.Range;
+                                range.Text = $"Sehr {(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "geehrter Herr" : "geehrte Frau")} {ActivityRequestManager.SelectedActivityRequest.ARUser.Fullname},\n\n" +
+                                                $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()} wird genehmigt.";
+                                break;
+                        }
+                    }
+
+                    DateTime date = new DateTime();
+                    date = DateTime.Now;
+                    string docName = $"Nebentätigkeit-{ActivityRequestManager.SelectedActivityRequest.ARUser.NachName}_{date:d}.docx";
+                    string dirTemp = $"{BGHKompaktSystemInfo.PathTemp}\\docAR\\";
+                    Directory.Delete(dirTemp);
+                    Directory.CreateDirectory(dirTemp);
+                    if (!Directory.Exists(dirTemp)) Directory.CreateDirectory(dirTemp);
+                    wordDoc.SaveAs2($"{dirTemp}{docName}");
+                    //wordDoc.Close();
+
+                    //string docFilePath = $"{dirTemp}{docName}";
+                    //byte[] bytes = System.IO.File.ReadAllBytes(docFilePath);
+
+                    //ActivityRequestDataFile file = new ActivityRequestDataFile { FileName = $"{docName}", Data = bytes, ActivityRequestId = SelectedActivityRequest.ActivityRequestId };
+                    //dBContext.ActivityRequestDataFiles.Add(file);
+                    //dBContext.SaveChanges();
+                    //wordDoc = wordApp.Documents.Add(docFilePath);
+                    wordApp.Visible = true;
+                    response.Success = true;
+                }
+                catch (Exception)
+                {
+                    response.Success = false;
+                    response.Message = "Die Textmarken konnte nicht eingefügt werden";
+                }
+                return response;
+            });
+            return task;
+        }
+
+
 
         private bool ChangeHistoryCanExecute(object obj)
         {
@@ -1278,7 +1489,7 @@ namespace BGH_Kompakt.ViewModel
                                         .ThenBy(x => x.VorName)
                                         .ToList();
                 foreach (var item in ApplicantQuery) ApplicantList.Add(item);
-                
+
             }
             catch (System.Exception ex)
             {
@@ -1755,7 +1966,6 @@ namespace BGH_Kompakt.ViewModel
             try
             {
                 System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttachment.FileName}", SelectedAttachment.Data);
-
                 Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttachment.FileName}") { UseShellExecute = true });
             }
             catch (Exception ex)
@@ -2226,9 +2436,16 @@ namespace BGH_Kompakt.ViewModel
                 AnzeigeAdventageList = AdventageList.Count > 0;
                 //Anlagen füllen
                 if (iActivityRequest.ActivityRequestDataFiles != null)
-                    foreach (ActivityRequestDataFile file in iActivityRequest.ActivityRequestDataFiles) ImportFileList.Add(file);
+                    foreach (ActivityRequestDataFile file in iActivityRequest.ActivityRequestDataFiles)
+                    {
+                        if (file.FileTyp == 1) ImportFileList.Add(file);
+                        else if (file.FileTyp == 2) DocFileList.Add(file);
+                    }
+
                 ShowAttachmentList = ImportFileList.Count > 0;
+                ShowDocFileList = DocFileList.Count > 0;
                 ARStatus = iActivityRequest.ActivityRequestStatusID ?? 1;
+                ARStatusText = (iActivityRequest.ActivityRequestStatus != null) ? iActivityRequest.ActivityRequestStatus.ActivityRequestStatusText : "unbekannt";
                 ActivityRequestAccepted = iActivityRequest.ActivityRequestAccepted;
             }
             else
@@ -2312,7 +2529,7 @@ namespace BGH_Kompakt.ViewModel
 
                 string pdfFilePath = fileInfo.FullName;
                 byte[] bytes = System.IO.File.ReadAllBytes(pdfFilePath);
-                ActivityRequestDataFile importFile = new ActivityRequestDataFile { FileName = fileInfo.Name, Data = bytes };
+                ActivityRequestDataFile importFile = new ActivityRequestDataFile { FileName = fileInfo.Name, Data = bytes, FileTyp = 1 };
                 ImportFileList.Add(importFile);
             }
             ShowAttachmentList = true;

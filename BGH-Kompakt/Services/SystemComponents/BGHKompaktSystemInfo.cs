@@ -26,6 +26,7 @@ namespace BGH_Kompakt.Services.SystemComponents
         public static string PathDokstelleDFS { get; }
         public static string PathLoggingData { get; }
         public static string PathTemp { get; }
+        public static string PathTempARDOC { get; }
 
 
         public static string EMailDokstelle { get; }
@@ -51,6 +52,7 @@ namespace BGH_Kompakt.Services.SystemComponents
             
             
             PathTemp = System.Environment.GetEnvironmentVariable("TEMP") + Path.DirectorySeparatorChar;
+            PathTempARDOC = $"{PathTemp}ARDOC\\";
             PathLoggingData = $"{PathTemp}LoggingData\\";
             try
             {

@@ -28,10 +28,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Document = Microsoft.Office.Interop.Word.Document;
 using Exception = System.Exception;
-using MSWord = Microsoft.Office.Interop.Word;
-using Task = System.Threading.Tasks.Task;
 
 
 namespace BGH_Kompakt.ViewModel
@@ -44,7 +41,6 @@ namespace BGH_Kompakt.ViewModel
         public ICommand DeleteCommand { get; set; }
         public ICommand SendCommand { get; set; }
         public ICommand RejectCommand { get; set; }
-        public ICommand WordCommand { get; set; }
         public ICommand NewRequestCommand { get; set; }
         public ICommand SortingCommand { get; set; }
         public ICommand ReSetFilterCommand { get; set; }
@@ -367,7 +363,6 @@ namespace BGH_Kompakt.ViewModel
             DeleteCommand = new RelayCommand(DeleteExecute);
             SendCommand = new RelayCommand(SendExecute);
             RejectCommand = new RelayCommand(RejectExecute);
-            WordCommand = new RelayCommand(WordExecute);
             NewRequestCommand = new RelayCommand(NewRequestExecute);
             SortingCommand = new RelayCommand(SortingExecute);
             ReSetFilterCommand = new RelayCommand(ReSetFilterExecute, ReSetFilterCanExecute);
@@ -572,123 +567,6 @@ namespace BGH_Kompakt.ViewModel
                 }
 
             }
-        }
-        private async void WordExecute(object obj)
-        {
-            string actionName = "Schreiben erstellen";
-            Task<DBResponse> task = CreateWordDocumnent();
-            ViewManager.ShowMainInfoFlyout("Das Schreiben wird erstellt", false);
-            ViewManager.ActionlistAdd(actionName);
-            await task;
-            string message = task.Result.Success ? "Das Schreiben wurde erstellt." : task.Result.Message;
-            ViewManager.ShowMainInfoFlyout(message, false);
-            ViewManager.ActionlistRemove(actionName);
-
-        }
-
-        private Task<DBResponse> CreateWordDocumnent()
-        {
-            Task<DBResponse> task = Task.Run<DBResponse>(() =>
-            {
-                DBResponse response = new DBResponse();
-                MSWord.Application wordApp = new MSWord.Application();
-                Document wordDoc = null;
-
-                string[] directories = Assembly.GetExecutingAssembly().Location.Split('\\');
-                string pathApp = string.Empty;
-                for (int i = 0; i < directories.Length - 1; i++) pathApp += directories[i] + "\\";
-                string DocDir = $"{pathApp}Documents\\";
-                object oTemplate = $"{DocDir}\\Vorlage BGHKompaktAR.dotx";
-
-                try
-                {
-                    if (!File.Exists(oTemplate.ToString()))
-                    {
-                        //MessageBox.Show(oTemplate.ToString());
-                        response.Success = false;
-                        response.Message = $"Die Vorlage \"Vorlage BGHKompaktAR.dotx\" wurde im Pfad {DocDir} nicht gefunden";
-                        return response;
-                    }
-                    wordDoc = wordApp.Documents.Add(oTemplate);
-                }
-                catch (Exception ex)
-                {
-                    response.Success = false;
-                    response.Message = $"Die Vorlage \"Vorlage BGHKompaktAR.dotx\" im Pfad {DocDir} konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
-                    return response;
-                }
-                try
-                {
-                    foreach (Bookmark bM in wordDoc.Bookmarks)
-                    {
-                        Range range = null;
-                        switch (bM.Name)
-                        {
-                            case "BGHKompaktAdresseAnrede":
-                                range = bM.Range;
-                                UserDBContext userDBContext = new UserDBContext();
-                                Dienstbezeichnung dienstbezeichnung = userDBContext.Dienstbezeichnungen.FirstOrDefault(d => d.DienstbezeichnungId == SelectedActivityRequest.ARUser.DienstbezeichnungId);
-                                range.Text = $"{(SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "Herrn" : "Frau")} {(dienstbezeichnung != null ? dienstbezeichnung.DienstbezeichnungText : "")}";
-                                break;
-                            case "BGHKompaktAdresseName":
-                                range = bM.Range;
-                                range.Text = $"{SelectedActivityRequest.ARUser.FullSurname}";
-                                break;
-                            case "BGHKompaktDatum":
-                                range = bM.Range;
-                                range.Text = $"Karlsruhe, den {SelectedActivityRequest.ARDatum.ToShortDateString()}";
-                                break;
-                            case "BGHKompaktBetreff":
-                                range = bM.Range;
-                                range.Text = $"{(SelectedActivityRequest.ActivityRequestMeldeArtID == 1 ? "Genehmigung" : "Anzeige")} einer Nebentätigkeit";
-                                break;
-                            case "BGHKompaktTitel":
-                                range = bM.Range;
-                                range.Text = $"{SelectedActivityRequest.ARTitel}";
-                                break;
-                            case "BGHKompaktBezug":
-                                range = bM.Range;
-                                range.Text = $"Ihr Antrag vom {SelectedActivityRequest.ARDatum.ToShortDateString()}";
-                                break;
-                            case "BGHKompaktBodyAnrede":
-                                range = bM.Range;
-                                range.Text = $"Sehr {(SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "geehrter Herr" : "geehrte Frau")} {SelectedActivityRequest.ARUser.FullSurname},";
-                                break;
-                            case "BGHKompaktBodyText":
-                                range = bM.Range;
-                                range.Text = $"ich genehmige die in Ihrem Antrag vom {SelectedActivityRequest.ARDatum.ToShortDateString()} bezeichnete Nebentätigkeit.";
-                                break;
-                            case "Genehmigungstext":
-                                range = bM.Range;
-                                range.Text = $"Sehr {(SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "geehrter Herr" : "geehrte Frau")} {SelectedActivityRequest.ARUser.Fullname},\n\n" +
-                                                $"Ihr Antrag vom {SelectedActivityRequest.ARDatum.ToShortDateString()} wird genehmigt.";
-                                break;
-                        }
-                    }
-                    string docName = $"Nebentätigkeit-{SelectedActivityRequest.ARUser.NachName}.docx";
-                    string dirTemp = $"{BGHKompaktSystemInfo.PathTemp}\\docAR\\";
-                    if (!Directory.Exists(dirTemp)) Directory.CreateDirectory(dirTemp);
-                    wordDoc.SaveAs2($"{dirTemp}{docName}");
-                    //wordDoc.Close();
-
-                    //string docFilePath = $"{dirTemp}{docName}";
-                    //byte[] bytes = System.IO.File.ReadAllBytes(docFilePath);
-
-                    //ActivityRequestDataFile file = new ActivityRequestDataFile { FileName = $"{docName}", Data = bytes, ActivityRequestId = SelectedActivityRequest.ActivityRequestId };
-                    //dBContext.ActivityRequestDataFiles.Add(file);
-                    //dBContext.SaveChanges();
-                    //wordDoc = wordApp.Documents.Add(docFilePath);
-                    wordApp.Visible = true;
-                    response.Success = true;
-                }
-                catch (Exception)
-                {
-                    response.Success = false;
-                    response.Message = "Die Textmarken konnte nicht eingefügt werden";
-                }
-                return response;
-            });
-            return task;
         }
 
         private void RejectExecute(object obj)
