@@ -959,13 +959,13 @@
                                         ToolTip="Kopie als neue/n Anzeige/Antrag anlegen">
                                         <MD:PackIcon Padding="0" Kind="ContentDuplicate" />
                                     </Button>
-                                    <Button
+                                    <!--<Button
                                         x:Name="Btn_Reject"
                                         Command="{Binding Path=DataContext.RejectCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
                                         Style="{StaticResource Button_GridView}"
                                         ToolTip="Antrag ablehnen">
                                         <MD:PackIcon Padding="0" Kind="CloseOctagon" />
-                                    </Button>
+                                    </Button>-->
                                     <Button
                                         x:Name="Btn_Send"
                                         Command="{Binding Path=DataContext.SendCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
@@ -1006,7 +1006,7 @@
                                         </MultiDataTrigger.Setters>
                                     </MultiDataTrigger>
 
-                                    <MultiDataTrigger>
+                                    <!--<MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />
                                             <Condition Binding="{Binding Path=DataContext.ShowReject, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" Value="true" />
@@ -1014,7 +1014,7 @@
                                         <MultiDataTrigger.Setters>
                                             <Setter TargetName="Btn_Reject" Property="Visibility" Value="Visible" />
                                         </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
+                                    </MultiDataTrigger>-->
                                     <!--<MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
                                             <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true" />

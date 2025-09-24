@@ -35,8 +35,8 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
         public ICommand SenatsheftCommand { get; set; }
         public ICommand AZCommand { get; set; }
         public ICommand RenameCommand { get; set; }
-        public ICommand DeleteAttechmentCommand { get; set; }
-        public ICommand OpenAttechmentCommand { get; set; }
+        public ICommand DeleteAttachmentCommand { get; set; }
+        public ICommand OpenAttachmentCommand { get; set; }
         public ICommand ExportCommand { get; set; }
 
         #region Test-Grouping
@@ -51,8 +51,8 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             SenatsheftCommand = new RelayCommand(SenatsheftExecute);
             AZCommand = new RelayCommand(AZExecute);
             RenameCommand = new RelayCommand(RenameExecute);
-            DeleteAttechmentCommand = new RelayCommand(DeleteAttechmentExecute);
-            OpenAttechmentCommand = new RelayCommand(OpenAttechmentExecute);
+            DeleteAttachmentCommand = new RelayCommand(DeleteAttachmentExecute);
+            OpenAttachmentCommand = new RelayCommand(OpenAttachmentExecute);
             ExportCommand = new RelayCommand(ExportExecute);
 
             string year = DateTime.Now.Year.ToString();
@@ -135,18 +135,18 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             get { return _SelectedAZ; }
             set { SetProperty(ref _SelectedAZ, value); }
         }
-        private bool _ShowAttechmentList = false;
-        public bool ShowAttechmentList
+        private bool _ShowAttachmentList = false;
+        public bool ShowAttachmentList
         {
-            get { return _ShowAttechmentList; }
-            set { SetProperty(ref _ShowAttechmentList, value); }
+            get { return _ShowAttachmentList; }
+            set { SetProperty(ref _ShowAttachmentList, value); }
         }
 
-        private MPImportFile _selectedAttechment;
-        public MPImportFile SelectedAttechment
+        private MPImportFile _selectedAttachment;
+        public MPImportFile SelectedAttachment
         {
-            get { return _selectedAttechment; }
-            set { _selectedAttechment = value; }
+            get { return _selectedAttachment; }
+            set { _selectedAttachment = value; }
         }
 
         private string _TextJahr = string.Empty;
@@ -176,7 +176,7 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
         public void OnFilesDropped(string[] files)
         {
             foreach (string file in files) ImportFileList.Add(new MPImportFile(file));
-            ShowAttechmentList = true;
+            ShowAttachmentList = true;
         }
         #region Executes
         private void AZExecute(object obj)
@@ -197,8 +197,8 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                 }
 
                 newFileName = newFileName.Replace(" ", UserManager.SenatSettings.StrafFileWhiteSpaceFill);
-                newFileName += $"{UserManager.SenatSettings.StrafFileWhiteSpaceFill}{SelectedAttechment.FileName}{SelectedAttechment.FileExtention}";
-                MPImportFile selectedFile = SelectedAttechment;
+                newFileName += $"{UserManager.SenatSettings.StrafFileWhiteSpaceFill}{SelectedAttachment.FileName}{SelectedAttachment.FileExtention}";
+                MPImportFile selectedFile = SelectedAttachment;
                 ObservableCollection<MPImportFile> templist = new ObservableCollection<MPImportFile>();
                 foreach (MPImportFile item in ImportFileList) templist.Add(item);
                 ImportFileList.Clear();
@@ -230,9 +230,9 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                     newFileName += $"{TextLaufendeNummer} {TextJahr}";
                 }
 
-                newFileName += $"{SelectedAttechment.FileExtention}";
+                newFileName += $"{SelectedAttachment.FileExtention}";
                 newFileName = newFileName.Replace(" ", UserManager.SenatSettings.StrafFileWhiteSpaceFill);
-                MPImportFile selectedFile = SelectedAttechment;
+                MPImportFile selectedFile = SelectedAttachment;
                 ObservableCollection<MPImportFile> templist = new ObservableCollection<MPImportFile>();
                 foreach (MPImportFile item in ImportFileList) templist.Add(item);
                 ImportFileList.Clear();
@@ -249,11 +249,11 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
 
         }
 
-        private void OpenAttechmentExecute(object obj)
+        private void OpenAttachmentExecute(object obj)
         {
             try
             {
-                Process.Start(new ProcessStartInfo(SelectedAttechment.FileFullPath)
+                Process.Start(new ProcessStartInfo(SelectedAttachment.FileFullPath)
                 {
                     UseShellExecute = true
                 });
@@ -283,9 +283,9 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             ViewManager.ShowMainInfoFlyout("Bitte wählen Sie einen Beisitzer aus.", false);
             return false;
         }
-        private void DeleteAttechmentExecute(object obj)
+        private void DeleteAttachmentExecute(object obj)
         {
-            ImportFileList.Remove(SelectedAttechment);
+            ImportFileList.Remove(SelectedAttachment);
         }
         private void ExportExecute(object obj)
         {

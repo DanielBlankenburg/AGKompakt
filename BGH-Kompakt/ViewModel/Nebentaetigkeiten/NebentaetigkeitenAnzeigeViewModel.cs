@@ -1,4 +1,5 @@
 ﻿using BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps;
+using BGH_Kompakt.Classes._LookUp.UserLookUps;
 using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.UserClasses;
@@ -13,6 +14,7 @@ using BGH_Kompakt.Services.UserService;
 using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.UserLogin;
 using BGH_Kompakt.Views.Windows;
+using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,6 +29,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using Task = System.Threading.Tasks.Task;
+using MSWord = Microsoft.Office.Interop.Word;
+using Document = Microsoft.Office.Interop.Word.Document;
+
+
 
 namespace BGH_Kompakt.ViewModel
 {
@@ -44,6 +51,8 @@ namespace BGH_Kompakt.ViewModel
         #region ObvervableCollections/SelectedItems
         private readonly ObservableCollection<ActivityRequestDataFile> _ImportFileList = new ObservableCollection<ActivityRequestDataFile>();
         public ObservableCollection<ActivityRequestDataFile> ImportFileList { get { return _ImportFileList; } }
+        private readonly ObservableCollection<ActivityRequestDataFile> _DocFileList = new ObservableCollection<ActivityRequestDataFile>();
+        public ObservableCollection<ActivityRequestDataFile> DocFileList { get { return _DocFileList; } }
         public ObservableCollection<ActivityClient> Items { get; set; }
         public CollectionViewSource CollectionView
         {
@@ -153,11 +162,31 @@ namespace BGH_Kompakt.ViewModel
             get { return _ApplicantSelected; }
             set { _ApplicantSelected = value; }
         }
-        private ActivityRequestDataFile _selectedAttechment;
-        public ActivityRequestDataFile SelectedAttechment
+        private ActivityRequestDataFile _selectedAttachment;
+        public ActivityRequestDataFile SelectedAttachment
         {
-            get { return _selectedAttechment; }
-            set { _selectedAttechment = value; }
+            get { return _selectedAttachment; }
+            set { _selectedAttachment = value; }
+        }
+        private ActivityRequestDataFile _selectedDocFileTable;
+        public ActivityRequestDataFile SelectedDocFileTable
+        {
+            get { return _selectedDocFileTable; }
+            set 
+            { 
+                SetProperty(ref _selectedDocFileTable, value); 
+                if (value != null) SelectedDocFile = value;
+            }
+        }
+        private ActivityRequestDataFile _selectedDocFile;
+        public ActivityRequestDataFile SelectedDocFile
+        {
+            get { return _selectedDocFile; }
+            set
+            {
+                SetProperty(ref _selectedDocFile, value);
+                ShowWordOptions = (value != null);
+            }
         }
         #endregion
         #region Eventhandler
@@ -620,11 +649,23 @@ namespace BGH_Kompakt.ViewModel
             get { return _ShowApplicant; }
             set { SetProperty(ref _ShowApplicant, value); }
         }
-        private bool _ShowAttechmentList = false;
-        public bool ShowAttechmentList
+        private bool _ShowAttachmentList = false;
+        public bool ShowAttachmentList
         {
-            get { return _ShowAttechmentList; }
-            set { SetProperty(ref _ShowAttechmentList, value); }
+            get { return _ShowAttachmentList; }
+            set { SetProperty(ref _ShowAttachmentList, value); }
+        }
+        private bool _ShowDocFileList = false;
+        public bool ShowDocFileList
+        {
+            get { return _ShowDocFileList; }
+            set { SetProperty(ref _ShowDocFileList, value); }
+        }
+        private bool _ShowWordOptions = false;
+        public bool ShowWordOptions
+        {
+            get { return _ShowWordOptions; }
+            set { SetProperty(ref _ShowWordOptions, value); }
         }
         private bool _PaymentPredicted = true;
         public bool PaymentPredicted
@@ -1034,6 +1075,24 @@ namespace BGH_Kompakt.ViewModel
                 ErrorInstruction = false;
             }
         }
+        private int _ARStatus;
+        public int ARStatus
+        {
+            get { return _ARStatus; }
+            set { SetProperty(ref _ARStatus, value); }
+        }
+        private string _ARStatusText;
+        public string ARStatusText
+        {
+            get { return _ARStatusText; }
+            set { SetProperty(ref _ARStatusText, value); }
+        }
+        private int _ActivityRequestAccepted;
+        public int ActivityRequestAccepted
+        {
+            get { return _ActivityRequestAccepted; }
+            set { SetProperty(ref _ActivityRequestAccepted, value); }
+        }
         private string _HinweisText;
         public string HinweisText
         {
@@ -1079,12 +1138,18 @@ namespace BGH_Kompakt.ViewModel
         public ICommand NewCommand { get; set; }
         public ICommand AddPersonCommand { get; set; }
         public ICommand ImportListClearCommand { get; set; }
-        public ICommand OpenAttechmentCommand { get; set; }
-        public ICommand DeleteAttechmentCommand { get; set; }
+        public ICommand OpenAttachmentCommand { get; set; }
+        public ICommand DeleteAttachmentCommand { get; set; }
         public ICommand AddRequestsCommand { get; set; }
         public ICommand ScienceAuthorListSelectedCommand { get; set; }
         public ICommand HyperLinkCommand { get; set; }
         public ICommand ChangeHistoryCommand { get; set; }
+        public ICommand PermissionCommand { get; set; }
+        public ICommand WordCommand { get; set; }
+        public ICommand OpenDocFileCommand { get; set; }
+        public ICommand SaveDocFileCommand { get; set; }
+        public ICommand SendDocFileCommand { get; set; }
+        public ICommand DeleteDocFileCommand { get; set; }
         public ICommand TestCommand { get; set; }
         #endregion
         public NebentaetigkeitenAnzeigeViewModel()
@@ -1141,16 +1206,227 @@ namespace BGH_Kompakt.ViewModel
             ArbitrationClientAddApplyCommand = new RelayCommand(ArbitrationClientAddApplyExecute);
             ArbitrationClientAddCommand = new RelayCommand(ArbitrationClientAddExecute);
             ImportListClearCommand = new RelayCommand(ImportListClearExecute, ImportListClearCanExecute);
-            OpenAttechmentCommand = new RelayCommand(OpenAttechmentExecute);
-            DeleteAttechmentCommand = new RelayCommand(DeleteAttechmentExecute);
+            OpenAttachmentCommand = new RelayCommand(OpenAttachmentExecute);
+            DeleteAttachmentCommand = new RelayCommand(DeleteAttachmentExecute);
             NewCommand = new RelayCommand(NewExecute);
             AddPersonCommand = new RelayCommand(AddPersonExecute);
             AddRequestsCommand = new RelayCommand(AddRequestExecute);
             ScienceAuthorListSelectedCommand = new RelayCommand(ScienceAuthorSelctionExecute);
             HyperLinkCommand = new RelayCommand(HyperLinkExecute);
             ChangeHistoryCommand = new RelayCommand(ChangeHistoryExecute, ChangeHistoryCanExecute);
+            PermissionCommand = new RelayCommand(PermissionExecute);
+            WordCommand = new RelayCommand(WordExecute);
+            OpenDocFileCommand = new RelayCommand(OpenDocFileExecute);
+            SaveDocFileCommand = new RelayCommand(SaveDocFileExecute);
+            SendDocFileCommand = new RelayCommand(SendDocFileExecute);
+            DeleteDocFileCommand = new RelayCommand(DeleteDocFileExecute);
             TestCommand = new RelayCommand(TextExecute);
         }
+
+        private void DeleteDocFileExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SendDocFileExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveDocFileExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OpenDocFileExecute(object obj)
+        {
+            try
+            {
+                if (Directory.Exists(BGHKompaktSystemInfo.PathTempARDOC)) Directory.Delete(BGHKompaktSystemInfo.PathTempARDOC);
+                Directory.CreateDirectory(BGHKompaktSystemInfo.PathTempARDOC);
+                System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}", SelectedDocFile.Data);
+                Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                ViewManager.ShowMainInfoFlyout($"Das Dokument konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
+            }
+        }
+
+        private void PermissionExecute(object obj)
+        {
+            String MessageText = string.Empty;
+            String MessageText2 = string.Empty;
+            int AblageArtExport = 0;
+
+            if (obj != null)
+            {
+                switch ((string)obj)
+                {
+                    case "Genehmigt":
+                        break;
+                    case "Abgelehnt":
+                        break;
+                }
+            }
+
+            switch (ActivityRequestManager.AblageArt)
+            {
+                case 2: //Präsidialbereich
+                    MessageText = $"Soll der Eintrag {((string)obj == "Genehmigt" ? "als genehmigungsfähig " : "als ablehnungsreif ")} zur Präsidentin weitergeleitet werden?";
+                    MessageText2 = "Der Eintrag wurde an die Präsidentin weitergeleitet.";
+                    AblageArtExport = 3;
+                    break;
+                case 3: //Präsidentinnenbereich
+                    MessageText = $"Soll der Eintrag {((string)obj == "Genehmigt" ? "genehmigt " : "abgelehnt ")} werden?";
+                    MessageText2 = $"Der Eintrag wurde {((string)obj == "Genehmigt" ? "genehmigt " : "abgelehnt ")}.";
+                    AblageArtExport = 4;
+                    break;
+            }
+
+            bool Antwort = ViewManager.ShowQuestionWindow(MessageText, "Ja");
+            if (Antwort == true)
+            {
+                try
+                {
+                    ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich = AblageArtExport;
+                    activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
+                    activityRequestDBcontext.SaveChanges();
+                    //Liste neu füllen
+                    ViewManager.ShowMainInfoFlyout(MessageText2, false);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: " + ex.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+        }
+
+        private async void WordExecute(object obj)
+        {
+            string actionName = "Schreiben erstellen";
+            Task<DBResponse> task = CreateWordDocumnent();
+            ViewManager.ShowMainInfoFlyout("Das Schreiben wird erstellt", false);
+            ViewManager.ActionlistAdd(actionName);
+            await task;
+            string message = task.Result.Success ? "Das Schreiben wurde erstellt." : task.Result.Message;
+            ViewManager.ShowMainInfoFlyout(message, false);
+            ViewManager.ActionlistRemove(actionName);
+
+        }
+
+        private Task<DBResponse> CreateWordDocumnent()
+        {
+            Task<DBResponse> task = Task.Run<DBResponse>(() =>
+            {
+                DBResponse response = new DBResponse();
+                MSWord.Application wordApp = new MSWord.Application();
+                Document wordDoc = null;
+
+                string[] directories = Assembly.GetExecutingAssembly().Location.Split('\\');
+                string pathApp = string.Empty;
+                for (int i = 0; i < directories.Length - 1; i++) pathApp += directories[i] + "\\";
+                string DocDir = $"{pathApp}Documents\\";
+                object oTemplate = $"{DocDir}\\Vorlage BGHKompaktAR.dotx";
+
+                try
+                {
+                    if (!File.Exists(oTemplate.ToString()))
+                    {
+                        //MessageBox.Show(oTemplate.ToString());
+                        response.Success = false;
+                        response.Message = $"Die Vorlage \"Vorlage BGHKompaktAR.dotx\" wurde im Pfad {DocDir} nicht gefunden";
+                        return response;
+                    }
+                    wordDoc = wordApp.Documents.Add(oTemplate);
+                }
+                catch (Exception ex)
+                {
+                    response.Success = false;
+                    response.Message = $"Die Vorlage \"Vorlage BGHKompaktAR.dotx\" im Pfad {DocDir} konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
+                    return response;
+                }
+                try
+                {
+                    foreach (Bookmark bM in wordDoc.Bookmarks)
+                    {
+                        Range range = null;
+                        switch (bM.Name)
+                        {
+                            case "BGHKompaktAdresseAnrede":
+                                range = bM.Range;
+                                UserDBContext userDBContext = new UserDBContext();
+                                Dienstbezeichnung dienstbezeichnung = userDBContext.Dienstbezeichnungen.FirstOrDefault(d => d.DienstbezeichnungId == ActivityRequestManager.SelectedActivityRequest.ARUser.DienstbezeichnungId);
+                                range.Text = $"{(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "Herrn" : "Frau")} {(dienstbezeichnung != null ? dienstbezeichnung.DienstbezeichnungText : "")}";
+                                break;
+                            case "BGHKompaktAdresseName":
+                                range = bM.Range;
+                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ARUser.FullSurname}";
+                                break;
+                            case "BGHKompaktDatum":
+                                range = bM.Range;
+                                range.Text = $"Karlsruhe, den {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()}";
+                                break;
+                            case "BGHKompaktBetreff":
+                                range = bM.Range;
+                                range.Text = $"{(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 1 ? "Genehmigung" : "Anzeige")} einer Nebentätigkeit";
+                                break;
+                            case "BGHKompaktTitel":
+                                range = bM.Range;
+                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ARTitel}";
+                                break;
+                            case "BGHKompaktBezug":
+                                range = bM.Range;
+                                range.Text = $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()}";
+                                break;
+                            case "BGHKompaktBodyAnrede":
+                                range = bM.Range;
+                                range.Text = $"Sehr {(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "geehrter Herr" : "geehrte Frau")} {ActivityRequestManager.SelectedActivityRequest.ARUser.FullSurname},";
+                                break;
+                            case "BGHKompaktBodyText":
+                                range = bM.Range;
+                                range.Text = $"ich genehmige die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()} bezeichnete Nebentätigkeit.";
+                                break;
+                            case "Genehmigungstext":
+                                range = bM.Range;
+                                range.Text = $"Sehr {(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "geehrter Herr" : "geehrte Frau")} {ActivityRequestManager.SelectedActivityRequest.ARUser.Fullname},\n\n" +
+                                                $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()} wird genehmigt.";
+                                break;
+                        }
+                    }
+
+                    DateTime date = new DateTime();
+                    date = DateTime.Now;
+                    string docName = $"Nebentätigkeit-{ActivityRequestManager.SelectedActivityRequest.ARUser.NachName}_{date:d}.docx";
+                    string dirTemp = $"{BGHKompaktSystemInfo.PathTemp}\\docAR\\";
+                    Directory.Delete(dirTemp);
+                    Directory.CreateDirectory(dirTemp);
+                    if (!Directory.Exists(dirTemp)) Directory.CreateDirectory(dirTemp);
+                    wordDoc.SaveAs2($"{dirTemp}{docName}");
+                    //wordDoc.Close();
+
+                    //string docFilePath = $"{dirTemp}{docName}";
+                    //byte[] bytes = System.IO.File.ReadAllBytes(docFilePath);
+
+                    //ActivityRequestDataFile file = new ActivityRequestDataFile { FileName = $"{docName}", Data = bytes, ActivityRequestId = SelectedActivityRequest.ActivityRequestId };
+                    //dBContext.ActivityRequestDataFiles.Add(file);
+                    //dBContext.SaveChanges();
+                    //wordDoc = wordApp.Documents.Add(docFilePath);
+                    wordApp.Visible = true;
+                    response.Success = true;
+                }
+                catch (Exception)
+                {
+                    response.Success = false;
+                    response.Message = "Die Textmarken konnte nicht eingefügt werden";
+                }
+                return response;
+            });
+            return task;
+        }
+
+
 
         private bool ChangeHistoryCanExecute(object obj)
         {
@@ -1213,7 +1489,7 @@ namespace BGH_Kompakt.ViewModel
                                         .ThenBy(x => x.VorName)
                                         .ToList();
                 foreach (var item in ApplicantQuery) ApplicantList.Add(item);
-                
+
             }
             catch (System.Exception ex)
             {
@@ -1504,6 +1780,8 @@ namespace BGH_Kompakt.ViewModel
                     {
                         newActivityRequest.ARNoteAdmin = ARNoteAdmin;
                         newActivityRequest.Assurance = ARAssurance;
+                        newActivityRequest.ActivityRequestStatusID = ARStatus;
+                        newActivityRequest.ActivityRequestAccepted = ActivityRequestAccepted;
                         if (ActivityRequestManager.ActionType == 1) //Create
                         {
                             newActivityRequest.ARUserID = ActivityRequestManager.LoginType == 2 ? ApplicantSelected.UserId : UserManager.RegistratedUser.UserId;
@@ -1632,7 +1910,7 @@ namespace BGH_Kompakt.ViewModel
                 }
             }
 
-            //Attechments
+            //Attachments
 
             if (changeList.Count > 0)
                 foreach (ActivityRequestChangeHistory item in changeList) newActivityRequest.ActivityRequestChangeHistories.Add(item);
@@ -1676,20 +1954,19 @@ namespace BGH_Kompakt.ViewModel
         private void ImportListClearExecute(object obj)
         {
             ImportFileList.Clear();
-            ShowAttechmentList = false;
+            ShowAttachmentList = false;
         }
-        private void DeleteAttechmentExecute(object obj)
+        private void DeleteAttachmentExecute(object obj)
         {
-            ImportFileList.Remove(SelectedAttechment);
-            ShowAttechmentList = ImportFileList.Count > 0;
+            ImportFileList.Remove(SelectedAttachment);
+            ShowAttachmentList = ImportFileList.Count > 0;
         }
-        private void OpenAttechmentExecute(object obj)
+        private void OpenAttachmentExecute(object obj)
         {
             try
             {
-                System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttechment.FileName}", SelectedAttechment.Data);
-
-                Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttechment.FileName}") { UseShellExecute = true });
+                System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttachment.FileName}", SelectedAttachment.Data);
+                Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttachment.FileName}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
@@ -2159,9 +2436,17 @@ namespace BGH_Kompakt.ViewModel
                 AnzeigeAdventageList = AdventageList.Count > 0;
                 //Anlagen füllen
                 if (iActivityRequest.ActivityRequestDataFiles != null)
-                    foreach (ActivityRequestDataFile file in iActivityRequest.ActivityRequestDataFiles) ImportFileList.Add(file);
-                ShowAttechmentList = ImportFileList.Count > 0;
+                    foreach (ActivityRequestDataFile file in iActivityRequest.ActivityRequestDataFiles)
+                    {
+                        if (file.FileTyp == 1) ImportFileList.Add(file);
+                        else if (file.FileTyp == 2) DocFileList.Add(file);
+                    }
 
+                ShowAttachmentList = ImportFileList.Count > 0;
+                ShowDocFileList = DocFileList.Count > 0;
+                ARStatus = iActivityRequest.ActivityRequestStatusID ?? 1;
+                ARStatusText = (iActivityRequest.ActivityRequestStatus != null) ? iActivityRequest.ActivityRequestStatus.ActivityRequestStatusText : "unbekannt";
+                ActivityRequestAccepted = iActivityRequest.ActivityRequestAccepted;
             }
             else
             {
@@ -2202,6 +2487,8 @@ namespace BGH_Kompakt.ViewModel
                 PaymentNothing = false;
                 PaymentUnknown = false;
                 SetScienceAuthor(null);
+                ARStatus = 1;
+                ActivityRequestAccepted = 0;
             }
             setActivityRequest = false;
         }
@@ -2242,10 +2529,10 @@ namespace BGH_Kompakt.ViewModel
 
                 string pdfFilePath = fileInfo.FullName;
                 byte[] bytes = System.IO.File.ReadAllBytes(pdfFilePath);
-                ActivityRequestDataFile importFile = new ActivityRequestDataFile { FileName = fileInfo.Name, Data = bytes };
+                ActivityRequestDataFile importFile = new ActivityRequestDataFile { FileName = fileInfo.Name, Data = bytes, FileTyp = 1 };
                 ImportFileList.Add(importFile);
             }
-            ShowAttechmentList = true;
+            ShowAttachmentList = true;
         }
     }
 }

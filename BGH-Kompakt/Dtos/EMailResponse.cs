@@ -14,6 +14,6 @@ namespace BGH_Kompakt.Dtos
         public string Body { get; set; } = string.Empty;
         public string EMailToCC { get; set; } = string.Empty;
         public string EMailToBCC { get; set; } = string.Empty;
-        public List<CustomMailAttechment> Attechments { get; set; } = new List<CustomMailAttechment>();
+        public List<CustomMailAttachment> Attachments { get; set; } = new List<CustomMailAttachment>();
     }
 }

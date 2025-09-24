@@ -41,7 +41,7 @@ namespace BGH_Kompakt.Services
             Send_Email(strEMailAdresses, subject, Text);
         }
 
-        public DBResponse Send_Email(string emailTo, string subject, string mailBody, string BCC = "", List<CustomMailAttechment> attachmentList = null, bool immediatSend = false)
+        public DBResponse Send_Email(string emailTo, string subject, string mailBody, string BCC = "", List<CustomMailAttachment> attachmentList = null, bool immediatSend = false)
         {
             DBResponse resp = new DBResponse();
             try
@@ -53,7 +53,7 @@ namespace BGH_Kompakt.Services
                 //Anlagen anfügen
                 if (attachmentList != null)
                 {
-                    foreach (CustomMailAttechment item in attachmentList)
+                    foreach (CustomMailAttachment item in attachmentList)
                     {
                         string sDisplayName = item.AttachmentName;
                         int iPosition = (int)oMsg.Body.Length + 1;

@@ -828,7 +828,7 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                         if (!response.Success) return response;
                         EMailResponse eMail = (EMailResponse)response.Data;
                         EMailVersand eMailVersand = new EMailVersand();
-                        response = eMailVersand.Send_Email(eMail.EmailTo, eMail.Subject, eMail.Body, attachmentList: eMail.Attechments);
+                        response = eMailVersand.Send_Email(eMail.EmailTo, eMail.Subject, eMail.Body, attachmentList: eMail.Attachments);
                     }
                     else
                     {
@@ -876,11 +876,11 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                 //foreach (User Member in MemberList) resp.Message += strEMailAdresses;
                 //resp.Message = SelectedVerfahren.Spruchgruppe.SenatSpruchgruppeID.ToString();
 
-                List<CustomMailAttechment> attachmentList = new List<CustomMailAttechment>
+                List<CustomMailAttachment> attachmentList = new List<CustomMailAttachment>
                 {
-                new CustomMailAttechment { AttachmentPath = SelectedUnterlagen.FileName_Fullpath, AttachmentName = SelectedUnterlagen.FileName_WithoutPath }
+                new CustomMailAttachment { AttachmentPath = SelectedUnterlagen.FileName_Fullpath, AttachmentName = SelectedUnterlagen.FileName_WithoutPath }
                 };
-                eMail.Attechments = attachmentList;
+                eMail.Attachments = attachmentList;
                 resp.Success = true;
                 resp.Data = eMail;
             }

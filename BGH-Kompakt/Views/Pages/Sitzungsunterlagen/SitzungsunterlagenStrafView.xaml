@@ -153,14 +153,14 @@
                         Margin="0,20,0,0"
                         Style="{StaticResource Style_Textblock_Titel_Unter2}"
                         Text="Übersicht der zu exportierenden Dateien"
-                        Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                        Visibility="{Binding ShowAttachmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                     <ListView
                         x:Name="listView"
                         Margin="0,30,0,0"
                         ItemsSource="{Binding ImportFileList, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedItem="{Binding SelectedAttechment, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding SelectedAttachment, UpdateSourceTrigger=PropertyChanged}"
                         SelectionMode="Single"
-                        Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        Visibility="{Binding ShowAttachmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
@@ -195,14 +195,14 @@
                                                 </Button>
                                                 <Button
                                                     x:Name="Btn_Open"
-                                                    Command="{Binding Path=DataContext.OpenAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding Path=DataContext.OpenAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Style="{StaticResource Button_GridView}"
                                                     ToolTip="Anlage öffnen">
                                                     <MD:PackIcon Padding="0" Kind="File" />
                                                 </Button>
                                                 <Button
                                                     x:Name="Btn_Bin"
-                                                    Command="{Binding Path=DataContext.DeleteAttechmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding Path=DataContext.DeleteAttachmentCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Style="{StaticResource Button_GridView}"
                                                     ToolTip="Anlage löschen">
                                                     <MD:PackIcon Padding="0" Kind="Bin" />
@@ -229,7 +229,7 @@
                         Command="{Binding ExportCommand}"
                         Content="Dateien auf den BSCW-Server exportieren"
                         Style="{StaticResource Button_Menu}"
-                        Visibility="{Binding ShowAttechmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                        Visibility="{Binding ShowAttachmentList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </MD:Card>
         </Grid>
