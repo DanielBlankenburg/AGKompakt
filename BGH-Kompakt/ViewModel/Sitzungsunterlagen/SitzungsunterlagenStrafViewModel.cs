@@ -74,8 +74,8 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             }
             catch (Exception ex)
             {
-                ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler aufgetreten: {ex.Message}", false);
-                Logger.WriteLog($"Es ist folgender Fehler aufgetreten: {ex.Message}");
+                ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler beim Laden des SitzungsunterlagenStrafViewModels aufgetreten: {ex.Message}", false);
+                Logger.WriteLog($"Es ist folgender Fehler beim Laden des SitzungsunterlagenStrafViewModels aufgetreten: {ex.Message}; {ex.InnerException}");
             }
         }
 

@@ -679,8 +679,8 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             }
             catch (Exception ex)
             {
-                ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler beim öffnen des Bereichs aufgetreten: {ex.Message}", true);
-                Logger.WriteLog($"Es ist folgender Fehler beim öffnen des Bereichs aufgetreten: {ex.Message}");
+                ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler beim Öffnen des Bereichs aufgetreten: {ex.Message}", true);
+                Logger.WriteLog($"Es ist folgender Fehler beim öffnen des Bereichs aufgetreten: {ex.Message}; {ex.InnerException}");
             }
         }
 
@@ -2414,7 +2414,7 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             catch (Exception ex)
             {
                 resp.Success = false;
-                resp.Message = $"Es ist folgender Fehler aufgetreten:\n\n {ex.Message}.";
+                resp.Message = $"Es ist folgender Fehler beim Füllen der Senate aufgetreten:\n\n {ex.Message}.";
             }
             return resp;
         }

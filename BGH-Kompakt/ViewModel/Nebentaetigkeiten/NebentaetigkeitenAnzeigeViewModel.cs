@@ -1267,7 +1267,7 @@ namespace BGH_Kompakt.ViewModel
                 string pdfFileName = $"{Attachmentfile.Name.Substring(0, Attachmentfile.Name.Length - Attachmentfile.Extension.Length)}.pdf";
                 List<CustomMailAttachment> attachmentListpfd = new List<CustomMailAttachment>
                 {
-                    new CustomMailAttachment { AttachmentPath = $"{Attachmentfile.Directory.FullName}{pdfFileName}" , AttachmentName = $"{pdfFileName}"}
+                    new CustomMailAttachment { AttachmentPath = $"{Attachmentfile.Directory.FullName}\\{pdfFileName}" , AttachmentName = $"{pdfFileName}"}
                 };
 
                 EMailVersand eMailVersand = new EMailVersand();

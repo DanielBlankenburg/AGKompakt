@@ -198,8 +198,8 @@ namespace BGH_Kompakt.Services.SystemComponents
             }
             catch (Exception ex)
             {
-                ShowMainInfoFlyout($"Es ist folgender Fehler aufgetreten: {ex.Message}", true);
-                Logger.WriteLog($"Es ist folgender Fehler aufgetreten: {ex.Message}");
+                ShowMainInfoFlyout($"Es ist folgender Fehler im ViewManager aufgetreten: {ex.Message}", true);
+                Logger.WriteLog($"Es ist folgender Fehler im ViewManager aufgetreten: {ex.Message}; {ex.InnerException}");
             }
         }
 
