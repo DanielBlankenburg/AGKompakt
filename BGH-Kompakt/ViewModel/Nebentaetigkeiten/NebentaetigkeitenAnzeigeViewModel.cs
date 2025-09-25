@@ -1,10 +1,13 @@
 ﻿using BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps;
+using BGH_Kompakt.Classes._LookUp.MP;
 using BGH_Kompakt.Classes._LookUp.UserLookUps;
 using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
+using BGH_Kompakt.Converter;
 using BGH_Kompakt.Dtos;
+using BGH_Kompakt.Migrartions.MP;
 using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.ActivityRequestService;
 using BGH_Kompakt.Services.DBContexts;
@@ -29,9 +32,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using Task = System.Threading.Tasks.Task;
-using MSWord = Microsoft.Office.Interop.Word;
+using static System.Net.Mime.MediaTypeNames;
 using Document = Microsoft.Office.Interop.Word.Document;
+using MSWord = Microsoft.Office.Interop.Word;
+using Task = System.Threading.Tasks.Task;
 
 
 
@@ -1244,24 +1248,87 @@ namespace BGH_Kompakt.ViewModel
                     MessageBox.Show("Es ist folgender Fehler beim Löschen der Datei aufgetreten: " + ex.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-            }
-            
+            }        
         }
 
         private void SendDocFileExecute(object obj)
         {
-            throw new NotImplementedException();
+            try
+            {
+                User eMailReciever = ActivityRequestManager.SelectedActivityRequest.ARUser;
+                string strSubject = "Genehmigung";
+                string text = $"Sehr {(eMailReciever.GeschlechtID == 1 ? "geehrte Frau" : "geehrter Herr")} {eMailReciever.FullSurname}, <br> <br>anliegend erhalten Sie die Genehmigung<br> <br> Mit freundlichen Grüßen<br>Präsidialgeschäftsstelle";
+
+                FileInfo Attachmentfile = new FileInfo($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}");
+                if (Attachmentfile.Extension == ".docx")
+                {
+                    DocxToPDFConverter.ConvertDOCtoPDFasync(Attachmentfile.Directory.FullName, Attachmentfile.Name, Attachmentfile.Extension);
+                }
+                string pdfFileName = $"{Attachmentfile.Name.Substring(0, Attachmentfile.Name.Length - Attachmentfile.Extension.Length)}.pdf";
+                List<CustomMailAttachment> attachmentListpfd = new List<CustomMailAttachment>
+                {
+                    new CustomMailAttachment { AttachmentPath = $"{Attachmentfile.Directory.FullName}{pdfFileName}" , AttachmentName = $"{pdfFileName}"}
+                };
+
+                EMailVersand eMailVersand = new EMailVersand();
+                DBResponse response = eMailVersand.Send_Email(
+                    emailTo: ActivityRequestManager.SelectedActivityRequest.ARUser.EMail,
+                    subject: strSubject,
+                    mailBody: text,
+                    attachmentList: attachmentListpfd);
+                if (response.Success) ViewManager.ShowMainInfoFlyout("Die E-Mail wurde erstellt.", false);
+                else ViewManager.ShowMainInfoFlyout(response.Message, false);
+            }
+            catch (Exception ex)
+            {
+                ViewManager.ShowMainInfoFlyout($"Bei der Erstellung der E-Mail ist folgender Fehler aufgetreten: {ex.Message}", false);
+                throw;
+            }
+
+
+
+
+
         }
 
         private void SaveDocFileExecute(object obj)
         {
             try
             {
+                
                 string docFilePath = $"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}";
+                if (!File.Exists(docFilePath))
+                {
+                    ViewManager.ShowMainInfoFlyout("Die Datei wurde nicht gefunden. Ein Speichern ist nicht möglich.", false);
+                    if (SelectedDocFileTable != null) DocFileList.Remove(SelectedDocFile);
+                    SelectedDocFile = null;
+                    return;
+                }
+
+                if (IsFileInUse(docFilePath))
+                {
+                    ViewManager.ShowMainInfoFlyout("Die Datei ist geöffnet. Bitte schließen Sie diese zunächst.", false);
+                    return;
+                }
+
+                ActivityRequestDataFile deleteFile = activityRequestDBcontext.ActivityRequestDataFiles.FirstOrDefault(x => x.ActivityRequestDataFileID == SelectedDocFile.ActivityRequestDataFileID);
+                if (deleteFile != null)
+                {
+                    activityRequestDBcontext.ActivityRequestDataFiles.Remove(deleteFile);
+                    activityRequestDBcontext.SaveChanges();
+                }
                 byte[] bytes = System.IO.File.ReadAllBytes(docFilePath);
                 SelectedDocFile.Data = bytes;
-                activityRequestDBcontext.ActivityRequestDataFiles.Add(SelectedDocFile);
+                ActivityRequestDataFile addFile = new ActivityRequestDataFile
+                {
+                    FileName = SelectedDocFile.FileName,
+                    FileTyp = SelectedDocFile.FileTyp,
+                    ActivityRequestId = SelectedDocFile.ActivityRequestId,
+                    Data = bytes
+                };
+                activityRequestDBcontext.ActivityRequestDataFiles.Add(addFile);
                 activityRequestDBcontext.SaveChanges();
+                SelectedDocFile = addFile;
                 ViewManager.ShowMainInfoFlyout("Die Datei wurde gespeichert.", false);
             }
             catch (Exception ex)
@@ -1270,11 +1337,26 @@ namespace BGH_Kompakt.ViewModel
             }
         }
 
+        public static bool IsFileInUse(string filePath)
+        {
+            try
+            {
+                using FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            // If no exception was thrown, the file is not in use
+            return false;
+        }
+
+
         private void OpenDocFileExecute(object obj)
         {
             try
             {
-                if (Directory.Exists(BGHKompaktSystemInfo.PathTempARDOC)) Directory.Delete(BGHKompaktSystemInfo.PathTempARDOC);
+                if (Directory.Exists(BGHKompaktSystemInfo.PathTempARDOC)) Directory.Delete(BGHKompaktSystemInfo.PathTempARDOC, true);
                 Directory.CreateDirectory(BGHKompaktSystemInfo.PathTempARDOC);
                 System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}", SelectedDocFile.Data);
                 Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}") { UseShellExecute = true });
@@ -2460,7 +2542,7 @@ namespace BGH_Kompakt.ViewModel
                 //ShowContentRequestTyp();
                 ARAssurance = iActivityRequest.Assurance;
                 //AdventageList füllen
-                SelectedScienceTyp = iActivityRequest.ActivityRequestScienceTyp;
+                SelectedScienceTyp = ScienceTypList.FirstOrDefault(x => x.ActivityRequestScienceTypId == iActivityRequest.ActivityRequestScienceTypId);
                 Online = iActivityRequest.ActivityRequestOrtArtId == 2;
                 Presence = iActivityRequest.ActivityRequestOrtArtId == 1;
                 Publication = iActivityRequest.ActivityRequestScienceCategorieId == 1;
