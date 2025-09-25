@@ -132,65 +132,74 @@ namespace BGH_Kompakt.Services.SystemComponents
         }
         public static void OpenMainMenu(string button)
         {
-            MainView.MainMenu.Visibility = Visibility.Visible;
-            if (button == "BtnMainSitzungsunterlagen" || button == "BtnInfoSitzungsunterlagen")
+            try
             {
-                if (UserManager.SenatSettings.Senat.SenatArt == 1) ViewManager.ShowPageOnMainView<SitzungsunterlagenView>();
-                else if (UserManager.SenatSettings.Senat.SenatArt == 2) ViewManager.ShowPageOnMainView<SitzungsunterlagenStrafView>();
-                else ViewManager.ShowMainInfoFlyout("Für diesen Senat steht dieser Bereich nicht zur Verfügung", false);
 
-
-            }
-            else if (button == "BtnMainSitzungsplaene")
-            {
-                List<SenatAktenzeichen> aktenzeichen = UserManager.SenatSettings.Aktenzeichen.ToList();
-                List<SenatSpruchgruppe> spruchgruppen = UserManager.SenatSettings.Spruchgruppen.ToList();
-                if (aktenzeichen.Count > 0 && spruchgruppen.Count > 0)
+                MainView.MainMenu.Visibility = Visibility.Visible;
+                if (button == "BtnMainSitzungsunterlagen" || button == "BtnInfoSitzungsunterlagen")
                 {
-                    ViewManager.ShowPageOnMainView<SitzungsplaeneView>();
+                    if (UserManager.SenatSettings.Senat.SenatArt == 1) ViewManager.ShowPageOnMainView<SitzungsunterlagenView>();
+                    else if (UserManager.SenatSettings.Senat.SenatArt == 2) ViewManager.ShowPageOnMainView<SitzungsunterlagenStrafView>();
+                    else ViewManager.ShowMainInfoFlyout("Für diesen Senat steht dieser Bereich nicht zur Verfügung", false);
+
+
                 }
-                else
+                else if (button == "BtnMainSitzungsplaene")
+                {
+                    List<SenatAktenzeichen> aktenzeichen = UserManager.SenatSettings.Aktenzeichen.ToList();
+                    List<SenatSpruchgruppe> spruchgruppen = UserManager.SenatSettings.Spruchgruppen.ToList();
+                    if (aktenzeichen.Count > 0 && spruchgruppen.Count > 0)
+                    {
+                        ViewManager.ShowPageOnMainView<SitzungsplaeneView>();
+                    }
+                    else
+                    {
+                        ViewManager.ShowPageOnMainView<SettingsView>();
+                    }
+                }
+                else if (button == "BtnMainSpruchgruppen")
+                {
+                    ViewManager.ShowPageOnMainView<SpruchgruppenView>();
+                }
+                //else if (button == Btn_Main_Kanzleiunterlagen)
+                //{
+                //    MessageBox.Show("Dieser Bereich steht noch nicht zur Verfügung");
+                //}
+                else if (button == "Btn_Main_PersonChange")
                 {
                     ViewManager.ShowPageOnMainView<SettingsView>();
                 }
+                else if (button == "BtnMainMontagspost")
+                {
+                    ViewManager.ShowPageOnMainView<MontagsPostView>();
+                }
+                else if (button == "BtnMontagspostAdmin")
+                {
+                    ViewManager.ShowPageOnMainView<MontagsPostAdminView>();
+                }
+                //else if (button == Btn_Anwaltswahl)
+                //{
+                //    ViewManager.ShowPageOnMainView<AnwaltswahlView>();
+                //}
+                else if (button == "BtnNebentaetigkeiten")
+                {
+                    ActivityRequestManager.LoginType = 1;
+                    ActivityRequestManager.ListArt = 1;
+                    ViewManager.ShowPageOnMainView<NebentaetigkeitenView>();
+                }
+                else if (button == "BtnNebentaetigkeitenAdmin")
+                {
+                    ViewManager.ShowPageOnMainView<NebentaetigkeitenView>();
+                }
+                else if (button == "Btn_Main_Instruction")
+                {
+                    ViewManager.ShowPageOnMainView<InstructionsView>();
+                }
             }
-            else if (button == "BtnMainSpruchgruppen")
+            catch (Exception ex)
             {
-                ViewManager.ShowPageOnMainView<SpruchgruppenView>();
-            }
-            //else if (button == Btn_Main_Kanzleiunterlagen)
-            //{
-            //    MessageBox.Show("Dieser Bereich steht noch nicht zur Verfügung");
-            //}
-            else if (button == "Btn_Main_PersonChange")
-            {
-                ViewManager.ShowPageOnMainView<SettingsView>();
-            }
-            else if (button == "BtnMainMontagspost")
-            {
-                ViewManager.ShowPageOnMainView<MontagsPostView>();
-            }
-            else if (button == "BtnMontagspostAdmin")
-            {
-                ViewManager.ShowPageOnMainView<MontagsPostAdminView>();
-            }
-            //else if (button == Btn_Anwaltswahl)
-            //{
-            //    ViewManager.ShowPageOnMainView<AnwaltswahlView>();
-            //}
-            else if (button == "BtnNebentaetigkeiten")
-            {
-                ActivityRequestManager.LoginType = 1;
-                ActivityRequestManager.ListArt = 1;
-                ViewManager.ShowPageOnMainView<NebentaetigkeitenView>();
-            }
-            else if (button == "BtnNebentaetigkeitenAdmin")
-            {
-                ViewManager.ShowPageOnMainView<NebentaetigkeitenView>();
-            }
-            else if (button == "Btn_Main_Instruction")
-            {
-                ViewManager.ShowPageOnMainView<InstructionsView>();
+                ShowMainInfoFlyout($"Es ist folgender Fehler aufgetreten: {ex.Message}", true);
+                Logger.WriteLog($"Es ist folgender Fehler aufgetreten: {ex.Message}");
             }
         }
 

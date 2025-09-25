@@ -631,49 +631,57 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
         //Constructor
         public SitzungsunterlagenViewModel()
         {
-            ImportCommand = new RelayCommand(ImportExecute);
-            SubscribeCommand = new RelayCommand(SubscribeExecute);
-            SubmitCommand = new RelayCommand(SubmitExecute);
-            CancelCommand = new RelayCommand(CancelExecute);
-            BinCommand = new RelayCommand(BinExecute);
-            OpenCommand = new RelayCommand(OpenExecute, OpenCanExecute);
-            PrintCommand = new RelayCommand(PrintExecute);
-            ShowCommand = new RelayCommand(ShowExecute);
-            ExportCommand = new RelayCommand(ExportExecute);
-            VotenmappeCommand = new RelayCommand(VotenmappeExecute);
-            LeitsatzVerteilenCommand = new RelayCommand(LeitsatzverteilenExecute);
-            OpenBeratungsListCommand = new RelayCommand(OpenListExecute, BeratungslistCanExecute);
-            OpenSitzungsListCommand = new RelayCommand(OpenListExecute, SitzungslistCanExecute);
-            BinBeratungsListCommand = new RelayCommand(BinListExecute, BeratungslistCanExecute);
-            BinSitzungsListCommand = new RelayCommand(BinListExecute, SitzungslistCanExecute);
-            //TestCommand = new RelayCommand(TestExecute);
-
-            //Auslesen des Senatslaufwerks
-            if (UserManager.SenatSettings.Senat != null)
+            try
             {
-                pathParent = (UserManager.SenatSettings.Senat.Path != null) ? UserManager.SenatSettings.Senat.Path.ToString() : "c:\\";
-            }
-            else { pathParent = "c:\\"; }
+                ImportCommand = new RelayCommand(ImportExecute);
+                SubscribeCommand = new RelayCommand(SubscribeExecute);
+                SubmitCommand = new RelayCommand(SubmitExecute);
+                CancelCommand = new RelayCommand(CancelExecute);
+                BinCommand = new RelayCommand(BinExecute);
+                OpenCommand = new RelayCommand(OpenExecute, OpenCanExecute);
+                PrintCommand = new RelayCommand(PrintExecute);
+                ShowCommand = new RelayCommand(ShowExecute);
+                ExportCommand = new RelayCommand(ExportExecute);
+                VotenmappeCommand = new RelayCommand(VotenmappeExecute);
+                LeitsatzVerteilenCommand = new RelayCommand(LeitsatzverteilenExecute);
+                OpenBeratungsListCommand = new RelayCommand(OpenListExecute, BeratungslistCanExecute);
+                OpenSitzungsListCommand = new RelayCommand(OpenListExecute, SitzungslistCanExecute);
+                BinBeratungsListCommand = new RelayCommand(BinListExecute, BeratungslistCanExecute);
+                BinSitzungsListCommand = new RelayCommand(BinListExecute, SitzungslistCanExecute);
+                //TestCommand = new RelayCommand(TestExecute);
 
-            pathMainDirectory = $"{pathParent}{BGHKompaktSystemInfo.PathSitzungsunterlagen}";
-            if (Directory.Exists(pathMainDirectory))
-            {
-                pathImport = $"{pathMainDirectory}Import\\";
-                SitzungstagePast = UserManager.SenatSettings.ShowFormerDays;
-                VintageListFill(pathMainDirectory);
-                SelectedVintage = CurrentVintage();
-                SelectedURI = new Uri("about:blank");
-                Intial = false;
-                ShowPreview = true;
-                WebbrowserHeight = 300;
-            }
-            else
-            {
-                MessageBox.Show($"Das Senatslaufwerk konnte unter dem angegebenen Laufwerk - {pathMainDirectory} nicht aufgerufen werden. Bitte ändern Sie die Einstellung für den Senat oder kontaktieren Sie eine Administrator.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                //ViewManager.ShowPageOnMainView<StartView>();
-            }
+                //Auslesen des Senatslaufwerks
+                if (UserManager.SenatSettings.Senat != null)
+                {
+                    pathParent = (UserManager.SenatSettings.Senat.Path != null) ? UserManager.SenatSettings.Senat.Path.ToString() : "c:\\";
+                }
+                else { pathParent = "c:\\"; }
 
-            Title = "Sitzungsunterlagen";
+                pathMainDirectory = $"{pathParent}{BGHKompaktSystemInfo.PathSitzungsunterlagen}";
+                if (Directory.Exists(pathMainDirectory))
+                {
+                    pathImport = $"{pathMainDirectory}Import\\";
+                    SitzungstagePast = UserManager.SenatSettings.ShowFormerDays;
+                    VintageListFill(pathMainDirectory);
+                    SelectedVintage = CurrentVintage();
+                    SelectedURI = new Uri("about:blank");
+                    Intial = false;
+                    ShowPreview = true;
+                    WebbrowserHeight = 300;
+                }
+                else
+                {
+                    MessageBox.Show($"Das Senatslaufwerk konnte unter dem angegebenen Laufwerk - {pathMainDirectory} nicht aufgerufen werden. Bitte ändern Sie die Einstellung für den Senat oder kontaktieren Sie eine Administrator.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //ViewManager.ShowPageOnMainView<StartView>();
+                }
+
+                Title = "Sitzungsunterlagen";
+            }
+            catch (Exception ex)
+            {
+                ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler beim öffnen des Bereichs aufgetreten: {ex.Message}", true);
+                Logger.WriteLog($"Es ist folgender Fehler beim öffnen des Bereichs aufgetreten: {ex.Message}");
+            }
         }
 
         //private async void TestExecute(object obj)

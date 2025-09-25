@@ -48,27 +48,35 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
 
         public SitzungsunterlagenStrafViewModel()
         {
-            SenatsheftCommand = new RelayCommand(SenatsheftExecute);
-            AZCommand = new RelayCommand(AZExecute);
-            RenameCommand = new RelayCommand(RenameExecute);
-            DeleteAttachmentCommand = new RelayCommand(DeleteAttachmentExecute);
-            OpenAttachmentCommand = new RelayCommand(OpenAttachmentExecute);
-            ExportCommand = new RelayCommand(ExportExecute);
+            try
+            {
+                SenatsheftCommand = new RelayCommand(SenatsheftExecute);
+                AZCommand = new RelayCommand(AZExecute);
+                RenameCommand = new RelayCommand(RenameExecute);
+                DeleteAttachmentCommand = new RelayCommand(DeleteAttachmentExecute);
+                OpenAttachmentCommand = new RelayCommand(OpenAttachmentExecute);
+                ExportCommand = new RelayCommand(ExportExecute);
 
-            string year = DateTime.Now.Year.ToString();
-            TextJahr = year.Substring(2);
-            FillComoboboxes();
+                string year = DateTime.Now.Year.ToString();
+                TextJahr = year.Substring(2);
+                FillComoboboxes();
 
-            //Testgrouping
-            List<TestItem> clients = new List<TestItem>();
-            ActivityRequestDBContext activityRequestDBContext = new ActivityRequestDBContext();
-            var Client_Query = activityRequestDBContext.ActivityClients.Include(t => t.ActivityClientTyp).OrderBy(ac => ac.ActivityClientTypID).ThenBy(ac => ac.ACName);
-            foreach (var item in Client_Query) clients.Add(new TestItem() { Name = item.ACName, Category = item.ActivityClientTyp.ActivityClientTypText });
-            Items = new ObservableCollection<TestItem>(clients);
-            var view = new CollectionViewSource();
-            view.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
-            view.Source = Items;
-            CollectionView = view;
+                //Testgrouping
+                List<TestItem> clients = new List<TestItem>();
+                ActivityRequestDBContext activityRequestDBContext = new ActivityRequestDBContext();
+                var Client_Query = activityRequestDBContext.ActivityClients.Include(t => t.ActivityClientTyp).OrderBy(ac => ac.ActivityClientTypID).ThenBy(ac => ac.ACName);
+                foreach (var item in Client_Query) clients.Add(new TestItem() { Name = item.ACName, Category = item.ActivityClientTyp.ActivityClientTypText });
+                Items = new ObservableCollection<TestItem>(clients);
+                var view = new CollectionViewSource();
+                view.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+                view.Source = Items;
+                CollectionView = view;
+            }
+            catch (Exception ex)
+            {
+                ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler aufgetreten: {ex.Message}", false);
+                Logger.WriteLog($"Es ist folgender Fehler aufgetreten: {ex.Message}");
+            }
         }
 
 
