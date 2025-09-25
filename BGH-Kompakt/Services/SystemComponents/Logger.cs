@@ -14,6 +14,10 @@ namespace BGH_Kompakt.Services.SystemComponents
         {
             try
             {
+                if (!Directory.Exists($"{System.Environment.GetEnvironmentVariable("TEMP")}\\LoggingData"))
+                {
+                    Directory.CreateDirectory($"{System.Environment.GetEnvironmentVariable("TEMP")}\\LoggingData");
+                }
                 using StreamWriter writer = new StreamWriter($"{System.Environment.GetEnvironmentVariable("TEMP")}\\LoggingData\\log_{Environment.UserName}.txt", true);
                 writer.WriteLine(Message);
             }
