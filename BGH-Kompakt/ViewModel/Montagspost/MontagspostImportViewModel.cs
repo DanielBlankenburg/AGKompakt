@@ -778,6 +778,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                     importhelper = FolderCreation("2. Strafsenat", SenateList);
                                     break;
                                 case "3":
+                                case "StB":
                                     importhelper = FolderCreation("3. Strafsenat", SenateList);
                                     break;
                                 case "4":
@@ -859,7 +860,6 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                 case "AR(Enw)":
                                     importhelper = FolderCreation("Kartellsenat", SenateList);
                                     break;
-                                case "StB":
                                 case "StBSt(R)":
                                 case "StBSt(B)":
                                     importhelper = FolderCreation("Steuerberatersenat", SenateList);
