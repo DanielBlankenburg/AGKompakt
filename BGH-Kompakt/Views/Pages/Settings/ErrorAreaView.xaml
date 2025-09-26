@@ -1,0 +1,49 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.Pages.Settings.ErrorAreaView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.Pages.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Button_Error"
+            BasedOn="{StaticResource Button_Master}"
+            TargetType="Button">
+            <Setter Property="Width" Value="300" />
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource MaterialDesignPaper}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource Style_Textblock_Titel}" Text="Fehlerbereich" />
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            Style="{StaticResource textblock_base}"
+            Text="In diesem Bereich können Sie weitere Informationen erhalten, wenn im Programm Fehler auftreten." />
+        <StackPanel Grid.Row="2" Margin="0,30,0,0">
+            <Button
+                Command="{Binding OpenLogFileCommand}"
+                Content="Anzeige Log-Datei"
+                Style="{StaticResource Button_Error}" />
+            <Button
+                Command="{Binding OpenLogDirectoryCommand}"
+                Content="Verzeichnis der Log-Datei öffnen"
+                Style="{StaticResource Button_Error}" />
+            <Button
+                Command="{Binding SendLogFileCommand}"
+                Content="Log-Datei per E-Mail versenden"
+                Style="{StaticResource Button_Error}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -10,6 +10,7 @@ using BGH_Kompakt.ViewModel.Userlogin;
 using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.Montagspost;
 using BGH_Kompakt.Views.Pages.Montagspost;
+using BGH_Kompakt.Views.Pages.Settings;
 using BGH_Kompakt.Views.Pages.Sitzungsunterlagen;
 using BGH_Kompakt.Views.Pages.Start;
 using BGH_Kompakt.Views.Pages.TestDesign;
@@ -170,6 +171,8 @@ namespace BGH_Kompakt
             iServiceColletion.AddSingleton<StartTest>();
 
             iServiceColletion.AddSingleton<InstructionsView>();
+            iServiceColletion.AddSingleton<ErrorAreaView>();
+            iServiceColletion.AddSingleton<ErrorAreaViewModel>();
 
 
 

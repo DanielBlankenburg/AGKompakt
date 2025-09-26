@@ -461,6 +461,7 @@
     <Compile Include="ViewModel\Sitzungsunterlagen\VotenMappeViewModel.cs" />
     <Compile Include="ViewModel\Start\StartViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\AdminViewModel.cs" />
+    <Compile Include="ViewModel\SystemSettings\ErrorAreaViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\MPSettingsViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\ProgrammSettingViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\SystemSettingViewModel.cs" />
@@ -474,6 +475,9 @@
     </Compile>
     <Compile Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml.cs">
       <DependentUpon>MontagsPostAdminView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Settings\ErrorAreaView.xaml.cs">
+      <DependentUpon>ErrorAreaView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Sitzungsunterlagen\SitzungsunterlagenStrafView.xaml.cs">
       <DependentUpon>SitzungsunterlagenStrafView.xaml</DependentUpon>
@@ -570,6 +574,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Settings\ErrorAreaView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1101,6 +1109,9 @@
     <SplashScreen Include="Resources\ImageResources\Images\Splashscreen.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </SplashScreen>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\ErrorArea.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />

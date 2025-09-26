@@ -65,5 +65,17 @@
                 <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Programmeinstellungen" />
             </StackPanel>
         </Button>
+        <Button
+            x:Name="Btn_ErrorArea"
+            Click="OpenPageOnMain"
+            Style="{StaticResource Button_Settings}">
+            <StackPanel>
+                <Image
+                    Source="/Resources/ImageResources/Images/ErrorArea.jpg"
+                    Stretch="Fill"
+                    Style="{StaticResource Button_Mainwindow_Image}" />
+                <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Fehlerbereich" />
+            </StackPanel>
+        </Button>
     </WrapPanel>
 </UserControl>

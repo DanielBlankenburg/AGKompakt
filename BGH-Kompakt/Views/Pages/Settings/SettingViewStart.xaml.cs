@@ -2,6 +2,7 @@
 using BGH_Kompakt.Enums;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
+using BGH_Kompakt.Views.Pages.Settings;
 using BGH_Kompakt.Views.SystemSettingsView;
 using System.Windows;
 using System.Windows.Controls;
@@ -59,6 +60,10 @@ namespace BGH_Kompakt.Views.Settings
                 else if (button == Btn_ProgrammSettings)
                 {
                     CheckAdmin(2);
+                }
+                else if (button == Btn_ErrorArea)
+                {
+                    ViewManager.ShowUnderPageOn<ErrorAreaView>(ViewManager.SettingView.AnimatedContentControl);
                 }
 
 
