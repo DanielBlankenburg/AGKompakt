@@ -603,12 +603,12 @@ namespace BGH_Kompakt.ViewModel
 
             try
             {
+                SetFilter();
                 SetSorting();
                 var MPVintages_Query = mPDBContext.MPWeeks.Select(x => x.MPWeekYear).Distinct();
                 foreach (var Vintage in MPVintages_Query) _VintageList.Add(Vintage);
                 if (VintageList.Count > 0) SelectedVintage = VintageList.LastOrDefault();
 
-                SetFilter();
                 ShowFilter();
 
                 if (UserManager.RegistratedUser.MPBSCW_Server_Drive != null) SelectedDrive = UserManager.RegistratedUser.MPBSCW_Server_Drive.Value;
