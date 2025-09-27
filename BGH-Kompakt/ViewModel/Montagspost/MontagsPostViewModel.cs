@@ -1,11 +1,13 @@
 ﻿using BGH_Kompakt.Classes._LookUp.MP;
 using BGH_Kompakt.Classes._LookUp.UserLookUps;
+using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.MP;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Dtos;
 using BGH_Kompakt.Enums;
+using BGH_Kompakt.Services.ActivityRequestService;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.MontagspostService;
 using BGH_Kompakt.Services.SystemComponents;
@@ -321,6 +323,9 @@ namespace BGH_Kompakt.ViewModel
         public ICommand TestCommand { get; set; }
         public ICommand BSCWServerCommand { get; set; }
         public ICommand DetailDoubleClickCommand { get; set; }
+        public ICommand MetaDataCommand { get; set; }
+        public ICommand MetaDataSaveCommand { get; set; }
+        public ICommand MetaDataBackCommand { get; set; }
         #endregion
 
         #region Visibility
@@ -330,7 +335,12 @@ namespace BGH_Kompakt.ViewModel
             get { return _showWebbrowser; }
             set { SetProperty<bool>(ref _showWebbrowser, value); }
         }
-
+        private bool _ShowMetaDataEdit = false;
+        public bool ShowMetaDataEdit
+        {
+            get { return _ShowMetaDataEdit; }
+            set { SetProperty(ref _ShowMetaDataEdit, value); }
+        }
         private bool _showZivilsenate = false;
         public bool ShowZivilsenate
         {
@@ -597,6 +607,9 @@ namespace BGH_Kompakt.ViewModel
             TestCommand = new RelayCommand(TestExecute);
             DetailDoubleClickCommand = new RelayCommand(DetailDoubleClickExecute);
             MPWeekEditCommand = new RelayCommand(MPWerkEditExecute);
+            MetaDataCommand = new RelayCommand(MetaDataExecute);
+            MetaDataSaveCommand = new RelayCommand(MetaDataSaveExecute);
+            MetaDataBackCommand = new RelayCommand(MetaDataBackExecute);
 
             //ReadMPState = MPStateText;
             MPDBContext mPDBContext = new MPDBContext();
@@ -627,6 +640,7 @@ namespace BGH_Kompakt.ViewModel
             }
             DataInitial = false;
         }
+
 
         private void SetSorting()
         {
@@ -687,7 +701,6 @@ namespace BGH_Kompakt.ViewModel
         }
 
 
-
         private void SetMontagespost()
         {
             if (MontagsPostManager.RecoverStatus && (MontagsPostManager.SavedWeekStatus || MontagsPostManager.SavedSenatStatus || MontagsPostManager.SavedDecisionStatus))
@@ -742,6 +755,30 @@ namespace BGH_Kompakt.ViewModel
         }
 
         #region Executes
+
+        private void MetaDataExecute(object obj)
+        {
+            ShowMetaDataEdit = true;
+            ShowWebbrowser = false;
+        }
+        private void MetaDataBackExecute(object obj)
+        {
+            ShowMetaDataEdit = false;
+            ShowWebbrowser = true;
+
+        }
+        private void MetaDataSaveExecute(object obj)
+        {
+            bool answer = ViewManager.ShowQuestionWindow("Sollen die Änderungen gespeichert werden?", "Ja");
+            if (answer)
+            {
+                MPDecision editDecision = mPDBContext.MPDecisions.FirstOrDefault(x => x.MPDecisionID == SelectedMPDecision.MPDecisionID);
+                if (editDecision == null) { }
+            }
+        }
+
+
+
 
         private void MPWerkEditExecute(object obj)
         {
