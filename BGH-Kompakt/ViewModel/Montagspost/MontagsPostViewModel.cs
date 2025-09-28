@@ -31,7 +31,7 @@ namespace BGH_Kompakt.ViewModel
 {
     public partial class MontagsPostViewModel : ViewModelBase
     {
-        private MPDBContext mPDBContext = new MPDBContext();
+        private readonly MPDBContext mPDBContext = new MPDBContext();
 
         #region Value
         private UserDBContext userDBContext = new UserDBContext();
@@ -306,7 +306,6 @@ namespace BGH_Kompakt.ViewModel
 
 
         #endregion
-
         #region ICommands
         public ICommand MPWeekDeleteCommand { get; set; }
         public ICommand MPWeekEditCommand { get; set; }
@@ -322,7 +321,6 @@ namespace BGH_Kompakt.ViewModel
         public ICommand BSCWServerCommand { get; set; }
         public ICommand DetailDoubleClickCommand { get; set; }
         #endregion
-
         #region Visibility
         private bool _showWebbrowser = false;
         public bool ShowWebbrowser

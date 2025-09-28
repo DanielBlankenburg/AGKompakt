@@ -51,6 +51,8 @@ namespace BGH_Kompakt.Classes.UserClasses
         public string Testfield { get; set; } = string.Empty;
         public int Testzahl { get; set; }
 
+
+
         [NotMapped]
         public string Fullname
         {

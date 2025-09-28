@@ -19,7 +19,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
 {
     public partial class SystemSettingViewModel : ViewModelBase
     {
-        private UserDBContext userDBContext = new UserDBContext();
+        private readonly UserDBContext userDBContext = new UserDBContext();
 
         //ICommands
         #region Commands

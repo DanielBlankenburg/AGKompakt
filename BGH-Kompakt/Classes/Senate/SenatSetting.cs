@@ -18,15 +18,6 @@ namespace BGH_Kompakt.Classes.Senate
         public Drives? BSCW_Server_Drive { get; set; } = new Drives();
         public ICollection<SenatAktenzeichen> Aktenzeichen {  get; set; }
         public ICollection<SenatSpruchgruppe> Spruchgruppen { get; set; }
-        //public string SG1 { get; set; }
-        //public string SG2 { get; set; }
-        //public string SG3 { get; set; }
-        //public string SG4 { get; set; }
-        //public string SG5 { get; set; }
-        //public string SG6 { get; set; }
-        //public string SG7 { get; set; }
-        //public string SG8 { get; set; }
-        //public string SG9 { get; set; }
         public bool AZPrefix { get; set; } = true;
         public bool AZPrefixDate { get; set; } = false;
         public string AZPrefixChar { get; set; }
