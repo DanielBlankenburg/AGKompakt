@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.Management;
 using System.Web.UI.WebControls.Expressions;
 using System.Windows;
 using System.Windows.Input;
@@ -33,10 +34,10 @@ namespace BGH_Kompakt.ViewModel
 {
     public partial class MontagsPostViewModel : ViewModelBase
     {
-        private MPDBContext mPDBContext = new MPDBContext();
+        private readonly MPDBContext mPDBContext = new MPDBContext();
 
         #region Value
-        private UserDBContext userDBContext = new UserDBContext();
+        private readonly UserDBContext userDBContext = new UserDBContext();
         private ObservableCollection<MPWeek> _MPWeekList = new ObservableCollection<MPWeek>();
         public ObservableCollection<MPWeek> MPWeekList { get { return _MPWeekList; } }
         private ObservableCollection<MPUserDecision> _MPUserDecisionList = new ObservableCollection<MPUserDecision>();
@@ -130,7 +131,7 @@ namespace BGH_Kompakt.ViewModel
                 SetProperty<MPDecision>(ref _SelectedMPDecision, value);
                 //MessageBox.Show("Auswahl der Entscheidung");
                 if (SelectedMPDecision != null)
-                {
+                {  
                     if (ShowDetailsPdf)
                     {
                         ShowWebbrowser = true;
@@ -140,21 +141,11 @@ namespace BGH_Kompakt.ViewModel
                             ShowWebbrowserData = false;
                             Vermerktext = SelectedMPDecision.Vermerk ?? string.Empty;
                         }
-                        else if (SelectedMPDecision.PathName != null && SelectedMPDecision.FileName != null)
-                        {
-                            ShowWebbrowserData = true;
-                            ShowWebbrowserVermerk = false;
-                            string Path = $"{SelectedMPDecision.PathName}{SelectedMPDecision.FileName}";
-                            try
-                            {
-                                URLAdress = File.Exists(Path) ? new Uri(Path) : new Uri("about:blank");
-                            }
-                            catch (Exception ex)
-                            {
-                                ViewManager.ShowMainInfoFlyout($"Die Entscheidung kann nicht angezeigt werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
-                            }
-                            Debug.WriteLine(URLAdress);
-                        }
+                        else if (SelectedMPDecision.PathName != null && SelectedMPDecision.FileName != null) SetWebBrowserURL();
+                    }
+                    else //Anzeige Details
+                    {
+                        if (SelectedMPDecision.PathName != null && SelectedMPDecision.FileName != null) SetWebBrowserURL();
                     }
                     if (MontagsPostManager.RecoverStatus)
                     {
@@ -169,6 +160,23 @@ namespace BGH_Kompakt.ViewModel
                 }
             }
         }
+
+        private void SetWebBrowserURL()
+        {
+            ShowWebbrowserData = true;
+            ShowWebbrowserVermerk = false;
+            string Path = $"{SelectedMPDecision.PathName}{SelectedMPDecision.FileName}";
+            try
+            {
+                URLAdress = File.Exists(Path) ? new Uri(Path) : new Uri("about:blank");
+            }
+            catch (Exception ex)
+            {
+                ViewManager.ShowMainInfoFlyout($"Die Entscheidung kann nicht angezeigt werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
+            }
+
+        }
+
         private int _SelectedMPDecisionIndex;
         public int SelectedMPDecisionIndex
         {
@@ -765,7 +773,7 @@ namespace BGH_Kompakt.ViewModel
         {
             ShowMetaDataEdit = false;
             ShowWebbrowser = true;
-
+            ViewManager.ShowMainInfoFlyout("Die Werte wurden nicht gespeichert. Wechseln Sie bitte die Kalenderwochen. Wenn Sie dann erneut zurückwechseln, werden die alten Werte wieder angezeigt.", false);
         }
         private void MetaDataSaveExecute(object obj)
         {
@@ -773,7 +781,27 @@ namespace BGH_Kompakt.ViewModel
             if (answer)
             {
                 MPDecision editDecision = mPDBContext.MPDecisions.FirstOrDefault(x => x.MPDecisionID == SelectedMPDecision.MPDecisionID);
-                if (editDecision == null) { }
+                if (editDecision == null) 
+                {
+                    ViewManager.ShowMainInfoFlyout("Die Daten konnten nicht gespeichert werden, da die Entscheidung in der Datenbank nicht mehr gefunden wurde", false);
+                    return;
+                }
+                try
+                {
+                    editDecision.LaufendeNummer = SelectedMPDecision.LaufendeNummer;
+                    editDecision.Jahr = SelectedMPDecision.Jahr;
+                    editDecision.Date = SelectedMPDecision.Date;
+                    editDecision.Normenkette = SelectedMPDecision.Normenkette;
+                    editDecision.Leitsatz= SelectedMPDecision.Leitsatz;
+                    mPDBContext.MPDecisions.AddOrUpdate(editDecision);
+                    mPDBContext.SaveChanges();
+                    ViewManager.ShowMainInfoFlyout("Die Metadaten wurden geändert.", false);
+                }
+                catch (Exception ex)
+                {
+                    ViewManager.ShowMainInfoFlyout($"Die Metadaten konnten nicht geändert werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
+                    return;
+                }
             }
         }
 
@@ -913,31 +941,12 @@ namespace BGH_Kompakt.ViewModel
             //{
             //    strKalenderwoche = selectedItem.Rohdaten;
             //}
-            String Bereich = string.Empty;
-            if (ShowSelectedZivilsenate)
-            {
-                Bereich = "Zivilsenate";
-            }
-            if (ShowSelectedStrafsenate)
-            {
-                Bereich = "Strafsenate";
-            }
-            if (ShowSelectedSondersenate)
-            {
-                Bereich = "Sondersenate";
-            }
+            string Bereich = string.Empty;
+            if (ShowSelectedZivilsenate) Bereich = "Zivilsenate";
+            if (ShowSelectedStrafsenate) Bereich = "Strafsenate";
+            if (ShowSelectedSondersenate) Bereich = "Sondersenate";
 
-            string KW = string.Empty;
-            if (SelectedMPWeek.MPWeekNumber < 9)
-            {
-                KW = "0" + SelectedMPWeek.MPWeekNumber;
-            }
-            else
-            {
-                KW = SelectedMPWeek.MPWeekNumber.ToString();
-            }
-
-
+            string KW = SelectedMPWeek.MPWeekNumber < 9 ? "0" + SelectedMPWeek.MPWeekNumber : SelectedMPWeek.MPWeekNumber.ToString();
             try
             {
                 Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathDokstelleDFS}{BGHKompaktSystemInfo.PathMontagspost}{SelectedMPWeek.MPWeekYear}\\KW{KW}\\{Bereich}\\{Bereich}.pdf")

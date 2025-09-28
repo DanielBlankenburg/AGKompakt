@@ -985,44 +985,53 @@
                 Grid.Column="3"
                 Margin="5"
                 Visibility="{Binding ShowMetaDataEdit, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource Style_Textblock_Titel_Unter2}" Text="Metadaten bearbeiten" />
-                    <TextBlock
-                        Margin="0,10"
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="70" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Margin="0,10,0,0">
+                        <TextBlock Style="{StaticResource Style_Textblock_Titel_Unter2}" Text="Metadaten bearbeiten" />
+                        <TextBlock
+                            Margin="0,10"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource textblock_base}"
+                            Text="{Binding SelectedMPDecision.Aktenzeichen}" />
+                        <StackPanel Margin="20,20">
+                            <TextBox
+                                MD:HintAssist.Hint="Datum:"
+                                Style="{StaticResource Textbox_Metadata}"
+                                Text="{Binding SelectedMPDecision.Date, StringFormat=d}" />
+                            <TextBox
+                                MD:HintAssist.Hint="Normenkette:"
+                                Style="{StaticResource Textbox_Metadata}"
+                                Text="{Binding SelectedMPDecision.Normenkette}" />
+                            <TextBox
+                                MD:HintAssist.Hint="Leitsatz:"
+                                Style="{StaticResource Textbox_Metadata}"
+                                Text="{Binding SelectedMPDecision.Leitsatz}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="1"
+                        Margin="0,15,0,15"
                         HorizontalAlignment="Center"
-                        Style="{StaticResource textblock_base}"
-                        Text="{Binding SelectedMPDecision.Aktenzeichen}" />
-                    <StackPanel Margin="20,20">
-                        <TextBox
-                            MD:HintAssist.Hint="laufende Nummer:"
-                            Style="{StaticResource Textbox_Metadata}"
-                            Text="{Binding SelectedMPDecision.LaufendeNummer}" />
-                        <TextBox
-                            MD:HintAssist.Hint="Jahr:"
-                            Style="{StaticResource Textbox_Metadata}"
-                            Text="{Binding SelectedMPDecision.Jahr}" />
-                        <TextBox
-                            MD:HintAssist.Hint="Datum:"
-                            Style="{StaticResource Textbox_Metadata}"
-                            Text="{Binding SelectedMPDecision.Date, StringFormat=d}" />
-                        <TextBox
-                            MD:HintAssist.Hint="Normenkette:"
-                            Style="{StaticResource Textbox_Metadata}"
-                            Text="{Binding SelectedMPDecision.Normenkette}" />
-                        <TextBox
-                            MD:HintAssist.Hint="Leitsatz:"
-                            Style="{StaticResource Textbox_Metadata}"
-                            Text="{Binding SelectedMPDecision.Leitsatz}"
-                            TextWrapping="Wrap" />
+                        Orientation="Horizontal">
+                        <Button
+                            Command="{Binding MetaDataSaveCommand}"
+                            Content="Speichern"
+                            Style="{StaticResource Button_Master}" />
+                        <Button
+                            Margin="20,0,0,0"
+                            Command="{Binding MetaDataBackCommand}"
+                            Content="Zurück"
+                            Style="{StaticResource Button_Master}" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Center">
-                        <Button  Content="Speichern" Style="{StaticResource Button_Master}" />
-                        <Button Content="Zurück" Margin="20,0,0,0" Style="{StaticResource Button_Master}" />
-                    </StackPanel>
-                </StackPanel>
+                </Grid>
             </MD:Card>
             <!--#endregion-->
-
             <!--#region Vorschau-->
             <MD:Card
                 Grid.Column="3"

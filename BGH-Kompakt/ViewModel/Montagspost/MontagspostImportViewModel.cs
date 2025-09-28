@@ -27,7 +27,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 {
     public class MontagspostImportViewModel : ViewModelBase, IFilesDropped
     {
-        private MPDBContext mpDBContext = new MPDBContext();
+        private readonly MPDBContext mpDBContext = new MPDBContext();
         public List<int> KalenderwochenList { get; set; } = new List<int>();
         public List<int> VintageList { get; set; } = new List<int>();
         public ObservableCollection<MPImportFile> ImportFileList { get; set; } = new ObservableCollection<MPImportFile>();
@@ -37,7 +37,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         public ObservableCollection<MPImportResult> ImportResultList { get; set; } = new ObservableCollection<MPImportResult>();
         private List<MPImportResult> ImportResultTemp { get; set; } = new List<MPImportResult>();
 
-        private string MPStateText = "Import abgeschlossen";
+        private readonly string MPStateText = "Import abgeschlossen";
         private string _readMPState = string.Empty;
 
         public string ReadMPState
@@ -290,333 +290,6 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
         }
 
-        #region Import Synchron
-
-        //private Task ImportMessageAsync(string file)
-        //{
-        //    //ViewManager.ShowMainInfoFlyout("Die E-Mail wird importiert.", false);
-        //    //         //Thread.Sleep(1000);
-        //    string path = BGHKompaktSystemInfo.PathLaufwerksbuchstabe + BGHKompaktSystemInfo.PathMontagspost;
-        //    string KWPath = string.Empty;
-
-        //    Mouse.OverrideCursor = Cursors.Wait;
-        //    //         //Unterlagen imoportieren
-
-        //    Task task = Task.Run(async () =>
-        //    {
-
-        //        try
-        //        {
-        //            Stopwatch sw = Stopwatch.StartNew();
-        //            sw.Start();
-        //            MPWeek ImportMPWeek = new MPWeek();
-        //            string pathEntscheidung = string.Empty;
-
-        //            //Email einlesen
-        //            Microsoft.Office.Interop.Outlook.Application app = new Microsoft.Office.Interop.Outlook.Application();
-
-        //            var item = app.Session.OpenSharedItem(file) as Microsoft.Office.Interop.Outlook.MailItem;
-        //            string body = item.HTMLBody;
-        //            string subject = item.Subject;
-        //            int att = item.Attachments.Count;
-
-        //            //int Jahr = DateTime.Parse(DateTime.Now.ToString()).Year;
-
-        //            int Ende = subject.LastIndexOf("Kw");
-        //            string kw = subject.Substring(Ende + 3, 2);
-        //            string JahrString = "20" + subject.Substring(Ende + 6, 2);
-        //            int Jahr = int.Parse(JahrString);
-
-        //            //kw = "31";
-        //            //Jahr = 2024;
-
-        //            string[] entscheidungsSammlung = new string[att - 1];
-
-        //            KWPath = path + Jahr + "\\KW" + kw + "\\";
-
-        //            if (!Directory.Exists(KWPath)) Directory.CreateDirectory(KWPath);
-        //            List<MPDecisionFile> ListFiles = new List<MPDecisionFile>();
-        //            try
-        //            {
-        //                //Attachments auslesen
-        //                for (int counter = 1; counter <= att; counter++)
-        //                {
-        //                    //jedes Attachment ablegen
-        //                    Microsoft.Office.Interop.Outlook.Attachment attachment = item.Attachments[counter];
-        //                    string fileName = item.Attachments[counter].FileName;
-        //                    string senat = fileName.Substring(0, fileName.IndexOf(" "));
-        //                    MPSenat mPSenat = new MPSenat();
-        //                    MPDBContext userContext = new MPDBContext();
-        //                    List<MPSenat> SenateList = userContext.MPSenate.ToList();
-        //                    int Bereich = 0;
-        //                    switch (senat) //1 = Zivilbereich, 2 = Strafbereich, 3 = Sondersenate
-        //                    {
-        //                        case "1":
-        //                            pathEntscheidung = CreateFolder("1. Strafsenat", KWPath, 2);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 16).FirstOrDefault();
-        //                            Bereich = 2;
-        //                            break;
-        //                        case "2":
-        //                            pathEntscheidung = CreateFolder("2. Strafsenat", KWPath, 2);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 17).FirstOrDefault();
-
-        //                            Bereich = 2;
-        //                            break;
-        //                        case "3":
-        //                            pathEntscheidung = CreateFolder("3. Strafsenat", KWPath, 2);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 18).FirstOrDefault();
-        //                            Bereich = 2;
-        //                            break;
-        //                        case "4":
-        //                            pathEntscheidung = CreateFolder("4. Strafsenat", KWPath, 2);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 19).FirstOrDefault();
-        //                            Bereich = 2;
-        //                            break;
-        //                        case "5":
-        //                            pathEntscheidung = CreateFolder("5. Strafsenat", KWPath, 2);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 20).FirstOrDefault();
-        //                            Bereich = 2;
-        //                            break;
-        //                        case "6":
-        //                            pathEntscheidung = CreateFolder("6. Strafsenat", KWPath, 2);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 21).FirstOrDefault();
-        //                            Bereich = 2;
-        //                            break;
-        //                        case "AK":
-        //                            pathEntscheidung = CreateFolder("Ermittlungsverfahren", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 32).FirstOrDefault();
-        //                            Bereich = 2;
-        //                            break;
-        //                        case "I":
-        //                            pathEntscheidung = CreateFolder("I. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 2).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "II":
-        //                            pathEntscheidung = CreateFolder("II. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 3).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "III":
-        //                            pathEntscheidung = CreateFolder("III. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 4).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "IV":
-        //                            pathEntscheidung = CreateFolder("IV. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 5).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "V":
-        //                            pathEntscheidung = CreateFolder("V. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 6).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "VI":
-        //                            pathEntscheidung = CreateFolder("VI. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 7).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "VIa":
-        //                            pathEntscheidung = CreateFolder("VIa. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 8).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "VII":
-        //                            pathEntscheidung = CreateFolder("VII. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 9).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "VIII":
-        //                            pathEntscheidung = CreateFolder("VIII. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 10).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "IX":
-        //                            pathEntscheidung = CreateFolder("IX. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 11).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "X":
-        //                            pathEntscheidung = CreateFolder("X. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 12).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "XI":
-        //                            pathEntscheidung = CreateFolder("XI. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 13).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "XII":
-        //                            pathEntscheidung = CreateFolder("XII. Strafsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 14).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "XIII":
-        //                            pathEntscheidung = CreateFolder("XIII. Zivilsenat", KWPath, 1);
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 15).FirstOrDefault();
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "KVB":
-        //                        case "EnVR":
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 31).FirstOrDefault();
-        //                            pathEntscheidung = CreateFolder("Kartelsenat", KWPath, 3);
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "StB":
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 26).FirstOrDefault();
-        //                            pathEntscheidung = CreateFolder("Steuerberatersenat", KWPath, 3);
-        //                            Bereich = 1;
-        //                            break;
-        //                        case "AnwZ(Brfg)":
-        //                        case "AnwStr(B)":
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 22).FirstOrDefault();
-        //                            pathEntscheidung = CreateFolder("Anwaltssenat", KWPath, 3);
-        //                            Bereich = 3;
-        //                            break;
-        //                        case "LwZR":
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 24).FirstOrDefault();
-        //                            pathEntscheidung = CreateFolder("Landwirtschaftssenat", KWPath, 3);
-        //                            Bereich = 3;
-        //                            break;
-        //                        default:
-        //                            mPSenat = SenateList.Where(x => x.MPSenatID == 1).FirstOrDefault();
-        //                            pathEntscheidung = CreateFolder("Sonstiges", KWPath, 3);
-        //                            Bereich = 3;
-        //                            break;
-        //                    }
-        //                    ListFiles.Add(new MPDecisionFile { FileName = fileName, Path = KWPath + pathEntscheidung, SenatRohstring = senat, Senat = mPSenat, Bereich = Bereich });
-        //                    attachment.SaveAsFile(KWPath + pathEntscheidung + fileName);
-        //                    //entscheidungsSammlung[counter - 1] = KWPath + pathEntscheidung + fileName;
-        //                }
-
-        //                if (att > 0)
-        //                {
-        //                    ImportMPWeek.MPWeekNumber = int.Parse(kw);
-        //                    ImportMPWeek.MPWeekYear = Jahr;
-
-        //                }
-
-        //            }
-        //            catch (System.Exception ex)
-        //            {
-
-        //                MessageBox.Show("Die Nachricht konnte nicht vollständig importiert werden. Es ist folgender Fehler aufgetreten: " + ex.Message, "Importfehler", MessageBoxButton.OK, MessageBoxImage.Error);
-        //            }
-        //            finally
-        //            {
-        //                //Word schließen
-        //                item.Close(OlInspectorClose.olDiscard);
-        //                app.Quit();
-        //                Marshal.ReleaseComObject(item);
-        //                //Docx-Dateien in pdf-Dateien umwandeln
-        //                //await DocxToPDFConverter.ConvertFileMultiFolderAsync(KWPath);
-        //            }
-
-        //            try
-        //            {
-        //                #region E-Mail mit pdf-Dateien auslesen
-
-        //                ////Entscheidungen aus dem Text auslesen
-        //                //body = ScrubHtml(body);
-        //                //body = body.Substring(body.IndexOf('\u2116'));
-
-        //                ////Liste mit den Entscheidungen aus der E-Mail erstellen
-        //                //ObservableCollection<MPDecisionImport> entscheidungsListe = new ObservableCollection<MPDecisionImport>();
-
-        //                //string[] entscheidungsSammlung = body.Split(new char[] { '\u2116' });
-        //                //foreach (string entscheidung in entscheidungsSammlung)
-        //                //{
-        //                //    if (entscheidung != string.Empty)
-        //                //        entscheidungsListe.Add(new MPDecisionImport(entscheidung));
-        //                //}
-
-        //                //MPDBContext userContext = new MPDBContext();
-        //                ////Liste mit den Attachments durchgehen und mit Daten aus E-Mail vergleichen
-        //                //foreach (MPDecisionFile mPDecisionFile in ListFiles)
-        //                //{
-        //                //    string Vergleichsaktenzeichen = AZVergleich(mPDecisionFile);
-        //                //    var Query_Info = entscheidungsListe.Where(x => x.Aktenzeichen == Vergleichsaktenzeichen).FirstOrDefault();
-        //                //    if (Query_Info != null)
-        //                //    {
-        //                //        MPDecision newMPDecision = new MPDecision();
-        //                //        Query_Info.ExportToMPDecesion(ref newMPDecision);
-        //                //        newMPDecision.Senat = userContext.MPSenate.Where(x => x.MPSenatID == mPDecisionFile.Senat.MPSenatID).FirstOrDefault();
-        //                //        newMPDecision.PathName = mPDecisionFile.Path;
-        //                //        newMPDecision.FileName_Fullpath = mPDecisionFile.FileName_Fullpath;
-        //                //        ImportMPWeek.MPDecisions.Add(newMPDecision);
-        //                //    }
-        //                //    else
-        //                //    {
-        //                //        MPDecision newMPDecision = new MPDecision();
-        //                //        newMPDecision.SenatID = 1;
-        //                //        newMPDecision.Typ = 0;
-        //                //        newMPDecision.Rohdaten = string.Empty;
-        //                //        newMPDecision.Date = DateTime.Now;
-        //                //        newMPDecision.Aktenzeichen = string.Empty;
-        //                //        newMPDecision.RegZeichen = string.Empty;
-        //                //        newMPDecision.LaufendeNummer= string.Empty;
-        //                //        newMPDecision.Jahr = string.Empty;
-        //                //        newMPDecision.PathName = mPDecisionFile.Path;
-        //                //        newMPDecision.FileName_Fullpath = mPDecisionFile.FileName_Fullpath;
-        //                //    }
-        //                //}
-
-        //                //userContext.MPWeeks.Add(ImportMPWeek);
-        //                //userContext.SaveChanges();
-        //                //if (SelectedVintage == ImportMPWeek.MPWeekYear) MPWeekList.Add(ImportMPWeek);
-        //                //ViewManager.ShowMainInfoFlyout("Die E-Mail wurde erfolgreich eingelesen.", false);
-
-        //                #endregion
-
-        //                #region E-Mail mit Word-Dateien auslesen
-
-        //                //Entscheidungen aus dem Text auslesen
-        //                List<MPDecisionImportWord> entscheidungsListe = new List<MPDecisionImportWord>();
-
-
-        //                //int AnzahlEntscheidungen = ListFiles.Count();
-
-        //                //Word_Datei_Auslesen(ListFiles, ref entscheidungsListe);
-
-        //                //MPDBContext userContext = new MPDBContext();
-        //                //foreach (MPDecisionImportWord mpImport in entscheidungsListe) 
-        //                //{
-        //                //    MPDecision newMPDecision = new MPDecision();
-        //                //    mpImport.ExportToMPDecesion(ref newMPDecision, ref userContext);
-        //                //    ImportMPWeek.MPDecisions.Add(newMPDecision);
-        //                //}
-
-
-        //                //userContext.MPWeeks.Add(ImportMPWeek);
-        //                //userContext.SaveChanges();
-
-        //                #endregion
-        //                sw.Stop();
-        //                MessageBox.Show($"Dauer des Einlesens: {sw.ElapsedMilliseconds} ms");
-
-        //            }
-        //            catch (System.Exception ex)
-        //            {
-
-        //                MessageBox.Show("Die Nachricht konnte nicht vollständig importiert werden. Es ist folgender Fehler aufgetreten: " + ex.Message, "Importfehler", MessageBoxButton.OK, MessageBoxImage.Error);
-        //            }
-
-        //            //GesamtListeErstellen(KWPath);
-        //            //             this.Cursor = Cursors.Arrow;
-
-        //        }
-        //        catch (System.Exception ex)
-        //        {
-        //            MessageBox.Show("Die Nachricht konnte nicht vollständig importiert werden. Es ist folgender Fehler aufgetreten: " + ex.Message, "Importfehler", MessageBoxButton.OK, MessageBoxImage.Error);
-        //        }
-        //    });
-        //    Mouse.OverrideCursor = Cursors.Arrow;
-        //    return task;
-
-        //}
-        #endregion
-
         //Parallel
         private Task ImportAsync()
         {
@@ -629,129 +302,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 MPWeek ImportMPWeek = new MPWeek();
 
                 var select = SelectedVintage;
-                //const bool forceNonParallel = false;
-                //var options = new ParallelOptions { MaxDegreeOfParallelism = forceNonParallel ? 1 : -1 };
 
-                //Parallel.For(0, ImportFileList.Count, options, i =>
-                //{
-                //    int counter = (int)i;
-                //    if (ImportFileList[i].WordFileExist)
-                //    {
-
-                //        string fileName = ImportFileList[counter].FileName;
-
-                //        ReadMPState = $"Es wird folgende Anlage eingelesen: {fileName}";
-                //        string senat = fileName.Substring(0, fileName.IndexOf("_"));
-                //        MPSenat mPSenat = new MPSenat();
-                //        MPDBContext context = new MPDBContext();
-                //        List<MPSenat> SenateList = context.MPSenate.ToList();
-                //        MPImportHelper importhelper = new MPImportHelper();
-                //        try
-                //        {
-                //            switch (senat) //1 = Zivilbereich, 2 = Strafbereich, 3 = Sondersenate
-                //            {
-                //                case "1":
-                //                    importhelper = FolderCreation(2, "1. Strafsenat", 16, SenateList);
-                //                    break;
-                //                case "2":
-                //                    importhelper = FolderCreation(2, "2. Strafsenat", 17, SenateList);
-                //                    break;
-                //                case "3":
-                //                    importhelper = FolderCreation(2, "3. Strafsenat", 18, SenateList);
-                //                    break;
-                //                case "4":
-                //                    importhelper = FolderCreation(2, "4. Strafsenat", 19, SenateList);
-                //                    break;
-                //                case "5":
-                //                    importhelper = FolderCreation(2, "5. Strafsenat", 20, SenateList);
-                //                    break;
-                //                case "6":
-                //                    importhelper = FolderCreation(2, "6. Strafsenat", 21, SenateList);
-                //                    break;
-                //                case "AK":
-                //                    importhelper = FolderCreation(2, "Ermittlungsverfahren", 32, SenateList);
-                //                    break;
-                //                case "I":
-                //                    importhelper = FolderCreation(1, "I. Zivilsenat", 2, SenateList);
-                //                    break;
-                //                case "II":
-                //                    importhelper = FolderCreation(1, "II. Zivilsenat", 3, SenateList);
-                //                    break;
-                //                case "III":
-                //                    importhelper = FolderCreation(1, "III. Zivilsenat", 4, SenateList);
-                //                    break;
-                //                case "IV":
-                //                    importhelper = FolderCreation(1, "IV. Zivilsenat", 5, SenateList);
-                //                    break;
-                //                case "V":
-                //                    importhelper = FolderCreation(1, "V. Zivilsenat", 6, SenateList);
-                //                    break;
-                //                case "VI":
-                //                    importhelper = FolderCreation(1, "VI. Zivilsenat", 7, SenateList);
-                //                    break;
-                //                case "VIa":
-                //                    importhelper = FolderCreation(1, "VIa. Zivilsenat", 8, SenateList);
-                //                    break;
-                //                case "VII":
-                //                    importhelper = FolderCreation(1, "VII. Zivilsenat", 9, SenateList);
-                //                    break;
-                //                case "VIII":
-                //                    importhelper = FolderCreation(1, "VIII. Zivilsenat", 10, SenateList);
-                //                    break;
-                //                case "IX":
-                //                    importhelper = FolderCreation(1, "IX. Zivilsenat", 11, SenateList);
-                //                    break;
-                //                case "X":
-                //                    importhelper = FolderCreation(1, "X. Zivilsenat", 12, SenateList);
-                //                    break;
-                //                case "XI":
-                //                    importhelper = FolderCreation(1, "XI. Zivilsenat", 13, SenateList);
-                //                    break;
-                //                case "XII":
-                //                    importhelper = FolderCreation(1, "XII. Zivilsenat", 14, SenateList);
-                //                    break;
-                //                case "XIII":
-                //                    importhelper = FolderCreation(1, "XIII. Zivilsenat", 15, SenateList);
-                //                    break;
-                //                case "KVB":
-                //                case "EnVR":
-                //                    importhelper = FolderCreation(3, "Kartelsenat", 31, SenateList);
-                //                    break;
-                //                case "StB":
-                //                    importhelper = FolderCreation(3, "Steuerberatersenat", 26, SenateList);
-                //                    break;
-                //                case "AnwZ(Brfg)":
-                //                case "AnwSt(B)":
-                //                    importhelper = FolderCreation(3, "Anwaltssenat", 22, SenateList);
-                //                    break;
-                //                case "NotSt(Brfg)":
-                //                case "NotZ(Brfg)":
-                //                    importhelper = FolderCreation(3, "Notarsenat", 23, SenateList);
-                //                    break;
-                //                case "LwZR":
-                //                    importhelper = FolderCreation(3, "Landwirtschaftssenat", 24, SenateList);
-                //                    break;
-                //                default:
-                //                    importhelper = FolderCreation(3, "Sonstiges", 1, SenateList);
-                //                    break;
-                //            }
-                //            Debug.WriteLine($"{fileName}; {importhelper.PathentscheidungDok}");
-                //            ImportFileList[counter].ImportPathDok = importhelper.PathentscheidungDok;
-                //            ImportFileList[counter].ImportPathMP = importhelper.PathentscheidungMP;
-                //            ImportFileList[counter].Senat = importhelper.MPSenat;
-                //            ImportFileList[counter].Bereich = importhelper.Bereich;
-                //            if (!File.Exists($"{importhelper.PathentscheidungDok}{ImportFileList[counter].FileName}")) File.Copy(ImportFileList[counter].FileFullPath, $"{importhelper.PathentscheidungDok}{ImportFileList[counter].FileName}");
-                //            //In den Montagspostordner kopieren
-                //            if (!File.Exists($"{importhelper.PathentscheidungMP}{ImportFileList[counter].FileName}")) File.Copy(ImportFileList[counter].FileFullPath, $"{importhelper.PathentscheidungMP}{ImportFileList[counter].FileName}");
-                //            ImportFileList[counter].ImportSuccessfull = true;
-                //        }
-                //        catch (System.Exception)
-                //        {
-                //            ImportFileList[counter].ImportSuccessfull = false;
-                //        }
-                //    }
-                //});
-
+                #region Dateien einlesen
                 foreach (MPImportFile file in ImportFileList)
                 {
                     //int counter = (int)i;
@@ -940,15 +492,12 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                         }
                     }
                 }
-                ;
 
-
-                //if (att > 0)
-                //{
                 ImportMPWeek.MPWeekNumber = SelectedKW;
                 ImportMPWeek.MPWeekYear = SelectedVintage;
 
 
+                #endregion                
                 #region E-Mail mit Word-Dateien auslesen
 
                 //Entscheidungen aus dem Text auslesen
@@ -958,7 +507,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 int AnzahlEntscheidungen = ImportFileList.Count();
 
                 entscheidungsListe = Word_Datei_Auslesen(ImportFileList);
-
+                #endregion
+                #region Dateien speichern
                 bool DataRead = false;
                 try
                 {
@@ -991,24 +541,24 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 }
                 catch (System.Exception ex)
                 {
+                    Logger.WriteLog($"Die Datensätze für die Montagspost konnten nicht in die Datenbank geschrieben werden. Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
                     ReadMPState = $"Die Datensätze konnten nicht in die Datenbank geschrieben werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
                 }
-                //MPWeekList.Add(ImportMPWeek);
 
-                //E-Mail-Erstellen
+                #endregion                //MPWeekList.Add(ImportMPWeek);
+                #region E-Mails erstellen
                 if (DataRead)
                 {
                     EMails_Erstellen();
                     EMailNotification_Erstellen();
                 }
 
-                //Gesamt - pdf - Erstellen
-
+                #endregion
+                #region Gesamt-PDF erstellen
                 string NumKW = (SelectedKW <= 9) ? $"0{SelectedKW}" : SelectedKW.ToString();
                 GesamtListeErstellen($"{BGHKompaktSystemInfo.PathDokstelleDFS}{BGHKompaktSystemInfo.PathMontagspost}{SelectedVintage}\\KW{NumKW}\\");
-
-
                 #endregion
+
                 sw.Stop();
 
             });
@@ -1108,7 +658,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                     Directory.CreateDirectory(pathMP);
                 }
 
-                string importPathDok = $"{pathDok}{SelectedVintage}\\kw{SelectedVintage.ToString().Substring(2)}{SelectedKW.ToString()}\\";
+                string importPathDok = $"{pathDok}{SelectedVintage}\\kw{SelectedVintage.ToString().Substring(2)}{SelectedKW}\\";
                 string NumKW = (SelectedKW <= 9) ? $"0{SelectedKW}" : SelectedKW.ToString();
                 string importPathMP = $"{pathMP}{SelectedVintage}\\KW{NumKW}\\";
                 //MessageBox.Show($"CreationPath: {importPathMP}");
