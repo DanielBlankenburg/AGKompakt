@@ -70,6 +70,14 @@
             TargetType="Border">
             <Setter Property="Margin" Value="0,0,20,10" />
         </Style>
+        <Style
+            x:Key="Textbox_Metadata"
+            BasedOn="{StaticResource Textbox_Base}"
+            TargetType="TextBox">
+            <Setter Property="MinWidth" Value="200" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,20,0,0" />
+        </Style>
     </UserControl.Resources>
     <Grid Background="{StaticResource MaterialDesignPaper}">
         <Grid.RowDefinitions>
@@ -699,6 +707,14 @@
                                             <MD:PackIcon Padding="0" Kind="Bin" />
                                         </Button>
                                         <Button
+                                            x:Name="Btn_MetaData"
+                                            Command="{Binding Path=DataContext.MetaDataCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                            Style="{StaticResource Button_MP_View_RowButton}"
+                                            ToolTip="Metadaten bearbeiten"
+                                            Visibility="Hidden">
+                                            <MD:PackIcon Padding="0" Kind="Edit" />
+                                        </Button>
+                                        <Button
                                             x:Name="Btn_Vermerk"
                                             Command="{Binding Path=DataContext.VermerkCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                             Style="{StaticResource Button_MP_View_RowButton}"
@@ -712,6 +728,7 @@
                                             <Setter TargetName="Btn_Open" Property="Visibility" Value="Visible" />
                                             <Setter TargetName="Btn_Ablage" Property="Visibility" Value="{Binding Path=DataContext.ShowSelectedDecisionsAll, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                             <Setter TargetName="Btn_Bin" Property="Visibility" Value="{Binding Path=DataContext.ShowSelectedDecisionsUser, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                            <Setter TargetName="Btn_MetaData" Property="Visibility" Value="{Binding Path=DataContext.ShowAdmin, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                             <Setter TargetName="Btn_Vermerk" Property="Visibility" Value="{Binding Path=DataContext.ShowAdmin, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                         </DataTrigger>
                                     </DataTemplate.Triggers>
@@ -832,6 +849,7 @@
                     SelectionMode="Single"
                     Style="{StaticResource DataGrid_Tite}"
                     VerticalScrollBarVisibility="Auto">
+
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
@@ -960,6 +978,58 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </DataGrid>
+            </MD:Card>
+            <!--#endregion-->
+            <!--#region Metadaten-->
+            <MD:Card
+                Grid.Column="3"
+                Margin="5"
+                Visibility="{Binding ShowMetaDataEdit, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="70" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Margin="0,10,0,0">
+                        <TextBlock Style="{StaticResource Style_Textblock_Titel_Unter2}" Text="Metadaten bearbeiten" />
+                        <TextBlock
+                            Margin="0,10"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource textblock_base}"
+                            Text="{Binding SelectedMPDecision.Aktenzeichen}" />
+                        <StackPanel Margin="20,20">
+                            <TextBox
+                                MD:HintAssist.Hint="Datum:"
+                                Style="{StaticResource Textbox_Metadata}"
+                                Text="{Binding SelectedMPDecision.Date, StringFormat=d}" />
+                            <TextBox
+                                MD:HintAssist.Hint="Normenkette:"
+                                Style="{StaticResource Textbox_Metadata}"
+                                Text="{Binding SelectedMPDecision.Normenkette}" />
+                            <TextBox
+                                MD:HintAssist.Hint="Leitsatz:"
+                                Style="{StaticResource Textbox_Metadata}"
+                                Text="{Binding SelectedMPDecision.Leitsatz}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="1"
+                        Margin="0,15,0,15"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            Command="{Binding MetaDataSaveCommand}"
+                            Content="Speichern"
+                            Style="{StaticResource Button_Master}" />
+                        <Button
+                            Margin="20,0,0,0"
+                            Command="{Binding MetaDataBackCommand}"
+                            Content="Zurück"
+                            Style="{StaticResource Button_Master}" />
+                    </StackPanel>
+                </Grid>
             </MD:Card>
             <!--#endregion-->
             <!--#region Vorschau-->

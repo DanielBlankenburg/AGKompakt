@@ -826,6 +826,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\ActivityRequests\202508181137426_DataFiles.resx">
       <DependentUpon>202508181137426_DataFiles.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\ActivityRequests\202508190621526_ARVerguetungType.resx">
       <DependentUpon>202508190621526_ARVerguetungType.cs</DependentUpon>
@@ -885,6 +886,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202506152030562_InitialUser.resx">
       <DependentUpon>202506152030562_InitialUser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202506161009483_TestZahl.resx">
       <DependentUpon>202506161009483_TestZahl.cs</DependentUpon>
@@ -907,6 +909,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202508191535020_BSCWSubFolders.resx">
       <DependentUpon>202508191535020_BSCWSubFolders.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202509050913148_Update3_013.resx">
       <DependentUpon>202509050913148_Update3_013.cs</DependentUpon>
