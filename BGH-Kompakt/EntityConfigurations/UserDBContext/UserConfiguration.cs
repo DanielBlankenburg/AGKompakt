@@ -53,7 +53,9 @@ namespace BGH_Kompakt.EntityConfigurations
             .WithMany(x => x.AdminUsers)
             .Map(m => m.ToTable("Senatsadministratoren"));
 
-
+            HasMany(x => x.Spruchgruppen)
+            .WithMany(x => x.Members)
+            .Map(m => m.ToTable("Spruchgruppenmitglieder"));
         }
     }
 }

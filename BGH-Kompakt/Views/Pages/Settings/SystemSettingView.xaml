@@ -1184,7 +1184,8 @@
                                                 <MW:ToggleSwitch
                                                     Grid.Column="1"
                                                     IsOn="{Binding StrafFolderYearFirst, UpdateSourceTrigger=PropertyChanged}"
-                                                    OffContent="Aktenzeichen" OnContent="Jahr" />
+                                                    OffContent="Aktenzeichen"
+                                                    OnContent="Jahr" />
                                             </Grid>
 
 
