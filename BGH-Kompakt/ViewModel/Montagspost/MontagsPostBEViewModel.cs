@@ -16,18 +16,36 @@ namespace BGH_Kompakt.ViewModel.Montagspost
     public class MontagsPostBEViewModel : ViewModelBase
     {
         public ObservableCollection<MPDecision> MPDecisionList { get; set; } = new ObservableCollection<MPDecision>();
+        public ObservableCollection<MPWeek> MPWeekList { get; set; } = new ObservableCollection<MPWeek>();
+        private ObservableCollection<int> _VintageList = new ObservableCollection<int>();
+        public ObservableCollection<int> VintageList { get { return _VintageList; } }
 
         public ICommand SaveCommand { get; set; }
         public ICommand BackCommand { get; set; }
+
+        private int _SelectedVintage;
+        public int SelectedVintage
+        {
+            get { return _SelectedVintage; }
+            set
+            {
+                SetProperty<int>(ref _SelectedVintage, value);
+                WeekFill();
+            }
+        }
 
 
         public MontagsPostBEViewModel()
         {
             SaveCommand = new RelayCommand(SaveExecute);
             BackCommand = new RelayCommand(BackExecute);
-
-
             MPDBContext mPDBContext = new MPDBContext();
+
+            var MPVintages_Query = mPDBContext.MPWeeks.Select(x => x.MPWeekYear).Distinct();
+            foreach (var Vintage in MPVintages_Query) VintageList.Add(Vintage);
+            if (VintageList.Count > 0) SelectedVintage = VintageList.LastOrDefault();
+
+
             //var Query = mPDBContext.MPDecisions.Include(x => x.BE).Where(x => x.MPWeekID == MontagsPostManager.SavedWeek.MPWeekID).OrderBy(x => x.Senat.MPSenatName).ThenBy(x => x.Aktenzeichen);
             //foreach (var item in Query) MPDecisionList.Add(item);
             //var Query2 = mPDBContext.MPBE.OrderBy(x => x.MPBEName);
@@ -37,6 +55,18 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         private void BackExecute(object obj)
         {
             ViewManager.ShowPageOnMainView<MontagsPostView>();
+        }
+
+        private void WeekFill()
+        {
+            MPWeekList.Clear();
+            if (SelectedVintage > 0)
+            {
+                MPDBContext mPDBContext = new MPDBContext();
+                var MPWeek_Query = mPDBContext.MPWeeks.Include(x => x.MPDecisions).Where(x => x.MPWeekYear == SelectedVintage).OrderByDescending(x => x.MPWeekNumber);
+                foreach (var item in MPWeek_Query) MPWeekList.Add(item);
+            }
+            return;
         }
 
         private void SaveExecute(object obj)

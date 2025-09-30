@@ -625,7 +625,7 @@ namespace BGH_Kompakt.ViewModel
                 SetFilter();
                 SetSorting();
                 var MPVintages_Query = mPDBContext.MPWeeks.Select(x => x.MPWeekYear).Distinct();
-                foreach (var Vintage in MPVintages_Query) _VintageList.Add(Vintage);
+                foreach (var Vintage in MPVintages_Query) VintageList.Add(Vintage);
                 if (VintageList.Count > 0) SelectedVintage = VintageList.LastOrDefault();
 
                 ShowFilter();
