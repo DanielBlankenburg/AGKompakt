@@ -1,4 +1,5 @@
 ﻿using BGH_Kompakt.Services.SystemComponents;
+using BGH_Kompakt.Services.UserService;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,8 +36,16 @@ namespace BGH_Kompakt.Views.Pages.Start
                 string fileName = string.Empty;
                 switch (button.Name)
                 {
-                    case "Allgemein":
-                        fileName = "Anleitung BGHKompaktSitzungsunterlagen.pdf";
+                    case "Geschäftstellenbereich":
+                        if (UserManager.SenatSettings.Senat != null)
+                        {
+                            if (UserManager.SenatSettings.Senat.SenatArt == 1) fileName = "Anleitung BGHKompaktSitzungsunterlagenZivil.pdf";
+                            else if (UserManager.SenatSettings.Senat.SenatArt == 2) fileName = "Anleitung BGHKompaktSitzungsunterlagenStraf.pdf";
+                        }
+                        else
+                        {
+                            ViewManager.ShowMainInfoFlyout($"Es ist kein Senat ausgewählt.", false);
+                        }
                         break;
                     case "Montagspost":
                         fileName = "Anleitung BGHKompaktMontagspost.pdf";
@@ -60,6 +69,7 @@ namespace BGH_Kompakt.Views.Pages.Start
                 }
                 catch (Exception ex)
                 {
+                    Logger.WriteLog($"Die Anleitung konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten:\n{ex.Message}\n{ex.InnerException}");
                     ViewManager.ShowMainInfoFlyout($"Die Anleitung konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten:\n{ex.Message}", false);
                 }
             }

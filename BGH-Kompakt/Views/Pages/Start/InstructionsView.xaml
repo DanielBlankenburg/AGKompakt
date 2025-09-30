@@ -30,7 +30,7 @@
             Text="Anleitungen" />
         <StackPanel Grid.Row="1">
             <Button
-                x:Name="Allgemein"
+                x:Name="Geschäftstellenbereich"
                 Click="Button_Click"
                 Content="Geschäftsstellenbereich"
                 Style="{StaticResource Button_Anleitungen}" />

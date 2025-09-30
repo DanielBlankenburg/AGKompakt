@@ -1879,21 +1879,29 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
 
         private void ImportList(string[] files, string listName)
         {
-            foreach (string filePath in files)
+            try
             {
-                FileInfo importFile = new FileInfo(filePath);
-                string targetDir = $"{SelectedSitzungstage.FullDirectory}\\_{listName}\\{importFile.Name}";
-                File.Copy(importFile.FullName, targetDir);
-                ViewManager.ShowMainInfoFlyout($"Die {listName} wurde abgelegt.", false);
-                switch (listName)
+                foreach (string filePath in files)
                 {
-                    case "Sitzungsliste":
-                        ShowSitzungsliste = true;
-                        break;
-                    case "Beratungsliste":
-                        ShowBeratungsliste = true;
-                        break;
+                    FileInfo importFile = new FileInfo(filePath);
+                    string targetDir = $"{SelectedSitzungstage.FullDirectory}\\_{listName}\\{importFile.Name}";
+                    File.Copy(importFile.FullName, targetDir);
+                    ViewManager.ShowMainInfoFlyout($"Die {listName} wurde abgelegt.", false);
+                    switch (listName)
+                    {
+                        case "Sitzungsliste":
+                            ShowSitzungsliste = true;
+                            break;
+                        case "Beratungsliste":
+                            ShowBeratungsliste = true;
+                            break;
+                    }
                 }
+            }
+            catch (Exception ex) 
+            {
+                Logger.WriteLog($"Die Datei konnte nicht abgelegt werden. Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                ViewManager.ShowMainInfoFlyout($"Die Datei konnte nicht abgelegt werden. Es ist folgender Fehler aufgetreten: {ex.Message}", true);
             }
 
         }
