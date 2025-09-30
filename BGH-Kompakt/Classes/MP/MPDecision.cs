@@ -33,7 +33,7 @@ namespace BGH_Kompakt.Classes.MP
         public MPWeek MPWeek { get; set; }
         public string PathName { get; set; }
         public string FileName { get; set; }
-        public MPBE BE { get; set; }
+        public int BE { get; set; }
         public string Vermerk { get; set; }
         public bool VermerkAnzeige { get; set; } = false;
         [NotMapped]

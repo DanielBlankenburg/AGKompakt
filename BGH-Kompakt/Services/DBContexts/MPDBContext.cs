@@ -21,7 +21,7 @@ namespace BGH_Kompakt.Services.DBContexts
         public DbSet<MPSenat> MPSenate { get; set; }
         public DbSet<MPSenatAbbreviation> MPSenateAbbreviation { get; set; }
         public DbSet<MPUserDecision> MPUserDecisions { get; set; }
-        public DbSet<MPBE> MPBE { get; set; }
+        //public DbSet<MPBE> MPBE { get; set; }
         public DbSet<MPEMailRecipient> MPEMailRecipients { get; set; }
         public DbSet<MPEMail> MPEMails { get; set; }
         public DbSet<MPSetting> MPSettings { get; set; }
@@ -48,8 +48,8 @@ namespace BGH_Kompakt.Services.DBContexts
 
                 modelBuilder.Entity<MPSenatAbbreviation>().Property(x => x.MPSenatAbbreviationText).IsRequired();
 
-                modelBuilder.Entity<MPBE>().Property(x => x.MPBEName).IsRequired();
-                modelBuilder.Entity<MPBE>().ToTable("MPBE");
+                //modelBuilder.Entity<MPBE>().Property(x => x.MPBEName).IsRequired();
+                //modelBuilder.Entity<MPBE>().ToTable("MPBE");
 
                 modelBuilder.Entity<MPEMail>().Property(x => x.MPEMailDescription).IsRequired();
 

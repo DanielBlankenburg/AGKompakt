@@ -31,8 +31,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             MPDBContext mPDBContext = new MPDBContext();
             var Query = mPDBContext.MPDecisions.Include(x => x.BE).Where(x => x.MPWeekID == MontagsPostManager.SavedWeek.MPWeekID).OrderBy(x => x.Senat.MPSenatName).ThenBy(x => x.Aktenzeichen);
             foreach (var item in Query) MPDecisionList.Add(item);
-            var Query2 = mPDBContext.MPBE.OrderBy(x => x.MPBEName);
-            foreach (var item in Query2) MPBEList.Add(item);
+            //var Query2 = mPDBContext.MPBE.OrderBy(x => x.MPBEName);
+            //foreach (var item in Query2) MPBEList.Add(item);
         }
 
         private void BackExecute(object obj)
@@ -43,22 +43,22 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         private void SaveExecute(object obj)
         {
             MPDBContext mPDBContext = new MPDBContext();
-            foreach(var item in MPDecisionList)
-            {
-                if(item.BE != null)
-                {
-                    MPDecision Decision = mPDBContext.MPDecisions.Where(x => x.MPDecisionID == item.MPDecisionID).FirstOrDefault();
-                    if (Decision != null)
-                    {
-                        MPBE newBE = mPDBContext.MPBE.Where(x => x.MPBEID == item.BE.MPBEID).FirstOrDefault();
-                        Decision.BE = newBE;
-                        mPDBContext.MPDecisions.AddOrUpdate(Decision);
-                    }
+            //foreach(var item in MPDecisionList)
+            //{
+            //    if(item.BE != null)
+            //    {
+            //        MPDecision Decision = mPDBContext.MPDecisions.Where(x => x.MPDecisionID == item.MPDecisionID).FirstOrDefault();
+            //        if (Decision != null)
+            //        {
+            //            MPBE newBE = mPDBContext.MPBE.Where(x => x.MPBEID == item.BE.MPBEID).FirstOrDefault();
+            //            Decision.BE = newBE;
+            //            mPDBContext.MPDecisions.AddOrUpdate(Decision);
+            //        }
                     
-                }
-            }
-            mPDBContext.SaveChanges();
-            ViewManager.ShowPageOnMainView<MontagsPostView>();
+            //    }
+            //}
+            //mPDBContext.SaveChanges();
+            //ViewManager.ShowPageOnMainView<MontagsPostView>();
         }
     }
 }
