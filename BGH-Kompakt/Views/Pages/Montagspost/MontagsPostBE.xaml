@@ -67,11 +67,11 @@
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Button
-                Margin="0,0,10,0"
+                Margin="0,0,10,0" Style="{StaticResource Button_Master}"
                 Command="{Binding SaveCommand}"
                 Content="Berichterstatter speichern" />
             <Button
-                Margin="0,0,20,0"
+                Margin="0,0,20,0" Style="{StaticResource Button_Master}"
                 Command="{Binding BackCommand}"
                 Content="Zurück ohne Speichern" />
         </StackPanel>

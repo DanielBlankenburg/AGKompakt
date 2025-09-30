@@ -26,6 +26,10 @@ namespace BGH_Kompakt.Views.Pages.Montagspost
                     ViewManager.ShowMainInfoFlyout("Dieser Bereich befindet sich noch in Entwicklung", false);
                     //ViewManager.ShowUnderPageOn<MontagsPostFilterView>(AnimatedContentControl);
                     break;
+                case "BE":
+                    ViewManager.ShowUnderPageOn<MontagsPostBE>(AnimatedContentControl);
+                    //ViewManager.ShowUnderPageOn<MontagsPostFilterView>(AnimatedContentControl);
+                    break;
             }
 
         }

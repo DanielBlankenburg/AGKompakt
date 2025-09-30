@@ -16,7 +16,6 @@ namespace BGH_Kompakt.ViewModel.Montagspost
     public class MontagsPostBEViewModel : ViewModelBase
     {
         public ObservableCollection<MPDecision> MPDecisionList { get; set; } = new ObservableCollection<MPDecision>();
-        public ObservableCollection<MPBE> MPBEList { get; set; } = new ObservableCollection<MPBE>();
 
         public ICommand SaveCommand { get; set; }
         public ICommand BackCommand { get; set; }
@@ -29,8 +28,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
 
             MPDBContext mPDBContext = new MPDBContext();
-            var Query = mPDBContext.MPDecisions.Include(x => x.BE).Where(x => x.MPWeekID == MontagsPostManager.SavedWeek.MPWeekID).OrderBy(x => x.Senat.MPSenatName).ThenBy(x => x.Aktenzeichen);
-            foreach (var item in Query) MPDecisionList.Add(item);
+            //var Query = mPDBContext.MPDecisions.Include(x => x.BE).Where(x => x.MPWeekID == MontagsPostManager.SavedWeek.MPWeekID).OrderBy(x => x.Senat.MPSenatName).ThenBy(x => x.Aktenzeichen);
+            //foreach (var item in Query) MPDecisionList.Add(item);
             //var Query2 = mPDBContext.MPBE.OrderBy(x => x.MPBEName);
             //foreach (var item in Query2) MPBEList.Add(item);
         }
