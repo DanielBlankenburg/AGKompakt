@@ -1,10 +1,13 @@
 ﻿using BGH_Kompakt.Classes._LookUp.MP;
 using BGH_Kompakt.Classes.MP;
+using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.MontagspostService;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Views;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
@@ -16,6 +19,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
     public class MontagsPostBEViewModel : ViewModelBase
     {
         public ObservableCollection<MPDecision> MPDecisionList { get; set; } = new ObservableCollection<MPDecision>();
+        public ObservableCollection<User> MPBEList { get; set; } = new ObservableCollection<User>();
         public ObservableCollection<MPWeek> MPWeekList { get; set; } = new ObservableCollection<MPWeek>();
         private ObservableCollection<int> _VintageList = new ObservableCollection<int>();
         public ObservableCollection<int> VintageList { get { return _VintageList; } }
@@ -33,6 +37,22 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 WeekFill();
             }
         }
+        private MPWeek _SelectedWeek;
+        public MPWeek SelectedWeek
+        {
+            get { return _SelectedWeek; }
+            set
+            {
+                SetProperty(ref _SelectedWeek, value);
+                DecisionFill();
+            }
+        }
+        private MPWeek _SelectedBE;
+        public MPWeek SelectedBE
+        {
+            get { return _SelectedBE; }
+            set { SetProperty(ref _SelectedBE, value); }
+        }
 
 
         public MontagsPostBEViewModel()
@@ -45,9 +65,10 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             foreach (var Vintage in MPVintages_Query) VintageList.Add(Vintage);
             if (VintageList.Count > 0) SelectedVintage = VintageList.LastOrDefault();
 
+            UserDBContext db = new UserDBContext();
+            var query = db.Users.Where(x => x.PositionId == 1).OrderBy(x => x.NachName).ThenBy(x => x.VorName);
+            foreach (User Richter in query) MPBEList.Add(Richter);
 
-            //var Query = mPDBContext.MPDecisions.Include(x => x.BE).Where(x => x.MPWeekID == MontagsPostManager.SavedWeek.MPWeekID).OrderBy(x => x.Senat.MPSenatName).ThenBy(x => x.Aktenzeichen);
-            //foreach (var item in Query) MPDecisionList.Add(item);
             //var Query2 = mPDBContext.MPBE.OrderBy(x => x.MPBEName);
             //foreach (var item in Query2) MPBEList.Add(item);
         }
@@ -68,6 +89,17 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             }
             return;
         }
+        private void DecisionFill()
+        {
+            MPDecisionList.Clear();
+            if (SelectedWeek != null)
+            {
+                MPDBContext mPDBContext = new MPDBContext();
+                var Query = mPDBContext.MPDecisions.Where(x => x.MPWeekID == SelectedWeek.MPWeekID).OrderBy(x => x.Senat.MPSenatName).ThenBy(x => x.Aktenzeichen);
+                foreach (var item in Query) MPDecisionList.Add(item);
+            }
+        }
+
 
         private void SaveExecute(object obj)
         {

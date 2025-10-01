@@ -1,5 +1,7 @@
 ﻿using BGH_Kompakt.Classes._LookUp.MP;
 using BGH_Kompakt.Classes.Senate;
+using BGH_Kompakt.Classes.UserClasses;
+using BGH_Kompakt.Services.DBContexts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -66,6 +68,27 @@ namespace BGH_Kompakt.Classes.MP
                 return Vermerk != string.Empty && Vermerk != null;
             }
         }
+
+        public User? BEDetails
+        {
+            get
+            {
+                UserDBContext db = new UserDBContext();
+                return db.Users.Find(BE) ?? null;
+            }
+        }
+
+        //public List<User> Belist
+        //{
+        //    get
+        //    {
+        //        UserDBContext db = new UserDBContext();
+        //        var query = db.Users.Where(x => x.PositionId == 1);
+        //        List<User> Richterlist = new List<User>();
+        //        foreach (User Richter in query) Richterlist.Add(Richter);
+        //        return Richterlist;
+        //    }
+        //}
 
     }
 }

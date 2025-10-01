@@ -28,99 +28,82 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" MinWidth="150" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <StackPanel
-                Grid.Column="0"
-                Margin="10,10,0,0"
-                HorizontalAlignment="Left"
-                Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        Margin="0,0,20,0"
-                        FontFamily="{StaticResource MaterialDesignFont}"
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Text="Jahrgang:"
-                        TextAlignment="Center" />
-                    <ComboBox
-                        x:Name="Cbo_Jahr"
-                        Margin="0,10,0,0"
-                        Padding="5,0,0,0"
-                        HorizontalContentAlignment="Left"
-                        FontFamily="{StaticResource MaterialDesignFont}"
-                        FontSize="16"
-                        ItemsSource="{Binding VintageList}"
-                        SelectedItem="{Binding SelectedVintage, UpdateSourceTrigger=PropertyChanged}" />
+            <MD:Card Grid.Column="1" Style="{StaticResource MDCard_Master}">
+
+                <StackPanel
+                    Margin="10,10,10,0"
+                    HorizontalAlignment="Left"
+                    Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,8,20,0"
+                            FontFamily="{StaticResource MaterialDesignFont}"
+                            FontSize="16"
+                            FontWeight="Medium"
+                            Text="Jahrgang:"
+                            TextAlignment="Center" />
+                        <ComboBox
+                            x:Name="Cbo_Jahr"
+                            HorizontalContentAlignment="Left"
+                            FontFamily="{StaticResource MaterialDesignFont}"
+                            FontSize="16"
+                            ItemsSource="{Binding VintageList}"
+                            SelectedItem="{Binding SelectedVintage, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    <ListBox
+                        Padding="5,20,0,0"
+                        DisplayMemberPath="MPWeekName"
+                        ItemsSource="{Binding MPWeekList}"
+                        SelectedItem="{Binding SelectedWeek, UpdateSourceTrigger=PropertyChanged}" />
+
                 </StackPanel>
-                <!--<ListView
-                    Grid.Column="0"
-                    ItemsSource="{Binding MPWeekList}"
-                    SelectedItem="{Binding SelectedActivityRequest}"
+            </MD:Card>
+
+            <MD:Card Grid.Column="2" Style="{StaticResource MDCard_Master}">
+
+                <ListView
+                    Margin="10,10,10,0"
+                    ItemsSource="{Binding MPDecisionList}"
+                    SelectedItem="{Binding SelectedBE}"
                     SelectionMode="Single">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn
                                 Width="130"
-                                DisplayMemberBinding="{Binding MPWeekName, TargetNullValue=[keine Angabe]}"
+                                DisplayMemberBinding="{Binding Aktenzeichen, TargetNullValue=[keine Angabe]}"
                                 Header="Entscheidung"
                                 HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                            <GridViewColumn
+                                Width="150"
+                                Header="Berichterstatter"
+                                HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox
+                                            MinWidth="100"
+                                            DisplayMemberPath="FullSurname"
+                                            ItemsSource="{Binding Path=DataContext.MPBEList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                            SelectedItem="{Binding BEDetails.FullSurname}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
-                </ListView>-->
-                <ListBox
-                    Padding="5,20,0,0"
-                    DisplayMemberPath="MPWeekName"
-                    ItemsSource="{Binding MPWeekList}"
-                    SelectedItem="{Binding SelectedSenat, UpdateSourceTrigger=PropertyChanged}" />
-
-            </StackPanel>
-
-
-            <ListView
-                Grid.Column="1"
-                ItemsSource="{Binding MPDecisionList}"
-                SelectedItem="{Binding SelectedActivityRequest}"
-                SelectionMode="Single">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn
-                            Width="130"
-                            DisplayMemberBinding="{Binding Aktenzeichen, TargetNullValue=[keine Angabe]}"
-                            Header="Entscheidung"
-                            HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
-                        <GridViewColumn
-                            Width="150"
-                            Header="Berichterstatter"
-                            HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ComboBox
-                                        MinWidth="100"
-                                        DisplayMemberPath="MPBEName"
-                                        ItemsSource="{Binding Path=DataContext.MPBEList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                        SelectedItem="{Binding BE}" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                </ListView>
+            </MD:Card>
         </Grid>
         <StackPanel
             Grid.Row="2"
-            HorizontalAlignment="Right"
+            HorizontalAlignment="Center"
             Orientation="Horizontal">
             <Button
                 Margin="0,0,10,0"
                 Command="{Binding SaveCommand}"
                 Content="Berichterstatter speichern"
-                Style="{StaticResource Button_Master}" />
-            <Button
-                Margin="0,0,20,0"
-                Command="{Binding BackCommand}"
-                Content="Zurück ohne Speichern"
                 Style="{StaticResource Button_Master}" />
         </StackPanel>
 
