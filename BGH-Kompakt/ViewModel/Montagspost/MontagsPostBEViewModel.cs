@@ -104,20 +104,20 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         private void SaveExecute(object obj)
         {
             MPDBContext mPDBContext = new MPDBContext();
-            //foreach(var item in MPDecisionList)
-            //{
-            //    if(item.BE != null)
-            //    {
-            //        MPDecision Decision = mPDBContext.MPDecisions.Where(x => x.MPDecisionID == item.MPDecisionID).FirstOrDefault();
-            //        if (Decision != null)
-            //        {
-            //            MPBE newBE = mPDBContext.MPBE.Where(x => x.MPBEID == item.BE.MPBEID).FirstOrDefault();
-            //            Decision.BE = newBE;
-            //            mPDBContext.MPDecisions.AddOrUpdate(Decision);
-            //        }
-                    
-            //    }
-            //}
+            foreach (var item in MPDecisionList)
+            {
+                //if (item.BE != null)
+                //{
+                //    MPDecision Decision = mPDBContext.MPDecisions.Where(x => x.MPDecisionID == item.MPDecisionID).FirstOrDefault();
+                //    if (Decision != null)
+                //    {
+                //        MPBE newBE = mPDBContext.MPBE.Where(x => x.MPBEID == item.BE.MPBEID).FirstOrDefault();
+                //        Decision.BE = newBE;
+                //        mPDBContext.MPDecisions.AddOrUpdate(Decision);
+                //    }
+
+                //}
+            }
             //mPDBContext.SaveChanges();
             //ViewManager.ShowPageOnMainView<MontagsPostView>();
         }

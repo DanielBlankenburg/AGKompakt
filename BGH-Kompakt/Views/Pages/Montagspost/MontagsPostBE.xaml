@@ -87,7 +87,7 @@
                                             MinWidth="100"
                                             DisplayMemberPath="FullSurname"
                                             ItemsSource="{Binding Path=DataContext.MPBEList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                            SelectedItem="{Binding BEDetails.FullSurname}" />
+                                            SelectedItem="{Binding BEDetails}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

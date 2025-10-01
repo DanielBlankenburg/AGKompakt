@@ -69,12 +69,13 @@ namespace BGH_Kompakt.Classes.MP
             }
         }
 
-        public User? BEDetails
+        public User BEDetails
         {
             get
             {
                 UserDBContext db = new UserDBContext();
-                return db.Users.Find(BE) ?? null;
+                if (db.Users.Find(BE) != null) return db.Users.Find(BE);
+                else return new User();
             }
         }
 
