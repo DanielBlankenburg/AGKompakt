@@ -1153,6 +1153,7 @@ namespace BGH_Kompakt.ViewModel
         public ICommand OpenDocFileCommand { get; set; }
         public ICommand SaveDocFileCommand { get; set; }
         public ICommand SendDocFileCommand { get; set; }
+        public ICommand SendRequestToArchiveCommand { get; set; }
         public ICommand DeleteDocFileCommand { get; set; }
         public ICommand TestCommand { get; set; }
         #endregion
@@ -1223,8 +1224,32 @@ namespace BGH_Kompakt.ViewModel
             OpenDocFileCommand = new RelayCommand(OpenDocFileExecute);
             SaveDocFileCommand = new RelayCommand(SaveDocFileExecute);
             SendDocFileCommand = new RelayCommand(SendDocFileExecute);
+            SendRequestToArchiveCommand = new RelayCommand(SendRequestToArchiveExecute);
             DeleteDocFileCommand = new RelayCommand(DeleteDocFileExecute);
             TestCommand = new RelayCommand(TextExecute);
+        }
+
+        private void SendRequestToArchiveExecute(object obj)
+        {
+            bool Antwort = ViewManager.ShowQuestionWindow("Soll der Eintrag in das Archiv verschoben werden?", "Ja");
+            if (Antwort == true)
+            {
+                try
+                {
+                    ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich = 5;
+                    activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
+                    activityRequestDBcontext.SaveChanges();
+                    //Liste neu füllen
+                    ViewManager.ShowMainInfoFlyout("EIntrag wurde in das Archiv verschoben", false);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: {ex.Message}; {ex.InnerException}");
+                    ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: {ex.Message}", false);
+                    return;
+                }
+            }
+
         }
 
         private void DeleteDocFileExecute(object obj)
@@ -1282,7 +1307,6 @@ namespace BGH_Kompakt.ViewModel
             catch (Exception ex)
             {
                 ViewManager.ShowMainInfoFlyout($"Bei der Erstellung der E-Mail ist folgender Fehler aufgetreten: {ex.Message}", false);
-                throw;
             }
 
 
@@ -1430,7 +1454,6 @@ namespace BGH_Kompakt.ViewModel
             catch (Exception ex)
             {
                 ViewManager.ShowMainInfoFlyout($"Der Vorgang konnte nicht weitergeleitet werden. Es ist folgender Fehler aufgetreten: {ex.Message}.", false);
-                throw;
             }
         }
 

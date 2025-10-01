@@ -1665,21 +1665,32 @@
                     Margin="0,20"
                     Style="{StaticResource Expander_Border}"
                     Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <Button
-                    x:Name="Btn_3"
-                    Width="170"
-                    Command="{Binding Path=DataContext.WordCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                    Style="{StaticResource Button_Master}"
-                    ToolTip="Genehmigung erstellen"
-                    Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                    <StackPanel Orientation="Horizontal">
-                        <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
-                        <TextBlock
-                            Margin="10,0,0,0"
-                            Style="{StaticResource textblock_base}"
-                            Text="Schreiben erstellen" />
-                    </StackPanel>
-                </Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button
+                        x:Name="Btn_3"
+                        Width="170"
+                        Command="{Binding Path=DataContext.WordCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        Style="{StaticResource Button_Master}"
+                        ToolTip="Genehmigung erstellen"
+                        Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <StackPanel Orientation="Horizontal">
+                            <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                Style="{StaticResource textblock_base}"
+                                Text="Schreiben erstellen" />
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        Margin="10, 0, 0, 0"    
+                        Command="{Binding Path=DataContext.SendRequestToArchiveCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Style="{StaticResource Button_GridView}"
+                            ToolTip="Antrag in das Archiv geben"
+                            Visibility="Visible">
+                        <MD:PackIcon Padding="0" Kind="Archive" />
+                    </Button>
+
+                </StackPanel>
                 <Border
                     Margin="0,20"
                     Style="{StaticResource Expander_Border}"
