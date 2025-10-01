@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BGH_Kompakt.ViewModel.Montagspost
@@ -26,6 +27,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
         public ICommand SaveCommand { get; set; }
         public ICommand BackCommand { get; set; }
+        public ICommand BECommand { get; set; }
 
         private int _SelectedVintage;
         public int SelectedVintage
@@ -47,8 +49,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 DecisionFill();
             }
         }
-        private MPWeek _SelectedBE;
-        public MPWeek SelectedBE
+        private MPDecision _SelectedBE;
+        public MPDecision SelectedBE
         {
             get { return _SelectedBE; }
             set { SetProperty(ref _SelectedBE, value); }
@@ -59,6 +61,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         {
             SaveCommand = new RelayCommand(SaveExecute);
             BackCommand = new RelayCommand(BackExecute);
+            BECommand = new RelayCommand(BESelectionExecute);
             MPDBContext mPDBContext = new MPDBContext();
 
             var MPVintages_Query = mPDBContext.MPWeeks.Select(x => x.MPWeekYear).Distinct();
@@ -71,6 +74,12 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
             //var Query2 = mPDBContext.MPBE.OrderBy(x => x.MPBEName);
             //foreach (var item in Query2) MPBEList.Add(item);
+        }
+
+        private void BESelectionExecute(object obj)
+        {
+            User user = (User)obj;
+            MessageBox.Show(user.VorName);
         }
 
         private void BackExecute(object obj)

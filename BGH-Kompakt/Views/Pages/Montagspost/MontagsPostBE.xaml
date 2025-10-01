@@ -5,6 +5,7 @@
     xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:BGH_Kompakt.Views.Montagspost"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:montagspost="clr-namespace:BGH_Kompakt.ViewModel.Montagspost"
@@ -84,10 +85,17 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox
+                                            x:Name="cboBE"
                                             MinWidth="100"
                                             DisplayMemberPath="FullSurname"
-                                            ItemsSource="{Binding Path=DataContext.MPBEList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                            SelectedItem="{Binding BEDetails}" />
+                                            ItemsSource="{Binding Path=DataContext.MPBEList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Selected">
+                                                    <i:InvokeCommandAction Command="{Binding Path=DataContext.BECommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding ElementName=cboBE, Path=SelectedItem}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+
+                                        </ComboBox>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

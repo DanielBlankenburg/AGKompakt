@@ -38,8 +38,8 @@ namespace BGH_Kompakt.EntityConfigurations
             .WithMany(a => a.Users)
             .HasForeignKey(x => x.TitelId);
 
-            HasOptional(x => x.FilterMP)
-            .WithRequired(x => x.User);
+            HasRequired(x => x.FilterMP)
+            .WithRequiredPrincipal(x => x.User);
 
             HasMany(x => x.Senate)
             .WithMany(x => x.Users)

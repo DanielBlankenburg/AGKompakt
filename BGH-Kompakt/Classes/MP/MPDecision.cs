@@ -5,6 +5,7 @@ using BGH_Kompakt.Services.DBContexts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,6 +78,15 @@ namespace BGH_Kompakt.Classes.MP
                 if (db.Users.Find(BE) != null) return db.Users.Find(BE);
                 else return new User();
             }
+            //set
+            //{
+            //    if (value != null)
+            //    {
+            //        //Debug.WriteLine(BEDetails.UserId);
+            //        //int userID = value.UserId;
+            //        //BE = userID;
+            //    }
+            //}
         }
 
         //public List<User> Belist
