@@ -332,29 +332,38 @@ namespace BGH_Kompakt.ViewModel
                                     .Include(c => c.ActivityRequestChangeHistories)
                                     .Include(u => u.ActivityRequestStatus)
                                     .OrderBy(x => x.ARDatum);
-                    foreach (var activityRequest in query2)
+                    try
                     {
-                        bool anzeige = true;
-                        if (pageIsLoaded)
+                        foreach (var activityRequest in query2)
                         {
-                            if (FilterAntragstellerSelected.Item != keinFilterBezeichnung)
+                            bool anzeige = true;
+                            if (pageIsLoaded)
                             {
-                                UserDBContext context = new UserDBContext();
-                                User ARuser = context.Users.FirstOrDefault(u => u.UserId == FilterAntragstellerSelected.Id);
-                                if (ARuser != null) anzeige = activityRequest.ARUserID == ARuser.UserId;
+                                if (FilterAntragstellerSelected.Item != keinFilterBezeichnung)
+                                {
+                                    UserDBContext context = new UserDBContext();
+                                    User ARuser = context.Users.FirstOrDefault(u => u.UserId == FilterAntragstellerSelected.Id);
+                                    if (ARuser != null) anzeige = activityRequest.ARUserID == ARuser.UserId;
+                                }
+                                if (anzeige && FilterMeldeartSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.ActivityRequestMeldeArt.ActivityRequestMeldeArtText == FilterMeldeartSelected.Item;
+                                if (anzeige && FilterTaetigkeitsartSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.ActivityRequestTyp.ActivityRequestTypText == FilterTaetigkeitsartSelected.Item;
+                                if (anzeige && FilterStatusSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.Status == FilterStatusSelected.Item;
                             }
-                            if (anzeige && FilterMeldeartSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.ActivityRequestMeldeArt.ActivityRequestMeldeArtText == FilterMeldeartSelected.Item;
-                            if (anzeige && FilterTaetigkeitsartSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.ActivityRequestTyp.ActivityRequestTypText == FilterTaetigkeitsartSelected.Item;
-                            if (anzeige && FilterStatusSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.Status == FilterStatusSelected.Item;
+                            if (anzeige)
+                            {
+                                ActivityRequestsView.Add(activityRequest);
+                                if (activityRequest.ARUser != null) 
+                                    if (activityRequest.ARUser.Fullname.Length > _maxUsernameLength) 
+                                        _maxUsernameLength = activityRequest.ARUser.Fullname.Length;
+                            }
                         }
-                        if (anzeige)
-                        {
-                            ActivityRequestsView.Add(activityRequest);
-                            if (activityRequest.ARUser.Fullname.Length > _maxUsernameLength) _maxUsernameLength = activityRequest.ARUser.Fullname.Length;
-                        }
+                        //Falls keine Userlength ermittelt werden soll, soll mindestens die Mindestbreite angezeigt werden; daher wird der Wert auf 1 gesetzt
+                        SetWidthUser(_maxUsernameLength == 0 ? 1 : _maxUsernameLength);
                     }
-                    //Falls keine Userlength ermittelt werden soll, soll mindestens die Mindestbreite angezeigt werden; daher wird der Wert auf 1 gesetzt
-                    SetWidthUser(_maxUsernameLength == 0 ? 1 : _maxUsernameLength);
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog($"Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                    }
                     break;
             }
         }
