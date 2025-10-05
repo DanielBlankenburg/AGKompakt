@@ -251,6 +251,10 @@
     <Compile Include="Migrartions\ActivityRequests\202509220322077_ARAccepted.Designer.cs">
       <DependentUpon>202509220322077_ARAccepted.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202510051624358_3_017_2_ActivityRequestComments.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202510051624358_3_017_2_ActivityRequestComments.Designer.cs">
+      <DependentUpon>202510051624358_3_017_2_ActivityRequestComments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.cs" />
     <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.Designer.cs">
       <DependentUpon>202507090547129_MPEMailMPSetting.cs</DependentUpon>
@@ -861,6 +865,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\ActivityRequests\202509220322077_ARAccepted.resx">
       <DependentUpon>202509220322077_ARAccepted.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202510051624358_3_017_2_ActivityRequestComments.resx">
+      <DependentUpon>202510051624358_3_017_2_ActivityRequestComments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\MP\202501301414587_InitialMP.resx">
       <DependentUpon>202501301414587_InitialMP.cs</DependentUpon>

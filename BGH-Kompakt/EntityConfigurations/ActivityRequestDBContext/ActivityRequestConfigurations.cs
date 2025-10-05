@@ -72,6 +72,10 @@ namespace BGH_Kompakt.EntityConfigurations
                 .WithRequired(x => x.ActivityRequest)
                 .HasForeignKey(x => x.ActivityRequestId);
 
+            HasMany(x => x.ActivityRequestComments)
+                .WithRequired(x => x.ActivityRequest)
+                .HasForeignKey(x => x.ActivityRequestID);
+
             Property(x => x.ARActivityDate).HasColumnType("datetime2");
             Property(x => x.ActivityRequestDatePermanentFrom).HasColumnType("datetime2");
             Property(x => x.ActivityRequestDatePermanentUntil).HasColumnType("datetime2");
