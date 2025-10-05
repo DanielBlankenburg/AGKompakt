@@ -68,19 +68,24 @@
 
                 <ListView
                     Margin="10,10,10,0"
-                    ItemsSource="{Binding MPDecisionList}"
+                    ItemsSource="{Binding MPDecisionBEList}"
                     SelectedItem="{Binding SelectedBE}"
                     SelectionMode="Single">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn
                                 Width="130"
-                                DisplayMemberBinding="{Binding Aktenzeichen, TargetNullValue=[keine Angabe]}"
+                                DisplayMemberBinding="{Binding Decision.Aktenzeichen, TargetNullValue=[keine Angabe]}"
                                 Header="Entscheidung"
                                 HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
                             <GridViewColumn
+                                Width="130"
+                                DisplayMemberBinding="{Binding BE.FullSurname, TargetNullValue=[keine BE gesetzt]}"
+                                Header="Bisherige BE"
+                                HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                            <GridViewColumn
                                 Width="150"
-                                Header="Berichterstatter"
+                                Header="Neuer BE"
                                 HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -88,12 +93,14 @@
                                             x:Name="cboBE"
                                             MinWidth="100"
                                             DisplayMemberPath="FullSurname"
-                                            ItemsSource="{Binding Path=DataContext.MPBEList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                            <i:Interaction.Triggers>
+                                            ItemsSource="{Binding Path=DataContext.MPBEList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                            SelectedItem="{Binding BE}">
+
+                                            <!--<i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="Selected">
                                                     <i:InvokeCommandAction Command="{Binding Path=DataContext.BECommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding ElementName=cboBE, Path=SelectedItem}" />
                                                 </i:EventTrigger>
-                                            </i:Interaction.Triggers>
+                                            </i:Interaction.Triggers>-->
 
                                         </ComboBox>
                                     </DataTemplate>

@@ -185,11 +185,14 @@
     </ApplicationDefinition>
     <Compile Include="AttchedProperties\WebBrowserBehaviors.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestChangeHistory.cs" />
+    <Compile Include="Classes\ActivityRequestClasses\ActivityRequestComment.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestDataFile.cs" />
     <Compile Include="Classes\BereichMP.cs" />
     <Compile Include="Classes\ComboboxItems.cs" />
+    <Compile Include="Classes\Helper\ARSendProperties.cs" />
     <Compile Include="Classes\Helper\ComboboxItem.cs" />
     <Compile Include="Classes\Helper\ScienceAuthor.cs" />
+    <Compile Include="Classes\MP\MPDecisionBE.cs" />
     <Compile Include="Classes\SystemSettings\PageInfo.cs" />
     <Compile Include="Classes\Test\FileData.cs" />
     <Compile Include="Classes\Test\TestItem.cs" />

@@ -19,7 +19,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 {
     public class MontagsPostBEViewModel : ViewModelBase
     {
-        public ObservableCollection<MPDecision> MPDecisionList { get; set; } = new ObservableCollection<MPDecision>();
+        public ObservableCollection<MPDecisionBE> MPDecisionBEList { get; set; } = new ObservableCollection<MPDecisionBE>();
         public ObservableCollection<User> MPBEList { get; set; } = new ObservableCollection<User>();
         public ObservableCollection<MPWeek> MPWeekList { get; set; } = new ObservableCollection<MPWeek>();
         private ObservableCollection<int> _VintageList = new ObservableCollection<int>();
@@ -46,11 +46,11 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             set
             {
                 SetProperty(ref _SelectedWeek, value);
-                DecisionFill();
+                DecsionBEListFill();
             }
         }
-        private MPDecision _SelectedBE;
-        public MPDecision SelectedBE
+        private MPDecisionBE _SelectedBE;
+        public MPDecisionBE SelectedBE
         {
             get { return _SelectedBE; }
             set { SetProperty(ref _SelectedBE, value); }
@@ -98,37 +98,50 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             }
             return;
         }
-        private void DecisionFill()
+        private void DecsionBEListFill()
         {
-            MPDecisionList.Clear();
+            MPDecisionBEList.Clear();
             if (SelectedWeek != null)
             {
                 MPDBContext mPDBContext = new MPDBContext();
+                UserDBContext userDBContext = new UserDBContext();
                 var Query = mPDBContext.MPDecisions.Where(x => x.MPWeekID == SelectedWeek.MPWeekID).OrderBy(x => x.Senat.MPSenatName).ThenBy(x => x.Aktenzeichen);
-                foreach (var item in Query) MPDecisionList.Add(item);
+                foreach (MPDecision item in Query)
+                {
+                    User BE = userDBContext.Users.FirstOrDefault(x => x.UserId == item.BE);
+                    MPDecisionBEList.Add(new MPDecisionBE { Decision = item, BE = BE });
+                }
             }
         }
 
 
         private void SaveExecute(object obj)
         {
-            MPDBContext mPDBContext = new MPDBContext();
-            foreach (var item in MPDecisionList)
+            try
             {
-                //if (item.BE != null)
-                //{
-                //    MPDecision Decision = mPDBContext.MPDecisions.Where(x => x.MPDecisionID == item.MPDecisionID).FirstOrDefault();
-                //    if (Decision != null)
-                //    {
-                //        MPBE newBE = mPDBContext.MPBE.Where(x => x.MPBEID == item.BE.MPBEID).FirstOrDefault();
-                //        Decision.BE = newBE;
-                //        mPDBContext.MPDecisions.AddOrUpdate(Decision);
-                //    }
+                MPDBContext mPDBContext = new MPDBContext();
+                foreach (var item in MPDecisionBEList)
+                {
+                    if (item.BE != null)
+                    {
+                        MPDecision Decision = mPDBContext.MPDecisions.Where(x => x.MPDecisionID == item.Decision.MPDecisionID).FirstOrDefault();
+                        if (Decision != null)
+                        {
+                            Decision.BE = item.BE.UserId;
+                            mPDBContext.MPDecisions.AddOrUpdate(Decision);
+                        }
 
-                //}
+                    }
+                }
+                mPDBContext.SaveChanges();
+                ViewManager.ShowMainInfoFlyout("Die Änderungen wurden gespeichert", false);
             }
-            //mPDBContext.SaveChanges();
-            //ViewManager.ShowPageOnMainView<MontagsPostView>();
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"Beim Bespeichern der BE ist folgender Fehler aufgetreten: {ex.Message}, {ex.InnerException}");
+                ViewManager.ShowMainInfoFlyout($"Beim Bespeichern der BE ist folgender Fehler aufgetreten: {ex.Message}", false);
+                throw;
+            }
         }
     }
 }

@@ -652,8 +652,12 @@ namespace BGH_Kompakt.ViewModel
         {
             try
             {
-                MPSorting = UserManager.RegistratedUser.FilterMP.AscSorting;
-                if (MPSorting) MPSortingAsc = true; else MPSortingDesc = true;
+                if (UserManager.RegistratedUser.FilterMP != null)
+                {
+                    MPSorting = UserManager.RegistratedUser.FilterMP.AscSorting;
+                    if (MPSorting) MPSortingAsc = true; else MPSortingDesc = true;
+
+                } 
             }
             catch (Exception ex)
             {
