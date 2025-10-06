@@ -1065,7 +1065,7 @@ namespace BGH_Kompakt.ViewModel
                                 }
                                 else
                                 {
-                                    var Decision = mPDBContext.MPDecisions.Include(x => x.Senat).Include(x => x.BE).Where(x => x.MPDecisionID == dec.MPDecisionID).FirstOrDefault();
+                                    var Decision = mPDBContext.MPDecisions.Include(x => x.Senat).Where(x => x.MPDecisionID == dec.MPDecisionID).FirstOrDefault();
                                     bool anzeige = ShowSelectedAlleSenate || Decision.Senat.MPCategorieID == Bereich;
                                     if (anzeige)
                                     {
