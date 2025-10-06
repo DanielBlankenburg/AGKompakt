@@ -57,6 +57,7 @@ namespace BGH_Kompakt.Classes.ActivityRequestClasses
         public  ICollection<ARVerguetungAdventage>? ARVerguetungAdventages { get; set; }
         public  ICollection<ActivityRequestArbitrationClient>? ActivityRequestArbitrationClients {  get; set; }
         public  ICollection<ActivityRequestDataFile>? ActivityRequestDataFiles {  get; set; }
+        public  ICollection<ActivityRequestComment>? ActivityRequestComments {  get; set; }
         //public  ICollection<ActivityRequestScienceAuthorName>? ActivityRequestScienceAuthors {  get; set; }
         public int ARZustaendigkeitsbereich { get; set; } = 1; //1 = Zuständigkeit beim Einreichenden; 2 = Zuständigkeit Präsidialrichter; 3 = Zuständigkeit Präsidentin; 4 = Zuständigkeit Vorzimmer; 5 = Archiv; 6 = Vorsitzender
         public int? ActivityRequestStatusID { get; set; }

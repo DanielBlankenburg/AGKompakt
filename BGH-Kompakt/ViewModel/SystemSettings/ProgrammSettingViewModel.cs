@@ -171,7 +171,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 };
 
                 List.Clear();
-                List = new List<String> { "durch Antragsteller/in eingereicht", "durch Präsidialrichter/in als genehmigungsfähig weiterleitet", "durch Präsidialrichter/in als ablehnungsreif", "durch Präsident/in genehmigung", "durch Präsident/in abgelehnt" };
+                List = new List<String> { "durch Antragsteller/in eingereicht", "durch Präsidialrichter/in als genehmigungsfähig weiterleitet", "durch Präsidialrichter/in als ablehnungsreif", "durch Präsident/in genehmigung", "durch Präsident/in abgelehnt", "durch Vorsitzende/n als genehmigungsfähig weiterleitet", "durch Vorsitzende/n als ablehnungsreife weiterleitet" };
                 foreach (string suchText in List)
                 {
                     if (arDBContext.ActivityRequestStatuses.FirstOrDefault(x => x.ActivityRequestStatusText == suchText) == null)

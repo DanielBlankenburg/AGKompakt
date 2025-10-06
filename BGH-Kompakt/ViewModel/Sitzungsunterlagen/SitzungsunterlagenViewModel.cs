@@ -878,7 +878,7 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
                 }
                 foreach (User Member in MemberList)
                 {
-                    if (Member.PositionId == 2 || SGMemberList.FirstOrDefault(x => x.UserId == Member.UserId) != null) strEMailAdresses = !(strEMailAdresses == "") ? strEMailAdresses + ";" + Member.EMail.ToString() : Member.EMail.ToString(); //nur WiMa(PositionID = 2) hinzufügen
+                    if (Member.PositionId == 2 || SGMemberList.FirstOrDefault(x => x.UserId == Member.UserId) == null) strEMailAdresses = !(strEMailAdresses == "") ? strEMailAdresses + ";" + Member.EMail.ToString() : Member.EMail.ToString(); //nur WiMa(PositionID = 2) hinzufügen
                 }
                 eMail.EmailTo = strEMailAdresses;
                 //foreach (User Member in MemberList) resp.Message += strEMailAdresses;

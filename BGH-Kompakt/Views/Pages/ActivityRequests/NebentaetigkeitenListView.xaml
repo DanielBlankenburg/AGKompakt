@@ -758,7 +758,7 @@
             SelectionMode="Single">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding EditCommand}" CommandParameter="{Binding ElementName=ListViewUser, Path=SelectedItem}" />
+                    <i:InvokeCommandAction Command="{Binding EditCommand}" CommandParameter="{Binding ElementName=listView, Path=SelectedItem}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 

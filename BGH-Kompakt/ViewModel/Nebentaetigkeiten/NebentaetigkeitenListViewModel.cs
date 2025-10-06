@@ -2,9 +2,11 @@
 using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.MP;
+using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Dtos;
+using BGH_Kompakt.EntityConfigurations.UserDBContext;
 using BGH_Kompakt.Enums;
 using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.ActivityRequestService;
@@ -12,6 +14,7 @@ using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
 using BGH_Kompakt.Views;
+using BGH_Kompakt.Views.Sitzungsunterlagen;
 using BGH_Kompakt.Views.Start;
 using ControlzEx.Standard;
 using Microsoft.Office.Interop.Outlook;
@@ -28,7 +31,9 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using static System.Net.Mime.MediaTypeNames;
 using Exception = System.Exception;
+using Task = System.Threading.Tasks.Task;
 
 
 namespace BGH_Kompakt.ViewModel
@@ -315,8 +320,9 @@ namespace BGH_Kompakt.ViewModel
                             if (anzeige) ActivityRequestsView.Add(activityRequest);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Logger.WriteLog($"Es konnte keine Verbindung zur Nebentätigkeitendatenbank hergestellt werden. Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
                         ViewManager.ShowMainInfoFlyout("Es konnte keine Verbindung zur Nebentätigkeitendatenbank hergestellt werden. Bitte wenden Sie sich an den Administrator.", false);
                         ViewManager.ShowPageOnMainView<StartView>();
                         return;
@@ -332,29 +338,59 @@ namespace BGH_Kompakt.ViewModel
                                     .Include(c => c.ActivityRequestChangeHistories)
                                     .Include(u => u.ActivityRequestStatus)
                                     .OrderBy(x => x.ARDatum);
-                    foreach (var activityRequest in query2)
+                    try
                     {
-                        bool anzeige = true;
-                        if (pageIsLoaded)
+                        foreach (var activityRequest in query2)
                         {
-                            if (FilterAntragstellerSelected.Item != keinFilterBezeichnung)
+                            bool anzeige = true;
+                            if (pageIsLoaded)
                             {
-                                UserDBContext context = new UserDBContext();
-                                User ARuser = context.Users.FirstOrDefault(u => u.UserId == FilterAntragstellerSelected.Id);
-                                if (ARuser != null) anzeige = activityRequest.ARUserID == ARuser.UserId;
+                                if (FilterAntragstellerSelected.Item != keinFilterBezeichnung)
+                                {
+                                    UserDBContext context = new UserDBContext();
+                                    User ARuser = context.Users.FirstOrDefault(u => u.UserId == FilterAntragstellerSelected.Id);
+                                    if (ARuser != null) anzeige = activityRequest.ARUserID == ARuser.UserId;
+                                }
+                                if (anzeige && FilterMeldeartSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.ActivityRequestMeldeArt.ActivityRequestMeldeArtText == FilterMeldeartSelected.Item;
+                                if (anzeige && FilterTaetigkeitsartSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.ActivityRequestTyp.ActivityRequestTypText == FilterTaetigkeitsartSelected.Item;
+                                if (anzeige && FilterStatusSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.Status == FilterStatusSelected.Item;
                             }
-                            if (anzeige && FilterMeldeartSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.ActivityRequestMeldeArt.ActivityRequestMeldeArtText == FilterMeldeartSelected.Item;
-                            if (anzeige && FilterTaetigkeitsartSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.ActivityRequestTyp.ActivityRequestTypText == FilterTaetigkeitsartSelected.Item;
-                            if (anzeige && FilterStatusSelected.Item != keinFilterBezeichnung) anzeige = activityRequest.Status == FilterStatusSelected.Item;
+                            if (ActivityRequestManager.AblageArt == 6)
+                            {
+                                if (UserManager.RegistratedUser.Senate == null) anzeige = false;
+                                else
+                                {
+                                    if (activityRequest.ARUserID < 1) anzeige = false;
+                                    else
+                                    {
+                                        List<Senat> senateVorsitzender = UserManager.RegistratedUser.Senate.ToList();
+                                        UserDBContext context = new UserDBContext();
+                                        User ARuser = context.Users.Include(x => x.Senate).FirstOrDefault(u => u.UserId == activityRequest.ARUserID);
+                                        if (ARuser == null) anzeige = false;
+                                        else
+                                        {
+                                            List<Senat> senateARUser = ARuser.Senate.ToList();
+                                            anzeige = false;
+                                            foreach (Senat senat in senateVorsitzender) if (senateARUser.FirstOrDefault(x => x.SenatID == senat.SenatID) != null) anzeige = true;
+                                        }
+                                    }
+                                }
+                            }
+                            if (anzeige)
+                            {
+                                ActivityRequestsView.Add(activityRequest);
+                                if (activityRequest.ARUser != null) 
+                                    if (activityRequest.ARUser.Fullname.Length > _maxUsernameLength) 
+                                        _maxUsernameLength = activityRequest.ARUser.Fullname.Length;
+                            }
                         }
-                        if (anzeige)
-                        {
-                            ActivityRequestsView.Add(activityRequest);
-                            if (activityRequest.ARUser.Fullname.Length > _maxUsernameLength) _maxUsernameLength = activityRequest.ARUser.Fullname.Length;
-                        }
+                        //Falls keine Userlength ermittelt werden soll, soll mindestens die Mindestbreite angezeigt werden; daher wird der Wert auf 1 gesetzt
+                        SetWidthUser(_maxUsernameLength == 0 ? 1 : _maxUsernameLength);
                     }
-                    //Falls keine Userlength ermittelt werden soll, soll mindestens die Mindestbreite angezeigt werden; daher wird der Wert auf 1 gesetzt
-                    SetWidthUser(_maxUsernameLength == 0 ? 1 : _maxUsernameLength);
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog($"Es ist beim Einlesen der Daten für die Nebentätigkeiten folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                    }
                     break;
             }
         }
@@ -449,77 +485,165 @@ namespace BGH_Kompakt.ViewModel
         #region Executes
         private void SendExecute(object obj)
         {
-            String MessageText = string.Empty;
-            String MessageText2 = string.Empty;
-            int AblageArtExport = 0;
+
+            ARSendProperties aRSendProperties = new ARSendProperties();
             switch (ActivityRequestManager.AblageArt)
             {
                 case 1: //Eigene Liste
-                    MessageText = $"Soll der Eintrag {((UserManager.RegistratedUser.PositionId == 1) ? "beim Präsidialbereich" : "bei der Vorsitzenden / dem Vorsitzenden")} eingereicht werden?";
-                    MessageText2 = "Der Eintrag wurde erfolgreich eingereicht.";
+                    aRSendProperties.MessageText1 = $"Soll der Eintrag {((UserManager.RegistratedUser.PositionId == 1) ? "beim Präsidialbereich" : "bei der Vorsitzenden / dem Vorsitzenden")} eingereicht werden?";
+                    if (UserManager.RegistratedUser.PositionId > 1) aRSendProperties.MessageText1 += $"\nEs wird automatisch eine Benachrichtigungsemail erstellt.";
+                    aRSendProperties.MessageText2 = "Der Eintrag wurde erfolgreich eingereicht.";
                     ShowBin = true;
                     ShowReject = false;
-                    ShowWord = false;
-                    AblageArtExport = 2;
+                    ShowWord = false;       
+                    aRSendProperties.AblageArtExport = UserManager.RegistratedUser.PositionId == 1 ? 2 : 6;
                     break;
                 case 2: //Präsidialbereich
-                    MessageText = "Soll der Eintrag zur Präsidentin weitergeleitet werden?";
-                    MessageText2 = "Der Eintrag wurde an die Präsidentin weitergeleitet.";
+                    aRSendProperties.MessageText1 = "Soll der Eintrag zur Präsidentin weitergeleitet werden?";
+                    aRSendProperties.MessageText2 = "Der Eintrag wurde an die Präsidentin weitergeleitet.";
                     ShowBin = true;
                     ShowReject = true;
                     ShowWord = false;
-                    AblageArtExport = 3;
+                    aRSendProperties.AblageArtExport = 3;
                     break;
                 case 3: //Präsidentinnenbereich
-                    MessageText = "Soll der Eintrag genehmigt werden?";
-                    MessageText2 = "Der Eintrag wurde genehmigt.";
+                    aRSendProperties.MessageText1 = "Soll der Eintrag genehmigt werden?";
+                    aRSendProperties.MessageText2 = "Der Eintrag wurde genehmigt.";
                     ShowBin = false;
                     ShowReject = true;
                     ShowWord = false;
-                    AblageArtExport = 4;
+                    aRSendProperties.AblageArtExport = 4;
                     break;
                 case 4: //Vorzimmer
-                    MessageText = "Soll der Eintrag in das Archiv gelegt werden?";
-                    MessageText2 = "Der Eintrag wurde in das Archiv abgelegt.";
+                    aRSendProperties.MessageText1 = "Soll der Eintrag in das Archiv gelegt werden?";
+                    aRSendProperties.MessageText2 = "Der Eintrag wurde in das Archiv abgelegt.";
                     ShowBin = false;
                     ShowReject = false;
                     ShowWord = true;
-                    AblageArtExport = 5;
+                    aRSendProperties.AblageArtExport = 5;
                     break;
 
             }
 
-            bool Antwort = ViewManager.ShowQuestionWindow(MessageText, "Ja");
+            bool Antwort = ViewManager.ShowQuestionWindow(aRSendProperties.MessageText1, "Ja");
             if (Antwort == true)
             {
-                try
-                {
-                    SelectedActivityRequest.ARZustaendigkeitsbereich = AblageArtExport;
-                    dBContext.ActivityRequests.AddOrUpdate(SelectedActivityRequest);
-                    dBContext.SaveChanges();
-                    //Liste neu füllen
-                    switch (ActivityRequestManager.AblageArt)
-                    {
-                        case 1:
-                            SetActivityRequestsView(1);
-                            break;
-                        case 2:
-                        case 3:
-                            SetActivityRequestsView(2);
-                            break;
-                    }
+                SendAcitivityRequest(aRSendProperties);
+            }
+        }
 
-                    if (ActivityRequestManager.LoginType == 2) ActivityRequestsView.Remove(SelectedActivityRequest);
-                    ViewManager.ShowMainInfoFlyout(MessageText2, false);
-                }
-                catch (Exception ex)
+        private void SendAcitivityRequest(ARSendProperties aRSendProperties)
+        {
+            try
+            {
+                SelectedActivityRequest.ARZustaendigkeitsbereich = aRSendProperties.AblageArtExport;
+                ActivityRequest sendRequest = SelectedActivityRequest;
+                dBContext.ActivityRequests.AddOrUpdate(SelectedActivityRequest);
+                dBContext.SaveChanges();
+                //Liste neu füllen
+                switch (ActivityRequestManager.AblageArt)
                 {
-                    MessageBox.Show("Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: " + ex.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    case 1:
+                        SetActivityRequestsView(1);
+                        if (aRSendProperties.AblageArtExport == 6)
+                        {
+                            DBResponse responseEMails = SendEMail(sendRequest);
+                            if (!responseEMails.Success)
+                            {
+                                Logger.WriteLog(responseEMails.Message);
+                                ViewManager.ShowMainInfoFlyout(responseEMails.Message,false);
+                            }
+                        }
+                        break;
+                    case 2:
+                    case 3:
+                        SetActivityRequestsView(2);
+                        break;
+                }
+
+                if (ActivityRequestManager.LoginType == 2) ActivityRequestsView.Remove(sendRequest);
+                ViewManager.ShowMainInfoFlyout(aRSendProperties.MessageText2, false);
+            }
+            catch (Exception ex)
+            {
+                ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: {ex.Message}", false);
+            }
+        }
+
+
+        private DBResponse SendEMail(ActivityRequest sendRequest)
+        {
+            DBResponse eMailResponse = new DBResponse();
+            try
+            {
+                List<User> EMailRecipientList = new List<User>();
+                UserDBContext userDBContext = new UserDBContext();
+                User HiWi = userDBContext.Users.Include(x => x.Senate).FirstOrDefault(x => x.UserId == sendRequest.ARUserID);
+                if (HiWi != null && HiWi.Senate != null)
+                {
+
+                    List<Senat> HiWiSenatslist = HiWi.Senate.ToList();
+                    foreach (Senat senat in HiWiSenatslist)
+                    {
+                        Senat searchSenat = userDBContext.Senate.Include(x => x.Users).FirstOrDefault(x => x.SenatID == senat.SenatID);
+                        if (searchSenat != null)
+                        {
+                            foreach (User Member in searchSenat.Users)
+                            {
+                                if (Member.DienstbezeichnungId == 3 || Member.DienstbezeichnungId == 4) EMailRecipientList.Add(Member);
+                            }
+                        }
+                    }
+                    if (EMailRecipientList.Count > 0)
+                    {
+                        foreach(User member in EMailRecipientList)
+                        {
+                            if(member.EMail != string.Empty)
+                            {        
+                                string subjectEMail = $"{(sendRequest.ActivityRequestMeldeArtID == 1 ? "Neue Anzeige einer Nebentätigkeit " : "Neuer Antrag auf Genehmigung einer Nebentätigkeit")}";
+                                string textBody = $"{(member.GeschlechtID == 1 ? "Sehr geehrter Herr " : "Sehr geehrte Frau ")} {member.FullSurname},<Br><Br>" +
+                                                    $"ich habe {(sendRequest.ActivityRequestMeldeArtID == 1 ? "eine neue Anzeige einer Nebentätigkeit " : "einen neuen Antrag auf Genehmigung einer Nebentätigkeit")} eingereicht." +
+                                                    $"<BR> Sie können {(sendRequest.ActivityRequestMeldeArtID == 1 ? "díe Anzeige " : "den Antrag ")} in BGHKompakt unter dem Menüpunkt Nebentätigkeiten einsehen.<BR><BR>" +
+                                                    $"Mit freundlichen Grüßen<Br>{sendRequest.ARUser.Fullname}";
+                                EMailVersand eMailVersand = new EMailVersand();
+                                DBResponse dBResponse = eMailVersand.Send_Email(
+                                    emailTo: member.EMail,
+                                    subject: subjectEMail,
+                                    mailBody: textBody);
+                                if (!dBResponse.Success)
+                                {
+                                    Logger.WriteLog(dBResponse.Message);
+                                    ViewManager.ShowMainInfoFlyout(dBResponse.Message, false);
+                                }
+                                
+                            }
+                            else
+                            {
+                                eMailResponse.Message += $"Die Benachrichtigungsemail konnte nicht an {member.FullSurname} versandt werden, da keine E-Mail-Adresse eingetragen war. ";
+                            }
+                        }
+                        if (eMailResponse.Message == string.Empty) eMailResponse.Success = true;
+                    }
+                    else
+                    {
+                        eMailResponse.Success = false;
+                        eMailResponse.Message = $"Die Benachrichtigungsemail konnte nicht versandt werden, da kein Vorsitzender zugeordnet werden konnte.";
+                    }
+                }
+                else
+                {
+                    eMailResponse.Success = false;
+                    eMailResponse.Message = $"Die Benachrichtigungsemail konnte nicht versandt werden, da kein Antragsteller gefunden wurde.";
                 }
             }
-
+            catch (Exception ex)
+            {
+                eMailResponse.Success = false;
+                eMailResponse.Message = $"Beim E-Mail-Versand ist folgender Fehler aufgetreten: {ex.Message}";
+            }
+            return eMailResponse;
         }
+
         private void EditExecute(object obj)
         {
             ActivityRequestManager.SelectedActivityRequest = SelectedActivityRequest;

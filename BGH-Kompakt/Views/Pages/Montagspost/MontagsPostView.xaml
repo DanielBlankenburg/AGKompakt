@@ -785,7 +785,7 @@
                                             Text="{Binding Normenkette}"
                                             TextWrapping="Wrap" />
                                     </Grid>
-                                    <Grid Visibility="{Binding Path=DataContext.ShowBE, Converter={StaticResource BoolToVisConverter}, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                    <!--<Grid Visibility="{Binding Path=DataContext.ShowBE, Converter={StaticResource BoolToVisConverter}, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="80" />
                                             <ColumnDefinition Width="*" />
@@ -795,7 +795,7 @@
                                             Grid.Column="1"
                                             Text="{Binding BE.MPBEName}"
                                             TextWrapping="Wrap" />
-                                    </Grid>
+                                    </Grid>-->
                                     <Grid x:Name="Grid_Vermerk" Visibility="Visible">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="80" />
@@ -924,11 +924,11 @@
                                                     HorizontalAlignment="Left"
                                                     Text="{Binding Normenkette}"
                                                     TextWrapping="Wrap" />
-                                                <TextBlock
+                                                <!--<TextBlock
                                                     MaxWidth="230"
                                                     HorizontalAlignment="Left"
                                                     Text="{Binding BE.MPBEName}"
-                                                    TextWrapping="Wrap" />
+                                                    TextWrapping="Wrap" />-->
                                                 <TextBlock
                                                     MaxWidth="230"
                                                     HorizontalAlignment="Left"

@@ -625,7 +625,7 @@ namespace BGH_Kompakt.ViewModel
                 SetFilter();
                 SetSorting();
                 var MPVintages_Query = mPDBContext.MPWeeks.Select(x => x.MPWeekYear).Distinct();
-                foreach (var Vintage in MPVintages_Query) _VintageList.Add(Vintage);
+                foreach (var Vintage in MPVintages_Query) VintageList.Add(Vintage);
                 if (VintageList.Count > 0) SelectedVintage = VintageList.LastOrDefault();
 
                 ShowFilter();
@@ -652,8 +652,12 @@ namespace BGH_Kompakt.ViewModel
         {
             try
             {
-                MPSorting = UserManager.RegistratedUser.FilterMP.AscSorting;
-                if (MPSorting) MPSortingAsc = true; else MPSortingDesc = true;
+                if (UserManager.RegistratedUser.FilterMP != null)
+                {
+                    MPSorting = UserManager.RegistratedUser.FilterMP.AscSorting;
+                    if (MPSorting) MPSortingAsc = true; else MPSortingDesc = true;
+
+                } 
             }
             catch (Exception ex)
             {
@@ -1061,7 +1065,7 @@ namespace BGH_Kompakt.ViewModel
                                 }
                                 else
                                 {
-                                    var Decision = mPDBContext.MPDecisions.Include(x => x.Senat).Include(x => x.BE).Where(x => x.MPDecisionID == dec.MPDecisionID).FirstOrDefault();
+                                    var Decision = mPDBContext.MPDecisions.Include(x => x.Senat).Where(x => x.MPDecisionID == dec.MPDecisionID).FirstOrDefault();
                                     bool anzeige = ShowSelectedAlleSenate || Decision.Senat.MPCategorieID == Bereich;
                                     if (anzeige)
                                     {

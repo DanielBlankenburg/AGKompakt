@@ -22,6 +22,7 @@ using BGH_Kompakt.Services;
 using BGH_Kompakt.Classes.Helper;
 using System.Text.RegularExpressions;
 using BGH_Kompakt.Services.SystemComponents;
+using BGH_Kompakt.Dtos;
 
 namespace BGH_Kompakt.ViewModel.Montagspost
 {
@@ -625,17 +626,18 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             }
             if (strEMailAdresses.Length > 0)
             {
-                try
+                EMailVersand eMailVersand = new EMailVersand();
+                DBResponse dBResponse = eMailVersand.Send_Email(
+                    emailTo: BGHKompaktSystemInfo.EMailDokstelle,
+                    BCC: strEMailAdresses,
+                    subject: strSubject,
+                    mailBody: text,
+                    attachmentList: attachmentListpfd);
+                if (!dBResponse.Success)
                 {
-                    EMailVersand eMailVersand = new EMailVersand();
-                    eMailVersand.Send_Email(
-                        emailTo: BGHKompaktSystemInfo.EMailDokstelle,
-                        BCC: strEMailAdresses,
-                        subject: strSubject,
-                        mailBody: text,
-                        attachmentList: attachmentListpfd);
+                    Logger.WriteLog(dBResponse.Message);
+                    ViewManager.ShowMainInfoFlyout(dBResponse.Message, false);
                 }
-                catch (System.Exception) { }
             }
         }
         #endregion

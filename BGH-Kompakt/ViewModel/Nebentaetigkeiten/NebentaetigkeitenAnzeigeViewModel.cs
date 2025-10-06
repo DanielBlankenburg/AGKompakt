@@ -1308,11 +1308,6 @@ namespace BGH_Kompakt.ViewModel
             {
                 ViewManager.ShowMainInfoFlyout($"Bei der Erstellung der E-Mail ist folgender Fehler aufgetreten: {ex.Message}", false);
             }
-
-
-
-
-
         }
 
         private void SaveDocFileExecute(object obj)
@@ -1429,6 +1424,12 @@ namespace BGH_Kompakt.ViewModel
                         Bearbeitungsstatus = Genehmigt ? 4 : 5;
                         AblageArtExport = 4;
                         break;
+                    case 6: //Vorsitzender
+                        MessageText = $"Soll der Eintrag {((string)obj == "Genehmigt" ? "als genehmigungsfähig " : "als ablehnungsreif ")} zur/zum Präsidialrichter/in weitergeleitet werden?";
+                        MessageText2 = "Der Eintrag wurde an den/die Präsidialrichter/in weitergeleitet.";
+                        Bearbeitungsstatus = Genehmigt ? 6 : 7;
+                        AblageArtExport = 2;
+                        break;
                 }
 
                 bool Antwort = ViewManager.ShowQuestionWindow(MessageText, "Ja");
@@ -1446,13 +1447,15 @@ namespace BGH_Kompakt.ViewModel
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: " + ex.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Logger.WriteLog($"Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: {ex.Message}; {ex.InnerException}");
+                        ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: {ex.Message}", false);
                         return;
                     }
                 }
             }
             catch (Exception ex)
             {
+                Logger.WriteLog($"Der Vorgang konnte nicht weitergeleitet werden: {ex.Message}; {ex.InnerException}");
                 ViewManager.ShowMainInfoFlyout($"Der Vorgang konnte nicht weitergeleitet werden. Es ist folgender Fehler aufgetreten: {ex.Message}.", false);
             }
         }

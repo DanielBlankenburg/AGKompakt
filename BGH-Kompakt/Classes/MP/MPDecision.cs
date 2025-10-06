@@ -1,8 +1,11 @@
 ﻿using BGH_Kompakt.Classes._LookUp.MP;
 using BGH_Kompakt.Classes.Senate;
+using BGH_Kompakt.Classes.UserClasses;
+using BGH_Kompakt.Services.DBContexts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +36,7 @@ namespace BGH_Kompakt.Classes.MP
         public MPWeek MPWeek { get; set; }
         public string PathName { get; set; }
         public string FileName { get; set; }
-        public MPBE BE { get; set; }
+        public int BE { get; set; }
         public string Vermerk { get; set; }
         public bool VermerkAnzeige { get; set; } = false;
         [NotMapped]
@@ -66,6 +69,37 @@ namespace BGH_Kompakt.Classes.MP
                 return Vermerk != string.Empty && Vermerk != null;
             }
         }
+
+        public User BEDetails
+        {
+            get
+            {
+                UserDBContext db = new UserDBContext();
+                if (db.Users.Find(BE) != null) return db.Users.Find(BE);
+                else return new User();
+            }
+            //set
+            //{
+            //    if (value != null)
+            //    {
+            //        //Debug.WriteLine(BEDetails.UserId);
+            //        //int userID = value.UserId;
+            //        //BE = userID;
+            //    }
+            //}
+        }
+
+        //public List<User> Belist
+        //{
+        //    get
+        //    {
+        //        UserDBContext db = new UserDBContext();
+        //        var query = db.Users.Where(x => x.PositionId == 1);
+        //        List<User> Richterlist = new List<User>();
+        //        foreach (User Richter in query) Richterlist.Add(Richter);
+        //        return Richterlist;
+        //    }
+        //}
 
     }
 }
