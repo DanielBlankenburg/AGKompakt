@@ -327,36 +327,6 @@
                                 <Border Margin="0,20,0,0" Style="{StaticResource Expander_Border}" />
                             </StackPanel>
                         </ScrollViewer>
-                        <StackPanel Grid.Row="1" HorizontalAlignment="Center">
-                            <StackPanel Height="36" Orientation="Horizontal">
-                                <TextBlock
-                                    Height="25"
-                                    Margin="0,6,10,0"
-                                    Style="{StaticResource textblock_base}"
-                                    Text="Übertragung auf den BSCW-Server?" />
-                                <MW:ToggleSwitch
-                                    Grid.Column="1"
-                                    Width="100"
-                                    Margin="0,0,0,10"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    IsOn="{Binding BSCWSubmit}"
-                                    OffContent="Nein"
-                                    OnContent="Ja"
-                                    Style="{StaticResource ToggleSwitchMaster}" />
-
-                            </StackPanel>
-                            <ComboBox
-                                MaxWidth="150"
-                                Margin="0,10,0,0"
-                                HorizontalAlignment="Center"
-                                HorizontalContentAlignment="Center"
-                                MD:HintAssist.Hint="Laufwerk BSCW-Server:"
-                                ItemsSource="{Binding}"
-                                SelectedItem="{Binding SelectedDrive}"
-                                Style="{StaticResource Combobox_Base}"
-                                TextBlock.TextAlignment="Center" />
-                        </StackPanel>
                         <Border
                             Grid.Row="2"
                             Margin="0,10,0,10"

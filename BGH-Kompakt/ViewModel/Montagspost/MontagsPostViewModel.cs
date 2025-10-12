@@ -333,6 +333,7 @@ namespace BGH_Kompakt.ViewModel
         public ICommand MetaDataCommand { get; set; }
         public ICommand MetaDataSaveCommand { get; set; }
         public ICommand MetaDataBackCommand { get; set; }
+        public ICommand BSCWUploadAdminCommand { get; set; }
         #endregion
         #region Visibility
         private bool _showWebbrowser = false;
@@ -616,6 +617,7 @@ namespace BGH_Kompakt.ViewModel
             MetaDataCommand = new RelayCommand(MetaDataExecute);
             MetaDataSaveCommand = new RelayCommand(MetaDataSaveExecute);
             MetaDataBackCommand = new RelayCommand(MetaDataBackExecute);
+            BSCWUploadAdminCommand = new RelayCommand(BSCWUploadAdminExecute);
 
             //ReadMPState = MPStateText;
             MPDBContext mPDBContext = new MPDBContext();
@@ -819,6 +821,11 @@ namespace BGH_Kompakt.ViewModel
         {
             BSCW_Check();
             //Test();
+        }
+        private void BSCWUploadAdminExecute(object obj)
+        {
+            bool antwort = ViewManager.ShowQuestionWindow("Sollen die Entscheidungen dieser Kalenderwoche auf den BSCW-Server übertragen werden?", "Ja");
+            if (antwort) SelectedMPWeek?.ExportBSCWAdmin(mPDBContext);
         }
 
         private void MPWeekDeleteExecute(object obj)
@@ -1473,10 +1480,7 @@ namespace BGH_Kompakt.ViewModel
                         ViewManager.ShowMainInfoFlyout($"Das Laufwerk {SelectedDrive}:\\ konnte nicht gefunden werden.", false);
                     }
                 }
-                catch (Exception ex)
-                {
-                    ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler aufgetreten: {ex.Message}", false);
-                }
+                catch (Exception ex) { ErrorMessage.CreateException("MontagspostViewModel_BSCW_Check", ex.Message, ex.InnerException); }
             }
             else
             {

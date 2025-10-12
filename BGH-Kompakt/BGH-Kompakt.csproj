@@ -191,6 +191,7 @@
     <Compile Include="Classes\ComboboxItems.cs" />
     <Compile Include="Classes\Helper\ARSendProperties.cs" />
     <Compile Include="Classes\Helper\ComboboxItem.cs" />
+    <Compile Include="Classes\Helper\ErrorMessage.cs" />
     <Compile Include="Classes\Helper\ScienceAuthor.cs" />
     <Compile Include="Classes\MP\MPDecisionBE.cs" />
     <Compile Include="Classes\SystemSettings\PageInfo.cs" />
@@ -266,6 +267,10 @@
     <Compile Include="Migrartions\MP\202509301601206_3_017_2_BE.cs" />
     <Compile Include="Migrartions\MP\202509301601206_3_017_2_BE.Designer.cs">
       <DependentUpon>202509301601206_3_017_2_BE.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\MP\202510110422449_BSCWServer.cs" />
+    <Compile Include="Migrartions\MP\202510110422449_BSCWServer.Designer.cs">
+      <DependentUpon>202510110422449_BSCWServer.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrartions\Users\202507110630070_SortingMP.cs" />
     <Compile Include="Migrartions\Users\202507110630070_SortingMP.Designer.cs">
@@ -903,6 +908,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\MP\202509301601206_3_017_2_BE.resx">
       <DependentUpon>202509301601206_3_017_2_BE.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202510110422449_BSCWServer.resx">
+      <DependentUpon>202510110422449_BSCWServer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202506152030562_InitialUser.resx">
       <DependentUpon>202506152030562_InitialUser.cs</DependentUpon>

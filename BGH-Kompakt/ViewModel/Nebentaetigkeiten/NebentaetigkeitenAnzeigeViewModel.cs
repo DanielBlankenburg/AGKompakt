@@ -1523,7 +1523,7 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                             case "BGHKompaktDatum":
                                 range = bM.Range;
-                                range.Text = $"Karlsruhe, den {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()}";
+                                range.Text = DateTime.Now.ToString("dd. MMMM yyyy");
                                 break;
                             case "BGHKompaktBetreff":
                                 range = bM.Range;
@@ -1531,11 +1531,11 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                             case "BGHKompaktTitel":
                                 range = bM.Range;
-                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ARTitel}";
+                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ActivityRequestTyp.ActivityRequestTypText} - {ActivityRequestManager.SelectedActivityRequest.ARTitel}";
                                 break;
                             case "BGHKompaktBezug":
                                 range = bM.Range;
-                                range.Text = $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()}";
+                                range.Text = $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:dd. MMMM yyyy}";
                                 break;
                             case "BGHKompaktBodyAnrede":
                                 range = bM.Range;
@@ -1548,7 +1548,7 @@ namespace BGH_Kompakt.ViewModel
                             case "Genehmigungstext":
                                 range = bM.Range;
                                 range.Text = $"Sehr {(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "geehrter Herr" : "geehrte Frau")} {ActivityRequestManager.SelectedActivityRequest.ARUser.Fullname},\n\n" +
-                                                $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()} wird genehmigt.";
+                                                $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:dd. MMMM yyyy} wird genehmigt.";
                                 break;
                         }
                     }
@@ -1557,7 +1557,7 @@ namespace BGH_Kompakt.ViewModel
                     date = DateTime.Now;
                     string docName = $"Nebentätigkeit-{ActivityRequestManager.SelectedActivityRequest.ARUser.NachName}_{date:d}.docx";
                     string dirTemp = $"{BGHKompaktSystemInfo.PathTempARDOC}";
-                    Directory.Delete(dirTemp,true);
+                    if (Directory.Exists(dirTemp)) Directory.Delete(dirTemp,true);
                     Directory.CreateDirectory(dirTemp);
                     wordDoc.SaveAs2($"{dirTemp}{docName}");
                     SelectedDocFile = new ActivityRequestDataFile { FileName = docName, ActivityRequestId = ActivityRequestManager.SelectedActivityRequest.ActivityRequestId, FileTyp = 2 };

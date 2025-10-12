@@ -468,12 +468,20 @@
                                                 Visibility="Hidden">
                                                 <MD:PackIcon Padding="0" Kind="Person" />
                                             </Button>
+                                            <Button
+                                                x:Name="Btn_BSCW"
+                                                Command="{Binding Path=DataContext.BSCWUploadAdminCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Style="{StaticResource Button_MP_View_RowButton}"
+                                                Visibility="Hidden">
+                                                <MD:PackIcon Padding="0" Kind="World" />
+                                            </Button>
                                         </StackPanel>
                                         <DataTemplate.Triggers>
                                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridCell}}, Path=IsSelected}" Value="true">
                                                 <Setter TargetName="Btn_Bin_KW" Property="UIElement.Visibility" Value="{Binding Path=DataContext.ShowAdmin, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                                 <Setter TargetName="Btn_Edit_KW" Property="UIElement.Visibility" Value="{Binding Path=DataContext.ShowAdmin, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                                 <Setter TargetName="Btn_BE_KW" Property="UIElement.Visibility" Value="{Binding Path=DataContext.ShowAdmin, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                <Setter TargetName="Btn_BSCW" Property="UIElement.Visibility" Value="{Binding Path=DataContext.ShowAdmin, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTrigger>
                                         </DataTemplate.Triggers>
                                     </DataTemplate>
@@ -508,7 +516,7 @@
                         BorderBrush="Transparent"
                         BorderThickness="1"
                         CornerRadius="3"
-                        Visibility="{Binding ShowAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        Visibility="Collapsed">
                         <Border.Effect>
                             <DropShadowEffect Opacity="0.5" ShadowDepth="0" />
                         </Border.Effect>

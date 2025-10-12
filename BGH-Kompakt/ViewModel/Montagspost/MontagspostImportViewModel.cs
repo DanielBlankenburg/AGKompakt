@@ -1,28 +1,30 @@
-﻿using BGH_Kompakt.Classes._LookUp.MP;
-using BGH_Kompakt.Classes;
+﻿using BGH_Kompakt.Classes;
+using BGH_Kompakt.Classes._LookUp.MP;
+using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.MP;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Converter;
+using BGH_Kompakt.Dtos;
+using BGH_Kompakt.Migrartions.Users;
+using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.Interfaces;
+using BGH_Kompakt.Services.SystemComponents;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf;
-using BGH_Kompakt.Services;
-using BGH_Kompakt.Classes.Helper;
-using System.Text.RegularExpressions;
-using BGH_Kompakt.Services.SystemComponents;
-using BGH_Kompakt.Dtos;
 
 namespace BGH_Kompakt.ViewModel.Montagspost
 {
@@ -282,22 +284,35 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         #endregion
         private async void Import()
         {
-            Task task = ImportAsync();
-            //ViewManager.ShowMainInfoFlyout("Die E-Mail wird importiert.", false);
+            string actionName = "Import Kalenderwoche";
+            Task<DBResponse> task = ImportAsync();
+            ViewManager.ShowMainInfoFlyout("Die Dateien werden importiert", false);
+            ViewManager.ActionlistAdd(actionName);
             await task;
-            foreach (MPImportResult result in ImportResultTemp) ImportResultList.Add(result);
-            ShowNewImport = true;
-            ViewManager.ShowMainInfoFlyout("Der Import ist abgeschlossen.", false);
+            ViewManager.ActionlistRemove(actionName);
+            if (task.Result.Success)
+            {
+                foreach (MPImportResult result in ImportResultTemp) ImportResultList.Add(result);
+                ShowNewImport = true;
+                ViewManager.ShowMainInfoFlyout("Die Kalenderwoche wurde importiert.", false);
+                MPWeek importweek = task.Result.Data as MPWeek;
+                importweek.ExportBSCWAdmin(mpDBContext);
+            }
+            else
+            {
+                ErrorMessage.CreateSimpleMessage(task.Result.Message);
+            }
+            
 
         }
 
         //Parallel
-        private Task ImportAsync()
+        private Task<DBResponse> ImportAsync()
         {
 
-            Task task = Task.Run(() =>
+            Task<DBResponse> task = Task.Run<DBResponse>(() =>
             {
-
+                DBResponse response = new DBResponse();
                 Stopwatch sw = Stopwatch.StartNew();
                 sw.Start();
                 MPWeek ImportMPWeek = new MPWeek();
@@ -305,194 +320,9 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 var select = SelectedVintage;
 
                 #region Dateien einlesen
-                foreach (MPImportFile file in ImportFileList)
-                {
-                    //int counter = (int)i;
-                    if (file.WordFileExist)
-                    {
-
-                        string fileName = file.FileName;
-
-                        ReadMPState = $"Es wird folgende Anlage eingelesen: {fileName}";
-                        //MessageBox.Show($"Es wird folgende Anlage eingelesen {fileName}");
-                        string senat = fileName.Substring(0, fileName.IndexOf("_"));
-                        MPSenat mPSenat = new MPSenat();
-                        MPDBContext context = new MPDBContext();
-                        List<MPSenat> SenateList = context.MPSenate.ToList();
-                        MPImportHelper importhelper = new MPImportHelper();
-                        try
-                        {
-                            switch (senat) //1 = Zivilbereich, 2 = Strafbereich, 3 = Sondersenate
-                            {
-                                case "1":
-                                    importhelper = FolderCreation("1. Strafsenat", SenateList);
-                                    break;
-                                case "2":
-                                    importhelper = FolderCreation("2. Strafsenat", SenateList);
-                                    break;
-                                case "3":
-                                case "StB":
-                                    importhelper = FolderCreation("3. Strafsenat", SenateList);
-                                    break;
-                                case "4":
-                                    importhelper = FolderCreation("4. Strafsenat", SenateList);
-                                    break;
-                                case "5":
-                                    importhelper = FolderCreation("5. Strafsenat", SenateList);
-                                    break;
-                                case "6":
-                                    importhelper = FolderCreation("6. Strafsenat", SenateList);
-                                    break;
-                                case "AK":
-                                case "BGs":
-                                    importhelper = FolderCreation("Ermittlungsrichter", SenateList);
-                                    break;
-                                case "I":
-                                    importhelper = FolderCreation("I. Zivilsenat", SenateList);
-                                    break;
-                                case "II":
-                                    importhelper = FolderCreation("II. Zivilsenat", SenateList);
-                                    break;
-                                case "III":
-                                    importhelper = FolderCreation("III. Zivilsenat", SenateList);
-                                    break;
-                                case "IV":
-                                    importhelper = FolderCreation("IV. Zivilsenat", SenateList);
-                                    break;
-                                case "V":
-                                    importhelper = FolderCreation("V. Zivilsenat", SenateList);
-                                    break;
-                                case "VI":
-                                    importhelper = FolderCreation("VI. Zivilsenat", SenateList);
-                                    break;
-                                case "VIa":
-                                    importhelper = FolderCreation("VIa. Zivilsenat", SenateList);
-                                    break;
-                                case "VII":
-                                    importhelper = FolderCreation("VII. Zivilsenat", SenateList);
-                                    break;
-                                case "VIII":
-                                    importhelper = FolderCreation("VIII. Zivilsenat", SenateList);
-                                    break;
-                                case "IX":
-                                    importhelper = FolderCreation("IX. Zivilsenat", SenateList);
-                                    break;
-                                case "X":
-                                    importhelper = FolderCreation("X. Zivilsenat", SenateList);
-                                    break;
-                                case "XI":
-                                    importhelper = FolderCreation("XI. Zivilsenat", SenateList);
-                                    break;
-                                case "XII":
-                                    importhelper = FolderCreation("XII. Zivilsenat", SenateList);
-                                    break;
-                                case "XIII":
-                                    importhelper = FolderCreation("XIII. Zivilsenat", SenateList);
-                                    break;
-                                case "GmS-OGB":
-                                    importhelper = FolderCreation("Gemeinsamer Senat der obersten Gerichtshöfe", SenateList);
-                                    break;
-                                case "GSSt":
-                                    importhelper = FolderCreation("Gemeinsamer Strafsenat", SenateList);
-                                    break;
-                                case "GSZ":
-                                    importhelper = FolderCreation("Gemeinsamer Zivilsenat", SenateList);
-                                    break;
-                                case "KZR":
-                                case "KZA":
-                                case "KZB":
-                                case "KVB":
-                                case "KVR":
-                                case "AR(Kart)":
-                                case "EnZR":
-                                case "EnZA":
-                                case "EnZB":
-                                case "EnVR":
-                                case "EnVZ":
-                                case "EnRB":
-                                case "AR(Enw)":
-                                    importhelper = FolderCreation("Kartellsenat", SenateList);
-                                    break;
-                                case "StBSt(R)":
-                                case "StBSt(B)":
-                                    importhelper = FolderCreation("Steuerberatersenat", SenateList);
-                                    break;
-                                case "WpSt(R)":
-                                case "WpSt(B)":
-                                    importhelper = FolderCreation("Wirtschaftsprüfersenat", SenateList);
-                                    break;
-                                case "AnwZ":
-                                case "AnwZ(P)":
-                                case "AnwZ(B)":
-                                case "AnwZ(Brfg)":
-                                case "AnwSt":
-                                case "AnwSt(B)":
-                                case "AnwSt(R)":
-                                    importhelper = FolderCreation("Anwaltssenat", SenateList);
-                                    break;
-                                case "NotZ":
-                                case "NotZ(Brfg)":
-                                case "NotSt(B)":
-                                case "NotSt(Brfg)":
-                                    importhelper = FolderCreation("Notarsenat", SenateList);
-                                    break;
-                                case "PatAnwZ":
-                                case "PatAnwZ(R)":
-                                case "PatAnwZ(B)":
-                                    importhelper = FolderCreation("Patentanwaltsenat", SenateList);
-                                    break;
-                                case "LwZR":
-                                case "LwZA":
-                                case "LwZB":
-                                case "BLw":
-                                case "ARLw":
-                                    importhelper = FolderCreation("Landwirtschaftssenat", SenateList);
-                                    break;
-                                case "VGS":
-                                    importhelper = FolderCreation("Vereinigte Große Senate", SenateList);
-                                    break;
-                                case "RiZ":
-                                case "RiZ(R)":
-                                case "RiZ(B)":
-                                case "RiSt":
-                                case "RiSt(B)":
-                                case "RiSt(R)":
-                                case "AR(Ri)":
-                                    importhelper = FolderCreation("Dienstgericht", SenateList);
-                                    break;
-                                default:
-                                    importhelper = FolderCreation("unbekannter Senat", SenateList);
-                                    break;
-                            }
-                            if (importhelper != null)
-                            {
-                                Debug.WriteLine($"{fileName}; {importhelper.PathentscheidungDok}");
-                                file.ImportPathDok = importhelper.PathentscheidungDok;
-                                file.ImportPathMP = importhelper.PathentscheidungMP;
-                                file.Senat = importhelper.MPSenat;
-                                file.Bereich = importhelper.Bereich;
-                                //MessageBox.Show($"CopyPath: {importhelper.PathentscheidungMP}");
-                                if (!File.Exists($"{importhelper.PathentscheidungDok}{file.FileName}")) File.Copy(file.FileFullPath, $"{importhelper.PathentscheidungDok}{file.FileName}");
-                                //In den Montagspostordner kopieren
-                                if (!File.Exists($"{importhelper.PathentscheidungMP}{file.FileName}"))
-                                {
-                                    //MessageBox.Show($"CopyFile: {importhelper.PathentscheidungMP}{file.FileName}");
-                                    File.Copy(file.FileFullPath, $"{importhelper.PathentscheidungMP}{file.FileName}");
-                                }
-                                file.ImportSuccessfull = true;
-                            }
-                            else
-                            {
-                                MessageBox.Show($"Import der Datei {file.FileName} ist gescheitert.");
-                                file.ImportSuccessfull = false;
-                            }
-                        }
-                        catch (System.Exception)
-                        {
-                            file.ImportSuccessfull = false;
-                        }
-                    }
-                }
+                DBResponse importResponse = new DBResponse();
+                importResponse = ImportFiles();
+                if (!importResponse.Success) ViewManager.ShowMainInfoFlyout(importResponse.Message, false);
 
                 ImportMPWeek.MPWeekNumber = SelectedKW;
                 ImportMPWeek.MPWeekYear = SelectedVintage;
@@ -553,20 +383,228 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                     EMails_Erstellen();
                     EMailNotification_Erstellen();
                 }
-
                 #endregion
                 #region Gesamt-PDF erstellen
                 string NumKW = (SelectedKW <= 9) ? $"0{SelectedKW}" : SelectedKW.ToString();
                 GesamtListeErstellen($"{BGHKompaktSystemInfo.PathDokstelleDFS}{BGHKompaktSystemInfo.PathMontagspost}{SelectedVintage}\\KW{NumKW}\\");
                 #endregion
-
+                response.Success  = true;
+                response.Data = ImportMPWeek;
                 sw.Stop();
+                return response;
 
             });
             return task;
 
         }
+        private DBResponse ImportFiles()
+        {
+            DBResponse response = new DBResponse();
+            string errorList = string.Empty;
+            
+            foreach (MPImportFile file in ImportFileList)
+            {
+                //int counter = (int)i;
+                if (file.WordFileExist)
+                {
 
+                    string fileName = file.FileName;
+
+                    ReadMPState = $"Es wird folgende Anlage eingelesen: {fileName}";
+                    //MessageBox.Show($"Es wird folgende Anlage eingelesen {fileName}");
+                    string senat = fileName.Substring(0, fileName.IndexOf("_"));
+                    MPSenat mPSenat = new MPSenat();
+                    MPDBContext context = new MPDBContext();
+                    List<MPSenat> SenateList = context.MPSenate.ToList();
+                    MPImportHelper importhelper = new MPImportHelper();
+                    try
+                    {
+                        switch (senat) //1 = Zivilbereich, 2 = Strafbereich, 3 = Sondersenate
+                        {
+                            case "1":
+                                importhelper = FolderCreation("1. Strafsenat", SenateList);
+                                break;
+                            case "2":
+                                importhelper = FolderCreation("2. Strafsenat", SenateList);
+                                break;
+                            case "3":
+                            case "StB":
+                            case "AK":
+                            case "BGs":
+                                importhelper = FolderCreation("3. Strafsenat", SenateList);
+                                break;
+                            case "4":
+                                importhelper = FolderCreation("4. Strafsenat", SenateList);
+                                break;
+                            case "5":
+                                importhelper = FolderCreation("5. Strafsenat", SenateList);
+                                break;
+                            case "6":
+                                importhelper = FolderCreation("6. Strafsenat", SenateList);
+                                break;
+                            //case "AK":
+                            //case "BGs":
+                            //    importhelper = FolderCreation("Ermittlungsrichter", SenateList);
+                            //    break;
+                            case "I":
+                                importhelper = FolderCreation("I. Zivilsenat", SenateList);
+                                break;
+                            case "II":
+                                importhelper = FolderCreation("II. Zivilsenat", SenateList);
+                                break;
+                            case "III":
+                                importhelper = FolderCreation("III. Zivilsenat", SenateList);
+                                break;
+                            case "IV":
+                                importhelper = FolderCreation("IV. Zivilsenat", SenateList);
+                                break;
+                            case "V":
+                                importhelper = FolderCreation("V. Zivilsenat", SenateList);
+                                break;
+                            case "VI":
+                                importhelper = FolderCreation("VI. Zivilsenat", SenateList);
+                                break;
+                            case "VIa":
+                                importhelper = FolderCreation("VIa. Zivilsenat", SenateList);
+                                break;
+                            case "VII":
+                                importhelper = FolderCreation("VII. Zivilsenat", SenateList);
+                                break;
+                            case "VIII":
+                                importhelper = FolderCreation("VIII. Zivilsenat", SenateList);
+                                break;
+                            case "IX":
+                                importhelper = FolderCreation("IX. Zivilsenat", SenateList);
+                                break;
+                            case "X":
+                                importhelper = FolderCreation("X. Zivilsenat", SenateList);
+                                break;
+                            case "XI":
+                                importhelper = FolderCreation("XI. Zivilsenat", SenateList);
+                                break;
+                            case "XII":
+                                importhelper = FolderCreation("XII. Zivilsenat", SenateList);
+                                break;
+                            case "XIII":
+                                importhelper = FolderCreation("XIII. Zivilsenat", SenateList);
+                                break;
+                            case "GmS-OGB":
+                                importhelper = FolderCreation("Gemeinsamer Senat der obersten Gerichtshöfe", SenateList);
+                                break;
+                            case "GSSt":
+                                importhelper = FolderCreation("Gemeinsamer Strafsenat", SenateList);
+                                break;
+                            case "GSZ":
+                                importhelper = FolderCreation("Gemeinsamer Zivilsenat", SenateList);
+                                break;
+                            case "KZR":
+                            case "KZA":
+                            case "KZB":
+                            case "KVB":
+                            case "KVR":
+                            case "AR(Kart)":
+                            case "EnZR":
+                            case "EnZA":
+                            case "EnZB":
+                            case "EnVR":
+                            case "EnVZ":
+                            case "EnRB":
+                            case "AR(Enw)":
+                                importhelper = FolderCreation("Kartellsenat", SenateList);
+                                break;
+                            case "StBSt(R)":
+                            case "StBSt(B)":
+                                importhelper = FolderCreation("Steuerberatersenat", SenateList);
+                                break;
+                            case "WpSt(R)":
+                            case "WpSt(B)":
+                                importhelper = FolderCreation("Wirtschaftsprüfersenat", SenateList);
+                                break;
+                            case "AnwZ":
+                            case "AnwZ(P)":
+                            case "AnwZ(B)":
+                            case "AnwZ(Brfg)":
+                            case "AnwSt":
+                            case "AnwSt(B)":
+                            case "AnwSt(R)":
+                                importhelper = FolderCreation("Anwaltssenat", SenateList);
+                                break;
+                            case "NotZ":
+                            case "NotZ(Brfg)":
+                            case "NotSt(B)":
+                            case "NotSt(Brfg)":
+                                importhelper = FolderCreation("Notarsenat", SenateList);
+                                break;
+                            case "PatAnwZ":
+                            case "PatAnwZ(R)":
+                            case "PatAnwZ(B)":
+                                importhelper = FolderCreation("Patentanwaltsenat", SenateList);
+                                break;
+                            case "LwZR":
+                            case "LwZA":
+                            case "LwZB":
+                            case "BLw":
+                            case "ARLw":
+                                importhelper = FolderCreation("Landwirtschaftssenat", SenateList);
+                                break;
+                            case "VGS":
+                                importhelper = FolderCreation("Vereinigte Große Senate", SenateList);
+                                break;
+                            case "RiZ":
+                            case "RiZ(R)":
+                            case "RiZ(B)":
+                            case "RiSt":
+                            case "RiSt(B)":
+                            case "RiSt(R)":
+                            case "AR(Ri)":
+                                importhelper = FolderCreation("Dienstgericht", SenateList);
+                                break;
+                            default:
+                                importhelper = FolderCreation("unbekannter Senat", SenateList);
+                                break;
+                        }
+                        if (importhelper != null)
+                        {
+                            Debug.WriteLine($"{fileName}; {importhelper.PathentscheidungDok}");
+                            file.ImportPathDok = importhelper.PathentscheidungDok;
+                            file.ImportPathMP = importhelper.PathentscheidungMP;
+                            file.Senat = importhelper.MPSenat;
+                            file.Bereich = importhelper.Bereich;
+                            //MessageBox.Show($"CopyPath: {importhelper.PathentscheidungMP}");
+                            if (!File.Exists($"{importhelper.PathentscheidungDok}{file.FileName}")) File.Copy(file.FileFullPath, $"{importhelper.PathentscheidungDok}{file.FileName}");
+                            //In den Montagspostordner kopieren
+                            if (!File.Exists($"{importhelper.PathentscheidungMP}{file.FileName}"))
+                            {
+                                //MessageBox.Show($"CopyFile: {importhelper.PathentscheidungMP}{file.FileName}");
+                                File.Copy(file.FileFullPath, $"{importhelper.PathentscheidungMP}{file.FileName}");
+                            }
+                            file.ImportSuccessfull = true;
+                        }
+                        else
+                        {
+                            Logger.WriteLog($"Import-Montagspost: Für folgende Datei konnte kein Importhelper erstellt werden: {file.FileName}");
+                            errorList += $"{file.FileName}; ";
+                            file.ImportSuccessfull = false;
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Logger.WriteLog($"Import-Montagspost: Für die Datei {file.FileName} ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                        file.ImportSuccessfull = false;
+                    }
+                }
+            }
+
+            if (errorList != string.Empty)
+            {
+                response.Message = $"Der Import folgender Dateien konnte nicht erfolgen: {errorList}";
+            }
+            else
+            {
+                response.Success = true;
+            }
+            return response;
+        }
         #region EMail
         private void EMails_Erstellen()
         {
@@ -641,7 +679,6 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             }
         }
         #endregion
-
         private MPImportHelper FolderCreation(string senatBezeichnung, List<MPSenat> SenateList)
         {
             try
@@ -653,11 +690,25 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 //MessageBox.Show($"ImportPath: {pathDok}; {pathMP}");
                 if (!Directory.Exists(pathDok))
                 {
-                    Directory.CreateDirectory(pathDok);
+                    try
+                    {
+                        Directory.CreateDirectory(pathDok);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog($"Das Verzeichnis {pathDok} konnte nicht erstellt werden; es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                    }
                 }
                 if (!Directory.Exists(pathMP))
                 {
-                    Directory.CreateDirectory(pathMP);
+                    try
+                    {
+                        Directory.CreateDirectory(pathMP);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog($"Das Verzeichnis {pathMP} konnte nicht erstellt werden; es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                    }
                 }
 
                 string importPathDok = $"{pathDok}{SelectedVintage}\\kw{SelectedVintage.ToString().Substring(2)}{SelectedKW}\\";
@@ -690,7 +741,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show($"Es ist folgender Fehler aufgetreten: {ex.Message}");
+                Logger.WriteLog($"Beim Import der Montagspost ist beim Senat {senatBezeichnung} folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
                 return null;
             }
         }
@@ -763,12 +814,20 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             {
                 if (!Directory.Exists(folder))
                 {
-                    Directory.CreateDirectory(folder);
+                    try
+                    {
+                        Directory.CreateDirectory(folder);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteLog($"Das Verzeichnis {folder} konnte nicht erstellt werden; es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                    }
                 }
                 return path + bereich + senat + "\\";
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                Logger.WriteLog($"Das Verzeichnis {folder} konnte nicht erstellt werden; es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
                 return string.Empty;
             }
         }
@@ -1185,7 +1244,6 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             ReleaseObject(word);
             return entscheidungsListe;
         }
-
         private bool LeitsatzCheck(string text, string[] paragraphText)
         {
             int paragraphCount = Regex.Matches(text, "§").Count;
@@ -1198,7 +1256,6 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             if (totalLength / paragraphText.Length <= 3) return true;
             return false;
         }
-
         public string FirstLetterToUpper(string str)
         {
             if (str == null)
@@ -1235,6 +1292,93 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 GC.Collect();
             }
         }
+
+        //private async void BSCCopyMain(MPWeek ImportMPWeek)
+        //{
+        //    try
+        //    {
+        //        MPSetting settings = mpDBContext.MPSettings.FirstOrDefault();
+        //        if (settings == null)
+        //        {
+        //            if (Directory.Exists($"{settings.BSCWServerDrive}:\\"))
+        //            {
+        //                {
+        //                    Task task = BSCWCopy(ImportMPWeek, settings);
+        //                    ViewManager.ShowMainInfoFlyout($"Die Daten werden eingelesen. Bitte warten Sie.", false);
+        //                    ViewManager.MainWindowViewModel.ActionList.Clear();
+        //                    ViewManager.MainWindowViewModel.ActionList.Add(new ActionStatus { ActionsStatusName = "Übertragung BSCW-Server" });
+        //                    ViewManager.MainWindowViewModel.ShowStatusBar = true;
+        //                    await task;
+        //                    ViewManager.ShowMainInfoFlyout($"Die Daten wurden erfolgreich auf den BSCW-Server übertragen.", false);
+        //                    ViewManager.MainWindowViewModel.ShowStatusBar = false;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                ErrorMessage.CreateSimpleMessage($"Das Laufwerk {settings.BSCWServerDrive}:\\ konnte nicht gefunden werden.");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            ErrorMessage.CreateSimpleMessage("Es konnte keine Datensatz für die Einstellungen der Montagspost gefunden werden"); 
+        //        }
+        //        //string BSCW_Server_Path = $"{UserManager.SenatSettings.BSCW_Server_Drive}:\\{SelectedVintage}\\{SelectedMPWeek.MPWeekNumber}\\";
+        //    }
+        //    catch (Exception ex) { ErrorMessage.CreateException("MontagspostViewModel_BSCW_Check", ex.Message, ex.InnerException); }
+        //}
+        //private Task BSCWCopy(MPWeek ImportMPWeek, MPSetting settings)
+        //{
+        //    Task task = Task.Run(() =>
+        //    {
+        //        List<string> ErrorList = new List<string>();
+        //        foreach (MPDecision Decision in ImportMPWeek.MPDecisions.OrderBy(x => x.SenatID))
+        //        {
+        //            bool error = false;
+        //            string exportpath = $"{settings.BSCWServerDrive}:\\{ImportMPWeek.MPWeekYear}\\KW{ImportMPWeek.MPWeekNumber}\\";
+        //            error = CreateFolder(exportpath, settings);
+        //            if (!error)
+        //            {
+        //                string exportfile = $"{exportpath}{Decision.FileName}";
+        //                //MessageBox.Show(exportpath);
+        //                try
+        //                {
+        //                    File.Copy($"{Decision.PathName}{Decision.FileName}", exportfile, true);
+        //                    error = false;
+        //                }
+        //                catch (Exception)
+        //                {
+        //                    error = true;
+        //                }
+        //            }
+        //            if (error) ErrorList.Add(Decision.PathName);
+        //        }
+
+        //        string text = string.Empty;
+        //        foreach (string item in ErrorList) text += $"{item}";
+        //        if (ErrorList.Count > 0) ErrorMessage.CreateSimpleMessage($"Folgende Dokumente konnte nicht auf den Server geladen werden: {text}");
+
+        //    });
+        //    return task;
+        //}
+        //private bool CreateFolder(string pathName, MPSetting settings)
+        //{
+        //    try
+        //    {
+        //        string folder = $"{settings.BSCWServerDrive}:\\";
+        //        string[] creationPath = pathName.Split(new[] { Path.DirectorySeparatorChar });
+        //        for (int i = 2; i < creationPath.Length - 1; i++)
+        //        {
+        //            folder += $"{creationPath[i]}\\";
+        //            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+        //        }
+        //        return false;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return true;
+        //    }
+        //}
+
 
     }
 }
