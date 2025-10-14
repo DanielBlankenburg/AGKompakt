@@ -130,7 +130,7 @@
             <TabItem
                 x:Name="ClientEditor"
                 Style="{StaticResource TabItem_AR}"
-                Visibility="{Binding ShowNewRequest, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                Visibility="{Binding ShowAdmin, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                 <TabItem.Header>
                     <StackPanel>
                         <TextBlock Style="{StaticResource TabItemHeaderTextTop_AR}" Text="Auftraggeber" />
