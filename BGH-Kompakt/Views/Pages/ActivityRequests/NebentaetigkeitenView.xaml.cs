@@ -1,6 +1,7 @@
 ﻿using BGH_Kompakt.Services.ActivityRequestService;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.ViewModel.Nebentaetigkeiten;
+using BGH_Kompakt.Views.Pages.ActivityRequests;
 using BGH_Kompakt.Views.Settings;
 using System.Windows;
 using System.Windows.Controls;
@@ -102,6 +103,9 @@ namespace BGH_Kompakt.Views
                     }
                     ActivityRequestManager.DirectJump = false;
                     ViewManager.ShowUnderPageOn<NebentaetigkeitenAnzeigeView>(AnimatedContentControl);
+                    break;
+                 case "ClientEditor":
+                    ViewManager.ShowUnderPageOn<NebentaetigkeitenClientEditorView>(AnimatedContentControl);
                     break;
             }
             //Debug.WriteLine(tabItem);

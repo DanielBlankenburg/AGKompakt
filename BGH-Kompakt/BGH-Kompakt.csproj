@@ -470,6 +470,7 @@
     <Compile Include="ViewModel\Montagspost\MontagsPostViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetgkeitenViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenAnzeigeViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenClientEditorViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenListViewModel.cs" />
     <Compile Include="ViewModel\PersonChangeViewModel.cs" />
     <Compile Include="ViewModel\PersonenViewModel.cs" />
@@ -489,6 +490,9 @@
     <Compile Include="ViewModel\Userlogin\UserPropertyViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\VotenViewModel.cs" />
+    <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenClientEditorView.xaml.cs">
+      <DependentUpon>NebentaetigkeitenClientEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\Anwaltsauswahl\AnwaltswahlView.xaml.cs">
       <DependentUpon>AnwaltswahlView.xaml</DependentUpon>
     </Compile>
@@ -589,6 +593,10 @@
       <DependentUpon>PreviewEMail.xaml</DependentUpon>
     </Compile>
     <Page Include="Components\AnimatedContentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityRequests\NebentaetigkeitenClientEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,90 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.Pages.ActivityRequests.NebentaetigkeitenClientEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.Pages.ActivityRequests"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:nebentaetigkeiten="clr-namespace:BGH_Kompakt.ViewModel.Nebentaetigkeiten"
+    d:DataContext="{d:DesignInstance Type=nebentaetigkeiten:NebentaetigkeitenClientEditorViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Background="{StaticResource MaterialDesignPaper}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <TextBlock
+            Grid.Row="0"
+            Margin="0,10"
+            Style="{StaticResource Style_Textblock_Titel_Unter1}"
+            Text="Auftraggeber" />
+        <ScrollViewer
+            Grid.Row="1"
+            Height="{Binding ElementName=Dateien, Path=ActualHeight}"
+            Margin="10,0,0,0"
+            VerticalScrollBarVisibility="Visible">
+
+            <ListBox
+                x:Name="ClientList"
+                ItemsSource="{Binding ClientList, UpdateSourceTrigger=PropertyChanged}"
+                SelectedItem="{Binding SelectedClient, UpdateSourceTrigger=PropertyChanged}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                FontWeight="Bold"
+                                Style="{StaticResource textblock_base}"
+                                Text="{Binding ACName}" />
+                            <TextBlock
+                                Margin="40,5,0,0"
+                                FontSize="11"
+                                Style="{StaticResource textblock_base}"
+                                Text="{Binding ActivityClientTyp.ActivityClientTypText}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+        <!--<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedClient.ACName}"></TextBlock>-->
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            MaxWidth="500"
+            Margin="20,0,0,0"
+            HorizontalAlignment="Left">
+            <TextBox
+                MD:HintAssist.Hint="Bezeichnung:"
+                Style="{StaticResource Textbox_Base}"
+                Text="{Binding SelectedClient.ACName, UpdateSourceTrigger=PropertyChanged}" />
+            <ComboBox
+                DisplayMemberPath="ActivityClientTypText"
+                ItemsSource="{Binding ClientTypList}"
+                SelectedItem="{Binding SelectedClientTyp}"
+                Style="{StaticResource Combobox_Base}" />
+            <StackPanel Margin="0,15,0,0">
+                <Label
+                    Content="Verwendet in folgenden Einträgen:"
+                    FontWeight="DemiBold"
+                    Style="{StaticResource Label_Base}" />
+                <ListBox DisplayMemberPath="ARTitel" ItemsSource="{Binding SelectedItem.ActivityRequests, ElementName=ClientList}" />
+            </StackPanel>
+            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                <Button
+                    Margin="0,0,15,0"
+                    Content="Speicher" Command="{Binding SaveCommand}"
+                    Style="{StaticResource Button_Master}" />
+                <Button Command="{Binding DeleteCommand}" Content="Löschen" Style="{StaticResource Button_Master}" />
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</UserControl>

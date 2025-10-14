@@ -1665,7 +1665,7 @@
                     Margin="0,20"
                     Style="{StaticResource Expander_Border}"
                     Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <Button
                         x:Name="Btn_3"
                         Width="170"
@@ -1682,11 +1682,11 @@
                         </StackPanel>
                     </Button>
                     <Button
-                        Margin="10, 0, 0, 0"    
+                        Margin="10,0,0,0"
                         Command="{Binding Path=DataContext.SendRequestToArchiveCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                            Style="{StaticResource Button_GridView}"
-                            ToolTip="Antrag in das Archiv geben"
-                            Visibility="Visible">
+                        Style="{StaticResource Button_GridView}"
+                        ToolTip="Antrag in das Archiv geben"
+                        Visibility="Visible">
                         <MD:PackIcon Padding="0" Kind="Archive" />
                     </Button>
 

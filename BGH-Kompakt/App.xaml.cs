@@ -9,6 +9,7 @@ using BGH_Kompakt.ViewModel.SystemSettings;
 using BGH_Kompakt.ViewModel.Userlogin;
 using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.Montagspost;
+using BGH_Kompakt.Views.Pages.ActivityRequests;
 using BGH_Kompakt.Views.Pages.Montagspost;
 using BGH_Kompakt.Views.Pages.Settings;
 using BGH_Kompakt.Views.Pages.Sitzungsunterlagen;
@@ -174,7 +175,8 @@ namespace BGH_Kompakt
             iServiceColletion.AddSingleton<ErrorAreaView>();
             iServiceColletion.AddSingleton<ErrorAreaViewModel>();
 
-
+            iServiceColletion.AddTransient<NebentaetigkeitenClientEditorView>();
+            iServiceColletion.AddTransient<NebentaetigkeitenClientEditorViewModel>();
 
 
             //iServiceColletion.AddTransient<AnwaltswahlView>();
