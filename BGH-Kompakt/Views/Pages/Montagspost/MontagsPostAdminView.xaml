@@ -89,6 +89,11 @@
                     <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Berichterstatter" />
                 </TabItem.Header>
             </TabItem>
+            <TabItem x:Name="BGHR_Zivil" Style="{StaticResource TabItem_AR}">
+                <TabItem.Header>
+                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="BGHR-Redaktion (Zivil)" />
+                </TabItem.Header>
+            </TabItem>
         </TabControl>
         <Border
             Grid.Row="2"

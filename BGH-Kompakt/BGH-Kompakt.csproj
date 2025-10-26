@@ -464,6 +464,7 @@
     <Compile Include="ViewModel\MainWindow\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\FilterViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostBEViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\MontagsPostBGHRViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostFilterViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagspostImportViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostVermerkViewModel.cs" />
@@ -498,6 +499,9 @@
     </Compile>
     <Compile Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml.cs">
       <DependentUpon>MontagsPostAdminView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagsPostBGHRView.xaml.cs">
+      <DependentUpon>MontagsPostBGHRView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Settings\ErrorAreaView.xaml.cs">
       <DependentUpon>ErrorAreaView.xaml</DependentUpon>
@@ -601,6 +605,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagsPostBGHRView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

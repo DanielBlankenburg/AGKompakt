@@ -178,6 +178,9 @@ namespace BGH_Kompakt
             iServiceColletion.AddTransient<NebentaetigkeitenClientEditorView>();
             iServiceColletion.AddTransient<NebentaetigkeitenClientEditorViewModel>();
 
+            iServiceColletion.AddTransient<MontagsPostBGHRView>();
+            iServiceColletion.AddTransient<MontagsPostBGHRViewModel>();
+
 
             //iServiceColletion.AddTransient<AnwaltswahlView>();
         }
