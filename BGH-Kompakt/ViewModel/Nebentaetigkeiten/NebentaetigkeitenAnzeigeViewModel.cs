@@ -395,7 +395,8 @@ namespace BGH_Kompakt.ViewModel
                     ActivityRequestDBContext activityRequestDBcontext = new ActivityRequestDBContext();
                     var RequestTyp_Query = activityRequestDBcontext.ActivityRequestTyps.Where(t => t.ActivityRequestTypMeldeArt == 1);
                     _RequestTypList.Clear();
-                    foreach (var item in RequestTyp_Query) _RequestTypList.Add(item);
+                    //Auf Wunsch von Frau Dr. Dauber wird die schriftstellerischer Tätigkeit entfernt - 2025-10-27
+                    foreach (var item in RequestTyp_Query) if (item.ActivityRequestTypId != 3) _RequestTypList.Add(item);
                 }
             }
         }
@@ -1629,7 +1630,8 @@ namespace BGH_Kompakt.ViewModel
                 foreach (var item in ClientTyps_Query) _ClientTypList.Add(item);
                 //ReqestTyps füllen
                 var RequestTyp_Query = activityRequestDBcontext.ActivityRequestTyps;
-                foreach (var item in RequestTyp_Query) _RequestTypList.Add(item);
+                //Auf Wunsch von Frau Dr. Dauber wird die schriftstellerische Tätigkeit entfernt - 2025-10-27
+                foreach (var item in RequestTyp_Query) if (item.ActivityRequestTypId != 3) _RequestTypList.Add(item);
                 //Adventage füllen
                 var AdventageTyp_Query = activityRequestDBcontext.ARVerguetungAdventageTyps;
                 foreach (var item in AdventageTyp_Query) _AdventageTypList.Add(item);
