@@ -105,6 +105,12 @@ namespace BGH_Kompakt.Classes.UserClasses
         [NotMapped]
         public bool ShowMontagspostAdmin { get; set; }
 
+        [NotMapped]
+        public bool IsInactiv
+        {
+            get { return StatusId == 2; }
+        }
+
         public User()
         {
             
@@ -179,6 +185,8 @@ namespace BGH_Kompakt.Classes.UserClasses
             foreach(Senat senat in SenateAdmin) if (senat.SenatID == iSenat.SenatID) return true;
             return false;
         }
+
+
 
     }
 }

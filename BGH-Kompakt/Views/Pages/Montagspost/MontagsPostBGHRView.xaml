@@ -7,6 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:BGH_Kompakt.Views.Pages.Montagspost"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:montagspost="clr-namespace:BGH_Kompakt.ViewModel.Montagspost"
+    d:DataContext="{d:DesignInstance Type=montagspost:MontagsPostBGHRViewModel}"
     d:DesignHeight="900"
     d:DesignWidth="1400"
     Background="{StaticResource MaterialDesignPaper}"
@@ -53,6 +55,7 @@
                             SelectedItem="{Binding SelectedVintage, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <ListBox
+                        Margin="0,10,0,0"
                         Padding="5,20,0,0"
                         DisplayMemberPath="MPWeekName"
                         ItemsSource="{Binding MPWeekList}"
@@ -86,26 +89,13 @@
                                 HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox
-                                            x:Name="cboBE"
-                                            MinWidth="100"
-                                            DisplayMemberPath="FullSurname"
-                                            ItemsSource="{Binding Path=DataContext.MPBEList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                            SelectedItem="{Binding BE}">
-
-                                            <!--<i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="Selected">
-                                                    <i:InvokeCommandAction Command="{Binding Path=DataContext.BECommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding ElementName=cboBE, Path=SelectedItem}" />
-                                                </i:EventTrigger>
-                                            </i:Interaction.Triggers>-->
-
-                                        </ComboBox>
+                                        <CheckBox IsChecked="{Binding BE.IsInactiv, Mode=OneWay}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn
                                 Width="150"
-                                Header="Alternative"
+                                Header="Anderer Empfänger"
                                 HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -114,7 +104,8 @@
                                             MinWidth="100"
                                             DisplayMemberPath="FullSurname"
                                             ItemsSource="{Binding Path=DataContext.MPBEList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                            SelectedItem="{Binding BE}">
+                                            SelectedItem="{Binding BE}"
+                                            Visibility="{Binding BE.IsInactiv, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                                             <!--<i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="Selected">
@@ -138,7 +129,7 @@
             <Button
                 Margin="0,0,10,0"
                 Command="{Binding SaveCommand}"
-                Content="Berichterstatter speichern"
+                Content="Berichterstatter benachrichtigen"
                 Style="{StaticResource Button_Master}" />
         </StackPanel>
 

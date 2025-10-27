@@ -98,7 +98,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             {
                 MPDBContext mPDBContext = new MPDBContext();
                 UserDBContext userDBContext = new UserDBContext();
-                var Query = mPDBContext.MPDecisions.Where(x => x.MPWeekID == SelectedWeek.MPWeekID && x.Senat.MPCategorieID == 2).OrderBy(x => x.Senat.MPSenatName).ThenBy(x => x.Aktenzeichen);
+                var Query = mPDBContext.MPDecisions.Where(x => x.MPWeekID == SelectedWeek.MPWeekID && x.Senat.MPCategorieID == 2).OrderBy(x => x.Senat.MPSenatSorting).ThenBy(x => x.Aktenzeichen);
                 foreach (MPDecision item in Query)
                 {
                     User BE = userDBContext.Users.FirstOrDefault(x => x.UserId == item.BE);
@@ -112,6 +112,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         {
             try
             {
+                
+                
                 //MPDBContext mPDBContext = new MPDBContext();
                 //foreach (var item in MPDecisionBEList)
                 //{
