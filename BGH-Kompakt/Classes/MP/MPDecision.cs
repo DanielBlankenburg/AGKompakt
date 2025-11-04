@@ -39,6 +39,7 @@ namespace BGH_Kompakt.Classes.MP
         public int BE { get; set; }
         public string Vermerk { get; set; }
         public bool VermerkAnzeige { get; set; } = false;
+        public bool BEEMail { get; set; } = false;
         [NotMapped]
         public bool EMailVersenden { get; set; } = true;
 

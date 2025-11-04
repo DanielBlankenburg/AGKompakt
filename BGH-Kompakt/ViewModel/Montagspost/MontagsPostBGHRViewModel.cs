@@ -1,14 +1,22 @@
-﻿using BGH_Kompakt.Classes.MP;
+﻿using BGH_Kompakt.Classes.Helper;
+using BGH_Kompakt.Classes.MP;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
+using BGH_Kompakt.Dtos;
+using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Views;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace BGH_Kompakt.ViewModel.Montagspost
@@ -21,7 +29,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         private ObservableCollection<int> _VintageList = new ObservableCollection<int>();
         public ObservableCollection<int> VintageList { get { return _VintageList; } }
 
-        public ICommand SaveCommand { get; set; }
+        public ICommand SendCommand { get; set; }
         public ICommand BackCommand { get; set; }
         public ICommand BECommand { get; set; }
 
@@ -54,7 +62,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
         public MontagsPostBGHRViewModel()
         {
-            SaveCommand = new RelayCommand(SaveExecute);
+            SendCommand = new RelayCommand(SendExecute);
             BackCommand = new RelayCommand(BackExecute);
             BECommand = new RelayCommand(BESelectionExecute);
             MPDBContext mPDBContext = new MPDBContext();
@@ -108,36 +116,117 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         }
 
 
-        private void SaveExecute(object obj)
+        private async void SendExecute(object obj)
         {
-            try
+            if (SelectedWeek == null)
             {
-                
-                
-                //MPDBContext mPDBContext = new MPDBContext();
-                //foreach (var item in MPDecisionBEList)
-                //{
-                //    if (item.BE != null)
-                //    {
-                //        //MPDecision Decision = mPDBContext.MPDecisions.Where(x => x.MPDecisionID == item.Decision.MPDecisionID).FirstOrDefault();
-                //        //if (Decision != null)
-                //        //{
-                //        //    Decision.BE = item.BE.UserId;
-                //        //    mPDBContext.MPDecisions.AddOrUpdate(Decision);
-                //        //}
-
-                //    }
-                //}
-                //mPDBContext.SaveChanges();
-                //ViewManager.ShowMainInfoFlyout("Die Änderungen wurden gespeichert", false);
+                ViewManager.ShowMainInfoFlyout("Bitte wählen Sie eine Kalenderwoche aus.", false);
+                return;
             }
-            catch (Exception ex)
+            string actionName = "Import Kalenderwoche";
+            Task<DBResponse> task = SendEMails();
+            ViewManager.ShowMainInfoFlyout("Die EMails werden versendet", false);
+            ViewManager.ActionlistAdd(actionName);
+            await task;
+            ViewManager.ActionlistRemove(actionName);
+            if (task.Result.Success)
             {
-                Logger.WriteLog($"Beim Bespeichern der BE ist folgender Fehler aufgetreten: {ex.Message}, {ex.InnerException}");
-                ViewManager.ShowMainInfoFlyout($"Beim Bespeichern der BE ist folgender Fehler aufgetreten: {ex.Message}", false);
-                throw;
+                ViewManager.ShowMainInfoFlyout("Die EMails wurden erfolgreich versendet.", false);
+            }
+            else
+            {
+                ErrorMessage.CreateSimpleMessage(task.Result.Message);
             }
         }
 
+        private Task<DBResponse> SendEMails()
+        {
+            Task<DBResponse> task = Task.Run<DBResponse>(() =>
+            {
+                DBResponse response = new DBResponse();
+
+                try
+                {
+                    MPDBContext mPDBContext = new MPDBContext();
+                    EMailVersand eMailVersand = new EMailVersand();
+
+                    //var query = from m in MPDecisionBEList
+                    //            group m.Decision by m.BE.UserId into g
+                    //            select new { UserID = g.Key, DecisionsID = g.ToList() };
+
+                    //foreach (var item in query)
+                    //{
+                    //    Debug.WriteLine (item);
+                    //}
+
+                    var groupedBEList = MPDecisionBEList
+                        .GroupBy(u => u.BE.UserId)
+                        .Select(g => g.ToList())
+                        .ToList();
+
+                    foreach (var item in groupedBEList)
+                    {
+                        string eMailAdress = string.Empty;
+                        List<MPDecision> decisionList = new List<MPDecision>();
+
+                        foreach (MPDecisionBE mPDecision in item)
+                        {
+                            if (eMailAdress == string.Empty) eMailAdress = mPDecision.BE.EMail;
+                            if (!mPDecision.Decision.BEEMail) decisionList.Add(mPDecision.Decision);
+                        }
+
+                        if (decisionList.Count > 0)
+                        {
+                            List<CustomMailAttachment> attachmentListpfd = new List<CustomMailAttachment>();
+                            foreach (MPDecision mPDecision in decisionList) 
+                                attachmentListpfd.Add(new CustomMailAttachment { AttachmentPath = mPDecision.PathName + mPDecision.FileName, AttachmentName = mPDecision.FileName });
+                            DBResponse eMailResponse = eMailVersand.Send_Email(
+                                emailTo: eMailAdress,
+                                subject: $"Entscheidungen ${SelectedWeek.MPWeekName}",
+                                mailBody: "Liebe Kollegin, lieber Kollege, <Br> <BR> anbei erhalten Sie die Entscheidungen Ihres Senats zur Bearbeitung für BGHRZ. Bitte füllen Sie das elektronische Erfassungsformular aus und senden es dann über den Senatsredaktor bzw. die Senatsredaktorin an woestmann-heinz@bgh.bund.de. Eine Übersendung der Datei mit der Entscheidung ist nicht erforderlich. <BR> <BR> Vielen Dank und viele Grüße <BR> Ihr Heinz Wöstmann <BR> Geschäftsführer BGHR",
+                                attachmentList: attachmentListpfd);
+                            if (eMailResponse.Success)
+                            {
+                                foreach (MPDecision mPDecision in decisionList)
+                                {
+                                    MPDecision changeDecision = mPDBContext.MPDecisions.FirstOrDefault(x => x.MPDecisionID == mPDecision.MPDecisionID);
+                                    if (changeDecision != null)
+                                    {
+                                        changeDecision.BEEMail = true;
+                                        try
+                                        {
+                                            mPDBContext.MPDecisions.AddOrUpdate(changeDecision);
+                                            mPDBContext.SaveChanges();
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Logger.WriteLog($"Beim Speichern des Versandmerkmals ist bei der Entscheidung ${mPDecision.FileName} folgender Fehler aufgetreten: ${ex.Message}; ${ex.InnerException}");
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Logger.WriteLog(eMailResponse.Message);
+                                response.Message = response.Message == string.Empty ? $"An folgende Empfänger konnte keine E-Mail versendet werden: ${eMailAdress}" : response.Message + $"; ${eMailAdress}";
+                            }
+                        }
+                        else
+                        {
+                            response.Message = "Es wurden bereits für alle Entscheidungen die Benachrichtigungen verschickt.";
+                        }
+                    }
+                    if (response.Message == string.Empty) response.Success = true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"Beim Senden ist folgender Fehler aufgetreten: {ex.Message}, {ex.InnerException}");
+                    response.Message = $"Beim Senden ist folgender Fehler aufgetreten: {ex.Message}";
+                    throw;
+                }
+                return response;
+            });
+            return task;
+        }
     }
 }
