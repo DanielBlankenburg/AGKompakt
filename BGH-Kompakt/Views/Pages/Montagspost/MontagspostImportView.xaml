@@ -245,55 +245,22 @@
                                         Style="{StaticResource Comobox_MPImport}" />
                                 </StackPanel>
                                 <Border Margin="0,20,0,0" Style="{StaticResource Expander_Border}" />
-                                <!--  EMail-Word-Recipients  -->
-                                <!--<StackPanel>
-                                    <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Empfänger EMail mit Word-Dateien" />
-                                    <ListBox
-                                        DisplayMemberPath="MPEMailRecipientAdress"
-                                        ItemsSource="{Binding EMailWordList}"
-                                        SelectedItem="{Binding SelectedEMailWordRecipient}"
-                                        Style="{StaticResource Listbox_MP}" />
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*" />
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBox
-                                            Grid.Row="0"
-                                            Grid.Column="0"
-                                            MD:HintAssist.Hint="EMail-Empfänger:"
-                                            Style="{StaticResource Textbox_MP_Import}"
-                                            Text="{Binding EMailWordRecipient, UpdateSourceTrigger=PropertyChanged}" />
-                                        <Button
-                                            Grid.Row="1"
-                                            Grid.Column="0"
-                                            Command="{Binding EMailWordAddCommand}"
-                                            CommandParameter="word"
-                                            Content="Hinzufügen"
-                                            Style="{StaticResource Button_MP_Import}" />
-                                        <Button
-                                            Grid.Row="1"
-                                            Grid.Column="1"
-                                            Command="{Binding EMailWordDeleteCommand}"
-                                            CommandParameter="word"
-                                            Content="Löschen"
-                                            Style="{StaticResource Button_MP_Import}" />
-                                    </Grid>
-                                </StackPanel>-->
                                 <Border Margin="0,20,0,0" Style="{StaticResource Expander_Border}" />
                                 <!--  EMail-pdf-Recipient  -->
-                                <StackPanel>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30" />
+                                        <RowDefinition Height="200" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
                                     <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Empfänger EMail mit pdf-Dateien" />
                                     <ListBox
+                                        Grid.Row="1"
                                         DisplayMemberPath="MPEMailRecipientAdress"
                                         ItemsSource="{Binding EMailPDFList}"
                                         SelectedItem="{Binding SelectedEMailpdfRecipient}"
                                         Style="{StaticResource Listbox_MP}" />
-                                    <Grid>
+                                    <Grid Grid.Row="2">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*" />
                                             <RowDefinition Height="*" />
@@ -323,7 +290,7 @@
                                             Content="Löschen"
                                             Style="{StaticResource Button_MP_Import}" />
                                     </Grid>
-                                </StackPanel>
+                                </Grid>
                                 <Border Margin="0,20,0,0" Style="{StaticResource Expander_Border}" />
                             </StackPanel>
                         </ScrollViewer>

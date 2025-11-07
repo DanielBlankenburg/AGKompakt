@@ -32,6 +32,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         public ICommand SendCommand { get; set; }
         public ICommand BackCommand { get; set; }
         public ICommand BECommand { get; set; }
+        public ICommand ResetCommand { get; set; }
 
         private int _SelectedVintage;
         public int SelectedVintage
@@ -65,6 +66,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             SendCommand = new RelayCommand(SendExecute);
             BackCommand = new RelayCommand(BackExecute);
             BECommand = new RelayCommand(BESelectionExecute);
+            ResetCommand = new RelayCommand(ResetExecute);
             MPDBContext mPDBContext = new MPDBContext();
 
             var MPVintages_Query = mPDBContext.MPWeeks.Select(x => x.MPWeekYear).Distinct();
@@ -75,6 +77,35 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             var query = db.Users.Where(x => x.PositionId == 1).OrderBy(x => x.NachName).ThenBy(x => x.VorName);
             foreach (User Richter in query) MPBEList.Add(Richter);
 
+        }
+
+        private void ResetExecute(object obj)
+        {
+            try
+            {
+                MPDBContext mPDBContext = new MPDBContext();
+                MPDecision editDecision = mPDBContext.MPDecisions.FirstOrDefault(x => x.MPDecisionID == SelectedBE.Decision.MPDecisionID);
+                if (editDecision != null)
+                {
+                    editDecision.BEEMail = false;
+                    mPDBContext.MPDecisions.AddOrUpdate(editDecision);
+                    mPDBContext.SaveChanges();
+                    SelectedBE.Decision.BEEMail = false;
+
+                }
+                else
+                {
+                    Logger.WriteLog($"Beim Reset der E-Mail für BGHR ist folgender Fehler aufgetreten: Die Entscheidung wurde nicht gefunden");
+                    ViewManager.ShowMainInfoFlyout("Der E-Mail-Empfang konnte nicht zurück gesetzt werden", false);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"Beim Reset der E-Mail für BGHR ist folgender Fehler aufgetreten: ${ex.Message}; ${ex.InnerException}");
+                ViewManager.ShowMainInfoFlyout("Der E-Mail-Empfang konnte nicht zurück gesetzt werden", false);
+            }
+            
         }
 
         private void BESelectionExecute(object obj)
@@ -154,12 +185,18 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                     //            group m.Decision by m.BE.UserId into g
                     //            select new { UserID = g.Key, DecisionsID = g.ToList() };
 
-                    //foreach (var item in query)
-                    //{
-                    //    Debug.WriteLine (item);
-                    //}
+                //foreach (var item in query)
+                //{
+                //    Debug.WriteLine (item);
+                //}
+                    ObservableCollection<MPDecisionBE> SortlistMPBE = new ObservableCollection<MPDecisionBE>();
 
-                    var groupedBEList = MPDecisionBEList
+                    foreach (MPDecisionBE item in MPDecisionBEList)
+                    {
+                        if (item.BE != null) SortlistMPBE.Add(item);
+                    }
+
+                    var groupedBEList = SortlistMPBE
                         .GroupBy(u => u.BE.UserId)
                         .Select(g => g.ToList())
                         .ToList();

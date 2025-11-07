@@ -13,6 +13,20 @@
     d:DesignWidth="1400"
     Background="{StaticResource MaterialDesignPaper}"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Button_MP_View_RowButton"
+            BasedOn="{StaticResource MaterialDesignFlatButton}"
+            TargetType="Button">
+            <Setter Property="Width" Value="35" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="Margin" Value="15,4,0,5" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -123,7 +137,24 @@
                                 HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding Decision.BEEMail, Mode=OneWay}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox Margin="30,0,0,0" IsChecked="{Binding Decision.BEEMail, Mode=OneWay}" />
+                                            <Button
+                                                x:Name="Btn_Reset"
+                                                Command="{Binding Path=DataContext.ResetCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Style="{StaticResource Button_MP_View_RowButton}"
+                                                ToolTip="Versand zurücksetzen"
+                                                Visibility="Hidden">
+
+                                                <MD:PackIcon Padding="0" Kind="BackupRestore" />
+                                            </Button>
+                                        </StackPanel>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="true">
+                                                <Setter TargetName="Btn_Reset" Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
