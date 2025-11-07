@@ -272,6 +272,10 @@
     <Compile Include="Migrartions\MP\202510110422449_BSCWServer.Designer.cs">
       <DependentUpon>202510110422449_BSCWServer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrartions\MP\202511010538599_MPRedakteureEMailNotice.cs" />
+    <Compile Include="Migrartions\MP\202511010538599_MPRedakteureEMailNotice.Designer.cs">
+      <DependentUpon>202511010538599_MPRedakteureEMailNotice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrartions\Users\202507110630070_SortingMP.cs" />
     <Compile Include="Migrartions\Users\202507110630070_SortingMP.Designer.cs">
       <DependentUpon>202507110630070_SortingMP.cs</DependentUpon>
@@ -464,6 +468,7 @@
     <Compile Include="ViewModel\MainWindow\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\FilterViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostBEViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\MontagsPostBGHRViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostFilterViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagspostImportViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostVermerkViewModel.cs" />
@@ -498,6 +503,9 @@
     </Compile>
     <Compile Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml.cs">
       <DependentUpon>MontagsPostAdminView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagsPostBGHRView.xaml.cs">
+      <DependentUpon>MontagsPostBGHRView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Settings\ErrorAreaView.xaml.cs">
       <DependentUpon>ErrorAreaView.xaml</DependentUpon>
@@ -601,6 +609,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagsPostBGHRView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -919,6 +931,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\MP\202510110422449_BSCWServer.resx">
       <DependentUpon>202510110422449_BSCWServer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\MP\202511010538599_MPRedakteureEMailNotice.resx">
+      <DependentUpon>202511010538599_MPRedakteureEMailNotice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202506152030562_InitialUser.resx">
       <DependentUpon>202506152030562_InitialUser.cs</DependentUpon>

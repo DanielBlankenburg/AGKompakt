@@ -30,6 +30,10 @@ namespace BGH_Kompakt.Views.Pages.Montagspost
                     ViewManager.ShowUnderPageOn<MontagsPostBE>(AnimatedContentControl);
                     //ViewManager.ShowUnderPageOn<MontagsPostFilterView>(AnimatedContentControl);
                     break;
+                case "BGHR_Zivil":
+                    ViewManager.ShowUnderPageOn<MontagsPostBGHRView>(AnimatedContentControl);
+                    //ViewManager.ShowUnderPageOn<MontagsPostFilterView>(AnimatedContentControl);
+                    break;
             }
 
         }

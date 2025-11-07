@@ -1,0 +1,269 @@
+﻿using BGH_Kompakt.Classes.Helper;
+using BGH_Kompakt.Classes.MP;
+using BGH_Kompakt.Classes.UserClasses;
+using BGH_Kompakt.Commands;
+using BGH_Kompakt.Dtos;
+using BGH_Kompakt.Services;
+using BGH_Kompakt.Services.DBContexts;
+using BGH_Kompakt.Services.SystemComponents;
+using BGH_Kompakt.Views;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Input;
+
+namespace BGH_Kompakt.ViewModel.Montagspost
+{
+    public class MontagsPostBGHRViewModel : ViewModelBase
+    {
+        public ObservableCollection<MPDecisionBE> MPDecisionBEList { get; set; } = new ObservableCollection<MPDecisionBE>();
+        public ObservableCollection<User> MPBEList { get; set; } = new ObservableCollection<User>();
+        public ObservableCollection<MPWeek> MPWeekList { get; set; } = new ObservableCollection<MPWeek>();
+        private ObservableCollection<int> _VintageList = new ObservableCollection<int>();
+        public ObservableCollection<int> VintageList { get { return _VintageList; } }
+
+        public ICommand SendCommand { get; set; }
+        public ICommand BackCommand { get; set; }
+        public ICommand BECommand { get; set; }
+        public ICommand ResetCommand { get; set; }
+
+        private int _SelectedVintage;
+        public int SelectedVintage
+        {
+            get { return _SelectedVintage; }
+            set
+            {
+                SetProperty<int>(ref _SelectedVintage, value);
+                WeekFill();
+            }
+        }
+        private MPWeek _SelectedWeek;
+        public MPWeek SelectedWeek
+        {
+            get { return _SelectedWeek; }
+            set
+            {
+                SetProperty(ref _SelectedWeek, value);
+                DecsionBEListFill();
+            }
+        }
+        private MPDecisionBE _SelectedBE;
+        public MPDecisionBE SelectedBE
+        {
+            get { return _SelectedBE; }
+            set { SetProperty(ref _SelectedBE, value); }
+        }
+
+        public MontagsPostBGHRViewModel()
+        {
+            SendCommand = new RelayCommand(SendExecute);
+            BackCommand = new RelayCommand(BackExecute);
+            BECommand = new RelayCommand(BESelectionExecute);
+            ResetCommand = new RelayCommand(ResetExecute);
+            MPDBContext mPDBContext = new MPDBContext();
+
+            var MPVintages_Query = mPDBContext.MPWeeks.Select(x => x.MPWeekYear).Distinct();
+            foreach (var Vintage in MPVintages_Query) VintageList.Add(Vintage);
+            if (VintageList.Count > 0) SelectedVintage = VintageList.LastOrDefault();
+
+            UserDBContext db = new UserDBContext();
+            var query = db.Users.Where(x => x.PositionId == 1).OrderBy(x => x.NachName).ThenBy(x => x.VorName);
+            foreach (User Richter in query) MPBEList.Add(Richter);
+
+        }
+
+        private void ResetExecute(object obj)
+        {
+            try
+            {
+                MPDBContext mPDBContext = new MPDBContext();
+                MPDecision editDecision = mPDBContext.MPDecisions.FirstOrDefault(x => x.MPDecisionID == SelectedBE.Decision.MPDecisionID);
+                if (editDecision != null)
+                {
+                    editDecision.BEEMail = false;
+                    mPDBContext.MPDecisions.AddOrUpdate(editDecision);
+                    mPDBContext.SaveChanges();
+                    SelectedBE.Decision.BEEMail = false;
+
+                }
+                else
+                {
+                    Logger.WriteLog($"Beim Reset der E-Mail für BGHR ist folgender Fehler aufgetreten: Die Entscheidung wurde nicht gefunden");
+                    ViewManager.ShowMainInfoFlyout("Der E-Mail-Empfang konnte nicht zurück gesetzt werden", false);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"Beim Reset der E-Mail für BGHR ist folgender Fehler aufgetreten: ${ex.Message}; ${ex.InnerException}");
+                ViewManager.ShowMainInfoFlyout("Der E-Mail-Empfang konnte nicht zurück gesetzt werden", false);
+            }
+            
+        }
+
+        private void BESelectionExecute(object obj)
+        {
+            User user = (User)obj;
+            MessageBox.Show(user.VorName);
+        }
+
+        private void BackExecute(object obj)
+        {
+            ViewManager.ShowPageOnMainView<MontagsPostView>();
+        }
+
+        private void WeekFill()
+        {
+            MPWeekList.Clear();
+            if (SelectedVintage > 0)
+            {
+                MPDBContext mPDBContext = new MPDBContext();
+                var MPWeek_Query = mPDBContext.MPWeeks.Include(x => x.MPDecisions).Where(x => x.MPWeekYear == SelectedVintage).OrderByDescending(x => x.MPWeekNumber);
+                foreach (var item in MPWeek_Query) MPWeekList.Add(item);
+            }
+            return;
+        }
+        private void DecsionBEListFill()
+        {
+            MPDecisionBEList.Clear();
+            if (SelectedWeek != null)
+            {
+                MPDBContext mPDBContext = new MPDBContext();
+                UserDBContext userDBContext = new UserDBContext();
+                var Query = mPDBContext.MPDecisions.Where(x => x.MPWeekID == SelectedWeek.MPWeekID && x.Senat.MPCategorieID == 2).OrderBy(x => x.Senat.MPSenatSorting).ThenBy(x => x.Aktenzeichen);
+                foreach (MPDecision item in Query)
+                {
+                    User BE = userDBContext.Users.FirstOrDefault(x => x.UserId == item.BE);
+                    MPDecisionBEList.Add(new MPDecisionBE { Decision = item, BE = BE });
+                }
+            }
+        }
+
+
+        private async void SendExecute(object obj)
+        {
+            if (SelectedWeek == null)
+            {
+                ViewManager.ShowMainInfoFlyout("Bitte wählen Sie eine Kalenderwoche aus.", false);
+                return;
+            }
+            string actionName = "Import Kalenderwoche";
+            Task<DBResponse> task = SendEMails();
+            ViewManager.ShowMainInfoFlyout("Die EMails werden versendet", false);
+            ViewManager.ActionlistAdd(actionName);
+            await task;
+            ViewManager.ActionlistRemove(actionName);
+            if (task.Result.Success)
+            {
+                ViewManager.ShowMainInfoFlyout("Die EMails wurden erfolgreich versendet.", false);
+            }
+            else
+            {
+                ErrorMessage.CreateSimpleMessage(task.Result.Message);
+            }
+        }
+
+        private Task<DBResponse> SendEMails()
+        {
+            Task<DBResponse> task = Task.Run<DBResponse>(() =>
+            {
+                DBResponse response = new DBResponse();
+
+                try
+                {
+                    MPDBContext mPDBContext = new MPDBContext();
+                    EMailVersand eMailVersand = new EMailVersand();
+
+                    //var query = from m in MPDecisionBEList
+                    //            group m.Decision by m.BE.UserId into g
+                    //            select new { UserID = g.Key, DecisionsID = g.ToList() };
+
+                //foreach (var item in query)
+                //{
+                //    Debug.WriteLine (item);
+                //}
+                    ObservableCollection<MPDecisionBE> SortlistMPBE = new ObservableCollection<MPDecisionBE>();
+
+                    foreach (MPDecisionBE item in MPDecisionBEList)
+                    {
+                        if (item.BE != null) SortlistMPBE.Add(item);
+                    }
+
+                    var groupedBEList = SortlistMPBE
+                        .GroupBy(u => u.BE.UserId)
+                        .Select(g => g.ToList())
+                        .ToList();
+
+                    foreach (var item in groupedBEList)
+                    {
+                        string eMailAdress = string.Empty;
+                        List<MPDecision> decisionList = new List<MPDecision>();
+
+                        foreach (MPDecisionBE mPDecision in item)
+                        {
+                            if (eMailAdress == string.Empty) eMailAdress = mPDecision.BE.EMail;
+                            if (!mPDecision.Decision.BEEMail) decisionList.Add(mPDecision.Decision);
+                        }
+
+                        if (decisionList.Count > 0)
+                        {
+                            List<CustomMailAttachment> attachmentListpfd = new List<CustomMailAttachment>();
+                            foreach (MPDecision mPDecision in decisionList) 
+                                attachmentListpfd.Add(new CustomMailAttachment { AttachmentPath = mPDecision.PathName + mPDecision.FileName, AttachmentName = mPDecision.FileName });
+                            DBResponse eMailResponse = eMailVersand.Send_Email(
+                                emailTo: eMailAdress,
+                                subject: $"Entscheidungen ${SelectedWeek.MPWeekName}",
+                                mailBody: "Liebe Kollegin, lieber Kollege, <Br> <BR> anbei erhalten Sie die Entscheidungen Ihres Senats zur Bearbeitung für BGHRZ. Bitte füllen Sie das elektronische Erfassungsformular aus und senden es dann über den Senatsredaktor bzw. die Senatsredaktorin an woestmann-heinz@bgh.bund.de. Eine Übersendung der Datei mit der Entscheidung ist nicht erforderlich. <BR> <BR> Vielen Dank und viele Grüße <BR> Ihr Heinz Wöstmann <BR> Geschäftsführer BGHR",
+                                attachmentList: attachmentListpfd);
+                            if (eMailResponse.Success)
+                            {
+                                foreach (MPDecision mPDecision in decisionList)
+                                {
+                                    MPDecision changeDecision = mPDBContext.MPDecisions.FirstOrDefault(x => x.MPDecisionID == mPDecision.MPDecisionID);
+                                    if (changeDecision != null)
+                                    {
+                                        changeDecision.BEEMail = true;
+                                        try
+                                        {
+                                            mPDBContext.MPDecisions.AddOrUpdate(changeDecision);
+                                            mPDBContext.SaveChanges();
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Logger.WriteLog($"Beim Speichern des Versandmerkmals ist bei der Entscheidung ${mPDecision.FileName} folgender Fehler aufgetreten: ${ex.Message}; ${ex.InnerException}");
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Logger.WriteLog(eMailResponse.Message);
+                                response.Message = response.Message == string.Empty ? $"An folgende Empfänger konnte keine E-Mail versendet werden: ${eMailAdress}" : response.Message + $"; ${eMailAdress}";
+                            }
+                        }
+                        else
+                        {
+                            response.Message = "Es wurden bereits für alle Entscheidungen die Benachrichtigungen verschickt.";
+                        }
+                    }
+                    if (response.Message == string.Empty) response.Success = true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"Beim Senden ist folgender Fehler aufgetreten: {ex.Message}, {ex.InnerException}");
+                    response.Message = $"Beim Senden ist folgender Fehler aufgetreten: {ex.Message}";
+                    throw;
+                }
+                return response;
+            });
+            return task;
+        }
+    }
+}
