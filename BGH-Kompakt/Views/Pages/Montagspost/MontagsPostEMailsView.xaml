@@ -1,0 +1,187 @@
+﻿<UserControl
+    x:Class="BGH_Kompakt.Views.Pages.Montagspost.MontagsPostEMailsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:BGH_Kompakt.Views.Pages.Montagspost"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="900"
+    d:DesignWidth="1400"
+    Background="{StaticResource MaterialDesignPaper}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Textblock_MPImport_Header"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,15,0,0" />
+        </Style>
+        <Style
+            x:Key="Textblock_MPImport_Text"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,25,0,0" />
+        </Style>
+        <Style
+            x:Key="Textblock_MPImpor_Under"
+            BasedOn="{StaticResource Textblock_MPImport_Header}"
+            TargetType="{x:Type TextBlock}">
+            <Setter Property="FontWeight" Value="Normal" />
+        </Style>
+        <Style
+            x:Key="Comobox_MPImport"
+            BasedOn="{StaticResource Combobox_Base}"
+            TargetType="{x:Type ComboBox}">
+            <Setter Property="Margin" Value="15,0" />
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style
+            x:Key="Button_MP_View_RowButton"
+            BasedOn="{StaticResource MaterialDesignFlatButton}"
+            TargetType="Button">
+            <Setter Property="Width" Value="35" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="Margin" Value="5,0,0,5" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style
+            x:Key="Button_MP_Import"
+            BasedOn="{StaticResource Button_Master}"
+            TargetType="{x:Type Button}">
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="MaxWidth" Value="160" />
+            <Setter Property="Margin" Value="0,10,0,0" />
+        </Style>
+        <Style
+            x:Key="Textbox_MP_Import"
+            BasedOn="{StaticResource Textbox_Base}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="Margin" Value="0,10,0,0" />
+            <Setter Property="MaxWidth" Value="200" />
+        </Style>
+        <Style x:Key="Listbox_MP" TargetType="{x:Type ListBox}">
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="15" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="0,15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <MD:Card Grid.Column="1" Style="{StaticResource MDCard_Master}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="200" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Interne Empfänger (Benachrichtigung Montagspost)" />
+                <ListBox
+                    Grid.Row="1"
+                    DisplayMemberPath="MPEMailRecipientAdress"
+                    ItemsSource="{Binding EMailPDFList}"
+                    SelectedItem="{Binding SelectedEMailpdfRecipient}"
+                    Style="{StaticResource Listbox_MP}" />
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        MD:HintAssist.Hint="EMail-Empfänger:"
+                        Style="{StaticResource Textbox_MP_Import}"
+                        Text="{Binding EMailpdfRecipient, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Command="{Binding EMailpdfAddCommand}"
+                        CommandParameter="pdf"
+                        Content="Hinzufügen"
+                        Style="{StaticResource Button_MP_Import}" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Command="{Binding EMailpdfDeleteCommand}"
+                        CommandParameter="pdf"
+                        Content="Löschen"
+                        Style="{StaticResource Button_MP_Import}" />
+                </Grid>
+            </Grid>
+        </MD:Card>
+        <MD:Card
+            Grid.Row="1"
+            Grid.Column="1"
+            Style="{StaticResource MDCard_Master}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="200" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Externe Empfänger" />
+                <ListBox
+                    Grid.Row="1"
+                    DisplayMemberPath="MPEMailRecipientAdress"
+                    ItemsSource="{Binding EMailPDFList}"
+                    SelectedItem="{Binding SelectedEMailpdfRecipient}"
+                    Style="{StaticResource Listbox_MP}" />
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        MD:HintAssist.Hint="EMail-Empfänger:"
+                        Style="{StaticResource Textbox_MP_Import}"
+                        Text="{Binding EMailpdfRecipient, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Command="{Binding EMailpdfAddCommand}"
+                        CommandParameter="pdf"
+                        Content="Hinzufügen"
+                        Style="{StaticResource Button_MP_Import}" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Command="{Binding EMailpdfDeleteCommand}"
+                        CommandParameter="pdf"
+                        Content="Löschen"
+                        Style="{StaticResource Button_MP_Import}" />
+                </Grid>
+            </Grid>
+        </MD:Card>
+
+    </Grid>
+</UserControl>

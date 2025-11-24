@@ -19,6 +19,9 @@ namespace BGH_Kompakt.Views.Pages.Montagspost
             string tabItem = ((sender as TabControl).SelectedItem as TabItem).Name as string;
             switch (tabItem)
             {
+                case "EMails":
+                    ViewManager.ShowUnderPageOn<MontagsPostEMailsView>(AnimatedContentControl);
+                    break;
                 case "AddKW":
                     ViewManager.ShowUnderPageOn<MontagspostImportView>(AnimatedContentControl);
                     break;

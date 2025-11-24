@@ -74,6 +74,14 @@
             Background="{StaticResource BGHActivityRequestBackground}"
             SelectionChanged="TabControl_SelectionChanged"
             Style="{StaticResource MahApps.Styles.TabControl}">
+            <TabItem
+                x:Name="EMails"
+                Style="{StaticResource TabItem_AR}"
+                Visibility="Collapsed">
+                <TabItem.Header>
+                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Einstellungen EMails" />
+                </TabItem.Header>
+            </TabItem>
             <TabItem x:Name="AddKW" Style="{StaticResource TabItem_AR}">
                 <TabItem.Header>
                     <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Kalenderwoche einlesen" />

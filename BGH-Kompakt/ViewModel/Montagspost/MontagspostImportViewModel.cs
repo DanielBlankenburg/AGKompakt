@@ -649,7 +649,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 //Adressenliste erstellen
                 ObservableCollection<MPEMailRecipient> AddressList = new ObservableCollection<MPEMailRecipient>();
                 UserDBContext context = new UserDBContext();
-                var query = context.Users.Where(n => n.MPEMailNotification == true).ToArray();
+                var query = context.Users.Where(n => n.MPEMailNotification == true && n.StatusId == 1).ToArray();
                 foreach (var item in query) AddressList.Add(new MPEMailRecipient { MPEMailRecipientAdress = item.EMail, MPEMailRecipientTyp = 2 });
 
                 EMails_Versenden(AddressList, strSubject, Text, null);
