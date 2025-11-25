@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls.Expressions;
 using System.Windows;
 using System.Windows.Input;
 
@@ -329,7 +330,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
 
                 #endregion                
-                #region E-Mail mit Word-Dateien auslesen
+                #region Word-Dateien auslesen
 
                 //Entscheidungen aus dem Text auslesen
                 List<MPDecisionImportWord> entscheidungsListe = new List<MPDecisionImportWord>();
@@ -934,6 +935,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             bool NormenketteStart = false;
             bool RubrumEnde = false;
             bool EntscheidungsartErfasst = false;
+            bool StraftatbestandStart = false;
             int ZeilenAnzahlEntscheidungsdatum = 0;
             int ZaehlerVorinstanz = 0;
             int AnzahlEntscheidungen = 0;
@@ -980,6 +982,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                         StraftatbestandErfasst = false;
                         NormenketteErfasst = false;
                         NormenketteStart = false;
+                        StraftatbestandStart = false;
 
                         //Properties auslesen
                         dynamic properties = document.CustomDocumentProperties;
@@ -1169,9 +1172,24 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                             if (p.Range.Text.Contains("wegen"))
                                             {
                                                 Leitsatz += (Leitsatz == string.Empty) ? p.Range.Text : Environment.NewLine + p.Range.Text;
-                                                LeitsatzErfasst = true;
-                                                StraftatbestandErfasst = true;
-                                                NormenketteErfasst = true;
+                                                //LeitsatzErfasst = true;
+                                                //StraftatbestandErfasst = true;
+                                                //NormenketteErfasst = true;
+                                                StraftatbestandStart = true;
+                                            }
+                                            else if(StraftatbestandStart)
+                                            {
+                                                Regex WordCharRegex = new Regex(@"^[\w]");
+                                                if (WordCharRegex.IsMatch(p.Range.Text))
+                                                {
+                                                    Leitsatz += (Leitsatz == string.Empty) ? p.Range.Text : Environment.NewLine + p.Range.Text;
+                                                }
+                                                else
+                                                {
+                                                    NormenketteErfasst = true;
+                                                    LeitsatzErfasst = true;
+                                                    StraftatbestandErfasst = true;
+                                                }
                                             }
                                         }
                                     }
