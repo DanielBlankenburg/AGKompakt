@@ -1516,15 +1516,15 @@ namespace BGH_Kompakt.ViewModel
                                 range = bM.Range;
                                 UserDBContext userDBContext = new UserDBContext();
                                 Dienstbezeichnung dienstbezeichnung = userDBContext.Dienstbezeichnungen.FirstOrDefault(d => d.DienstbezeichnungId == ActivityRequestManager.SelectedActivityRequest.ARUser.DienstbezeichnungId);
-                                range.Text = $"{(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "Herrn" : "Frau")} {(dienstbezeichnung != null ? dienstbezeichnung.DienstbezeichnungText : "")}";
+                                range.Text = $"{(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "Herrn" : "Frau")} {(dienstbezeichnung != null ? dienstbezeichnung.DienstbezeichnungLong()  : "")}";
                                 break;
                             case "BGHKompaktAdresseName":
                                 range = bM.Range;
-                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ARUser.FullSurname}";
+                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ARUser.Fullname}";
                                 break;
                             case "BGHKompaktDatum":
                                 range = bM.Range;
-                                range.Text = DateTime.Now.ToString("dd. MMMM yyyy");
+                                range.Text = DateTime.Now.ToString("d. MMMM yyyy");
                                 break;
                             case "BGHKompaktBetreff":
                                 range = bM.Range;
@@ -1536,7 +1536,7 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                             case "BGHKompaktBezug":
                                 range = bM.Range;
-                                range.Text = $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:dd. MMMM yyyy}";
+                                range.Text = $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy}";
                                 break;
                             case "BGHKompaktBodyAnrede":
                                 range = bM.Range;
@@ -1544,12 +1544,12 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                             case "BGHKompaktBodyText":
                                 range = bM.Range;
-                                range.Text = $"ich genehmige die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum.ToShortDateString()} bezeichnete Nebentätigkeit.";
+                                range.Text = $"ich genehmige die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy} bezeichnete Nebentätigkeit.";
                                 break;
                             case "Genehmigungstext":
                                 range = bM.Range;
                                 range.Text = $"Sehr {(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "geehrter Herr" : "geehrte Frau")} {ActivityRequestManager.SelectedActivityRequest.ARUser.Fullname},\n\n" +
-                                                $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:dd. MMMM yyyy} wird genehmigt.";
+                                                $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy} wird genehmigt.";
                                 break;
                         }
                     }
@@ -1583,7 +1583,6 @@ namespace BGH_Kompakt.ViewModel
             });
             return task;
         }
-
 
 
         private bool ChangeHistoryCanExecute(object obj)
