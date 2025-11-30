@@ -7,6 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:BGH_Kompakt.Views.Pages.Montagspost"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:montagspost="clr-namespace:BGH_Kompakt.ViewModel.Montagspost"
+    d:DataContext="{d:DesignInstance Type=montagspost:MontagsPostEMailsViewModel}"
     d:DesignHeight="900"
     d:DesignWidth="1400"
     Background="{StaticResource MaterialDesignPaper}"
@@ -95,11 +97,58 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Interne Empfänger (Benachrichtigung Montagspost)" />
+
+                <!--<ListBox Margin="30,10,0,0" ItemsSource="{Binding ActionList, UpdateSourceTrigger=PropertyChanged}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                            VerticalAlignment="Center"
+                                            Foreground="White"
+                                            Style="{StaticResource textblock_base}">
+                                            <Run Text="•" />
+                                            <Run Text="{Binding ActionsStatusName, Mode=OneWay}" />
+                                </TextBlock>
+                                <Canvas
+                                            Width="10"
+                                            Height="10"
+                                            Margin="10,0,0,0">
+                                    <Rectangle
+                                                x:Name="rect1"
+                                                Width="8"
+                                                Height="8"
+                                                Fill="White"
+                                                RenderTransformOrigin="0.5, 0.5">
+                                        <Rectangle.RenderTransform>
+                -->
+                <!--  giving the transform a name tells the framework not to freeze it  -->
+                <!--
+                                            <RotateTransform x:Name="noFreeze" />
+                                        </Rectangle.RenderTransform>
+                                        <Rectangle.Triggers>
+                                            <EventTrigger RoutedEvent="Loaded">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                                    RepeatBehavior="Forever"
+                                                                    Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)"
+                                                                    To="-360"
+                                                                    Duration="0:0:1" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Rectangle.Triggers>
+                                    </Rectangle>
+                                </Canvas>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>-->
                 <ListBox
                     Grid.Row="1"
                     DisplayMemberPath="MPEMailRecipientAdress"
-                    ItemsSource="{Binding EMailPDFList}"
-                    SelectedItem="{Binding SelectedEMailpdfRecipient}"
+                    ItemsSource="{Binding ListInterior}"
+                    SelectedItem="{Binding SelectedInteriorEMailRecipient}"
                     Style="{StaticResource Listbox_MP}" />
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
@@ -113,22 +162,15 @@
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="0"
-                        MD:HintAssist.Hint="EMail-Empfänger:"
+                        MD:HintAssist.Hint="EMail-Adresse:"
                         Style="{StaticResource Textbox_MP_Import}"
-                        Text="{Binding EMailpdfRecipient, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{Binding EMailRecipientInterior, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
                         Grid.Row="1"
                         Grid.Column="0"
                         Command="{Binding EMailpdfAddCommand}"
                         CommandParameter="pdf"
-                        Content="Hinzufügen"
-                        Style="{StaticResource Button_MP_Import}" />
-                    <Button
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Command="{Binding EMailpdfDeleteCommand}"
-                        CommandParameter="pdf"
-                        Content="Löschen"
+                        Content="Änderung Speichern"
                         Style="{StaticResource Button_MP_Import}" />
                 </Grid>
             </Grid>
@@ -147,8 +189,8 @@
                 <ListBox
                     Grid.Row="1"
                     DisplayMemberPath="MPEMailRecipientAdress"
-                    ItemsSource="{Binding EMailPDFList}"
-                    SelectedItem="{Binding SelectedEMailpdfRecipient}"
+                    ItemsSource="{Binding ListExterior}"
+                    SelectedItem="{Binding SelectedExteriorEMailRecipient}"
                     Style="{StaticResource Listbox_MP}" />
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
@@ -164,19 +206,17 @@
                         Grid.Column="0"
                         MD:HintAssist.Hint="EMail-Empfänger:"
                         Style="{StaticResource Textbox_MP_Import}"
-                        Text="{Binding EMailpdfRecipient, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{Binding EMailRecipientExterior, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
                         Grid.Row="1"
                         Grid.Column="0"
-                        Command="{Binding EMailpdfAddCommand}"
-                        CommandParameter="pdf"
+                        Command="{Binding ListExteriorAddCommand}"
                         Content="Hinzufügen"
                         Style="{StaticResource Button_MP_Import}" />
                     <Button
                         Grid.Row="1"
                         Grid.Column="1"
                         Command="{Binding EMailpdfDeleteCommand}"
-                        CommandParameter="pdf"
                         Content="Löschen"
                         Style="{StaticResource Button_MP_Import}" />
                 </Grid>
