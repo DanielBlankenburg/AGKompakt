@@ -1,6 +1,7 @@
 ﻿using BGH_Kompakt.Classes.UserClasses;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.RightsManagement;
 using System.Text;
@@ -13,7 +14,10 @@ namespace BGH_Kompakt.Classes.MP
         public int MPEMailRecipientID { get; set; }
         public string MPEMailRecipientAdress { get; set; }
         public int MPEMailRecipientTyp { get; set; } //1 = Word; 2 = pdf
-        public User MPEMailUser { get; set; } 
+        [NotMapped]
+        public int MPEMailUserID { get; set; }
+        [NotMapped]
+        public string MPEMailUserFullName { get; set; }
         public MPEMailRecipient()
         {
 
@@ -22,7 +26,8 @@ namespace BGH_Kompakt.Classes.MP
         {
             MPEMailRecipientAdress = recipient;
             MPEMailRecipientTyp = typ;
-            MPEMailUser = user;
+            MPEMailUserID = user.UserId;
+            MPEMailUserFullName = user.Fullname;
         }
     }
 }

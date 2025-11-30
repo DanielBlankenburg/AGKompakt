@@ -247,7 +247,7 @@
                                 <Border Margin="0,20,0,0" Style="{StaticResource Expander_Border}" />
                                 <Border Margin="0,20,0,0" Style="{StaticResource Expander_Border}" />
                                 <!--  EMail-pdf-Recipient  -->
-                                <Grid>
+                                <Grid Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="30" />
                                         <RowDefinition Height="200" />

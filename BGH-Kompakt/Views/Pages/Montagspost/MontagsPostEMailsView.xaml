@@ -60,7 +60,7 @@
             BasedOn="{StaticResource Button_Master}"
             TargetType="{x:Type Button}">
             <Setter Property="MinWidth" Value="100" />
-            <Setter Property="MaxWidth" Value="160" />
+            <Setter Property="MaxWidth" Value="170" />
             <Setter Property="Margin" Value="0,10,0,0" />
         </Style>
         <Style
@@ -69,7 +69,7 @@
             TargetType="{x:Type TextBox}">
             <Setter Property="MinWidth" Value="100" />
             <Setter Property="Margin" Value="0,10,0,0" />
-            <Setter Property="MaxWidth" Value="200" />
+            <Setter Property="MaxWidth" Value="300" />
         </Style>
         <Style x:Key="Listbox_MP" TargetType="{x:Type ListBox}">
             <Setter Property="BorderBrush" Value="LightGray" />
@@ -81,13 +81,10 @@
     <Grid Margin="0,15">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="7*" />
+            <ColumnDefinition Width="7*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
 
         <MD:Card Grid.Column="1" Style="{StaticResource MDCard_Master}">
             <Grid>
@@ -98,87 +95,49 @@
                 </Grid.RowDefinitions>
                 <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Interne Empfänger (Benachrichtigung Montagspost)" />
 
-                <!--<ListBox Margin="30,10,0,0" ItemsSource="{Binding ActionList, UpdateSourceTrigger=PropertyChanged}">
+                <ListBox
+                    Grid.Row="1"
+                    ItemsSource="{Binding ListInterior}"
+                    SelectedItem="{Binding SelectedInteriorEMailRecipient}"
+                    Style="{StaticResource Listbox_MP}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
-                                            VerticalAlignment="Center"
-                                            Foreground="White"
-                                            Style="{StaticResource textblock_base}">
-                                            <Run Text="•" />
-                                            <Run Text="{Binding ActionsStatusName, Mode=OneWay}" />
-                                </TextBlock>
-                                <Canvas
-                                            Width="10"
-                                            Height="10"
-                                            Margin="10,0,0,0">
-                                    <Rectangle
-                                                x:Name="rect1"
-                                                Width="8"
-                                                Height="8"
-                                                Fill="White"
-                                                RenderTransformOrigin="0.5, 0.5">
-                                        <Rectangle.RenderTransform>
-                -->
-                <!--  giving the transform a name tells the framework not to freeze it  -->
-                <!--
-                                            <RotateTransform x:Name="noFreeze" />
-                                        </Rectangle.RenderTransform>
-                                        <Rectangle.Triggers>
-                                            <EventTrigger RoutedEvent="Loaded">
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation
-                                                                    RepeatBehavior="Forever"
-                                                                    Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)"
-                                                                    To="-360"
-                                                                    Duration="0:0:1" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </EventTrigger>
-                                        </Rectangle.Triggers>
-                                    </Rectangle>
-                                </Canvas>
+                                    Margin="0,0,20,0"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource textblock_base}"
+                                    Text="{Binding MPEMailUserFullName}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource textblock_base}"
+                                    Text="{Binding MPEMailRecipientAdress}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
-                </ListBox>-->
-                <ListBox
-                    Grid.Row="1"
-                    DisplayMemberPath="MPEMailRecipientAdress"
-                    ItemsSource="{Binding ListInterior}"
-                    SelectedItem="{Binding SelectedInteriorEMailRecipient}"
-                    Style="{StaticResource Listbox_MP}" />
+
+                </ListBox>
                 <Grid Grid.Row="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        MD:HintAssist.Hint="EMail-Adresse:"
-                        Style="{StaticResource Textbox_MP_Import}"
-                        Text="{Binding EMailRecipientInterior, UpdateSourceTrigger=PropertyChanged}" />
-                    <Button
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Command="{Binding EMailpdfAddCommand}"
-                        CommandParameter="pdf"
-                        Content="Änderung Speichern"
-                        Style="{StaticResource Button_MP_Import}" />
+                    <StackPanel>
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            MD:HintAssist.Hint="EMail-Adresse:"
+                            Style="{StaticResource Textbox_MP_Import}"
+                            Text="{Binding EMailRecipientInterior, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Command="{Binding ListInteriorEditCommand}"
+                            CommandParameter="pdf"
+                            Content="Änderung Speichern"
+                            Style="{StaticResource Button_MP_Import}" />
+
+                    </StackPanel>
                 </Grid>
             </Grid>
         </MD:Card>
-        <MD:Card
-            Grid.Row="1"
-            Grid.Column="1"
-            Style="{StaticResource MDCard_Master}">
+        <MD:Card Grid.Column="2" Style="{StaticResource MDCard_Master}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
@@ -188,35 +147,41 @@
                 <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Externe Empfänger" />
                 <ListBox
                     Grid.Row="1"
-                    DisplayMemberPath="MPEMailRecipientAdress"
                     ItemsSource="{Binding ListExterior}"
                     SelectedItem="{Binding SelectedExteriorEMailRecipient}"
-                    Style="{StaticResource Listbox_MP}" />
+                    Style="{StaticResource Listbox_MP}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource textblock_base}"
+                                    Text="{Binding MPEMailRecipientAdress}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
                 <Grid Grid.Row="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBox
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        MD:HintAssist.Hint="EMail-Empfänger:"
-                        Style="{StaticResource Textbox_MP_Import}"
-                        Text="{Binding EMailRecipientExterior, UpdateSourceTrigger=PropertyChanged}" />
-                    <Button
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Command="{Binding ListExteriorAddCommand}"
-                        Content="Hinzufügen"
-                        Style="{StaticResource Button_MP_Import}" />
+                    <StackPanel Margin="15,0,0,0">
+                        <TextBox
+                            MD:HintAssist.Hint="EMail-Empfänger:"
+                            Style="{StaticResource Textbox_MP_Import}"
+                            Text="{Binding EMailRecipientExterior, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button
+                            Command="{Binding ListExteriorAddCommand}"
+                            Content="Hinzufügen"
+                            Style="{StaticResource Button_MP_Import}" />
+
+                    </StackPanel>
                     <Button
                         Grid.Row="1"
                         Grid.Column="1"
-                        Command="{Binding EMailpdfDeleteCommand}"
+                        VerticalAlignment="Bottom"
+                        Command="{Binding ListExteriorDeleteCommand}"
                         Content="Löschen"
                         Style="{StaticResource Button_MP_Import}" />
                 </Grid>

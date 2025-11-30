@@ -1,4 +1,5 @@
 ﻿using BGH_Kompakt.Classes.MP;
+using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.SystemComponents;
@@ -40,8 +41,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         {
             get { return _SelectedInteriorEMailRecipient; }
             set { 
-                EMailRecipientInterior = value.MPEMailRecipientAdress;
                 SetProperty(ref _SelectedInteriorEMailRecipient, value); 
+                if (value != null) EMailRecipientInterior = value.MPEMailRecipientAdress;
             }
         }
 
@@ -50,10 +51,12 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         {
             get { return _SelectedExteriorEMailRecipient; }
             set {
-                EMailRecipientExterior = value.MPEMailRecipientAdress;
                 SetProperty(ref _SelectedExteriorEMailRecipient, value); 
+                if (value != null) EMailRecipientExterior = value.MPEMailRecipientAdress;
             }
         }
+
+        private readonly UserDBContext userDBContext = new UserDBContext();
 
         public ICommand ListExteriorAddCommand { get; set; }
         public ICommand ListExteriorDeleteCommand { get; set; }
@@ -67,13 +70,12 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             ListInteriorEditCommand = new RelayCommand(ListInteriorEditExecute, ListInteriorEditCanExecute);
 
             //ListExterior 
-            var templist = mpDBContext.MPEMailRecipients.Where(x => x.MPEMailRecipientTyp == 1).ToArray();
+            var templist = mpDBContext.MPEMailRecipients.Where(x => x.MPEMailRecipientTyp == 2).ToArray();
             foreach (MPEMailRecipient recipient in templist) ListExterior.Add(recipient);
 
             //ListInterior
-            UserDBContext context = new UserDBContext();
-            var query = context.Users.Where(n => n.MPEMailNotification == true && n.StatusId == 1).ToArray();
-            foreach (var item in query) ListInterior.Add(new MPEMailRecipient { MPEMailRecipientAdress = item.EMail, MPEMailRecipientTyp = 2, MPEMailUser = item});
+            var query = userDBContext.Users.Where(n => n.MPEMailNotification == true && n.StatusId == 1).ToArray();
+            foreach (var item in query) ListInterior.Add(new MPEMailRecipient { MPEMailRecipientAdress = item.EMail, MPEMailRecipientTyp = 2, MPEMailUserID = item.UserId, MPEMailUserFullName = item.Fullname});
 
         }
 
@@ -84,7 +86,15 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
         private void ListExteriorDeleteExecute(object obj)
         {
-            throw new NotImplementedException();
+            if (SelectedExteriorEMailRecipient == null)
+                ViewManager.ShowMainInfoFlyout("Bitte wählen Sie eine E-Mail-Adresse aus.", false); 
+            MPEMailRecipient recipient = mpDBContext.MPEMailRecipients.FirstOrDefault(x => x.MPEMailRecipientID == SelectedExteriorEMailRecipient.MPEMailRecipientID);
+            if (recipient != null)
+            {
+                mpDBContext.MPEMailRecipients.Remove(recipient);
+                mpDBContext.SaveChanges();
+                ListExterior.Remove(SelectedExteriorEMailRecipient);
+            }
         }
 
         private bool ListInteriorEditCanExecute(object obj)
@@ -94,8 +104,18 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
         private void ListInteriorEditExecute(object obj)
         {
-            if (SelectedInteriorEMailRecipient == null);
-            ViewManager.ShowMainInfoFlyout("Bitte wählen Sie eine E-Mail-Adresse aus.", false);
+            if (SelectedInteriorEMailRecipient == null)
+            ViewManager.ShowMainInfoFlyout("Bitte wählen Sie einen E-Mail-Empfänger aus.", false);
+
+            User editUser = userDBContext.Users.FirstOrDefault(x => x.UserId == SelectedInteriorEMailRecipient.MPEMailUserID);
+            if (editUser != null)
+            {
+                editUser.EMail = EMailRecipientInterior;
+                userDBContext.SaveChanges();
+                ListInterior.Remove(SelectedInteriorEMailRecipient);
+                ListInterior.Add(new MPEMailRecipient { MPEMailRecipientAdress = EMailRecipientInterior, MPEMailRecipientTyp = 2, MPEMailUserID = editUser.UserId, MPEMailUserFullName = editUser.Fullname});
+
+            }
         }
 
         private bool ListExteriorAddCanExecute(object obj)
