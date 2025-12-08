@@ -1180,7 +1180,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                             else if(StraftatbestandStart)
                                             {
                                                 Regex WordCharRegex = new Regex(@"^[\w]");
-                                                if (WordCharRegex.IsMatch(p.Range.Text))
+                                                if (WordCharRegex.IsMatch(p.Range.Text.TrimStart()))
                                                 {
                                                     Leitsatz += (Leitsatz == string.Empty) ? p.Range.Text : Environment.NewLine + p.Range.Text;
                                                 }
@@ -1194,6 +1194,12 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                         }
                                     }
                                 }
+                            }
+                            else if (StraftatbestandStart && !StraftatbestandErfasst)
+                            {
+                                NormenketteErfasst = true;
+                                LeitsatzErfasst = true;
+                                StraftatbestandErfasst = true;
                             }
                             if (!RubrumEnde && (p.Range.Text.Contains("\f") == true || p.PageBreakBefore == -1))
                             {

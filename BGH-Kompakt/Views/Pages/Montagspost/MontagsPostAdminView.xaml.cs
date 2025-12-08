@@ -25,17 +25,17 @@ namespace BGH_Kompakt.Views.Pages.Montagspost
                 case "AddKW":
                     ViewManager.ShowUnderPageOn<MontagspostImportView>(AnimatedContentControl);
                     break;
+                case "MetadataEdit":
+                    ViewManager.ShowUnderPageOn<MontagsPostMetadataEditView>(AnimatedContentControl);
+                    break;
                 case "Search":
                     ViewManager.ShowMainInfoFlyout("Dieser Bereich befindet sich noch in Entwicklung", false);
-                    //ViewManager.ShowUnderPageOn<MontagsPostFilterView>(AnimatedContentControl);
                     break;
                 case "BE":
                     ViewManager.ShowUnderPageOn<MontagsPostBE>(AnimatedContentControl);
-                    //ViewManager.ShowUnderPageOn<MontagsPostFilterView>(AnimatedContentControl);
                     break;
                 case "BGHR_Zivil":
                     ViewManager.ShowUnderPageOn<MontagsPostBGHRView>(AnimatedContentControl);
-                    //ViewManager.ShowUnderPageOn<MontagsPostFilterView>(AnimatedContentControl);
                     break;
             }
 
