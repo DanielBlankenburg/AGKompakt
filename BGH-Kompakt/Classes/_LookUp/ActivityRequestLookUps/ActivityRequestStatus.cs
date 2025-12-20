@@ -11,7 +11,7 @@ namespace BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps
     {
         public int ActivityRequestStatusId { get; set; }
         public string ActivityRequestStatusText { get; set; }
-        public IList<ActivityRequest> ActivityRequests { get; set; }
+        public IList<ActivityRequestStatusHistory> ActivityRequestStatusHistories { get; set; }
 
     }
 }

@@ -505,6 +505,7 @@ namespace BGH_Kompakt.ViewModel
                     ShowReject = true;
                     ShowWord = false;
                     aRSendProperties.AblageArtExport = 3;
+                    aRSendProperties.ActivityRequestStatusID = 2;
                     break;
                 case 3: //Präsidentinnenbereich
                     aRSendProperties.MessageText1 = "Soll der Eintrag genehmigt werden?";
@@ -537,6 +538,7 @@ namespace BGH_Kompakt.ViewModel
             try
             {
                 SelectedActivityRequest.ARZustaendigkeitsbereich = aRSendProperties.AblageArtExport;
+                SelectedActivityRequest.ActivityRequestStatus.ActivityRequestStatusId = aRSendProperties.ActivityRequestStatusID;
                 ActivityRequest sendRequest = SelectedActivityRequest;
                 dBContext.ActivityRequests.AddOrUpdate(SelectedActivityRequest);
                 dBContext.SaveChanges();

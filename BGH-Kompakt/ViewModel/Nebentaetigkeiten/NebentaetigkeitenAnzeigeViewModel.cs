@@ -1282,8 +1282,8 @@ namespace BGH_Kompakt.ViewModel
             try
             {
                 User eMailReciever = ActivityRequestManager.SelectedActivityRequest.ARUser;
-                string strSubject = "Genehmigung";
-                string text = $"Sehr {(eMailReciever.GeschlechtID == 1 ? "geehrte Frau" : "geehrter Herr")} {eMailReciever.FullSurname}, <br> <br>anliegend erhalten Sie die Genehmigung<br> <br> Mit freundlichen Grüßen<br>Präsidialgeschäftsstelle";
+                string strSubject = "Genehmigung einer Nebentätigkeit";
+                string text = $"Sehr {(eMailReciever.GeschlechtID == 2 ? "geehrte Frau" : "geehrter Herr")} {eMailReciever.FullSurname}, <br> <br>anliegend erhalten Sie die Genehmigung<br> <br> Mit freundlichen Grüßen<br>Präsidialgeschäftsstelle";
 
                 FileInfo Attachmentfile = new FileInfo($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}");
                 if (Attachmentfile.Extension == ".docx")
@@ -1820,7 +1820,10 @@ namespace BGH_Kompakt.ViewModel
                     return resp;
                 }
                 newActivityRequest.ActivityRequestMeldeArtID = Genehmigungspflichtig == true ? 2 : 1;
-                newActivityRequest.ARDatum = DateTime.Now;
+                if (ActivityRequestManager.SelectedActivityRequest != null)
+                    newActivityRequest.ARDatum = ActivityRequestManager.SelectedActivityRequest.ARDatum;
+                else
+                    newActivityRequest.ARDatum = DateTime.Now;
                 if (SelectedRequestTyp != null)
                 {
                     newActivityRequest.ActivityRequestTypID = SelectedRequestTyp.ActivityRequestTypId;
@@ -1940,10 +1943,22 @@ namespace BGH_Kompakt.ViewModel
                         newActivityRequest.Assurance = ARAssurance;
                         newActivityRequest.ActivityRequestStatusID = ARStatus;
                         newActivityRequest.ActivityRequestAccepted = ActivityRequestAccepted;
+                        int statusID = 0;
                         if (ActivityRequestManager.ActionType == 1) //Create
                         {
                             newActivityRequest.ARUserID = ActivityRequestManager.LoginType == 2 ? ApplicantSelected.UserId : UserManager.RegistratedUser.UserId;
-                            if (ActivityRequestManager.LoginType == 2) newActivityRequest.ARZustaendigkeitsbereich = 5;
+                            if (ActivityRequestManager.LoginType == 2)
+                            {
+                                newActivityRequest.ARZustaendigkeitsbereich = 5;
+                                statusID = 5;
+                            }
+                            else
+                            {
+                                statusID = 1;
+                            }
+                            ActivityRequestStatusHistory activityRequestStatusHistory = new ActivityRequestStatusHistory { Date = DateTime.Now, ActivityRequestStatusID = statusID };
+                            newActivityRequest.ActivityRequestStatusHistories.Add(activityRequestStatusHistory);
+
                         }
                         else //Edit
                         {

@@ -3,6 +3,7 @@ using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Services.DBContexts;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable enable
@@ -58,7 +59,7 @@ namespace BGH_Kompakt.Classes.ActivityRequestClasses
         public  ICollection<ActivityRequestArbitrationClient>? ActivityRequestArbitrationClients {  get; set; }
         public  ICollection<ActivityRequestDataFile>? ActivityRequestDataFiles {  get; set; }
         public  ICollection<ActivityRequestComment>? ActivityRequestComments {  get; set; }
-        //public  ICollection<ActivityRequestScienceAuthorName>? ActivityRequestScienceAuthors {  get; set; }
+        public ICollection<ActivityRequestStatusHistory>? ActivityRequestStatusHistories { get; set; } = new ObservableCollection<ActivityRequestStatusHistory>();
         public int ARZustaendigkeitsbereich { get; set; } = 1; //1 = Zuständigkeit beim Einreichenden; 2 = Zuständigkeit Präsidialrichter; 3 = Zuständigkeit Präsidentin; 4 = Zuständigkeit Vorzimmer; 5 = Archiv; 6 = Vorsitzender
         public int? ActivityRequestStatusID { get; set; }
         public virtual ActivityRequestStatus? ActivityRequestStatus { get; set; }

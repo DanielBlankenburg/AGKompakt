@@ -11,6 +11,7 @@ namespace BGH_Kompakt.Classes.Helper
         public string MessageText1 { get; set; }
         public string MessageText2 { get; set; }
         public int AblageArtExport { get; set; }
+        public int ActivityRequestStatusID { get; set; }
 
         public ARSendProperties()
         {

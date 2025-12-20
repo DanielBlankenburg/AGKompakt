@@ -41,6 +41,7 @@ namespace BGH_Kompakt.Services
         public DbSet<ActivityRequestChangeHistory> ActivityRequestChangeHistories { get; set; }
         public DbSet<ActivityRequestStatus> ActivityRequestStatuses { get; set; }
         public DbSet<ActivityRequestComment> ActivityRequestComments { get; set; }
+        public DbSet<ActivityRequestStatusHistory> ActivityRequestStatusHistories { get; set; }
 
         public ActivityRequestDBContext() :base("name=Main")
         {
@@ -52,7 +53,6 @@ namespace BGH_Kompakt.Services
 
             try
             {
-
                 modelBuilder.Entity<ActivityRequestMeldeArt>()
                     .ToTable("ActivityRequestMeldeArten")
                     .Property(x => x.ActivityRequestMeldeArtText).IsRequired();
@@ -94,6 +94,11 @@ namespace BGH_Kompakt.Services
                     .HasRequired(x => x.ARVerguetungAdventageTyp)
                     .WithMany(a => a.ARVerguetungAdventages)
                     .HasForeignKey(x => x.ARVerguetungAdventageTypId);
+
+                modelBuilder.Entity<ActivityRequestStatusHistory>()
+                    .HasRequired(x => x.ActivityRequestStatus)
+                    .WithMany(a => a.ActivityRequestStatusHistories)
+                    .HasForeignKey(x => x.ActivityRequestStatusID);
 
                 modelBuilder.Configurations.Add(new ActivityClientConfigurations());
                 modelBuilder.Configurations.Add(new ActivityRequestConfigurations());
