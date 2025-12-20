@@ -170,16 +170,6 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                         arDBContext.ActivityRequestTyps.AddOrUpdate(a => a.ActivityRequestTypText, new ActivityRequestTyp { ActivityRequestTypText = suchText.ActivityRequestTypText, ActivityRequestTypMeldeArt = suchText.ActivityRequestTypMeldeArt });
                 };
 
-                List.Clear();
-                List = new List<String> { "durch Antragsteller/in eingereicht", "durch Präsidialrichter/in als genehmigungsfähig weiterleitet", "durch Präsidialrichter/in als ablehnungsreif", "durch Präsident/in genehmigung", "durch Präsident/in abgelehnt", "durch Vorsitzende/n als genehmigungsfähig weiterleitet", "durch Vorsitzende/n als ablehnungsreife weiterleitet" };
-                foreach (string suchText in List)
-                {
-                    if (arDBContext.ActivityRequestStatuses.FirstOrDefault(x => x.ActivityRequestStatusText == suchText) == null)
-                        arDBContext.ActivityRequestStatuses.AddOrUpdate(a => a.ActivityRequestStatusText, new ActivityRequestStatus { ActivityRequestStatusText = suchText });
-                }
-                ;
-
-
                 //List.Clear();
                 //List = new List<String> { "Erhaltene Vergütung", "Honorarfrei", "derzeit unbekannte Vergütung" };
                 //foreach (string suchText in List)
@@ -190,9 +180,43 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
 
 
                 arDBContext.SaveChanges();
-                ViewManager.ShowMainInfoFlyout($"Die Werte für die Nebentätigkeiten wurden gesetzt.", false);
 
                 #endregion
+
+                var desiredStatuses = new Dictionary<int, string>
+                {
+                    { 1, "durch Antragsteller/in eingereicht" },
+                    { 2, "durch Präsidialrichter/in als genehmigungsfähig weiterleitet" },
+                    { 3, "durch Präsidialrichter/in als ablehnungsreif" },
+                    { 4, "durch Präsident/in genehmigung" },
+                    { 5, "durch Präsident/in abgelehnt" },
+                    { 6, "durch Vorsitzende/n als genehmigungsfähig weiterleitet" },
+                    { 7, "durch Vorsitzende/n als ablehnungsreife weiterleitet" }
+                };
+
+                try
+                {
+                    foreach (var kv in desiredStatuses)
+                    {
+                        // AddOrUpdate will insert if missing or update the text if exists.
+                        arDBContext.ActivityRequestStatuses.AddOrUpdate(
+                            a => a.ActivityRequestStatusId,
+                            new ActivityRequestStatus
+                            {
+                                ActivityRequestStatusId = kv.Key,
+                                ActivityRequestStatusText = kv.Value
+                            });
+                    }
+
+                    arDBContext.SaveChanges();
+                }
+                catch (System.Exception ex)
+                {
+                    Logger.WriteLog("Fehler beim Aktualisieren des ActivityRequestStatus während des AZ-Seeds. " + ex.Message);
+                }
+                ViewManager.ShowMainInfoFlyout($"Die Werte für die Nebentätigkeiten wurden gesetzt.", false);
+
+
             }
             catch (Exception)
             {
@@ -372,14 +396,14 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             var query = userDBContext.SenatSettings.ToArray();
             foreach (SenatSetting s in query)
             {
-                if(userDBContext.SenatAktenzeichen.FirstOrDefault(f => f.SenatSetting.SenatSettingID  == s.SenatSettingID) == null)
+                if (userDBContext.SenatAktenzeichen.FirstOrDefault(f => f.SenatSetting.SenatSettingID == s.SenatSettingID) == null)
                 {
-                    if(s.Senat.SenatArt == 1)
+                    if (s.Senat.SenatArt == 1)
                     {
-                        for(int i = 0; i < 3; i++)
+                        for (int i = 0; i < 3; i++)
                         {
                             string azName = string.Empty;
-                            switch(i)
+                            switch (i)
                             {
                                 case 0:
                                     azName = "ZR";
@@ -395,7 +419,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                             {
                                 SenatAktenzeichenName = azName,
                                 SenatAktenzeichenNameRaw = azName,
-                                SenatAktenzeichenOrderNumber = i+1,
+                                SenatAktenzeichenOrderNumber = i + 1,
                                 SenatSetting = s
                             };
                             try
