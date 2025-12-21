@@ -78,9 +78,9 @@
                     Style="{StaticResource Label_Base}" />
                 <ListBox
                     Name="ListBoxUsedClients"
-                    SelectedItem="{Binding SelectedUsedAR}"
                     DisplayMemberPath="ARTitel"
-                    ItemsSource="{Binding SelectedItem.ActivityRequests, ElementName=ClientList}">
+                    ItemsSource="{Binding SelectedItem.ActivityRequests, ElementName=ClientList}"
+                    SelectedItem="{Binding SelectedUsedAR}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDoubleClick">
                             <i:InvokeCommandAction Command="{Binding ListBoxUsedARDblClickCommand}" CommandParameter="{Binding ElementName=ListBoxUsedClients, Path=SelectedItem}" />
