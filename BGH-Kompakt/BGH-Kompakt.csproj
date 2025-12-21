@@ -66,6 +66,9 @@
     <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.4.3.0\lib\net462\ControlzEx.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetKit.Wpf.AutoCompleteComboBox, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetKit.Wpf.AutoCompleteComboBox.2.0.1\lib\net462\DotNetKit.Wpf.AutoCompleteComboBox.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -260,6 +263,10 @@
     <Compile Include="Migrartions\ActivityRequests\202512130452031_ARSatusHistories.cs" />
     <Compile Include="Migrartions\ActivityRequests\202512130452031_ARSatusHistories.Designer.cs">
       <DependentUpon>202512130452031_ARSatusHistories.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\ActivityRequests\202512202156428_DeleteSingleStatus.cs" />
+    <Compile Include="Migrartions\ActivityRequests\202512202156428_DeleteSingleStatus.Designer.cs">
+      <DependentUpon>202512202156428_DeleteSingleStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.cs" />
     <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.Designer.cs">
@@ -917,6 +924,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\ActivityRequests\202512130452031_ARSatusHistories.resx">
       <DependentUpon>202512130452031_ARSatusHistories.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\ActivityRequests\202512202156428_DeleteSingleStatus.resx">
+      <DependentUpon>202512202156428_DeleteSingleStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\MP\202501301414587_InitialMP.resx">
       <DependentUpon>202501301414587_InitialMP.cs</DependentUpon>

@@ -1,12 +1,9 @@
-﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
-using BGH_Kompakt.Classes.ActivityRequestClasses;
+﻿using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
-using BGH_Kompakt.Classes.MP;
 using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Dtos;
-using BGH_Kompakt.EntityConfigurations.UserDBContext;
 using BGH_Kompakt.Enums;
 using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.ActivityRequestService;
@@ -14,26 +11,16 @@ using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
 using BGH_Kompakt.Views;
-using BGH_Kompakt.Views.Sitzungsunterlagen;
 using BGH_Kompakt.Views.Start;
-using ControlzEx.Standard;
-using Microsoft.Office.Interop.Outlook;
-using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using static System.Net.Mime.MediaTypeNames;
 using Exception = System.Exception;
-using Task = System.Threading.Tasks.Task;
 
 
 namespace BGH_Kompakt.ViewModel
@@ -306,7 +293,7 @@ namespace BGH_Kompakt.ViewModel
                                         .Include(a => a.ARVerguetungAdventages)
                                         .Include(x => x.ActivityRequestDataFiles)
                                         .Include(c => c.ActivityRequestChangeHistories)
-                                        .Include(u => u.ActivityRequestStatus)
+                                        .Include(u => u.ActivityRequestStatusHistories)
                                         .OrderBy(x => x.ARDatum);
                         foreach (var activityRequest in query)
                         {
@@ -336,7 +323,7 @@ namespace BGH_Kompakt.ViewModel
                                     .Include(a => a.ARVerguetungAdventages)
                                     .Include(x => x.ActivityRequestDataFiles)
                                     .Include(c => c.ActivityRequestChangeHistories)
-                                    .Include(u => u.ActivityRequestStatus)
+                                    .Include(u => u.ActivityRequestStatusHistories)
                                     .OrderBy(x => x.ARDatum);
                     try
                     {
@@ -497,6 +484,7 @@ namespace BGH_Kompakt.ViewModel
                     ShowReject = false;
                     ShowWord = false;       
                     aRSendProperties.AblageArtExport = UserManager.RegistratedUser.PositionId == 1 ? 2 : 6;
+                    aRSendProperties.ActivityRequestStatusID = 1;
                     break;
                 case 2: //Präsidialbereich
                     aRSendProperties.MessageText1 = "Soll der Eintrag zur Präsidentin weitergeleitet werden?";
@@ -538,7 +526,15 @@ namespace BGH_Kompakt.ViewModel
             try
             {
                 SelectedActivityRequest.ARZustaendigkeitsbereich = aRSendProperties.AblageArtExport;
-                SelectedActivityRequest.ActivityRequestStatus.ActivityRequestStatusId = aRSendProperties.ActivityRequestStatusID;
+                //SelectedActivityRequest.ActivityRequestStatusID = aRSendProperties.ActivityRequestStatusID;
+
+                SelectedActivityRequest.ActivityRequestStatusHistories.Add(new ActivityRequestStatusHistory
+                {
+                    ActivityRequestID= SelectedActivityRequest.ActivityRequestId,
+                    ActivityRequestStatusID = aRSendProperties.ActivityRequestStatusID,
+                    Date= DateTime.Now
+                });
+
                 ActivityRequest sendRequest = SelectedActivityRequest;
                 dBContext.ActivityRequests.AddOrUpdate(SelectedActivityRequest);
                 dBContext.SaveChanges();

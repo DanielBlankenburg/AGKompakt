@@ -191,7 +191,8 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                     { 4, "durch Präsident/in genehmigung" },
                     { 5, "durch Präsident/in abgelehnt" },
                     { 6, "durch Vorsitzende/n als genehmigungsfähig weiterleitet" },
-                    { 7, "durch Vorsitzende/n als ablehnungsreife weiterleitet" }
+                    { 7, "durch Vorsitzende/n als ablehnungsreife weiterleitet" },
+                    { 8, "durch Antragsteller/in erstellt" }
                 };
 
                 try

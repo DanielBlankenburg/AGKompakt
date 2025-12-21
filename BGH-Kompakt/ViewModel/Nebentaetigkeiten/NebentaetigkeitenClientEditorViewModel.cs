@@ -19,6 +19,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
     {
         public ICommand SaveCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
+        public ICommand ListBoxUsedARDblClickCommand { get; set; }
 
         public List<ActivityClient> ClientList { get; set; }
         public List<ActivityClientTyp> ClientTypList { get; set; }
@@ -43,6 +44,13 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                 SelectedClient.ActivityClientTyp = value;
             }
         }
+        private ActivityRequest _SelectedUsedAR;
+        public ActivityRequest SelectedUsedAR
+        {
+            get { return _SelectedUsedAR; }
+            set { SetProperty(ref _SelectedUsedAR, value);}
+        }
+
         public NebentaetigkeitenClientEditorViewModel()
         {
             ClientList = activityRequestDBContext.ActivityClients.Include(x => x.ActivityClientTyp).Include(x => x.ActivityRequests).OrderBy(x => x.ACName).ToList();
@@ -50,7 +58,13 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
 
             SaveCommand = new RelayCommand(SaveExecute, SaveCanExecute);
             DeleteCommand = new RelayCommand(DeleteExecute, DeleteCanExecute);
+            ListBoxUsedARDblClickCommand = new RelayCommand(UsedARDblClickExecute);
 
+        }
+
+        private void UsedARDblClickExecute(object obj)
+        {
+            ViewManager.ShowMainInfoFlyout(SelectedUsedAR.ARTitel, false);
         }
 
         private bool SaveCanExecute(object obj)

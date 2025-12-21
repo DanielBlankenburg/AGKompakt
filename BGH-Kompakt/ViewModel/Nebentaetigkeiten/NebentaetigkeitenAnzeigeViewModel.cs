@@ -1,5 +1,4 @@
 ﻿using BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps;
-using BGH_Kompakt.Classes._LookUp.MP;
 using BGH_Kompakt.Classes._LookUp.UserLookUps;
 using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
@@ -7,14 +6,12 @@ using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Converter;
 using BGH_Kompakt.Dtos;
-using BGH_Kompakt.Migrartions.MP;
 using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.ActivityRequestService;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.Interfaces;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
-using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.UserLogin;
 using BGH_Kompakt.Views.Windows;
 using Microsoft.Office.Interop.Word;
@@ -32,7 +29,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using static System.Net.Mime.MediaTypeNames;
 using Document = Microsoft.Office.Interop.Word.Document;
 using MSWord = Microsoft.Office.Interop.Word;
 using Task = System.Threading.Tasks.Task;
@@ -192,6 +188,8 @@ namespace BGH_Kompakt.ViewModel
                 ShowWordOptions = (value != null);
             }
         }
+        public ObservableCollection<ActivityRequestStatusHistory> ActivityRequestStatusHistories { get; set; }
+
         #endregion
         #region Eventhandler
         public event EventHandler OnClientClick;
@@ -940,14 +938,14 @@ namespace BGH_Kompakt.ViewModel
                 SetProperty<string>(ref _requestClientName, value);
             }
         }
-        private string _responseOrt;
+        private string _RequestOrt;
         public string RequestOrt
         {
-            get { return _responseOrt; }
+            get { return _RequestOrt; }
             set
             {
                 ErrorOrt = false;
-                SetProperty<string>(ref _responseOrt, value);
+                SetProperty<string>(ref _RequestOrt, value);
             }
         }
         private DateTime? _RequestDate;
@@ -1439,7 +1437,7 @@ namespace BGH_Kompakt.ViewModel
                     try
                     {
                         ActivityRequestStatus status = activityRequestDBcontext.ActivityRequestStatuses.FirstOrDefault(x => x.ActivityRequestStatusId == Bearbeitungsstatus);
-                        if (status != null) ActivityRequestManager.SelectedActivityRequest.ActivityRequestStatus = status;
+                        //if (status != null) ActivityRequestManager.SelectedActivityRequest.ActivityRequestStatus = status;
                         ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich = AblageArtExport;
                         activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
                         activityRequestDBcontext.SaveChanges();
@@ -1528,11 +1526,15 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                             case "BGHKompaktBetreff":
                                 range = bM.Range;
-                                range.Text = $"{(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 1 ? "Genehmigung" : "Anzeige")} einer Nebentätigkeit";
+                                range.Text = $"{(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "Genehmigung" : "Anzeige")} einer Nebentätigkeit";
                                 break;
                             case "BGHKompaktTitel":
                                 range = bM.Range;
-                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ActivityRequestTyp.ActivityRequestTypText} - {ActivityRequestManager.SelectedActivityRequest.ARTitel}";
+                                range.Text = $"{ActivityRequestManager.SelectedActivityRequest.ActivityRequestTyp.ActivityRequestTypText} - " +
+                                                $"{ActivityRequestManager.SelectedActivityRequest.ARTitel} - " +
+                                                $"{ActivityRequestManager.SelectedActivityRequest.ActivityClient.ACName} - " +
+                                                $"{(ActivityRequestManager.SelectedActivityRequest.AROrt != null && ActivityRequestManager.SelectedActivityRequest.AROrt != string.Empty ? ActivityRequestManager.SelectedActivityRequest.AROrt + " - " : "")}" +
+                                                $"{ActivityRequestManager.SelectedActivityRequest.ARActivityDate:d. MMMM yyyy}";
                                 break;
                             case "BGHKompaktBezug":
                                 range = bM.Range;
@@ -1544,7 +1546,8 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                             case "BGHKompaktBodyText":
                                 range = bM.Range;
-                                range.Text = $"ich genehmige die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy} bezeichnete Nebentätigkeit.";
+                                range.Text = $"ich {(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "habe " : "genehmige ")}die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy}" +
+                                                $" bezeichnete Nebentätigkeit{(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? " zur Kenntnis genommen." : ".")}";
                                 break;
                             case "Genehmigungstext":
                                 range = bM.Range;
@@ -1941,7 +1944,7 @@ namespace BGH_Kompakt.ViewModel
                     {
                         newActivityRequest.ARNoteAdmin = ARNoteAdmin;
                         newActivityRequest.Assurance = ARAssurance;
-                        newActivityRequest.ActivityRequestStatusID = ARStatus;
+                        //newActivityRequest.ActivityRequestStatusID = ARStatus;
                         newActivityRequest.ActivityRequestAccepted = ActivityRequestAccepted;
                         int statusID = 0;
                         if (ActivityRequestManager.ActionType == 1) //Create
@@ -1954,7 +1957,7 @@ namespace BGH_Kompakt.ViewModel
                             }
                             else
                             {
-                                statusID = 1;
+                                statusID = 8;
                             }
                             ActivityRequestStatusHistory activityRequestStatusHistory = new ActivityRequestStatusHistory { Date = DateTime.Now, ActivityRequestStatusID = statusID };
                             newActivityRequest.ActivityRequestStatusHistories.Add(activityRequestStatusHistory);
@@ -2617,9 +2620,11 @@ namespace BGH_Kompakt.ViewModel
 
                 ShowAttachmentList = ImportFileList.Count > 0;
                 ShowDocFileList = DocFileList.Count > 0;
-                ARStatus = iActivityRequest.ActivityRequestStatusID ?? 1;
-                ARStatusText = (iActivityRequest.ActivityRequestStatus != null) ? iActivityRequest.ActivityRequestStatus.ActivityRequestStatusText : "unbekannt";
+                //ARStatus = iActivityRequest.ActivityRequestStatusID ?? 1;
+                //ARStatusText = (iActivityRequest.ActivityRequestStatus != null) ? iActivityRequest.ActivityRequestStatus.ActivityRequestStatusText : "unbekannt";
                 ActivityRequestAccepted = iActivityRequest.ActivityRequestAccepted;
+                if (iActivityRequest.ActivityRequestStatusHistories != null)
+                    ActivityRequestStatusHistories = new ObservableCollection<ActivityRequestStatusHistory>(iActivityRequest.ActivityRequestStatusHistories.OrderBy(arsh => arsh.Date).ToList());
             }
             else
             {

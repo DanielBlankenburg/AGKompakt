@@ -7,6 +7,7 @@
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:components="clr-namespace:BGH_Kompakt.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dotNetKitControls="clr-namespace:DotNetKit.Windows.Controls;assembly=DotNetKit.Wpf.AutoCompleteComboBox"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:BGH_Kompakt.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -72,6 +73,15 @@
             <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
             <Setter Property="Height" Value="Auto" />
         </Style>
+        <Style
+            x:Key="Textbox_Status"
+            BasedOn="{StaticResource Textbox_Base}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="Margin" Value="0,0,0,20" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Width" Value="400" />
+        </Style>
+
         <!--<Style
             x:Key="Button_Expander"
             BasedOn="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
@@ -211,7 +221,6 @@
             x:Key="Textblock_Status"
             BasedOn="{StaticResource textblock_base}"
             TargetType="{x:Type TextBlock}">
-            <Setter Property="FontSize" Value="20" />
             <Setter Property="Foreground" Value="{StaticResource BGHActivityRequestBackground}" />
         </Style>
 
@@ -276,7 +285,7 @@
                         Command="{Binding AddPersonCommand}"
                         Content="Person hinzufügen"
                         Style="{StaticResource Button_Master}" />
-                    <Button
+                    <Button Visibility="Collapsed"
                         Margin="30,0,0,0"
                         Command="{Binding AddRequestsCommand}"
                         Content="Masseneintrag"
@@ -393,13 +402,13 @@
                                                                 </DataTemplate>
                                                             </ComboBox.ItemTemplate>
                                                         </ComboBox>-->
-                                                        <ComboBox
+                                                        <dotNetKitControls:AutoCompleteComboBox
                                                             MD:HintAssist.Hint="Veranstalter"
                                                             ItemsSource="{Binding Clientlist}"
                                                             SelectedValue="{Binding SelectedClient}"
                                                             Style="{StaticResource Combobox_Request_Client}"
                                                             TextSearch.TextPath="ACName">
-                                                            <ComboBox.ItemTemplate>
+                                                            <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <StackPanel>
                                                                         <TextBlock
@@ -414,8 +423,8 @@
                                                                             Text="{Binding ActivityClientTyp.ActivityClientTypText}" />
                                                                     </StackPanel>
                                                                 </DataTemplate>
-                                                            </ComboBox.ItemTemplate>
-                                                        </ComboBox>
+                                                            </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                                                        </dotNetKitControls:AutoCompleteComboBox>
                                                         <Button Style="{StaticResource Button_Add_Client}">
                                                             <MD:PackIcon Kind="Add" />
                                                         </Button>
@@ -514,13 +523,13 @@
                                                     <!--  Auftraggeber  -->
                                                     <StackPanel Style="{StaticResource Stackpanel_Vertical}">
                                                         <StackPanel Orientation="Horizontal">
-                                                            <ComboBox
+                                                            <dotNetKitControls:AutoCompleteComboBox
                                                                 MD:HintAssist.Hint="Veranstalter"
                                                                 ItemsSource="{Binding Clientlist}"
                                                                 SelectedValue="{Binding SelectedClient}"
                                                                 Style="{StaticResource Combobox_Request_Client}"
                                                                 TextSearch.TextPath="ACName">
-                                                                <ComboBox.ItemTemplate>
+                                                                <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
                                                                     <DataTemplate>
                                                                         <StackPanel>
                                                                             <TextBlock
@@ -535,8 +544,8 @@
                                                                                 Text="{Binding ActivityClientTyp.ActivityClientTypText}" />
                                                                         </StackPanel>
                                                                     </DataTemplate>
-                                                                </ComboBox.ItemTemplate>
-                                                            </ComboBox>
+                                                                </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                                                            </dotNetKitControls:AutoCompleteComboBox>
                                                             <Button Style="{StaticResource Button_Add_Client}">
                                                                 <MD:PackIcon Kind="Add" />
                                                             </Button>
@@ -602,13 +611,13 @@
                                                     <!--#region Auftraggeber-->
                                                     <StackPanel Style="{StaticResource Stackpanel_Vertical}">
                                                         <StackPanel Orientation="Horizontal">
-                                                            <ComboBox
+                                                            <dotNetKitControls:AutoCompleteComboBox
                                                                 MD:HintAssist.Hint="Veranstalter"
                                                                 ItemsSource="{Binding Clientlist}"
                                                                 SelectedValue="{Binding SelectedClient}"
                                                                 Style="{StaticResource Combobox_Request_Client}"
                                                                 TextSearch.TextPath="ACName">
-                                                                <ComboBox.ItemTemplate>
+                                                                <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
                                                                     <DataTemplate>
                                                                         <StackPanel>
                                                                             <TextBlock
@@ -623,8 +632,8 @@
                                                                                 Text="{Binding ActivityClientTyp.ActivityClientTypText}" />
                                                                         </StackPanel>
                                                                     </DataTemplate>
-                                                                </ComboBox.ItemTemplate>
-                                                            </ComboBox>
+                                                                </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                                                            </dotNetKitControls:AutoCompleteComboBox>
                                                             <Button Style="{StaticResource Button_Add_Client}">
                                                                 <MD:PackIcon Kind="Add" />
                                                             </Button>
@@ -748,13 +757,13 @@
                                                 <!--  Auftraggeber  -->
                                                 <StackPanel Style="{StaticResource Stackpanel_Vertical}">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <ComboBox
+                                                        <dotNetKitControls:AutoCompleteComboBox
                                                             MD:HintAssist.Hint="Veranstalter"
                                                             ItemsSource="{Binding Clientlist}"
                                                             SelectedValue="{Binding SelectedClient}"
                                                             Style="{StaticResource Combobox_Request_Client}"
                                                             TextSearch.TextPath="ACName">
-                                                            <ComboBox.ItemTemplate>
+                                                            <dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <StackPanel>
                                                                         <TextBlock
@@ -769,8 +778,8 @@
                                                                             Text="{Binding ActivityClientTyp.ActivityClientTypText}" />
                                                                     </StackPanel>
                                                                 </DataTemplate>
-                                                            </ComboBox.ItemTemplate>
-                                                        </ComboBox>
+                                                            </dotNetKitControls:AutoCompleteComboBox.ItemTemplate>
+                                                        </dotNetKitControls:AutoCompleteComboBox>
                                                         <Button Style="{StaticResource Button_Add_Client}">
                                                             <MD:PackIcon Kind="Add" />
                                                         </Button>
@@ -869,130 +878,7 @@
                                                 </StackPanel>
                                             </StackPanel>
                                             <!--#endregion-->
-                                            <!--#region Arbitration-->
-                                            <StackPanel Margin="30,0,0,0" Visibility="{Binding AnzeigeArbitration, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                                                <!--  ArbitrationClient  -->
-                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
-                                                    <Label
-                                                        Margin="0,30,0,10"
-                                                        Content="Parteien des Schiedsverfahrens"
-                                                        Style="{StaticResource Label_Base}" />
-                                                    <ListView
-                                                        Margin="20,0,0,0"
-                                                        ItemsSource="{Binding ArbitrationClientList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                                        SelectedItem="{Binding Path=SelectedArbitrationClient}"
-                                                        SelectionMode="Single"
-                                                        Visibility="{Binding AnzeigeArbitrationClientList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                                                        <ListView.View>
-                                                            <GridView>
-                                                                <GridViewColumn
-                                                                    Width="190"
-                                                                    DisplayMemberBinding="{Binding ActivityRequestArbitrationClientText, TargetNullValue=[keine Angabe], UpdateSourceTrigger=PropertyChanged}"
-                                                                    Header="Parteibezeichnung"
-                                                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
-                                                                <GridViewColumn
-                                                                    Width="80"
-                                                                    Header="Löschen"
-                                                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
-                                                                    <GridViewColumn.CellTemplate>
-                                                                        <DataTemplate>
-                                                                            <Button
-                                                                                Command="{Binding Path=DataContext.ArbitrationClientAddClearCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                                                Style="{StaticResource Button_Add}"
-                                                                                ToolTip="Partei löschen">
-                                                                                <MD:PackIcon Padding="0" Kind="Bin" />
-                                                                            </Button>
-                                                                        </DataTemplate>
-                                                                    </GridViewColumn.CellTemplate>
-                                                                </GridViewColumn>
-                                                            </GridView>
-                                                        </ListView.View>
-                                                    </ListView>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Button
-                                                            Command="{Binding ArbitrationClientAddCommand}"
-                                                            Style="{StaticResource Button_Add}"
-                                                            ToolTip="Anlegen einer neuen Partei">
-                                                            <MD:PackIcon Kind="Add" />
-                                                        </Button>
-                                                    </StackPanel>
-                                                    <!--  ErrorValidation  -->
-                                                    <TextBlock
-                                                        Style="{StaticResource Style_Textbox_Error}"
-                                                        Text="Bitte tragen Sie mindestens zwei Parteien ein"
-                                                        Visibility="{Binding ErrorArbitrationCLient, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                                                </StackPanel>
-                                                <!--  Beauftragung  -->
-                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
-                                                    <StackPanel Orientation="Vertical">
-                                                        <Label
-                                                            Padding="0,1,0,0"
-                                                            VerticalAlignment="Top"
-                                                            Content="Beauftragung:"
-                                                            Style="{StaticResource Label_Base}" />
-                                                        <StackPanel Style="{StaticResource Stackpanel_Horizontal}">
-                                                            <RadioButton
-                                                                Margin="10,0,0,0"
-                                                                Content="durch die Parteien gemeinsam"
-                                                                IsChecked="{Binding Party}"
-                                                                Style="{StaticResource RadioButton_Base}" />
-                                                            <RadioButton
-                                                                Margin="10,0,0,0"
-                                                                Content="durch unbeteiligte Stelle"
-                                                                IsChecked="{Binding Third}"
-                                                                Style="{StaticResource RadioButton_Base}" />
-                                                        </StackPanel>
-                                                    </StackPanel>
-                                                    <!--  ErrorValidation  -->
-                                                    <TextBlock
-                                                        Style="{StaticResource Style_Textbox_Error}"
-                                                        Text="Bitte wählen Sie eine Option aus"
-                                                        Visibility="{Binding ErrorArbitrationTyp, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                                                </StackPanel>
-                                                <!--  Benennende Stelle  -->
-                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
-                                                    <TextBox
-                                                        MD:HintAssist.Hint="Bezeichnung der benennenden Stelle"
-                                                        Style="{StaticResource Textbox_Request}"
-                                                        Text="{Binding ActivityRequestArbitrationCaller}"
-                                                        Visibility="{Binding AnzeigeArbitrationParties, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                                                    <!--  ErrorValidation  -->
-                                                    <TextBlock
-                                                        Style="{StaticResource Style_Textbox_Error}"
-                                                        Text="Bitte wählen Sie eine Option aus"
-                                                        Visibility="{Binding ErrorArbitrationCaller, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                                                </StackPanel>
-                                                <!--  Titel  -->
-                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
-                                                    <TextBox
-                                                        MD:HintAssist.Hint="Gegenstand des Schiedsverfahrens/ Rechtsmaterie"
-                                                        Style="{StaticResource Textbox_Request}"
-                                                        Text="{Binding RequestTitel}" />
-                                                    <!--  ErrorValidation  -->
-                                                    <TextBlock
-                                                        Style="{StaticResource Style_Textbox_Error}"
-                                                        Text="Bitte geben einen Gegenstand ein"
-                                                        Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                                                </StackPanel>
-                                            </StackPanel>
-                                            <!--#endregion-->
-                                            <!--#region Schriftstellerische / Künsterliche/ Sonstige Tätigkeiten, Visibility: AnzeigeSonstiges-->
-                                            <StackPanel Margin="30,0,0,0" Visibility="{Binding AnzeigeSonstiges, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
-                                                    <TextBox
-                                                        MD:HintAssist.Hint="{Binding Hint_Description}"
-                                                        Style="{StaticResource Textbox_Request}"
-                                                        Text="{Binding RequestTitel}" />
-                                                    <!--  ErrorValidation  -->
-                                                    <TextBlock
-                                                        Style="{StaticResource Style_Textbox_Error}"
-                                                        Text="Bitte geben ein Thema ein"
-                                                        Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                                                </StackPanel>
-                                            </StackPanel>
-                                            <!--#endregion-->
                                         </StackPanel>
-                                        <!--#endregion-->
                                     </StackPanel>
                                     <!--#endregion-->
                                     <StackPanel
@@ -1614,9 +1500,35 @@
                     <StackPanel
                         Margin="5,10"
                         HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource Textblock_Status}" Text="Status: " />
-                        <TextBlock Style="{StaticResource Textblock_Status}" Text="{Binding ARStatusText}" />
+                        Orientation="Vertical">
+                        <TextBlock
+                            FontWeight="Bold"
+                            Style="{StaticResource Textblock_Status}"
+                            Text="Status:"
+                            TextAlignment="Center" />
+                        <ListBox ItemsSource="{Binding ActivityRequestStatusHistories}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="Transparent">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="130" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                Style="{StaticResource Textblock_Status}"
+                                                Text="{Binding Date, StringFormat={}{0:dd.MM.yyyy - HH:mm}, FallbackValue='-'}" />
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                Style="{StaticResource Textblock_Status}"
+                                                Text="{Binding ActivityRequestStatus.ActivityRequestStatusText, FallbackValue=''}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Margin="10,0,10,0">
@@ -1665,7 +1577,10 @@
                     Margin="0,20"
                     Style="{StaticResource Expander_Border}"
                     Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Visibility="{Binding ShowWordSend, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                     <Button
                         x:Name="Btn_3"
                         Width="170"

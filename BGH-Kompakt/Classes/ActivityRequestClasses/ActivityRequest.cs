@@ -61,8 +61,8 @@ namespace BGH_Kompakt.Classes.ActivityRequestClasses
         public  ICollection<ActivityRequestComment>? ActivityRequestComments {  get; set; }
         public ICollection<ActivityRequestStatusHistory>? ActivityRequestStatusHistories { get; set; } = new ObservableCollection<ActivityRequestStatusHistory>();
         public int ARZustaendigkeitsbereich { get; set; } = 1; //1 = Zuständigkeit beim Einreichenden; 2 = Zuständigkeit Präsidialrichter; 3 = Zuständigkeit Präsidentin; 4 = Zuständigkeit Vorzimmer; 5 = Archiv; 6 = Vorsitzender
-        public int? ActivityRequestStatusID { get; set; }
-        public virtual ActivityRequestStatus? ActivityRequestStatus { get; set; }
+        //public int? ActivityRequestStatusID { get; set; }
+        //public virtual ActivityRequestStatus? ActivityRequestStatus { get; set; }
         public int ActivityRequestAccepted { get; set; } = 0; //0 = in Bearbeitung; 1 = akzeptiert; 2 = abgelehnt
 
         public bool ARRejected { get; set; } = false;

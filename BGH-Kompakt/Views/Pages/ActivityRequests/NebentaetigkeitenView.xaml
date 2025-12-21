@@ -68,6 +68,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Style="{StaticResource Style_Textblock_Titel}" Text="Nebentätigkeiten" />
@@ -141,6 +142,11 @@
         </TabControl>
         <Border
             Grid.Row="2"
+            Height="2"
+            Background="LightGray"
+            BorderThickness="0,1,0,0" />
+        <Border
+            Grid.Row="3"
             Grid.Column="0"
             BorderThickness="0,1,0,0">
             <Ctrl:AnimatedContentControl x:Name="AnimatedContentControl" />

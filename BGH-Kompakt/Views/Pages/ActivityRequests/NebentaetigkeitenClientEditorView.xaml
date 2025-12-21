@@ -5,6 +5,7 @@
     xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:BGH_Kompakt.Views.Pages.ActivityRequests"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:nebentaetigkeiten="clr-namespace:BGH_Kompakt.ViewModel.Nebentaetigkeiten"
@@ -75,14 +76,28 @@
                     Content="Verwendet in folgenden Einträgen:"
                     FontWeight="DemiBold"
                     Style="{StaticResource Label_Base}" />
-                <ListBox DisplayMemberPath="ARTitel" ItemsSource="{Binding SelectedItem.ActivityRequests, ElementName=ClientList}" />
+                <ListBox
+                    Name="ListBoxUsedClients"
+                    SelectedItem="{Binding SelectedUsedAR}"
+                    DisplayMemberPath="ARTitel"
+                    ItemsSource="{Binding SelectedItem.ActivityRequests, ElementName=ClientList}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding ListBoxUsedARDblClickCommand}" CommandParameter="{Binding ElementName=ListBoxUsedClients, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ListBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                 <Button
                     Margin="0,0,15,0"
-                    Content="Speicher" Command="{Binding SaveCommand}"
+                    Command="{Binding SaveCommand}"
+                    Content="Speicher"
                     Style="{StaticResource Button_Master}" />
-                <Button Command="{Binding DeleteCommand}" Content="Löschen" Style="{StaticResource Button_Master}" />
+                <Button
+                    Command="{Binding DeleteCommand}"
+                    Content="Löschen"
+                    Style="{StaticResource Button_Master}" />
             </StackPanel>
         </StackPanel>
 
