@@ -193,7 +193,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
                     foreach (MPDecisionBE item in MPDecisionBEList)
                     {
-                        if (item.BE != null) SortlistMPBE.Add(item);
+                        if (item.BEAlternative != null) item.BE = item.BEAlternative;
+                        SortlistMPBE.Add(item);
                     }
 
                     var groupedBEList = SortlistMPBE

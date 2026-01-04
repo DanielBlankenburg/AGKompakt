@@ -11,8 +11,7 @@ namespace BGH_Kompakt.Classes.MP
     {
         public MPDecision Decision {  get; set; }
         public User? BE { get; set; }
-
- 
+        public User? BEAlternative { get; set; }
         public MPDecisionBE()
         {
         }
