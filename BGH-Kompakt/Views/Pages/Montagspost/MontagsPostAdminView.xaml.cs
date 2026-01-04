@@ -37,6 +37,9 @@ namespace BGH_Kompakt.Views.Pages.Montagspost
                 case "BGHR_Zivil":
                     ViewManager.ShowUnderPageOn<MontagsPostBGHRView>(AnimatedContentControl);
                     break;
+                case "Settings":
+                    ViewManager.ShowUnderPageOn<MontagsPostSettingsView>(AnimatedContentControl);
+                    break;
             }
 
         }

@@ -184,6 +184,10 @@ namespace BGH_Kompakt
             iServiceColletion.AddTransient<MontagsPostEMailsViewModel>();
             iServiceColletion.AddTransient<MontagsPostMetadataEditView>();
             iServiceColletion.AddTransient<MontagsPostMetadataEditViewModel>();
+            iServiceColletion.AddTransient<MontagsPostSettingsView>();
+            iServiceColletion.AddTransient<MontagsPostSettingsViewModel>();
+
+
 
 
             //iServiceColletion.AddTransient<AnwaltswahlView>();

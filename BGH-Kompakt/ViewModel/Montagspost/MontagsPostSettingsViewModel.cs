@@ -11,9 +11,9 @@ using System.Linq;
 using System.Windows.Input;
 using static BGH_Kompakt.Enums.SettingEnums;
 
-namespace BGH_Kompakt.ViewModel.SystemSettings
+namespace BGH_Kompakt.ViewModel.Montagspost
 {
-    public partial class MPSettingsViewModel : ViewModelBase
+    public partial class MontagsPostSettingsViewModel : ViewModelBase
     {
         public ICommand SaveEMailCommand { get; set; }
         public ICommand SaveAutotextCommand { get; set; }
@@ -36,7 +36,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
 
 
         readonly MPDBContext mPDBContext = new MPDBContext();
-        public MPSettingsViewModel()
+        public MontagsPostSettingsViewModel()
         {
             SaveEMailCommand = new RelayCommand(SaveEMailExecute);
             SaveAutotextCommand = new RelayCommand(SaveAutoTextExecute);
@@ -49,7 +49,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 foreach (var mail in query) EMailList.Add(mail);
             }
             catch (Exception ex) { ErrorMessage.CreateException("Open MPSettingsViewModel", ex.Message, ex.InnerException); }
-    }
+        }
 
         private void SaveBSCWServerExecute(object obj)
         {
@@ -62,9 +62,9 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 mPDBContext.SaveChanges();
                 ViewManager.ShowMainInfoFlyout("Die Änderungen wurden gespeichert", false);
             }
-            catch (Exception ex) 
-            { 
-                Logger.WriteLog( ex.Message + "; " + ex.InnerException);
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex.Message + "; " + ex.InnerException);
                 ViewManager.ShowMainInfoFlyout("Die Änderungen konnten nicht gespeichert werden. Die Fehlerbeschreibung befindet sich in der Log-Datei.", false);
             }
         }
@@ -73,7 +73,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
         {
             try
             {
-                foreach(MPEMail Autotext in EMailList)
+                foreach (MPEMail Autotext in EMailList)
                 {
                     MPEMail changeText = mPDBContext.MPEMails.FirstOrDefault(x => x.MPEMailID == Autotext.MPEMailID);
                     if (changeText != null)
@@ -85,8 +85,8 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 }
                 ViewManager.ShowMainInfoFlyout("Die Änderungen wurden gespeichert", false);
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 Logger.WriteLog(ex.Message + "; " + ex.InnerException);
                 ViewManager.ShowMainInfoFlyout("Die Änderungen konnten nicht gespeichert werden. Die Fehlerbeschreibung befindet sich in der Log-Datei.", false);
             }
@@ -99,16 +99,17 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 MPSetting newMPSetting = mPDBContext.MPSettings.FirstOrDefault();
                 newMPSetting.MPSettingEMailAnrede = MPSetting.MPSettingEMailAnrede;
                 newMPSetting.MPSettingEMailSchluss = MPSetting.MPSettingEMailSchluss;
-                newMPSetting.MPSettingDatenschutzhinweis= MPSetting.MPSettingDatenschutzhinweis;
+                newMPSetting.MPSettingDatenschutzhinweis = MPSetting.MPSettingDatenschutzhinweis;
                 mPDBContext.MPSettings.AddOrUpdate(newMPSetting);
                 mPDBContext.SaveChanges();
                 ViewManager.ShowMainInfoFlyout("Die Änderungen wurden gespeichert", false);
             }
-            catch (Exception ex) 
-            { 
-                ErrorMessage.CreateException("MPSettings-SaveEMailExecute", ex.Message, ex.InnerException); 
+            catch (Exception ex)
+            {
+                ErrorMessage.CreateException("MPSettings-SaveEMailExecute", ex.Message, ex.InnerException);
             }
 
         }
+
     }
 }

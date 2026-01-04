@@ -79,9 +79,15 @@
                     <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Kalenderwoche einlesen" />
                 </TabItem.Header>
             </TabItem>
+            <TabItem x:Name="Settings" Style="{StaticResource TabItem_AR}">
+                <TabItem.Header>
+                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Einstellungen Dokstelle" />
+                </TabItem.Header>
+            </TabItem>
+
             <TabItem x:Name="EMails" Style="{StaticResource TabItem_AR}">
                 <TabItem.Header>
-                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Einstellungen EMails" />
+                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="EMail-Empfänger" />
                 </TabItem.Header>
             </TabItem>
             <TabItem

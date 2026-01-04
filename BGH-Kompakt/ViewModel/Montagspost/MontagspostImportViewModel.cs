@@ -143,7 +143,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
             ReadMPState = MPStateText;
 
-            for (int i = 1; i < 52; i++) KalenderwochenList.Add(i + 1);
+            for (int i = 0; i < 52; i++) KalenderwochenList.Add(i + 1);
             VintageList.Add(DateTime.Now.Year);
             VintageList.Add(DateTime.Now.Year + 1);
             SelectedVintage = VintageList[0];
@@ -374,7 +374,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 catch (System.Exception ex)
                 {
                     Logger.WriteLog($"Die Datensätze für die Montagspost konnten nicht in die Datenbank geschrieben werden. Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
-                    ReadMPState = $"Die Datensätze konnten nicht in die Datenbank geschrieben werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
+                    ReadMPState = $"Die Datensätze konnten nicht in die Datenbank geschrieben werden. Bitte prüfen Sie die Log-Datei.";
                 }
 
                 #endregion                //MPWeekList.Add(ImportMPWeek);
@@ -941,6 +941,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             int AnzahlEntscheidungen = 0;
             int Zaehler = 1;
             string path = string.Empty;
+            DateTime temp;
 
             List<MPImportFile> ListFiles = new List<MPImportFile>();
             foreach (MPImportFile file in ImportList) ListFiles.Add(file);
@@ -1003,8 +1004,16 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                             }
                             if (item.Name == "Entscheidungsdatum")
                             {
-                                Entscheidungsdatum = item.Value;
-                                EntscheidungsdatumErfasst = true;
+                                
+                                if(DateTime.TryParse(item.value, out temp))
+                                {
+                                    DateTime checkDate = new DateTime(2025, 01, 01);
+                                    if (temp > checkDate)
+                                    {
+                                        Entscheidungsdatum = item.Value;
+                                        EntscheidungsdatumErfasst = true;
+                                    }
+                                }
                                 //continue;
                             }
                         }

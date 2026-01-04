@@ -485,6 +485,7 @@
     <Compile Include="ViewModel\Montagspost\MontagsPostFilterViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagspostImportViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostMetadataEditViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\MontagsPostSettingsViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostVermerkViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetgkeitenViewModel.cs" />
@@ -526,6 +527,9 @@
     </Compile>
     <Compile Include="Views\Pages\Montagspost\MontagsPostMetadataEditView.xaml.cs">
       <DependentUpon>MontagsPostMetadataEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagsPostSettingsView.xaml.cs">
+      <DependentUpon>MontagsPostSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Settings\ErrorAreaView.xaml.cs">
       <DependentUpon>ErrorAreaView.xaml</DependentUpon>
@@ -641,6 +645,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\Montagspost\MontagsPostMetadataEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagsPostSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
