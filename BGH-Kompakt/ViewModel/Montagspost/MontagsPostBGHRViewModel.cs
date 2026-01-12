@@ -32,8 +32,10 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         private readonly string MPEMailDescription = "BGHR-EMail";
         private readonly string DefaultSubject = "BGHRZ - Entscheidungen zur Bearbeitun";
         private readonly string DefaultBody = "Liebe Kollegin, lieber Kollege, <Br> <BR> anbei erhalten Sie die Entscheidungen Ihres Senats zur Bearbeitung für BGHRZ." +
-                                    "Bitte füllen Sie das elektronische Erfassungsformular aus und senden es dann über den Senatsredaktor bzw. die Senatsredaktorin an woestmann-heinz@bgh.bund.de. " +
-                                    "Eine Übersendung der Datei mit der Entscheidung ist nicht erforderlich. <BR> <BR> Vielen Dank und viele Grüße <BR> Ihr Heinz Wöstmann <BR> Geschäftsführer BGHR";
+                                    "Bitte füllen Sie das elektronische Erfassungsformular aus und senden es dann über den Senatsredaktor bzw. die Senatsredaktorin an. <BR> Eine Übersendung der Datei mit der Entscheidung ist nicht erforderlich. " +
+                                    "Sollten Sie versehentlich zu Unrecht als Berichterstatter bzw. Berichterstatterin angemailt worden sein, leiten Sie bitte die Mail mit der Entscheidungsdatei an den richtigen Berichterstatter bzw. die richtige Berichterstatterin in Ihrem Senat weiter. " + 
+                                    "Sollte es sich um eine Entscheidung eines anderen Senats handeln, leiten Sie die Mail an mich (woestmann-heinz@bgh.bund.de) mit  einem entsprechenden Hinweis weiter. Leider kann systembedingt eine falsche Zuordnung nicht vollständig ausgeschlossen werden." +
+                                    "<BR> <BR> Vielen Dank und viele Grüße <BR> Ihr Heinz Wöstmann <BR> Geschäftsführer BGHR";
         private string emailBody = string.Empty;
         private readonly MPDBContext mPDBContext = new MPDBContext();
 
