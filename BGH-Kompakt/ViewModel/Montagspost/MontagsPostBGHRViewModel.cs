@@ -177,7 +177,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                     editDecision.BEEMail = false;
                     mPDBContext.MPDecisions.AddOrUpdate(editDecision);
                     mPDBContext.SaveChanges();
-                    SelectedBE.Decision.BEEMail = false;
+                    DecsionBEListFill();
 
                 }
                 else
