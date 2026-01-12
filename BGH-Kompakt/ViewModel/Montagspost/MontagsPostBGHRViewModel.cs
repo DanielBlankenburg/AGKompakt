@@ -1,4 +1,5 @@
-﻿using BGH_Kompakt.Classes.Helper;
+﻿using BGH_Kompakt.Classes._LookUp.MP;
+using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.MP;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
@@ -28,11 +29,20 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         public ObservableCollection<MPWeek> MPWeekList { get; set; } = new ObservableCollection<MPWeek>();
         private ObservableCollection<int> _VintageList = new ObservableCollection<int>();
         public ObservableCollection<int> VintageList { get { return _VintageList; } }
+        private readonly string MPEMailDescription = "BGHR-EMail";
+        private readonly string DefaultSubject = "BGHRZ - Entscheidungen zur Bearbeitun";
+        private readonly string DefaultBody = "Liebe Kollegin, lieber Kollege, <Br> <BR> anbei erhalten Sie die Entscheidungen Ihres Senats zur Bearbeitung für BGHRZ." +
+                                    "Bitte füllen Sie das elektronische Erfassungsformular aus und senden es dann über den Senatsredaktor bzw. die Senatsredaktorin an woestmann-heinz@bgh.bund.de. " +
+                                    "Eine Übersendung der Datei mit der Entscheidung ist nicht erforderlich. <BR> <BR> Vielen Dank und viele Grüße <BR> Ihr Heinz Wöstmann <BR> Geschäftsführer BGHR";
+        private string emailBody = string.Empty;
+        private readonly MPDBContext mPDBContext = new MPDBContext();
 
         public ICommand SendCommand { get; set; }
         public ICommand BackCommand { get; set; }
         public ICommand BECommand { get; set; }
         public ICommand ResetCommand { get; set; }
+        public ICommand ResetEMailCommand { get; set; }
+        public ICommand SaveEMailCommand { get; set; }
 
         private int _SelectedVintage;
         public int SelectedVintage
@@ -60,6 +70,27 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             get { return _SelectedBE; }
             set { SetProperty(ref _SelectedBE, value); }
         }
+        private MPEMail _BGHR_EMail;
+        public MPEMail BGHR_EMail
+        {
+            get { return _BGHR_EMail; }
+            set { SetProperty(ref _BGHR_EMail, value); }
+        }
+
+        private string _tagHint;
+        public string TagHint
+        {
+            get { return _tagHint; }
+            set { SetProperty(ref _tagHint, value); }
+        }
+
+        private bool _VersandArt;
+        public bool VersandArt
+        {
+            get { return _VersandArt; }
+            set { SetProperty(ref _VersandArt, value); }
+        }
+
 
         public MontagsPostBGHRViewModel()
         {
@@ -67,16 +98,72 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             BackCommand = new RelayCommand(BackExecute);
             BECommand = new RelayCommand(BESelectionExecute);
             ResetCommand = new RelayCommand(ResetExecute);
-            MPDBContext mPDBContext = new MPDBContext();
+            SaveEMailCommand = new RelayCommand(SaveEMailExecute);
+            ResetEMailCommand = new RelayCommand(ResetEMailExecute);
+            TagHint = "Achtung: Durch die Abkürzung (Tag) <BR> wird ein Absatz erzeugt. Die Tags sollten beibehalten bleiben.";
+            VersandArt = true; 
 
             var MPVintages_Query = mPDBContext.MPWeeks.Select(x => x.MPWeekYear).Distinct();
             foreach (var Vintage in MPVintages_Query) VintageList.Add(Vintage);
             if (VintageList.Count > 0) SelectedVintage = VintageList.LastOrDefault();
 
+            BGHR_EMail = mPDBContext.MPEMails.FirstOrDefault(x => x.MPEMailDescription == MPEMailDescription);
+            if (BGHR_EMail == null)
+            {
+                BGHR_EMail = new MPEMail
+                {
+                    MPEMailDescription = MPEMailDescription,
+                    MPEMailSubject = DefaultSubject,
+                    MPEMailBody = DefaultBody
+                };
+                mPDBContext.MPEMails.Add(BGHR_EMail);
+                mPDBContext.SaveChanges();
+            };
             UserDBContext db = new UserDBContext();
             var query = db.Users.Where(x => x.PositionId == 1).OrderBy(x => x.NachName).ThenBy(x => x.VorName);
             foreach (User Richter in query) MPBEList.Add(Richter);
 
+        }
+
+        private void ResetEMailExecute(object obj)
+        {
+            bool antwort = ViewManager.ShowQuestionWindow("Soll der E-Mail-Text zurückgesetzt werden?", "Ja");
+            if (antwort) { 
+                BGHR_EMail = new MPEMail
+                {
+                    MPEMailDescription = MPEMailDescription,
+                    MPEMailSubject = DefaultSubject,
+                    MPEMailBody = DefaultBody
+                };
+                SaveEMail("Der E-Mail-Text wurde zurückgesetzt und gespeichert.");            
+            }
+
+
+        }
+
+        private void SaveEMail(string Message)
+        {
+            MPEMail saveItem = mPDBContext.MPEMails.FirstOrDefault(x => x.MPEMailDescription == MPEMailDescription);
+            if (saveItem != null)
+            {
+                saveItem.MPEMailBody = BGHR_EMail.MPEMailBody;
+                try
+                {
+                    mPDBContext.MPEMails.Add(saveItem);
+                    mPDBContext.SaveChanges();
+                    ViewManager.ShowMainInfoFlyout(Message, false);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"Beim Speichern der BGHR E-Mail ist folgender Fehler aufgetreten: ${ex.Message}; ${ex.InnerException}");
+                    ViewManager.ShowMainInfoFlyout("Die E-Mail konnte nicht gespeichert werden. Bitte prüfen Sie den Fehler in den Log-Files.", false);
+                }
+            };
+        }
+
+        private void SaveEMailExecute(object obj)
+        {
+            SaveEMail("Der E-Mail-Text wurde gespeichert.");
         }
 
         private void ResetExecute(object obj)
@@ -221,8 +308,9 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                             DBResponse eMailResponse = eMailVersand.Send_Email(
                                 emailTo: eMailAdress,
                                 subject: $"Entscheidungen ${SelectedWeek.MPWeekName}",
-                                mailBody: "Liebe Kollegin, lieber Kollege, <Br> <BR> anbei erhalten Sie die Entscheidungen Ihres Senats zur Bearbeitung für BGHRZ. Bitte füllen Sie das elektronische Erfassungsformular aus und senden es dann über den Senatsredaktor bzw. die Senatsredaktorin an woestmann-heinz@bgh.bund.de. Eine Übersendung der Datei mit der Entscheidung ist nicht erforderlich. <BR> <BR> Vielen Dank und viele Grüße <BR> Ihr Heinz Wöstmann <BR> Geschäftsführer BGHR",
-                                attachmentList: attachmentListpfd);
+                                mailBody: BGHR_EMail.MPEMailBody,
+                                attachmentList: attachmentListpfd,
+                                immediatSend: VersandArt);
                             if (eMailResponse.Success)
                             {
                                 foreach (MPDecision mPDecision in decisionList)
