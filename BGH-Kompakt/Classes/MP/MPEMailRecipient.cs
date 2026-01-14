@@ -26,8 +26,8 @@ namespace BGH_Kompakt.Classes.MP
         {
             MPEMailRecipientAdress = recipient;
             MPEMailRecipientTyp = typ;
-            MPEMailUserID = user.UserId;
-            MPEMailUserFullName = user.Fullname;
+            MPEMailUserID = user != null ? user.UserId : 0;
+            MPEMailUserFullName = user != null ? user.Fullname : "";
         }
     }
 }
