@@ -283,7 +283,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                     foreach (MPDecisionBE item in MPDecisionBEList)
                     {
                         if (item.BEAlternative != null) item.BE = item.BEAlternative;
-                        SortlistMPBE.Add(item);
+                        if (item.BE != null || item.BEAlternative != null) SortlistMPBE.Add(item);
                     }
 
                     var groupedBEList = SortlistMPBE
@@ -309,7 +309,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                 attachmentListpfd.Add(new CustomMailAttachment { AttachmentPath = mPDecision.PathName + mPDecision.FileName, AttachmentName = mPDecision.FileName });
                             DBResponse eMailResponse = eMailVersand.Send_Email(
                                 emailTo: eMailAdress,
-                                subject: $"Entscheidungen ${SelectedWeek.MPWeekName}",
+                                subject: $"Entscheidungen {SelectedWeek.MPWeekName}",
                                 mailBody: BGHR_EMail.MPEMailBody,
                                 attachmentList: attachmentListpfd,
                                 immediatSend: VersandArt);
