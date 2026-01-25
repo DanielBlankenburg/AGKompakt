@@ -328,7 +328,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                         }
                                         catch (Exception ex)
                                         {
-                                            Logger.WriteLog($"Beim Speichern des Versandmerkmals ist bei der Entscheidung ${mPDecision.FileName} folgender Fehler aufgetreten: ${ex.Message}; ${ex.InnerException}");
+                                            Logger.WriteLog($"Beim Speichern des Versandmerkmals ist bei der Entscheidung {mPDecision.FileName} folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
                                         }
                                     }
                                 }
@@ -336,7 +336,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                             else
                             {
                                 Logger.WriteLog(eMailResponse.Message);
-                                response.Message = response.Message == string.Empty ? $"An folgende Empfänger konnte keine E-Mail versendet werden: ${eMailAdress}" : response.Message + $"; ${eMailAdress}";
+                                response.Message = response.Message == string.Empty ? $"An folgende Empfänger konnte keine E-Mail versendet werden: {eMailAdress}" : response.Message + $"; {eMailAdress}";
                             }
                         }
                         else

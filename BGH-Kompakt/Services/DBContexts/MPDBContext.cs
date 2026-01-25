@@ -26,6 +26,7 @@ namespace BGH_Kompakt.Services.DBContexts
         public DbSet<MPEMail> MPEMails { get; set; }
         public DbSet<MPSetting> MPSettings { get; set; }
         public DbSet<MPVermerk> MPVermerke { get; set; }
+        public DbSet<MPBGHRSenat> MPBGHRSenate { get; set; }
         //public DbSet<FileData> FileDatas { get; set; }
 
 
@@ -55,9 +56,11 @@ namespace BGH_Kompakt.Services.DBContexts
 
                 modelBuilder.Entity<MPVermerk>().Property(x => x.MPVermerkText).IsRequired();
                 modelBuilder.Entity<MPVermerk>().ToTable("MPVermerke");
+                modelBuilder.Entity<MPBGHRSenat>().ToTable("MPBGHRSenate");
 
                 modelBuilder.Configurations.Add(new MPConfiguration());
                 modelBuilder.Configurations.Add(new MPSenatConfiguration());
+
 
             }
             catch (Exception)
