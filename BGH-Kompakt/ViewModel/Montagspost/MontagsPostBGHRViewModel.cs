@@ -1,6 +1,7 @@
 ﻿using BGH_Kompakt.Classes._LookUp.MP;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.MP;
+using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Dtos;
@@ -29,6 +30,11 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         public ObservableCollection<MPWeek> MPWeekList { get; set; } = new ObservableCollection<MPWeek>();
         private ObservableCollection<int> _VintageList = new ObservableCollection<int>();
         public ObservableCollection<int> VintageList { get { return _VintageList; } }
+        public ObservableCollection<Senat> SenateList { get; set; } = new ObservableCollection<Senat>();
+        public ObservableCollection<User> SenatBEList { get; set; } = new ObservableCollection<User>();
+        public ObservableCollection<MPBGHRSenat> SenateRecipientList { get; set; } = new ObservableCollection<MPBGHRSenat>();
+
+
         private readonly string MPEMailDescription = "BGHR-EMail";
         private readonly string DefaultSubject = "BGHRZ - Entscheidungen zur Bearbeitun";
         private readonly string DefaultBody = "Liebe Kollegin, lieber Kollege, <Br> <BR> anbei erhalten Sie die Entscheidungen Ihres Senats zur Bearbeitung für BGHRZ." +
@@ -36,8 +42,10 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                     "Sollten Sie versehentlich zu Unrecht als Berichterstatter bzw. Berichterstatterin angemailt worden sein, leiten Sie bitte die Mail mit der Entscheidungsdatei an den richtigen Berichterstatter bzw. die richtige Berichterstatterin in Ihrem Senat weiter. " + 
                                     "Sollte es sich um eine Entscheidung eines anderen Senats handeln, leiten Sie die Mail an mich (woestmann-heinz@bgh.bund.de) mit  einem entsprechenden Hinweis weiter. Leider kann systembedingt eine falsche Zuordnung nicht vollständig ausgeschlossen werden." +
                                     "<BR> <BR> Vielen Dank und viele Grüße <BR> Ihr Heinz Wöstmann <BR> Geschäftsführer BGHR";
-        private string emailBody = string.Empty;
+        private readonly string emailBody = string.Empty;
         private readonly MPDBContext mPDBContext = new MPDBContext();
+        private readonly UserDBContext UserDbContext = new UserDBContext();
+
 
         public ICommand SendCommand { get; set; }
         public ICommand BackCommand { get; set; }
@@ -45,6 +53,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         public ICommand ResetCommand { get; set; }
         public ICommand ResetEMailCommand { get; set; }
         public ICommand SaveEMailCommand { get; set; }
+        public ICommand AddSenateEmpfaengerCommand { get; set; }
+        public ICommand RemoveSenateEmpfaengerCommand { get; set; }
 
         private int _SelectedVintage;
         public int SelectedVintage
@@ -93,6 +103,47 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             set { SetProperty(ref _VersandArt, value); }
         }
 
+        private Senat _SelectedSenat;
+        public Senat SelectedSenat
+        {
+            get { return _SelectedSenat; }
+            set { 
+                SetProperty(ref _SelectedSenat, value); 
+                SenatBEList.Clear();
+                Senat QuerySenat = UserDbContext.Senate.Where(x => x.SenatID == SelectedSenat.SenatID).Include(x => x.Users).FirstOrDefault();
+                foreach (User user in QuerySenat.Users)
+                {
+                    SenatBEList.Add(user);
+                }
+            }
+        }
+
+        private User _SelectedSenatBE;
+        public User SelectedSenatBE
+        {
+            get { return _SelectedSenatBE; }
+            set { SetProperty(ref _SelectedSenatBE, value); }
+        }
+
+        private MPBGHRSenat _SelectedSenatRecipient;
+        public MPBGHRSenat SelectedSenatRecipient
+        {
+            get { return _SelectedSenatRecipient; }
+            set { 
+                SetProperty(ref _SelectedSenatRecipient, value);
+                try
+                {
+                       
+                    SelectedSenat = SelectedSenatRecipient != null ? SenateList.FirstOrDefault(x => x.SenatID == SelectedSenatRecipient.Senat) ?? null : null;
+                    SelectedSenatBE = SelectedSenatRecipient != null ? SenatBEList.FirstOrDefault(x => x.UserId == SelectedSenatRecipient.Recipient) ?? null : null;
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"Beim Setzen der Anzeige ist folgender Fehler aufgetreten: {ex.Message}, {ex.InnerException}");
+                }
+            }
+        }
+
 
         public MontagsPostBGHRViewModel()
         {
@@ -102,9 +153,12 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             ResetCommand = new RelayCommand(ResetExecute);
             SaveEMailCommand = new RelayCommand(SaveEMailExecute);
             ResetEMailCommand = new RelayCommand(ResetEMailExecute);
+            AddSenateEmpfaengerCommand = new RelayCommand(AddSenateEmpfaengerExecute);
+            RemoveSenateEmpfaengerCommand = new RelayCommand(RemoveSenateEmpfaengerExecute);
             TagHint = "Achtung: Durch die Abkürzung (Tag) <BR> wird ein Absatz erzeugt. Die Tags sollten beibehalten bleiben.";
-            VersandArt = true; 
+            VersandArt = true;
 
+            Logger.WriteLog("MontagsPostBGHR opend");
             var MPVintages_Query = mPDBContext.MPWeeks.Select(x => x.MPWeekYear).Distinct();
             foreach (var Vintage in MPVintages_Query) VintageList.Add(Vintage);
             if (VintageList.Count > 0) SelectedVintage = VintageList.LastOrDefault();
@@ -121,9 +175,86 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 mPDBContext.MPEMails.Add(BGHR_EMail);
                 mPDBContext.SaveChanges();
             };
-            UserDBContext db = new UserDBContext();
-            var query = db.Users.Where(x => x.PositionId == 1).OrderBy(x => x.NachName).ThenBy(x => x.VorName);
+
+            Fill_SenateRecipientList();
+
+            var Seante_Query = UserDbContext.Senate.Where(x => x.SenatArt == 1).ToList();
+            foreach (var Senat in Seante_Query) {
+                if (Senat.SenatName != "unbekannter Senat") SenateList.Add(Senat);
+            };
+
+            var query = UserDbContext.Users.Where(x => x.PositionId == 1).OrderBy(x => x.NachName).ThenBy(x => x.VorName);
             foreach (User Richter in query) MPBEList.Add(Richter);
+
+        }
+
+        private void Fill_SenateRecipientList()
+        {
+            SenateRecipientList.Clear();
+            var SenateRecipient_Query = mPDBContext.MPBGHRSenate.ToList();
+            foreach (var item in SenateRecipient_Query) SenateRecipientList.Add(item);
+        }
+
+        private void RemoveSenateEmpfaengerExecute(object obj)
+        {
+            string messageBoxText = "Bitte fülllen Sie alle Felder aus.";
+            bool ErrorSenat = false;
+            bool ErrorBE = false;
+
+            Logger.WriteLog("RemoveSenateEmpfaengerExecute fired");
+            if (SelectedSenat == null) ErrorSenat = true;
+            if (SelectedSenatBE == null) ErrorBE = true;
+            if (ErrorSenat || ErrorBE)
+            {
+                ViewManager.ShowMainInfoFlyout(messageBoxText, false);
+                return;
+            }
+
+            MPBGHRSenat deleteSenat = mPDBContext.MPBGHRSenate.FirstOrDefault(x => x.Senat == SelectedSenat.SenatID);
+            if (deleteSenat != null)
+            {
+                mPDBContext.MPBGHRSenate.Remove(deleteSenat);
+                mPDBContext.SaveChanges();
+                Fill_SenateRecipientList();
+            }
+            else
+            {
+                ViewManager.ShowMainInfoFlyout("Der Senat konnte nicht gelöscht werden.", false);
+            }
+
+        }
+
+        private void AddSenateEmpfaengerExecute(object obj)
+        {
+            string messageBoxText = "Bitte tragen Sie in folgende Felder einen Wert ein: ";
+            bool ErrorSenat = false;
+            bool ErrorBE = false;
+
+            Logger.WriteLog("AddSenateEmpfaengerExecute fired");
+            if (SelectedSenat == null)
+            {
+                messageBoxText += "Senat";
+                ErrorSenat = true;
+            }
+            if (SelectedSenatBE == null)
+            {
+                messageBoxText += ErrorSenat ? "; Berichterstatter" : "Berichterstatter";
+                ErrorBE = true;
+            }
+            if (ErrorSenat || ErrorBE)
+            {
+                ViewManager.ShowMainInfoFlyout(messageBoxText, false);
+                return;
+            }
+
+            MPBGHRSenat AddSenat = new MPBGHRSenat
+            {
+                Senat = SelectedSenat.SenatID,
+                Recipient = SelectedSenatBE.UserId
+            };
+            mPDBContext.MPBGHRSenate.AddOrUpdate(AddSenat);
+            mPDBContext.SaveChanges();
+            Fill_SenateRecipientList();
 
         }
 
@@ -283,7 +414,16 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                     foreach (MPDecisionBE item in MPDecisionBEList)
                     {
                         if (item.BEAlternative != null) item.BE = item.BEAlternative;
-                        if (item.BE != null || item.BEAlternative != null) SortlistMPBE.Add(item);
+                        if (item.BE != null || item.BEAlternative != null)
+                        {
+                            MPBGHRSenat commonBE = mPDBContext.MPBGHRSenate.FirstOrDefault(x => x.Senat == item.Decision.SenatID);
+                            if (commonBE != null)
+                            {
+                                User recipientUser = UserDbContext.Users.FirstOrDefault(x => x.UserId == commonBE.Recipient);
+                                if (recipientUser != null) item.BE = recipientUser;
+                            }
+                            SortlistMPBE.Add(item);
+                        }
                     }
 
                     var groupedBEList = SortlistMPBE
