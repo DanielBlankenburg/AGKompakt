@@ -288,7 +288,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteLog($"Beim Speichern der BGHR E-Mail ist folgender Fehler aufgetreten: ${ex.Message}; ${ex.InnerException}");
+                    Logger.WriteLog($"Beim Speichern der BGHR E-Mail ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
                     ViewManager.ShowMainInfoFlyout("Die E-Mail konnte nicht gespeichert werden. Bitte prüfen Sie den Fehler in den Log-Files.", false);
                 }
             };
@@ -322,7 +322,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             }
             catch (Exception ex)
             {
-                Logger.WriteLog($"Beim Reset der E-Mail für BGHR ist folgender Fehler aufgetreten: ${ex.Message}; ${ex.InnerException}");
+                Logger.WriteLog($"Beim Reset der E-Mail für BGHR ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
                 ViewManager.ShowMainInfoFlyout("Der E-Mail-Empfang konnte nicht zurück gesetzt werden", false);
             }
             
