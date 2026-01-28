@@ -203,7 +203,7 @@
                                 <StackPanel VerticalAlignment="Top">
                                     <Border Style="{StaticResource ButtonMainwindowImageBorder}">
                                         <Border.Background>
-                                            <ImageBrush ImageSource="/Resources/ImageResources/Images/holzhammer-und-buecher-auf-holztisch.jpg" Stretch="Fill" />
+                                            <ImageBrush ImageSource="/Resources/ImageResources/Images/holzhammer-und-buecher-auf-holztisch.png" Stretch="Fill" />
                                         </Border.Background>
                                     </Border>
                                     <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Sitzungsdienste" />
@@ -231,7 +231,7 @@
                                 <StackPanel VerticalAlignment="Top">
                                     <Border Style="{StaticResource ButtonMainwindowImageBorder}">
                                         <Border.Background>
-                                            <ImageBrush ImageSource="/Resources/ImageResources/Images/Montagspost.jpg" Stretch="UniformToFill" />
+                                            <ImageBrush ImageSource="/Resources/ImageResources/Images/Montagspost.png" Stretch="UniformToFill" />
                                         </Border.Background>
                                     </Border>
                                     <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Montagspost" />
@@ -305,7 +305,7 @@
                             </Grid.RowDefinitions>
                             <Image
                                 Grid.Row="0"
-                                Source="/Resources/ImageResources/Images/Einstellungen.jpg"
+                                Source="/Resources/ImageResources/Images/Einstellungen.png"
                                 Stretch="Fill"
                                 Style="{StaticResource Button_Mainwindow_Image}" />
                             <TextBlock
@@ -326,7 +326,7 @@
                             </Grid.RowDefinitions>
                             <Image
                                 Grid.Row="0"
-                                Source="/Resources/ImageResources/Images/Anleitung.jpg"
+                                Source="/Resources/ImageResources/Images/Anleitung.png"
                                 Stretch="Fill"
                                 Style="{StaticResource Button_Mainwindow_Image}" />
                             <TextBlock

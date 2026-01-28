@@ -1051,7 +1051,7 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ImageResources\Images\holzhammer-und-buecher-auf-holztisch.jpg">
+    <Resource Include="Resources\ImageResources\Images\holzhammer-und-buecher-auf-holztisch.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
@@ -1118,7 +1118,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ImageResources\Images\hope-house-press-leather-diary-studio-PJzc7LOt2Ig-unsplash.jpg">
+    <Resource Include="Resources\ImageResources\Images\hope-house-press-leather-diary-studio-PJzc7LOt2Ig-unsplash.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
@@ -1138,25 +1138,25 @@
     <Resource Include="Images\previous_dis.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ImageResources\Images\Anleitung.jpg">
+    <Resource Include="Resources\ImageResources\Images\Anleitung.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ImageResources\Images\Einstellungen.jpg" />
+    <Resource Include="Resources\ImageResources\Images\Einstellungen.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ImageResources\Images\Montagspost.jpg">
+    <Resource Include="Resources\ImageResources\Images\Montagspost.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ImageResources\Images\Nebentaetigkeiten.jpg">
+    <Resource Include="Resources\ImageResources\Images\Nebentaetigkeiten.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ImageResources\Images\Trennungsgeld.jpg">
+    <Resource Include="Resources\ImageResources\Images\Trennungsgeld.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

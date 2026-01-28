@@ -95,7 +95,7 @@
                 Style="{StaticResource Button_Mainwindow}"
                 Visibility="{Binding ShowSitzungsunterlagen, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                 <StackPanel>
-                    <Image Source="/Resources/ImageResources/Images/Nebentaetigkeiten.jpg" Style="{StaticResource Button_Mainwindow_Image}" />
+                    <Image Source="/Resources/ImageResources/Images/Nebentaetigkeiten.png" Style="{StaticResource Button_Mainwindow_Image}" />
                     <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Sitzungsunterlagen" />
                 </StackPanel>
             </Button>
@@ -133,7 +133,7 @@
                     <StackPanel VerticalAlignment="Top">
                         <Border Style="{StaticResource ButtonMainwindowImageBorder}">
                             <Border.Background>
-                                <ImageBrush ImageSource="/Resources/ImageResources/Images/Nebentaetigkeiten.jpg" Stretch="Fill" />
+                                <ImageBrush ImageSource="/Resources/ImageResources/Images/Nebentaetigkeiten.png" Stretch="Fill" />
                             </Border.Background>
                         </Border>
                         <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Nebentätigkeiten" />

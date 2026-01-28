@@ -35,7 +35,7 @@
             Style="{StaticResource Button_Settings}">
             <StackPanel>
                 <Image
-                    Source="/Resources/ImageResources/Images/Montagspost.jpg"
+                    Source="/Resources/ImageResources/Images/Montagspost.png"
                     Stretch="Fill"
                     Style="{StaticResource Button_Mainwindow_Image}" />
                 <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Einstellungen Montagspost" />
