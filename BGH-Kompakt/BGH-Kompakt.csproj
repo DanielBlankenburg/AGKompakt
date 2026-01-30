@@ -207,6 +207,7 @@
     <Compile Include="Classes\_LookUp\MP\MPSetting.cs" />
     <Compile Include="Classes\_LookUp\MP\MPVermerk.cs" />
     <Compile Include="Converter\BoolToWidthConverter.cs" />
+    <Compile Include="Converter\RadioBoolToIntConverter.cs" />
     <Compile Include="Dtos\EMailResponse.cs" />
     <Compile Include="Enums\AREnums.cs" />
     <Compile Include="Migrartions\ActivityRequests\202507030418003_InitialAR.cs" />
@@ -486,6 +487,7 @@
     <Compile Include="ViewModel\Montagspost\FilterViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostBEViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostBGHRViewModel.cs" />
+    <Compile Include="ViewModel\Montagspost\MontagsPostEditorViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostEMailsViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostFilterViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagspostImportViewModel.cs" />
@@ -526,6 +528,9 @@
     </Compile>
     <Compile Include="Views\Pages\Montagspost\MontagsPostBGHRView.xaml.cs">
       <DependentUpon>MontagsPostBGHRView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Montagspost\MontagsPostEditorView.xaml.cs">
+      <DependentUpon>MontagsPostEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Montagspost\MontagsPostEMailsView.xaml.cs">
       <DependentUpon>MontagsPostEMailsView.xaml</DependentUpon>
@@ -642,6 +647,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\Montagspost\MontagsPostBGHRView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Montagspost\MontagsPostEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

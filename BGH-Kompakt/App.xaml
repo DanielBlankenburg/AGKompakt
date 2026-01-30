@@ -69,6 +69,7 @@
             <Conv:BoolToStringConverter x:Key="BoolToStringConverter" />
             <Conv:BoolToColorConverter x:Key="BoolToColorConverter" />
             <Conv:BoolToWidthConverter x:Key="BoolToWidthConverter" />
+            <Conv:RadioBoolToIntConverter x:Key="radioBoolToIntConverter" />
 
             <!--#region Sonstiges-->
             <Style x:Key="FocusVisual">

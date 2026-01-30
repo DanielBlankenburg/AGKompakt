@@ -186,6 +186,8 @@ namespace BGH_Kompakt
             iServiceColletion.AddTransient<MontagsPostMetadataEditViewModel>();
             iServiceColletion.AddTransient<MontagsPostSettingsView>();
             iServiceColletion.AddTransient<MontagsPostSettingsViewModel>();
+            iServiceColletion.AddTransient<MontagsPostEditorView>();
+            iServiceColletion.AddTransient<MontagsPostEditorViewModel>();
 
 
 

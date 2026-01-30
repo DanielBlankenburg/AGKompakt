@@ -22,6 +22,9 @@ namespace BGH_Kompakt.Views.Pages.Montagspost
                 case "EMails":
                     ViewManager.ShowUnderPageOn<MontagsPostEMailsView>(AnimatedContentControl);
                     break;
+                case "MPEditor":
+                    ViewManager.ShowUnderPageOn<MontagsPostEditorView>(AnimatedContentControl);
+                    break;
                 case "AddKW":
                     ViewManager.ShowUnderPageOn<MontagspostImportView>(AnimatedContentControl);
                     break;

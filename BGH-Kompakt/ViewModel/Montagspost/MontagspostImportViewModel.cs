@@ -40,6 +40,10 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         public ObservableCollection<MPEMailRecipient> EMailPDFList { get; set; } = new ObservableCollection<MPEMailRecipient>();
         public ObservableCollection<MPImportResult> ImportResultList { get; set; } = new ObservableCollection<MPImportResult>();
         private List<MPImportResult> ImportResultTemp { get; set; } = new List<MPImportResult>();
+        public ObservableCollection<MPDecision> MPDecisionList { get; set; } = new ObservableCollection<MPDecision>();
+        public ObservableCollection<MPSenat> SenatList { get; set; } = new ObservableCollection<MPSenat>();
+
+
 
         private readonly string MPStateText = "Import abgeschlossen";
         private string _readMPState = string.Empty;
@@ -100,6 +104,26 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             get { return _AnzahlImportDateien; }
             set { SetProperty(ref _AnzahlImportDateien, value); }
         }
+        private MPDecision _SelectedDecision;
+        public MPDecision SelecteDecision
+        {
+            get { return _SelectedDecision; }
+            set
+            {
+                SetProperty(ref _SelectedDecision, value);
+                EditDecision = _SelectedDecision;
+            }
+        }
+
+        private MPDecision _EditDecision;
+        public MPDecision EditDecision
+        {
+            get { return _EditDecision; }
+            set { SetProperty(ref _EditDecision, value); }
+        }
+        private MPSenat _SelectSenat;
+
+
 
         #region ICommands
         public ICommand ClearCommand { get; set; }
@@ -293,11 +317,11 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             ViewManager.ActionlistRemove(actionName);
             if (task.Result.Success)
             {
-                foreach (MPImportResult result in ImportResultTemp) ImportResultList.Add(result);
+                //foreach (MPImportResult result in ImportResultTemp) ImportResultList.Add(result);
                 ShowNewImport = true;
                 ViewManager.ShowMainInfoFlyout("Die Kalenderwoche wurde importiert.", false);
-                MPWeek importweek = task.Result.Data as MPWeek;
-                importweek.ExportBSCWAdmin(mpDBContext);
+                //MPWeek importweek = task.Result.Data as MPWeek;
+                //importweek.ExportBSCWAdmin(mpDBContext);
             }
             else
             {
@@ -341,56 +365,59 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 entscheidungsListe = Word_Datei_Auslesen(ImportFileList);
                 #endregion
                 #region Dateien speichern
-                bool DataRead = false;
-                try
-                {
-                    MPDBContext context = new MPDBContext();
-                    string MessageboxText = string.Empty;
-                    foreach (MPDecisionImportWord mpImport in entscheidungsListe)
-                    {
-                        MessageboxText += $"{mpImport.FileName}; ";
-                        MPImportResult importResult = new MPImportResult
-                        {
-                            Importpdf = mpImport.ImportpdfSuccessfull,
-                            ImportWord = mpImport.ImportWordSuccessfull,
-                            Name = mpImport.FileName
-                        };
-                        ImportResultTemp.Add(importResult);
+                MPDecisionList = WordFileConverter(entscheidungsListe);
 
-                        if (mpImport.ImportpdfSuccessfull && mpImport.ImportWordSuccessfull)
-                        {
-                            MPDecision newMPDecision = new MPDecision();
-                            mpImport.ExportToMPDecesion(ref newMPDecision, ref context);
-                            ImportMPWeek.MPDecisions.Add(newMPDecision);
-                        }
-                    }
-                    //MessageBox.Show(MessageboxText);
-                    ////Änderungen in der Datenbank speichern
-                    context.MPWeeks.Add(ImportMPWeek);
-                    context.SaveChanges();
-                    ReadMPState = MPStateText;
-                    DataRead = true;
-                }
-                catch (System.Exception ex)
-                {
-                    Logger.WriteLog($"Die Datensätze für die Montagspost konnten nicht in die Datenbank geschrieben werden. Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
-                    ReadMPState = $"Die Datensätze konnten nicht in die Datenbank geschrieben werden. Bitte prüfen Sie die Log-Datei.";
-                }
+
+                //bool DataRead = false;
+                //try
+                //{
+                //    MPDBContext context = new MPDBContext();
+                //    string MessageboxText = string.Empty;
+                //    foreach (MPDecisionImportWord mpImport in entscheidungsListe)
+                //    {
+                //        MessageboxText += $"{mpImport.FileName}; ";
+                //        MPImportResult importResult = new MPImportResult
+                //        {
+                //            Importpdf = mpImport.ImportpdfSuccessfull,
+                //            ImportWord = mpImport.ImportWordSuccessfull,
+                //            Name = mpImport.FileName
+                //        };
+                //        ImportResultTemp.Add(importResult);
+
+                //        if (mpImport.ImportpdfSuccessfull && mpImport.ImportWordSuccessfull)
+                //        {
+                //            MPDecision newMPDecision = new MPDecision();
+                //            mpImport.ExportToMPDecesion(ref newMPDecision, ref context);
+                //            ImportMPWeek.MPDecisions.Add(newMPDecision);
+                //        }
+                //    }
+                //    //MessageBox.Show(MessageboxText);
+                //    ////Änderungen in der Datenbank speichern
+                //    context.MPWeeks.Add(ImportMPWeek);
+                //    context.SaveChanges();
+                //    ReadMPState = MPStateText;
+                //    DataRead = true;
+                //}
+                //catch (System.Exception ex)
+                //{
+                //    Logger.WriteLog($"Die Datensätze für die Montagspost konnten nicht in die Datenbank geschrieben werden. Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                //    ReadMPState = $"Die Datensätze konnten nicht in die Datenbank geschrieben werden. Bitte prüfen Sie die Log-Datei.";
+                //}
 
                 #endregion                //MPWeekList.Add(ImportMPWeek);
                 #region E-Mails erstellen
-                if (DataRead)
-                {
-                    EMails_Erstellen();
-                    EMailNotification_Erstellen();
-                }
+                //if (DataRead)
+                //{
+                //    EMails_Erstellen();
+                //    EMailNotification_Erstellen();
+                //}
                 #endregion
                 #region Gesamt-PDF erstellen
-                string NumKW = (SelectedKW <= 9) ? $"0{SelectedKW}" : SelectedKW.ToString();
-                GesamtListeErstellen($"{BGHKompaktSystemInfo.PathDokstelleDFS}{BGHKompaktSystemInfo.PathMontagspost}{SelectedVintage}\\KW{NumKW}\\");
+                //string NumKW = (SelectedKW <= 9) ? $"0{SelectedKW}" : SelectedKW.ToString();
+                //GesamtListeErstellen($"{BGHKompaktSystemInfo.PathDokstelleDFS}{BGHKompaktSystemInfo.PathMontagspost}{SelectedVintage}\\KW{NumKW}\\");
                 #endregion
                 response.Success  = true;
-                response.Data = ImportMPWeek;
+                //response.Data = ImportMPWeek;
                 sw.Stop();
                 return response;
 
@@ -398,6 +425,43 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             return task;
 
         }
+
+        private ObservableCollection<MPDecision> WordFileConverter(List<MPDecisionImportWord> entscheidungsListe)
+        {
+
+            ObservableCollection<MPDecision>decisionList = new ObservableCollection<MPDecision>();
+            try
+            {
+                MPDBContext context = new MPDBContext();
+                string MessageboxText = string.Empty;
+                foreach (MPDecisionImportWord mpImport in entscheidungsListe)
+                {
+                    MessageboxText += $"{mpImport.FileName}; ";
+                    MPImportResult importResult = new MPImportResult
+                    {
+                        Importpdf = mpImport.ImportpdfSuccessfull,
+                        ImportWord = mpImport.ImportWordSuccessfull,
+                        Name = mpImport.FileName
+                    };
+                    ImportResultTemp.Add(importResult);
+
+                    if (mpImport.ImportpdfSuccessfull && mpImport.ImportWordSuccessfull)
+                    {
+                        MPDecision newMPDecision = new MPDecision();
+                        mpImport.ExportToMPDecesion(ref newMPDecision, ref context);
+                        decisionList.Add(newMPDecision);
+                    }
+                }
+                return decisionList;
+            }
+            catch (System.Exception ex)
+            {
+                Logger.WriteLog($"Die Datensätze für die Montagspost konnten nicht in die Datenbank geschrieben werden. Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                ReadMPState = $"Die Datensätze konnten nicht in die Datenbank geschrieben werden. Bitte prüfen Sie die Log-Datei.";
+                return null;
+            }
+        }
+
         private DBResponse ImportFiles()
         {
             DBResponse response = new DBResponse();

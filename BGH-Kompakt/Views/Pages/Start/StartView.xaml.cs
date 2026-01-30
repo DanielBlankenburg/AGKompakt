@@ -26,7 +26,11 @@ namespace BGH_Kompakt.Views.Start
         {
             try 
             {
-                if (sender is Button button) ViewManager.OpenMainMenu(button.Name);
+                if (sender is Button button)
+                {
+                    Logger.WriteLog($"Es wurde der Button {button.Name} angeklickt.");
+                    ViewManager.OpenMainMenu(button.Name);
+                }
             }
             catch (Exception ex)
             {
@@ -37,8 +41,9 @@ namespace BGH_Kompakt.Views.Start
 
         private void Btn_Main_Instruction_Click(object sender, RoutedEventArgs e)
         {
-            
+
             //string pathParent = Assembly.GetExecutingAssembly().Location.Split('\\')[0] + "\\";
+            Logger.WriteLog("Es wurde die Anleitung geöffnet");
             string fileName = BGHKompaktSystemInfo.PathLaufwerksbuchstabe + BGHKompaktSystemInfo.PathSystemdateien + "Anleitung BGH-Kompakt.pdf";
 
             try

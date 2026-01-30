@@ -79,28 +79,24 @@ namespace BGH_Kompakt.Classes.MP
                 if (db.Users.Find(BE) != null) return db.Users.Find(BE);
                 else return new User();
             }
-            //set
-            //{
-            //    if (value != null)
-            //    {
-            //        //Debug.WriteLine(BEDetails.UserId);
-            //        //int userID = value.UserId;
-            //        //BE = userID;
-            //    }
-            //}
         }
 
-        //public List<User> Belist
-        //{
-        //    get
-        //    {
-        //        UserDBContext db = new UserDBContext();
-        //        var query = db.Users.Where(x => x.PositionId == 1);
-        //        List<User> Richterlist = new List<User>();
-        //        foreach (User Richter in query) Richterlist.Add(Richter);
-        //        return Richterlist;
-        //    }
-        //}
+        public void UpdateDecision(MPDecision updatedDecision)
+        {
+            Date = updatedDecision.Date;
+            Typ = updatedDecision.Typ;
+            Rechtsgebiet = updatedDecision.Rechtsgebiet;
+            Normenkette = updatedDecision.Normenkette;
+            Leitsatz = updatedDecision.Leitsatz;
+            Aktenzeichen = updatedDecision.Aktenzeichen;
+            SenatID = updatedDecision.SenatID;
+            RegZeichen = updatedDecision.RegZeichen;
+            LaufendeNummer = updatedDecision.LaufendeNummer;
+            Jahr = updatedDecision.Jahr;
+            InstanzErste = updatedDecision.InstanzErste;
+            InstanzZweite = updatedDecision.InstanzZweite;
+        }
+
 
     }
 }

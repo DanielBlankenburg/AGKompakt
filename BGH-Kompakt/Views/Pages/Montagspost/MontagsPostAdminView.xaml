@@ -74,14 +74,19 @@
             Background="{StaticResource BGHActivityRequestBackground}"
             SelectionChanged="TabControl_SelectionChanged"
             Style="{StaticResource MahApps.Styles.TabControl}">
+            <TabItem x:Name="MPEditor" Style="{StaticResource TabItem_AR}">
+                <TabItem.Header>
+                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Editor" />
+                </TabItem.Header>
+            </TabItem>
             <TabItem x:Name="AddKW" Style="{StaticResource TabItem_AR}">
                 <TabItem.Header>
-                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Kalenderwoche einlesen" />
+                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Import" />
                 </TabItem.Header>
             </TabItem>
             <TabItem x:Name="Settings" Style="{StaticResource TabItem_AR}">
                 <TabItem.Header>
-                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Einstellungen Dokstelle" />
+                    <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Einstellungen" />
                 </TabItem.Header>
             </TabItem>
 
@@ -98,11 +103,11 @@
                     <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Metadaten editieren" />
                 </TabItem.Header>
             </TabItem>
-            <TabItem x:Name="Search" Style="{StaticResource TabItem_AR}">
+            <!--<TabItem x:Name="Search" Style="{StaticResource TabItem_AR}">
                 <TabItem.Header>
                     <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Entscheidung suchen" />
                 </TabItem.Header>
-            </TabItem>
+            </TabItem>-->
             <TabItem x:Name="BE" Style="{StaticResource TabItem_AR}">
                 <TabItem.Header>
                     <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="Berichterstatter" />

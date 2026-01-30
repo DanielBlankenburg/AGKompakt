@@ -1987,6 +1987,7 @@ namespace BGH_Kompakt.ViewModel
                     catch (Exception ex)
                     {
                         resp.Success = false;
+                        Logger.WriteLog("Die Meldung konnte nicht eintragen werden. Es ist folgender Fehler aufgetreten: " + ex.Message + "; " + ex.InnerException);
                         resp.Message = "Die Meldung konnte nicht eintragen werden. Es ist folgender Fehler aufgetreten: " + ex.InnerException;
                     }
                 }

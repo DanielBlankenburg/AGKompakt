@@ -21,7 +21,8 @@
             TargetType="{x:Type TextBlock}">
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Margin" Value="0,15,0,0" />
+            <Setter Property="Margin" Value="0,30,0,0" />
+            <Setter Property="Height" Value="30" />
         </Style>
         <Style
             x:Key="Textblock_MPImport_Text"
@@ -77,6 +78,32 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Margin" Value="15" />
         </Style>
+        <Style
+            x:Key="TextMPEditLabelProperties"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,17,0,0" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style
+            x:Key="TextMPEditTextboxProperties"
+            BasedOn="{StaticResource Textbox_Base}"
+            TargetType="TextBox">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+        </Style>
+        <Style
+            x:Key="TextMPEditCombobox"
+            BasedOn="{StaticResource Combobox_Base}"
+            TargetType="ComboBox">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="MaxWidth" Value="350" />
+        </Style>
 
     </UserControl.Resources>
     <Grid>
@@ -100,220 +127,340 @@
             Grid.Row="1"
             Grid.Column="1"
             Margin="0,15,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <MD:Card Grid.Row="0" Style="{StaticResource MDCard_Master_Padding}">
-
-                <Border Style="{StaticResource Border_Import_Files}">
-                    <ScrollViewer components:DropFilesBehaviorExtension.IsEnabled="True" Style="{StaticResource Scrollviewer_Import_Files}">
-                        <StackPanel HorizontalAlignment="Center">
-                            <TextBlock
-                                FontWeight="Bold"
-                                Style="{StaticResource textblock_base}"
-                                Text="Ziehen Sie die pdf-Dateien für die betroffene Woche aus dem Kanzleipool auf dieses Feld"
-                                TextWrapping="WrapWithOverflow" />
-                        </StackPanel>
-                    </ScrollViewer>
-                </Border>
-            </MD:Card>
-            <Grid Grid.Row="1" Margin="0,30,0,30">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="15" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <!--  Settings  -->
+            <!--  Visibility="{Binding ShowSettings, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}"  -->
+            <Grid Margin="0,0,0,20" Visibility="Collapsed">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <!--  Importliste  -->
                 <MD:Card
-                    Grid.Column="0"
-                    Style="{StaticResource MDCard_Master_Padding}"
-                    Visibility="{Binding ShowSettings, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                    <Grid>
+                    Grid.Row="0"
+                    Margin="0,0,0,20"
+                    Style="{StaticResource MDCard_Master_Padding}">
+
+                    <Border Style="{StaticResource Border_Import_Files}">
+                        <ScrollViewer components:DropFilesBehaviorExtension.IsEnabled="True" Style="{StaticResource Scrollviewer_Import_Files}">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock
+                                    FontWeight="Bold"
+                                    Style="{StaticResource textblock_base}"
+                                    Text="Ziehen Sie die pdf-Dateien für die betroffene Woche aus dem Kanzleipool auf dieses Feld"
+                                    TextWrapping="WrapWithOverflow" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </MD:Card>
+                <MD:Card Grid.Row="1" Style="{StaticResource MDCard_Master_Padding}">
+                    <Grid x:Name="Grid_Settings">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="50" />
                         </Grid.RowDefinitions>
-                        <DataGrid Grid.Row="0" ItemsSource="{Binding ImportFileList, UpdateSourceTrigger=PropertyChanged}">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="*" MinWidth="200">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock
-                                                    Margin="0,0,30,0"
-                                                    Text="{Binding FileName}"
-                                                    TextAlignment="Left" />
-                                                <!--  Delete  -->
-                                                <Button
-                                                    x:Name="Btn_Bin_KW"
-                                                    Command="{Binding Path=DataContext.MPWeekDeleteCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                    Style="{StaticResource Button_MP_View_RowButton}"
-                                                    ToolTip="Löschen der Datei"
-                                                    Visibility="Hidden">
-                                                    <MD:PackIcon Padding="0" Kind="Bin" />
-                                                </Button>
-                                            </StackPanel>
-                                            <DataTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridCell}}, Path=IsSelected}" Value="true">
-                                                    <Setter TargetName="Btn_Bin_KW" Property="UIElement.Visibility" Value="{Binding Path=DataContext.ShowAdmin, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                                                </DataTrigger>
-                                            </DataTemplate.Triggers>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                    <DataGridColumn.Header>
-                                        Test
-                                        <!--<TextBlock Style="{StaticResource Style_ListView_Header}" Text="Dateiname" />-->
-                                    </DataGridColumn.Header>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="*" MinWidth="200">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <CheckBox
-                                                Margin="0,-8,0,0"
-                                                IsChecked="{Binding WordFileExist}"
-                                                IsEnabled="False" />
-                                            <!--<TextBlock
+                        <StackPanel Grid.Row="0">
+                            <!--  Importeinstellungen  -->
+                            <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Importeinstellungen" />
+                            <StackPanel
+                                Margin="0,15,0,0"
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                                <ComboBox
+                                    MD:HintAssist.Hint="Kalenderwoche:"
+                                    ItemsSource="{Binding KalenderwochenList}"
+                                    SelectedIndex="{Binding SelectedKWIndex}"
+                                    SelectedItem="{Binding SelectedKW}"
+                                    Style="{StaticResource Comobox_MPImport}" />
+                                <ComboBox
+                                    MD:HintAssist.Hint="Jahr:"
+                                    ItemsSource="{Binding VintageList}"
+                                    SelectedIndex="0"
+                                    SelectedItem="{Binding SelectedVintage}"
+                                    Style="{StaticResource Comobox_MPImport}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <Border
+                            Grid.Row="1"
+                            Margin="0,20,0,20"
+                            Style="{StaticResource Expander_Border}" />
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" MinHeight="60" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Auswählte Dateien" />
+                            <DataGrid
+                                Grid.Row="1"
+                                Width="300"
+                                ItemsSource="{Binding ImportFileList, UpdateSourceTrigger=PropertyChanged}">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="*" MinWidth="200">
+                                        <DataGridTemplateColumn.Header>Dokumentname</DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock
+                                                        Margin="0,0,30,0"
+                                                        Text="{Binding FileName}"
+                                                        TextAlignment="Left" />
+                                                    <!--  Delete  -->
+                                                    <Button
+                                                        x:Name="Btn_Bin_KW"
+                                                        Command="{Binding Path=DataContext.MPWeekDeleteCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                        Style="{StaticResource Button_MP_View_RowButton}"
+                                                        ToolTip="Löschen der Datei"
+                                                        Visibility="Hidden">
+                                                        <MD:PackIcon Padding="0" Kind="Bin" />
+                                                    </Button>
+                                                </StackPanel>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridCell}}, Path=IsSelected}" Value="true">
+                                                        <Setter TargetName="Btn_Bin_KW" Property="UIElement.Visibility" Value="{Binding Path=DataContext.ShowAdmin, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="50">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox
+                                                    Margin="0,-8,0,0"
+                                                    IsChecked="{Binding WordFileExist}"
+                                                    IsEnabled="False" />
+                                                <!--<TextBlock
                                             Margin="0,0,30,0"
                                             Text="{Binding WordFileExist}"
                                             TextAlignment="Left" />-->
-                                            <!--  Delete  -->
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                    <DataGridColumn.Header>
-                                        Test
-                                        <!--<TextBlock Style="{StaticResource Style_ListView_Header}" Text="Dateiname" />-->
-                                    </DataGridColumn.Header>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <TextBlock
-                            Grid.Row="1"
-                            Style="{StaticResource Textblock_MPImport_Text}"
-                            Text="{Binding AnzahlImportDateien}" />
-
-                        <Button
-                            Grid.Row="2"
-                            MinWidth="100"
-                            MaxWidth="160"
-                            Command="{Binding ClearCommand}"
-                            Content="Liste leeren"
-                            Style="{StaticResource Button_Master}" />
-
-                    </Grid>
-                </MD:Card>
-                <!--  Settings  -->
-                <MD:Card
-                    Grid.Column="2"
-                    Style="{StaticResource MDCard_Master_Padding}"
-                    Visibility="{Binding ShowSettings, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
-                    <Grid x:Name="Grid_Settings">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="50" />
-                        </Grid.RowDefinitions>
-                        <ScrollViewer
-                            Grid.Row="0"
-                            Height="{Binding ElementName=Grid_Settings, Path=ActualHeight}"
-                            VerticalScrollBarVisibility="Auto">
-                            <StackPanel Grid.Row="0">
-                                <!--  Importeinstellungen  -->
-                                <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Importeinstellungen" />
-                                <StackPanel
-                                    Margin="0,15,0,0"
-                                    HorizontalAlignment="Center"
-                                    Orientation="Horizontal">
-                                    <ComboBox
-                                        MD:HintAssist.Hint="Kalenderwoche:"
-                                        ItemsSource="{Binding KalenderwochenList}"
-                                        SelectedIndex="{Binding SelectedKWIndex}"
-                                        SelectedItem="{Binding SelectedKW}"
-                                        Style="{StaticResource Comobox_MPImport}" />
-                                    <ComboBox
-                                        MD:HintAssist.Hint="Jahr:"
-                                        ItemsSource="{Binding VintageList}"
-                                        SelectedIndex="0"
-                                        SelectedItem="{Binding SelectedVintage}"
-                                        Style="{StaticResource Comobox_MPImport}" />
-                                </StackPanel>
-                                <Border Margin="0,20,0,0" Style="{StaticResource Expander_Border}" />
-                                <Border Margin="0,20,0,0" Style="{StaticResource Expander_Border}" />
-                                <!--  EMail-pdf-Recipient  -->
-                                <Grid Visibility="Collapsed">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="30" />
-                                        <RowDefinition Height="200" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Style="{StaticResource Textblock_MPImport_Header}" Text="Empfänger EMail mit pdf-Dateien" />
-                                    <ListBox
-                                        Grid.Row="1"
-                                        DisplayMemberPath="MPEMailRecipientAdress"
-                                        ItemsSource="{Binding EMailPDFList}"
-                                        SelectedItem="{Binding SelectedEMailpdfRecipient}"
-                                        Style="{StaticResource Listbox_MP}" />
-                                    <Grid Grid.Row="2">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*" />
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBox
-                                            Grid.Row="0"
-                                            Grid.Column="0"
-                                            MD:HintAssist.Hint="EMail-Empfänger:"
-                                            Style="{StaticResource Textbox_MP_Import}"
-                                            Text="{Binding EMailpdfRecipient, UpdateSourceTrigger=PropertyChanged}" />
-                                        <Button
-                                            Grid.Row="1"
-                                            Grid.Column="0"
-                                            Command="{Binding EMailpdfAddCommand}"
-                                            CommandParameter="pdf"
-                                            Content="Hinzufügen"
-                                            Style="{StaticResource Button_MP_Import}" />
-                                        <Button
-                                            Grid.Row="1"
-                                            Grid.Column="1"
-                                            Command="{Binding EMailpdfDeleteCommand}"
-                                            CommandParameter="pdf"
-                                            Content="Löschen"
-                                            Style="{StaticResource Button_MP_Import}" />
-                                    </Grid>
-                                </Grid>
-                                <Border Margin="0,20,0,0" Style="{StaticResource Expander_Border}" />
-                            </StackPanel>
-                        </ScrollViewer>
-                        <Border
-                            Grid.Row="2"
-                            Margin="0,10,0,10"
-                            Style="{StaticResource Expander_Border}" />
-
-                        <Button
+                                                <!--  Delete  -->
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock
+                                Grid.Row="2"
+                                Style="{StaticResource Textblock_MPImport_Text}"
+                                Text="{Binding AnzahlImportDateien}" />
+                        </Grid>
+                        <StackPanel
                             Grid.Row="3"
-                            MinWidth="100"
-                            MaxWidth="200"
-                            Command="{Binding ImportCommand}"
-                            Content="Unterlagen importieren"
-                            Style="{StaticResource Button_Master}" />
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Button
+                                Grid.Row="2"
+                                MinWidth="100"
+                                MaxWidth="160"
+                                Margin="0,0,20,0"
+                                Command="{Binding ClearCommand}"
+                                Content="Liste leeren"
+                                Style="{StaticResource Button_Master}" />
+
+                            <Button
+                                Grid.Row="3"
+                                MinWidth="100"
+                                MaxWidth="200"
+                                Command="{Binding ImportCommand}"
+                                Content="Unterlagen einlesen"
+                                Style="{StaticResource Button_Master}" />
+
+                        </StackPanel>
                     </Grid>
                 </MD:Card>
+            </Grid>
+            <!--  Visibility="{Binding ShowImportResult, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}"  -->
+            <Grid Grid.Row="0" Margin="0,30,0,30">
                 <!--  Importresult  -->
-                <MD:Card
-                    Grid.Column="0"
-                    Style="{StaticResource MDCard_Master_Padding}"
-                    Visibility="{Binding ShowImportResult, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                <MD:Card Grid.Column="0" Style="{StaticResource MDCard_Master_Padding}">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="50"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="0,0,10,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Style="{StaticResource Style_Textblock_Titel_Unter3}" Text="Eingelesene Dateien" />
+                                <ListBox
+                                    Grid.Row="1"
+                                    Margin="15,0,0,0"
+                                    Padding="5,20,0,0"
+                                    DisplayMemberPath="Aktenzeichen"
+                                    ItemsSource="{Binding MPDecisionList}"
+                                    SelectedItem="{Binding SelecteDecision, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                            <Border Grid.Column="1" Style="{StaticResource Expander_Border_Vertical}" />
+                            <Grid Grid.Column="2" Margin="15,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource Style_Textblock_Titel_Unter3}"
+                                    Text="Metadaten" />
+                                <Grid Grid.Row="1" DataContext="{Binding EditDecision}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="6*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <!--  Datum  -->
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="Datum:" />
+                                    <TextBox
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        MaxWidth="100"
+                                        HorizontalAlignment="Left"
+                                        Style="{StaticResource TextMPEditTextboxProperties}"
+                                        Text="{Binding Date, StringFormat=d}" />
+                                    <!--  Typ  -->
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="Typ:" />
+                                    <StackPanel
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Margin="0,16,0,0"
+                                        Orientation="Horizontal">
+                                        <RadioButton
+                                            Margin="0,0,10,0"
+                                            Content="Urteil"
+                                            IsChecked="{Binding Typ, Converter={StaticResource radioBoolToIntConverter}, ConverterParameter=1}"
+                                            Style="{StaticResource RadioButton_Base}" />
+                                        <RadioButton
+                                            Content="Beschluss"
+                                            IsChecked="{Binding Typ, Converter={StaticResource radioBoolToIntConverter}, ConverterParameter=2}"
+                                            Style="{StaticResource RadioButton_Base}" />
+                                    </StackPanel>
+                                    <!--<TextBox
+                                    Grid.Row="1"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding Typ}" />-->
+                                    <!--  Senat  -->
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="Senat:" />
+                                    <ComboBox
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        DisplayMemberPath="MPSenatName"
+                                        ItemsSource="{Binding Path=DataContext.SenatList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                        SelectedItem="{Binding Senat}"
+                                        Style="{StaticResource TextMPEditCombobox}" />
+
+                                    <!--  RegZeichen  -->
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="Registerzeichen:" />
+                                    <TextBox
+                                        Grid.Row="3"
+                                        Style="{StaticResource TextMPEditTextboxProperties}"
+                                        Text="{Binding RegZeichen}" />
+
+                                    <!--  Laufende Nummer  -->
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="Laufende Nummer:" />
+                                    <TextBox
+                                        Grid.Row="4"
+                                        Style="{StaticResource TextMPEditTextboxProperties}"
+                                        Text="{Binding LaufendeNummer}" />
+                                    <!--  Jahr  -->
+                                    <TextBlock
+                                        Grid.Row="5"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="Jahr:" />
+                                    <TextBox
+                                        Grid.Row="5"
+                                        Style="{StaticResource TextMPEditTextboxProperties}"
+                                        Text="{Binding Jahr}" />
+                                    <!--  Rechtsgebiet  -->
+                                    <TextBlock
+                                        Grid.Row="6"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="Rechtsgebiet:" />
+                                    <TextBox
+                                        Grid.Row="6"
+                                        Style="{StaticResource TextMPEditTextboxProperties}"
+                                        Text="{Binding Rechtsgebiet}" />
+                                    <!--  Leitsatz  -->
+                                    <TextBlock
+                                        Grid.Row="7"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="Leitsatz:" />
+                                    <TextBox
+                                        Grid.Row="7"
+                                        Style="{StaticResource TextMPEditTextboxProperties}"
+                                        Text="{Binding Leitsatz}" />
+                                    <!--  Normenkette  -->
+                                    <TextBlock
+                                        Grid.Row="8"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="Normenkette:" />
+                                    <TextBox
+                                        Grid.Row="8"
+                                        Style="{StaticResource TextMPEditTextboxProperties}"
+                                        Text="{Binding Normenkette}" />
+                                    <!--  1. Instanz  -->
+                                    <TextBlock
+                                        Grid.Row="9"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="1. Instanz:" />
+                                    <TextBox
+                                        Grid.Row="9"
+                                        Style="{StaticResource TextMPEditTextboxProperties}"
+                                        Text="{Binding InstanzErste}" />
+                                    <!--  2. Instanz  -->
+                                    <TextBlock
+                                        Grid.Row="10"
+                                        Style="{StaticResource TextMPEditLabelProperties}"
+                                        Text="2.Instanz:" />
+                                    <TextBox
+                                        Grid.Row="10"
+                                        Style="{StaticResource TextMPEditTextboxProperties}"
+                                        Text="{Binding InstanzZweite}" />
+                                </Grid>
+
+                            </Grid>
+                        </Grid>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Margin="0,0,20,0" Style="{StaticResource Button_Master}" Content="Dateien verwerfen"></Button>
+                            <Button Style="{StaticResource Button_Master}" Content="Dateien importieren"></Button>
+                        </StackPanel>
+                    </Grid>
+                    <!--<Grid Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="37*" />
                             <ColumnDefinition Width="376*" />
@@ -349,12 +496,16 @@
                                                     Margin="0,0,30,0"
                                                     Text="{Binding Name}"
                                                     TextAlignment="Left" />
-                                                <!--  Delete  -->
+                    -->
+                    <!--  Delete  -->
+                    <!--
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                         <DataGridColumn.Header>
                                             Test
-                                            <!--<TextBlock Style="{StaticResource Style_ListView_Header}" Text="Dateiname" />-->
+                    -->
+                    <!--<TextBlock Style="{StaticResource Style_ListView_Header}" Text="Dateiname" />-->
+                    <!--
                                         </DataGridColumn.Header>
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn>
@@ -368,7 +519,9 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                         <DataGridColumn.Header>
                                             Test
-                                            <!--<TextBlock Style="{StaticResource Style_ListView_Header}" Text="Dateiname" />-->
+                    -->
+                    <!--<TextBlock Style="{StaticResource Style_ListView_Header}" Text="Dateiname" />-->
+                    <!--
                                         </DataGridColumn.Header>
                                     </DataGridTemplateColumn>
                                     <DataGridTemplateColumn>
@@ -382,7 +535,9 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                         <DataGridColumn.Header>
                                             Test
-                                            <!--<TextBlock Style="{StaticResource Style_ListView_Header}" Text="Dateiname" />-->
+                    -->
+                    <!--<TextBlock Style="{StaticResource Style_ListView_Header}" Text="Dateiname" />-->
+                    <!--
                                         </DataGridColumn.Header>
                                     </DataGridTemplateColumn>
                                 </DataGrid.Columns>
@@ -397,7 +552,7 @@
                             Command="{Binding NewImportCommand}"
                             Content="Neuer Import"
                             Style="{StaticResource Button_Master}" />
-                    </Grid>
+                    </Grid>-->
                 </MD:Card>
             </Grid>
         </Grid>
