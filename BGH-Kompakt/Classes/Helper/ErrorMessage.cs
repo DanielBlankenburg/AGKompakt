@@ -9,10 +9,16 @@ namespace BGH_Kompakt.Classes.Helper
 {
     public static class ErrorMessage
     {
-        public static void CreateException (string errorLocation, string errorMessage, Exception errorInnerException)
+        public static void CreateExceptionWithoutMessage(string errorLocation, Exception ex)
         {
-            Logger.WriteLog($"Es ist folgender Fehler aufgetreten: Funktion {errorLocation}; {errorMessage}; {errorInnerException}");
-            ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler aufgetreten: Funktion {errorLocation}; {errorMessage}", false);
+            Logger.WriteLog($"Es ist folgender Fehler aufgetreten: Funktion {errorLocation}; {ex.Message}; {ex.InnerException}; {ex.StackTrace}");
+        }
+
+
+        public static void CreateExceptionWithFlyOutMessage (string errorLocation, Exception ex)
+        {
+            Logger.WriteLog($"Es ist folgender Fehler aufgetreten: Funktion {errorLocation}; {ex.Message}; {ex.InnerException}; {ex.StackTrace}");
+            ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler aufgetreten: Funktion {errorLocation}; {ex.Message}", false);
         }
 
         public static void CreateSimpleMessage(string message)

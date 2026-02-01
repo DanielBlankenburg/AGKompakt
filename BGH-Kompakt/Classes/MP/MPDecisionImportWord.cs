@@ -36,7 +36,7 @@ namespace BGH_Kompakt.Classes
 
         //public string FileName_Extention { get; set; } = "";
 
-        public MPDecisionImportWord(MPImportFile File, bool imprtWordSuccessfull, string aktenzeichen = "", string entscheidungart = "", string verfahrensart = "", string entscheidungsdatum = "", string leitsatz = "", string normenkette = "", string vorinstanz1 = "", string vorinstanz2 = "")
+        public MPDecisionImportWord(MPImportFile File, bool imprtWordSuccessfull, string aktenzeichen = "", string entscheidungart = "", string rechtsgebiet = "", string entscheidungsdatum = "", string leitsatz = "", string normenkette = "", string vorinstanz1 = "", string vorinstanz2 = "")
         {
             Bereich = File.Bereich;
             ImportWordSuccessfull = imprtWordSuccessfull;
@@ -96,7 +96,7 @@ namespace BGH_Kompakt.Classes
                 //Rechtsgebiet extrahieren
                 try
                 {
-                    Rechtsgebiet = verfahrensart;
+                    Rechtsgebiet = rechtsgebiet;
                 }
                 catch (Exception)
                 {

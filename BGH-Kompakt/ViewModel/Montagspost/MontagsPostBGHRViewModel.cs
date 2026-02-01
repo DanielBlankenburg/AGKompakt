@@ -137,10 +137,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                     SelectedSenat = SelectedSenatRecipient != null ? SenateList.FirstOrDefault(x => x.SenatID == SelectedSenatRecipient.Senat) ?? null : null;
                     SelectedSenatBE = SelectedSenatRecipient != null ? SenatBEList.FirstOrDefault(x => x.UserId == SelectedSenatRecipient.Recipient) ?? null : null;
                 }
-                catch (Exception ex)
-                {
-                    Logger.WriteLog($"Beim Setzen der Anzeige ist folgender Fehler aufgetreten: {ex.Message}, {ex.InnerException}");
-                }
+                catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("SelectedSenatRecipient", ex);}
             }
         }
 
@@ -360,8 +357,11 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 var Query = mPDBContext.MPDecisions.Where(x => x.MPWeekID == SelectedWeek.MPWeekID && x.Senat.MPCategorieID == 2).OrderBy(x => x.Senat.MPSenatSorting).ThenBy(x => x.Aktenzeichen);
                 foreach (MPDecision item in Query)
                 {
-                    User BE = userDBContext.Users.FirstOrDefault(x => x.UserId == item.BE);
-                    MPDecisionBEList.Add(new MPDecisionBE { Decision = item, BE = BE });
+                    if (item.Leitsatz != string.Empty)
+                    {
+                        User BE = userDBContext.Users.FirstOrDefault(x => x.UserId == item.BE);
+                        MPDecisionBEList.Add(new MPDecisionBE { Decision = item, BE = BE });
+                    }
                 }
             }
         }

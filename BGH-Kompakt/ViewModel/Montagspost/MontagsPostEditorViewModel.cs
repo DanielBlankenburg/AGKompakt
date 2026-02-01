@@ -1,4 +1,5 @@
 ﻿using BGH_Kompakt.Classes._LookUp.MP;
+using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.MP;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Services.DBContexts;
@@ -87,11 +88,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 var MPSenat_Query = mPDBContext.MPSenate.OrderBy(x => x.MPCategorieID).ThenBy(x => x.MPSenatSorting);
                 foreach (var senat in MPSenat_Query) SenatList.Add(senat);
             }
-            catch (Exception ex)
-            {
-                Logger.WriteLog($"Fehler beim Laden der MontagsPostEditorViewModel: {ex.Message}, {ex.InnerException}");
-                ViewManager.ShowMainInfoFlyout("Fehler beim Laden der Seite. Bitte überprüfen die Log-Files.", true);
-            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("MontagsPostEditorViewModel-Constructor", ex);}
         }
 
         private void SaveExecute(object obj)

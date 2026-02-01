@@ -132,151 +132,166 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="50" />
-
                 </Grid.RowDefinitions>
-                <MD:Card Grid.Column="2" Style="{StaticResource MDCard_Master}">
-                    <Grid Style="{StaticResource GridMain}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            Style="{StaticResource Style_Textblock_Titel_Unter3}"
-                            Text="Entscheidungsdaten" />
-                        <Grid Grid.Row="1" DataContext="{Binding EditDecision}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="6*" />
-                            </Grid.ColumnDefinitions>
+                <MD:Card
+                    x:Name="Entscheidungsdaten"
+                    Grid.Column="2"
+                    Style="{StaticResource MDCard_Master}">
+                    <ScrollViewer Height="{Binding ElementName=Entscheidungsdaten, Path=ActualHeight}" VerticalScrollBarVisibility="Visible">
+                        <Grid Style="{StaticResource GridMain}">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <!--  Datum  -->
                             <TextBlock
-                                Grid.Row="0"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="Datum:" />
-                            <TextBox
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                MaxWidth="100"
-                                HorizontalAlignment="Left"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding Date, StringFormat=d}" />
-                            <!--  Typ  -->
-                            <TextBlock
-                                Grid.Row="1"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="Typ:" />
-                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,16,0,0">
-                                <RadioButton Style="{StaticResource RadioButton_Base}" Margin="0,0,10,0" Content="Urteil" IsChecked="{Binding Typ, Converter={StaticResource radioBoolToIntConverter}, ConverterParameter=1}" />
-                                <RadioButton Style="{StaticResource RadioButton_Base}" Content="Beschluss" IsChecked="{Binding Typ, Converter={StaticResource radioBoolToIntConverter}, ConverterParameter=2}" />
-                            </StackPanel>
-                            <!--<TextBox
-                                Grid.Row="1"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding Typ}" />-->
-                            <!--  Senat  -->
-                            <TextBlock
-                                Grid.Row="2"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="Senat:" />
-                            <ComboBox
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                DisplayMemberPath="MPSenatName"
-                                ItemsSource="{Binding Path=DataContext.SenatList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                SelectedItem="{Binding Senat}"
-                                Style="{StaticResource TextMPEditCombobox}" />
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource Style_Textblock_Titel_Unter3}"
+                                Text="Entscheidungsdaten" />
+                            <Grid Grid.Row="1" DataContext="{Binding EditDecision}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="6*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <!--  Datum  -->
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="Datum:" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    MaxWidth="100"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding Date, StringFormat=d}" />
+                                <!--  Typ  -->
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="Typ:" />
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="0,16,0,0"
+                                    Orientation="Horizontal">
+                                    <RadioButton
+                                        Margin="0,0,10,0"
+                                        Content="Urteil"
+                                        IsChecked="{Binding Typ, Converter={StaticResource radioBoolToIntConverter}, ConverterParameter=1}"
+                                        Style="{StaticResource RadioButton_Base}" />
+                                    <RadioButton
+                                        Content="Beschluss"
+                                        IsChecked="{Binding Typ, Converter={StaticResource radioBoolToIntConverter}, ConverterParameter=2}"
+                                        Style="{StaticResource RadioButton_Base}" />
+                                </StackPanel>
+                                <!--<TextBox
+                                    Grid.Row="1"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding Typ}" />-->
+                                <!--  Senat  -->
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="Senat:" />
+                                <ComboBox
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    DisplayMemberPath="MPSenatName"
+                                    ItemsSource="{Binding Path=DataContext.SenatList, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                    SelectedItem="{Binding Senat}"
+                                    Style="{StaticResource TextMPEditCombobox}" />
 
-                            <!--  RegZeichen  -->
-                            <TextBlock
-                                Grid.Row="3"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="Registerzeichen:" />
-                            <TextBox
-                                Grid.Row="3"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding RegZeichen}" />
+                                <!--  RegZeichen  -->
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="Registerzeichen:" />
+                                <TextBox
+                                    Grid.Row="3"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding RegZeichen}" />
 
-                            <!--  Laufende Nummer  -->
-                            <TextBlock
-                                Grid.Row="4"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="Laufende Nummer:" />
-                            <TextBox
-                                Grid.Row="4"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding LaufendeNummer}" />
-                            <!--  Jahr  -->
-                            <TextBlock
-                                Grid.Row="5"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="Jahr:" />
-                            <TextBox
-                                Grid.Row="5"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding Jahr}" />
-                            <!--  Rechtsgebiet  -->
-                            <TextBlock
-                                Grid.Row="6"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="Rechtsgebiet:" />
-                            <TextBox
-                                Grid.Row="6"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding Rechtsgebiet}" />
-                            <!--  Leitsatz  -->
-                            <TextBlock
-                                Grid.Row="7"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="Leitsatz:" />
-                            <TextBox
-                                Grid.Row="7"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding Leitsatz}" />
-                            <!--  Normenkette  -->
-                            <TextBlock
-                                Grid.Row="8"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="Normenkette:" />
-                            <TextBox
-                                Grid.Row="8"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding Normenkette}" />
-                            <!--  1. Instanz  -->
-                            <TextBlock
-                                Grid.Row="9"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="1. Instanz:" />
-                            <TextBox
-                                Grid.Row="9"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding InstanzErste}" />
-                            <!--  2. Instanz  -->
-                            <TextBlock
-                                Grid.Row="10"
-                                Style="{StaticResource TextMPEditLabelProperties}"
-                                Text="2.Instanz:" />
-                            <TextBox
-                                Grid.Row="10"
-                                Style="{StaticResource TextMPEditTextboxProperties}"
-                                Text="{Binding InstanzZweite}" />
+                                <!--  Laufende Nummer  -->
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="Laufende Nummer:" />
+                                <TextBox
+                                    Grid.Row="4"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding LaufendeNummer}" />
+                                <!--  Jahr  -->
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="Jahr:" />
+                                <TextBox
+                                    Grid.Row="5"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding Jahr}" />
+                                <!--  Rechtsgebiet  -->
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="Rechtsgebiet:" />
+                                <TextBox
+                                    Grid.Row="6"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding Rechtsgebiet}" />
+                                <!--  Leitsatz  -->
+                                <TextBlock
+                                    Grid.Row="7"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="Leitsatz:" />
+                                <TextBox
+                                    Grid.Row="7"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding Leitsatz}" />
+                                <!--  Normenkette  -->
+                                <TextBlock
+                                    Grid.Row="8"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="Normenkette:" />
+                                <TextBox
+                                    Grid.Row="8"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding Normenkette}" />
+                                <!--  1. Instanz  -->
+                                <TextBlock
+                                    Grid.Row="9"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="1. Instanz:" />
+                                <TextBox
+                                    Grid.Row="9"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding InstanzErste}" />
+                                <!--  2. Instanz  -->
+                                <TextBlock
+                                    Grid.Row="10"
+                                    Style="{StaticResource TextMPEditLabelProperties}"
+                                    Text="2.Instanz:" />
+                                <TextBox
+                                    Grid.Row="10"
+                                    Style="{StaticResource TextMPEditTextboxProperties}"
+                                    Text="{Binding InstanzZweite}" />
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </ScrollViewer>
                 </MD:Card>
                 <Button
                     Grid.Row="1"
