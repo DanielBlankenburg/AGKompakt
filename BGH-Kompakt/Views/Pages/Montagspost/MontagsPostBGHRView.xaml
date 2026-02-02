@@ -278,7 +278,7 @@
                                         <ComboBox
                                             x:Name="Cbo_Empfaenger"
                                             DisplayMemberPath="Fullname"
-                                            ItemsSource="{Binding SenatBEList}"
+                                            ItemsSource="{Binding MPBEList}"
                                             SelectedItem="{Binding SelectedSenatBE, UpdateSourceTrigger=PropertyChanged}"
                                             Style="{StaticResource Combobox_Base}" />
                                     </StackPanel>

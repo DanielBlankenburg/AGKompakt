@@ -1480,7 +1480,7 @@ namespace BGH_Kompakt.ViewModel
                         ViewManager.ShowMainInfoFlyout($"Das Laufwerk {SelectedDrive}:\\ konnte nicht gefunden werden.", false);
                     }
                 }
-                catch (Exception ex) { ErrorMessage.CreateException("MontagspostViewModel_BSCW_Check", ex.Message, ex.InnerException); }
+                catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("MontagspostViewModel_BSCW_Check", ex); }
             }
             else
             {

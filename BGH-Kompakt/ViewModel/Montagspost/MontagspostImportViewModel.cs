@@ -10,12 +10,16 @@ using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.Interfaces;
 using BGH_Kompakt.Services.SystemComponents;
+using BGH_Kompakt.Views.Pages.Settings;
+using Microsoft.Office.Interop.Word;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
 using System.Globalization;
@@ -26,6 +30,7 @@ using System.Threading.Tasks;
 using System.Web.UI.WebControls.Expressions;
 using System.Windows;
 using System.Windows.Input;
+using Task = System.Threading.Tasks.Task;
 
 namespace BGH_Kompakt.ViewModel.Montagspost
 {
@@ -40,6 +45,10 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         public ObservableCollection<MPEMailRecipient> EMailPDFList { get; set; } = new ObservableCollection<MPEMailRecipient>();
         public ObservableCollection<MPImportResult> ImportResultList { get; set; } = new ObservableCollection<MPImportResult>();
         private List<MPImportResult> ImportResultTemp { get; set; } = new List<MPImportResult>();
+        public ObservableCollection<MPDecision> MPDecisionList { get; set; } = new ObservableCollection<MPDecision>();
+        public ObservableCollection<MPSenat> SenatList { get; set; } = new ObservableCollection<MPSenat>();
+        private MPWeek ImportMPWeek { get; set; }
+
 
         private readonly string MPStateText = "Import abgeschlossen";
         private string _readMPState = string.Empty;
@@ -100,6 +109,32 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             get { return _AnzahlImportDateien; }
             set { SetProperty(ref _AnzahlImportDateien, value); }
         }
+        private MPDecision _SelectedDecision;
+        public MPDecision SelecteDecision
+        {
+            get { return _SelectedDecision; }
+            set
+            {
+                SetProperty(ref _SelectedDecision, value);
+                EditDecision = _SelectedDecision;
+            }
+        }
+
+        private MPDecision _EditDecision;
+        public MPDecision EditDecision
+        {
+            get { return _EditDecision; }
+            set { SetProperty(ref _EditDecision, value); }
+        }
+        private MPSenat _SelectSenat;
+        public MPSenat SelectSenat
+        {
+            get { return _SelectSenat; }
+            set { SetProperty(ref _SelectSenat, value); }
+        }
+
+
+
 
         #region ICommands
         public ICommand ClearCommand { get; set; }
@@ -110,6 +145,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         public ICommand EMailWordDeleteCommand { get; set; }
         public ICommand EMailpdfDeleteCommand { get; set; }
         public ICommand MPWeekDeleteCommand { get; set; }
+        public ICommand AbortCommand { get; set; }
+        public ICommand SaveCommand { get; set; }
         #endregion
 
         #region Show
@@ -126,6 +163,26 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             get { return _ShowImportResult; }
             set { SetProperty(ref _ShowImportResult, value); }
         }
+        private bool _ShowImportProgress = false;
+        public bool ShowImportProgress
+        {
+            get { return _ShowImportProgress; }
+            set { SetProperty(ref _ShowImportProgress, value); }
+        }
+        private bool _ShowImportStart = true;
+        public bool ShowImportStart
+        {
+            get { return _ShowImportStart; }
+            set { SetProperty(ref _ShowImportStart, value); }
+        }
+        private string _KalenderWocheString = "";
+        public string KalenderWocheString
+        {
+            get { return _KalenderWocheString; }
+            set { SetProperty(ref _KalenderWocheString, value); }
+        }
+
+
 
         private bool ShowNewImport { get; set; } = false;
         #endregion
@@ -140,24 +197,41 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             EMailWordDeleteCommand = new RelayCommand(EMailDeleteExecute, EMailWordDeleteCanExecute);
             EMailpdfDeleteCommand = new RelayCommand(EMailDeleteExecute, EMailpdfDeleteCanExecute);
             MPWeekDeleteCommand = new RelayCommand(MPWeekDeleteExecute);
+            AbortCommand = new RelayCommand(AbortExecute);
+            SaveCommand = new RelayCommand(SaveExecute);
+
 
             ReadMPState = MPStateText;
 
-            for (int i = 0; i < 52; i++) KalenderwochenList.Add(i + 1);
-            VintageList.Add(DateTime.Now.Year);
-            VintageList.Add(DateTime.Now.Year + 1);
-            SelectedVintage = VintageList[0];
-            CultureInfo currentCulture = CultureInfo.CurrentCulture;
-            Calendar calendar = currentCulture.Calendar;
+            try
+            {
+                for (int i = 0; i < 52; i++) KalenderwochenList.Add(i + 1);
+                VintageList.Add(DateTime.Now.Year);
+                VintageList.Add(DateTime.Now.Year + 1);
+                SelectedVintage = VintageList[0];
+                CultureInfo currentCulture = CultureInfo.CurrentCulture;
+                Calendar calendar = currentCulture.Calendar;
 
-            int kw = calendar.GetWeekOfYear(DateTime.Now, currentCulture.DateTimeFormat.CalendarWeekRule, currentCulture.DateTimeFormat.FirstDayOfWeek) - 1;
-            SelectedKWIndex = (kw <= 52) ? kw : 1; //Kalenderwoche wird auf 1 gesetzt, wenn 53 KW berechnet werden soll
-            SelectedKW = SelectedKWIndex;
-            var templist = mpDBContext.MPEMailRecipients.Where(x => x.MPEMailRecipientTyp == 1).ToArray();
-            foreach (MPEMailRecipient recipient in templist) EMailWordList.Add(recipient);
-            var templist2 = mpDBContext.MPEMailRecipients.Where(x => x.MPEMailRecipientTyp == 2).ToArray();
-            foreach (MPEMailRecipient recipient in templist2) EMailPDFList.Add(recipient);
+                int kw = calendar.GetWeekOfYear(DateTime.Now, currentCulture.DateTimeFormat.CalendarWeekRule, currentCulture.DateTimeFormat.FirstDayOfWeek) - 1;
+                SelectedKWIndex = (kw <= 52) ? kw : 1; //Kalenderwoche wird auf 1 gesetzt, wenn 53 KW berechnet werden soll
+                SelectedKW = SelectedKWIndex;
+                var templist = mpDBContext.MPEMailRecipients.Where(x => x.MPEMailRecipientTyp == 1).ToArray();
+                foreach (MPEMailRecipient recipient in templist) EMailWordList.Add(recipient);
+                var templist2 = mpDBContext.MPEMailRecipients.Where(x => x.MPEMailRecipientTyp == 2).ToArray();
+                foreach (MPEMailRecipient recipient in templist2) EMailPDFList.Add(recipient);
+                var MPSenat_Query = mpDBContext.MPSenate.OrderBy(x => x.MPCategorieID).ThenBy(x => x.MPSenatSorting);
+                foreach (var senat in MPSenat_Query) SenatList.Add(senat);
+            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("MontagspostImportViewModel-Constructor", ex); }
+        }
 
+        private void SetShow(bool start = false, bool result = false, bool import = false, bool progress = false, bool settings = false)
+        {
+            ShowImportStart = start;
+            ShowImportResult = result;
+            ShowNewImport = import;
+            ShowImportProgress = progress;
+            ShowSettings = settings;
         }
 
 
@@ -170,10 +244,10 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         private void NewImportExecute(object obj)
         {
             ImportFileList.Clear();
-            ShowImportResult = false;
-            ShowSettings = false;
-            ShowNewImport = false;
+            SetShow();
         }
+
+
         private void MPWeekDeleteExecute(object obj)
         {
             throw new NotImplementedException();
@@ -185,8 +259,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         private void ImportExecute(object obj)
         {
             ImportResultList.Clear();
-            ShowImportResult = true;
-            ShowSettings = false;
+            SetShow(progress: true);
             Import();
         }
         private bool EMailpdfAddCanExecute(object obj)
@@ -208,41 +281,58 @@ namespace BGH_Kompakt.ViewModel.Montagspost
         private void EMailDeleteExecute(object obj)
         {
             if (obj == null) return;
-            switch ((string)obj)
+            try
             {
-                case "word":
-                    if (SelectedEMailWordRecipient == null) return;
-                    mpDBContext.MPEMailRecipients.Remove(SelectedEMailWordRecipient);
-                    mpDBContext.SaveChanges();
-                    EMailWordList.Remove(SelectedEMailWordRecipient);
-                    return;
-                case "pdf":
-                    if (SelectedEMailpdfRecipient == null) return;
-                    mpDBContext.MPEMailRecipients.Remove(SelectedEMailpdfRecipient);
-                    mpDBContext.SaveChanges();
-                    EMailWordList.Remove(SelectedEMailpdfRecipient);
-                    return;
+                switch ((string)obj)
+                {
+                    case "word":
+                        if (SelectedEMailWordRecipient == null) return;
+                        RemoveRecipient(SelectedEMailWordRecipient);
+                        EMailWordList.Remove(SelectedEMailWordRecipient);
+                        return;
+                    case "pdf":
+                        if (SelectedEMailpdfRecipient == null) return;
+                        RemoveRecipient(SelectedEMailpdfRecipient);
+                        EMailPDFList.Remove(SelectedEMailpdfRecipient);
+                        return;
+                }
             }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("EMailDeleteExecute", ex); }
         }
+
+        private void RemoveRecipient(MPEMailRecipient selectedRecipient)
+        {
+            try
+            {
+                mpDBContext.MPEMailRecipients.Remove(selectedRecipient);
+                mpDBContext.SaveChanges();
+            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("RemoveRecipient", ex);}
+        }
+
         private void EMailAddExecute(object obj)
         {
             if (obj == null) return;
-            int typ = ((string)obj == "word") ? 1 : 2;
-            string recipientAdress = ((string)obj == "word") ? EMailWordRecipient : EMailpdfRecipient;
-            MPEMailRecipient recipient = new MPEMailRecipient(recipientAdress, typ);
-            mpDBContext.MPEMailRecipients.Add(recipient);
-            mpDBContext.SaveChanges();
-            if ((string)obj == "word")
+            try
             {
-                EMailWordList.Add(recipient);
-                EMailWordRecipient = string.Empty;
-            }
-            else
-            {
-                EMailPDFList.Add(recipient);
-                EMailpdfRecipient = string.Empty;
+                int typ = ((string)obj == "word") ? 1 : 2;
+                string recipientAdress = ((string)obj == "word") ? EMailWordRecipient : EMailpdfRecipient;
+                MPEMailRecipient recipient = new MPEMailRecipient(recipientAdress, typ);
+                mpDBContext.MPEMailRecipients.Add(recipient);
+                mpDBContext.SaveChanges();
+                if ((string)obj == "word")
+                {
+                    EMailWordList.Add(recipient);
+                    EMailWordRecipient = string.Empty;
+                }
+                else
+                {
+                    EMailPDFList.Add(recipient);
+                    EMailpdfRecipient = string.Empty;
 
+                }
             }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("EMailDeleteExecute", ex); }
 
         }
         private bool ClearCanExecute(object obj)
@@ -255,34 +345,133 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             AnzahlImportDateien = "Anzahl der Importdateien: 0";
         }
 
+        private void SaveExecute(object obj)
+        {
+            MessageBoxResult answer = MessageBox.Show("Sollen die Dateien in die Datenbank importiert werden?", "Import", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (answer == MessageBoxResult.Yes) {ImportDatabase(); }
+        }
+
+
+        private void AbortExecute(object obj)
+        {
+            MessageBoxResult answer = MessageBox.Show("Soll der Import verworfen werden?", "Verwerfen", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (answer == MessageBoxResult.Yes)
+            {
+                MPDecisionList.Clear();
+                ImportFileList.Clear();
+                ImportWordFileList.Clear();
+                SetShow(start: true);
+            }
+        }
+
 
         public void OnFilesDropped(string[] files)
         {
-            ImportFileList.Clear();
-            ImportWordFileList.Clear();
+            try
+            {
+                ImportFileList.Clear();
+                ImportWordFileList.Clear();
 
-            foreach (string file in files) ImportFileList.Add(new MPImportFile(file));
-            FileInfo fileImport = new FileInfo(ImportFileList[0].FileFullPath);
-            foreach (FileInfo file in new DirectoryInfo(fileImport.Directory.ToString()).GetFiles())
-            {
-                if (file.Name.Contains("docx")) ImportWordFileList.Add(new MPImportFile(file.FullName));
-            }
-            var templist = ImportFileList.ToArray();
-            foreach (MPImportFile file in templist)
-            {
-                MPImportFile WordFile = ImportWordFileList.FirstOrDefault(x => x.FileRohChar == file.FileRohChar);
-                if (WordFile != null)
+                foreach (string file in files) ImportFileList.Add(new MPImportFile(file));
+                FileInfo fileImport = new FileInfo(ImportFileList[0].FileFullPath);
+                foreach (FileInfo file in new DirectoryInfo(fileImport.Directory.ToString()).GetFiles())
                 {
-                    file.WordFileExist = true;
-                    file.FileWordFullPath = WordFile.FileFullPath;
+                    if (file.Name.Contains("docx")) ImportWordFileList.Add(new MPImportFile(file.FullName));
                 }
-                ImportFileList.Remove(file);
-                ImportFileList.Add(file);
-                AnzahlImportDateien = $"Anzahl der Importdateien: {ImportFileList.Count()}";
+                var templist = ImportFileList.ToArray();
+                foreach (MPImportFile file in templist)
+                {
+                    MPImportFile WordFile = ImportWordFileList.FirstOrDefault(x => x.FileRohChar == file.FileRohChar);
+                    if (WordFile != null)
+                    {
+                        file.WordFileExist = true;
+                        file.FileWordFullPath = WordFile.FileFullPath;
+                    }
+                    ImportFileList.Remove(file);
+                    ImportFileList.Add(file);
+                    AnzahlImportDateien = $"Anzahl der Importdateien: {ImportFileList.Count()}";
+                }
+                SetShow(start: true, settings: true);
             }
-            ShowSettings = true;
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("Ablage der Dateien", ex); }
         }
         #endregion
+
+        private async void ImportDatabase()
+        {
+            string actionName = "Import Datenbank";
+            Task<DBResponse> task = ImportDatabaseAsync();
+            ViewManager.ShowMainInfoFlyout("Die Entscheidungen werden in die Datenbank importiert", false);
+            ViewManager.ActionlistAdd(actionName);
+            await task;
+            ViewManager.ActionlistRemove(actionName);
+            if (task.Result.Success)
+            {
+                SetShow(start: true);
+                ViewManager.ShowMainInfoFlyout("Die Kalenderwoche wurde importiert.", false);
+                //MPWeek importweek = task.Result.Data as MPWeek;
+                //importweek.ExportBSCWAdmin(mpDBContext);
+            }
+            else { ErrorMessage.CreateSimpleMessage(task.Result.Message); }
+        }
+
+        private Task<DBResponse> ImportDatabaseAsync()
+        {
+            Task<DBResponse> task = Task.Run<DBResponse>(() =>
+            {
+                DBResponse response = new DBResponse();
+                Stopwatch sw = Stopwatch.StartNew();
+                sw.Start();
+                #region Dateien speichern
+
+
+                try
+                {
+                    string MessageboxText = string.Empty;
+                    foreach (MPDecision mpImport in MPDecisionList) ImportMPWeek.MPDecisions.Add(mpImport);
+                    mpDBContext.MPWeeks.Add(ImportMPWeek);
+                    mpDBContext.SaveChanges();
+                }
+                catch (System.Exception ex)
+                {
+                    Logger.WriteLog($"Die Datensätze für die Montagspost konnten nicht in die Datenbank geschrieben werden. Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                    response.Message = $"Die Datensätze konnten nicht in die Datenbank geschrieben werden. Bitte prüfen Sie die Log-Datei.";
+                    return response;
+                }
+
+                #endregion
+                #region E-Mails erstellen
+                DBResponse emailResponse = EMails_Erstellen();
+                if (!emailResponse.Success)
+                {
+                    response.Message = emailResponse.Message;
+                    Logger.WriteLog(emailResponse.Message);
+                }
+                emailResponse = EMailNotification_Erstellen();
+                if (!emailResponse.Success)
+                {
+                    response.Message = emailResponse.Message;
+                    Logger.WriteLog(emailResponse.Message);
+                }
+                #endregion
+                #region Gesamt-PDF erstellen
+                string NumKW = (SelectedKW <= 9) ? $"0{SelectedKW}" : SelectedKW.ToString();
+                DBResponse gesamtListeResponse = GesamtListeErstellen($"{BGHKompaktSystemInfo.PathDokstelleDFS}{BGHKompaktSystemInfo.PathMontagspost}{SelectedVintage}\\KW{NumKW}\\");
+                if (!gesamtListeResponse.Success)
+                {
+                    response.Message = gesamtListeResponse.Message;
+                    Logger.WriteLog(gesamtListeResponse.Message);
+                }
+                #endregion
+                if (response.Message == string.Empty) response.Success = true;
+                sw.Stop();
+                Logger.WriteLog($"Import der Montagspost KW {SelectedKW}/{SelectedVintage} abgeschlossen. Dauer: {sw.Elapsed.TotalSeconds} Sekunden.");
+                return response;
+
+            });
+            return task;
+
+        }
         private async void Import()
         {
             string actionName = "Import Kalenderwoche";
@@ -293,20 +482,30 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             ViewManager.ActionlistRemove(actionName);
             if (task.Result.Success)
             {
-                foreach (MPImportResult result in ImportResultTemp) ImportResultList.Add(result);
-                ShowNewImport = true;
+                var resultList = ((IEnumerable)task.Result.Data).Cast<MPDecision>().ToList();
+                foreach (MPDecision result in resultList)
+                {
+                    if (result.SenatID > 0)
+                    {
+                        try
+                        {
+                            MPSenat senat = mpDBContext.MPSenate.FirstOrDefault(x => x.MPSenatID == result.SenatID);
+                            result.Senat = senat ?? null;
+                        }
+                        catch (Exception ex) { ErrorMessage.CreateExceptionWithoutMessage("Fill MPDecisionList", ex); }
+                    }
+                    MPDecisionList.Add(result);
+                }
+                KalenderWocheString = $"Kalenderwoche: {SelectedKW}/{SelectedVintage}";
+                SetShow(result: true, import: true);
                 ViewManager.ShowMainInfoFlyout("Die Kalenderwoche wurde importiert.", false);
-                MPWeek importweek = task.Result.Data as MPWeek;
-                importweek.ExportBSCWAdmin(mpDBContext);
+                //MPWeek importweek = task.Result.Data as MPWeek;
+                //importweek.ExportBSCWAdmin(mpDBContext);
             }
-            else
-            {
-                ErrorMessage.CreateSimpleMessage(task.Result.Message);
-            }
+            else { ErrorMessage.CreateSimpleMessage(task.Result.Message); }
             
 
         }
-
         //Parallel
         private Task<DBResponse> ImportAsync()
         {
@@ -316,14 +515,18 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 DBResponse response = new DBResponse();
                 Stopwatch sw = Stopwatch.StartNew();
                 sw.Start();
-                MPWeek ImportMPWeek = new MPWeek();
+                ImportMPWeek = new MPWeek();
 
                 var select = SelectedVintage;
 
                 #region Dateien einlesen
                 DBResponse importResponse = new DBResponse();
                 importResponse = ImportFiles();
-                if (!importResponse.Success) ViewManager.ShowMainInfoFlyout(importResponse.Message, false);
+                if (!importResponse.Success)
+                {
+                    ReadMPState = "Fehler beim Import der Dateien. Bitte prüfen Sie die Log-Datei.";
+                    return importResponse;
+                }
 
                 ImportMPWeek.MPWeekNumber = SelectedKW;
                 ImportMPWeek.MPWeekYear = SelectedVintage;
@@ -339,64 +542,64 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 int AnzahlEntscheidungen = ImportFileList.Count();
 
                 entscheidungsListe = Word_Datei_Auslesen(ImportFileList);
-                #endregion
-                #region Dateien speichern
-                bool DataRead = false;
-                try
+                if (entscheidungsListe.Count == 0)
                 {
-                    MPDBContext context = new MPDBContext();
-                    string MessageboxText = string.Empty;
-                    foreach (MPDecisionImportWord mpImport in entscheidungsListe)
-                    {
-                        MessageboxText += $"{mpImport.FileName}; ";
-                        MPImportResult importResult = new MPImportResult
-                        {
-                            Importpdf = mpImport.ImportpdfSuccessfull,
-                            ImportWord = mpImport.ImportWordSuccessfull,
-                            Name = mpImport.FileName
-                        };
-                        ImportResultTemp.Add(importResult);
-
-                        if (mpImport.ImportpdfSuccessfull && mpImport.ImportWordSuccessfull)
-                        {
-                            MPDecision newMPDecision = new MPDecision();
-                            mpImport.ExportToMPDecesion(ref newMPDecision, ref context);
-                            ImportMPWeek.MPDecisions.Add(newMPDecision);
-                        }
-                    }
-                    //MessageBox.Show(MessageboxText);
-                    ////Änderungen in der Datenbank speichern
-                    context.MPWeeks.Add(ImportMPWeek);
-                    context.SaveChanges();
-                    ReadMPState = MPStateText;
-                    DataRead = true;
+                    ReadMPState = "Fehler beim Einlesen der Word-Dateien. Bitte prüfen Sie die Log-Datei.";
+                    response.Message = "Fehler beim Einlesen der Word-Dateien. Bitte prüfen Sie die Log-Datei.";
+                    return response;
                 }
-                catch (System.Exception ex)
+                #endregion
+
+                response.Data = WordFileConverter(entscheidungsListe);
+                if (response.Data == null)
                 {
-                    Logger.WriteLog($"Die Datensätze für die Montagspost konnten nicht in die Datenbank geschrieben werden. Es ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
-                    ReadMPState = $"Die Datensätze konnten nicht in die Datenbank geschrieben werden. Bitte prüfen Sie die Log-Datei.";
+                    response.Success = false;
+                    response.Message = "Fehler beim Einlasen der Dateien. Bitte prüfen Sie die Log-Datei.";
+                    return response;
                 }
 
-                #endregion                //MPWeekList.Add(ImportMPWeek);
-                #region E-Mails erstellen
-                if (DataRead)
-                {
-                    EMails_Erstellen();
-                    EMailNotification_Erstellen();
-                }
-                #endregion
-                #region Gesamt-PDF erstellen
-                string NumKW = (SelectedKW <= 9) ? $"0{SelectedKW}" : SelectedKW.ToString();
-                GesamtListeErstellen($"{BGHKompaktSystemInfo.PathDokstelleDFS}{BGHKompaktSystemInfo.PathMontagspost}{SelectedVintage}\\KW{NumKW}\\");
-                #endregion
                 response.Success  = true;
-                response.Data = ImportMPWeek;
+                //response.Data = ImportMPWeek;
                 sw.Stop();
                 return response;
 
             });
             return task;
 
+        }
+        private ObservableCollection<MPDecision> WordFileConverter(List<MPDecisionImportWord> entscheidungsListe)
+        {
+            ObservableCollection<MPDecision> decisionList = new ObservableCollection<MPDecision>();
+            try
+            {
+                MPDBContext context = new MPDBContext();
+                string MessageboxText = string.Empty;
+                foreach (MPDecisionImportWord mpImport in entscheidungsListe)
+                {
+                    MessageboxText += $"{mpImport.FileName}; ";
+                    MPImportResult importResult = new MPImportResult
+                    {
+                        Importpdf = mpImport.ImportpdfSuccessfull,
+                        ImportWord = mpImport.ImportWordSuccessfull,
+                        Name = mpImport.FileName
+                    };
+                    ImportResultTemp.Add(importResult);
+
+                    if (mpImport.ImportpdfSuccessfull && mpImport.ImportWordSuccessfull)
+                    {
+                        MPDecision newMPDecision = new MPDecision();
+                        mpImport.ExportToMPDecesion(ref newMPDecision, ref context);
+                        decisionList.Add(newMPDecision);
+                    }
+                }
+                return decisionList;
+            }
+            catch (System.Exception ex)
+            {
+                ErrorMessage.CreateExceptionWithoutMessage("WordFileConverter", ex);
+                ReadMPState = $"Die Datensätze konnten nicht in die Datenbank geschrieben werden. Bitte prüfen Sie die Log-Datei.";
+                return decisionList;
+            }
         }
         private DBResponse ImportFiles()
         {
@@ -590,29 +793,66 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                     }
                     catch (System.Exception ex)
                     {
-                        Logger.WriteLog($"Import-Montagspost: Für die Datei {file.FileName} ist folgender Fehler aufgetreten: {ex.Message}; {ex.InnerException}");
+                        ErrorMessage.CreateExceptionWithFlyOutMessage("ImportFiles", ex);
                         file.ImportSuccessfull = false;
                     }
                 }
             }
 
-            if (errorList != string.Empty)
-            {
-                response.Message = $"Der Import folgender Dateien konnte nicht erfolgen: {errorList}";
-            }
-            else
-            {
-                response.Success = true;
-            }
+            if (errorList != string.Empty) { response.Message = $"Der Import folgender Dateien konnte nicht erfolgen: {errorList}"; }
+            else { response.Success = true;}
             return response;
         }
         #region EMail
-        private void EMails_Erstellen()
+        private DBResponse EMails_Erstellen()
         {
+            DBResponse response = new DBResponse();
             if (EMailPDFList.Count > 0)
             {
+                try
+                {
+                    MPSetting mpSetting = mpDBContext.MPSettings.FirstOrDefault();
+                    MPEMail mpEMail = mpDBContext.MPEMails.FirstOrDefault(e => e.MPEMailDescription == "Anschreiben Externe Empfänger");
+                    if (mpSetting != null && mpEMail != null)
+                    {
+                        string jahr = SelectedVintage.ToString().Substring(2);
+                        string strSubject = Regex.Replace(mpEMail.MPEMailSubject, "'KW'", $"{SelectedKW}/{jahr}");
+
+                        string Text = $"{mpSetting.MPSettingEMailAnrede}, <br> <br>{mpEMail.MPEMailBody}<br> <br> {mpSetting.MPSettingEMailSchluss}<br> <br>{mpSetting.MPSettingDatenschutzhinweis}";
+                        Text = Regex.Replace(Text, "'KW'", $"{SelectedKW}/{jahr}");
+
+                        List<CustomMailAttachment> attachmentListpfd = new List<CustomMailAttachment>();
+                        foreach (MPImportFile file in ImportFileList) if (file.ImportSuccessfull) attachmentListpfd.Add(new CustomMailAttachment { AttachmentPath = file.FileFullPath, AttachmentName = file.FileName });
+                        
+                        DBResponse eMailresponse = EMails_Versenden(EMailPDFList, strSubject, Text, attachmentListpfd);
+                        if (!eMailresponse.Success)
+                        {
+                            response.Message = eMailresponse.Message;
+                        }
+                        else { response.Success = true; }
+                    }
+                    else
+                    {
+                        Logger.WriteLog("Die E-Mail-Vorlage für externe Empfänger ist nicht hinterlegt.");
+                        response.Message = "Die E-Mail-Vorlage für externe Empfänger ist nicht hinterlegt.";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage.CreateExceptionWithoutMessage("EMails_Erstellen", ex);
+                    response.Message = "Fehler beim Erstellen der E-Mails an externe Empfänger. Bitte prüfen Sie die Log-Datei.";
+                }
+            }
+            else { response.Message = "Es sind keine externen E-Mail-Empfänger hinterlegt.";}
+            return response;
+        }
+        private DBResponse EMailNotification_Erstellen()
+        {
+            DBResponse response = new DBResponse();
+            try
+            {
                 MPSetting mpSetting = mpDBContext.MPSettings.FirstOrDefault();
-                MPEMail mpEMail = mpDBContext.MPEMails.FirstOrDefault(e => e.MPEMailDescription == "Anschreiben Externe Empfänger");
+                MPEMail mpEMail = mpDBContext.MPEMails.FirstOrDefault(e => e.MPEMailDescription == "Anschreiben Interne Empfänger");
                 if (mpSetting != null && mpEMail != null)
                 {
                     string jahr = SelectedVintage.ToString().Substring(2);
@@ -620,64 +860,66 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
                     string Text = $"{mpSetting.MPSettingEMailAnrede}, <br> <br>{mpEMail.MPEMailBody}<br> <br> {mpSetting.MPSettingEMailSchluss}<br> <br>{mpSetting.MPSettingDatenschutzhinweis}";
                     Text = Regex.Replace(Text, "'KW'", $"{SelectedKW}/{jahr}");
+                    //Adressenliste erstellen
+                    ObservableCollection<MPEMailRecipient> AddressList = new ObservableCollection<MPEMailRecipient>();
+                    UserDBContext context = new UserDBContext();
+                    var query = context.Users.Where(n => n.MPEMailNotification == true && n.StatusId == 1).ToArray();
+                    foreach (var item in query) AddressList.Add(new MPEMailRecipient { MPEMailRecipientAdress = item.EMail, MPEMailRecipientTyp = 2 });
 
-                    List<CustomMailAttachment> attachmentListpfd = new List<CustomMailAttachment>();
-
-                    foreach (MPImportFile file in ImportFileList)
+                    if (AddressList.Count > 0)
                     {
-                        if (file.ImportSuccessfull)
+                        DBResponse eMailresponse = EMails_Versenden(AddressList, strSubject, Text, null);
+                        if (!eMailresponse.Success)
                         {
-                            attachmentListpfd.Add(new CustomMailAttachment { AttachmentPath = file.FileFullPath, AttachmentName = file.FileName });
+                            response.Message = eMailresponse.Message;
                         }
+                        else { response.Success = true; }
                     }
-
-                    EMails_Versenden(EMailPDFList, strSubject, Text, attachmentListpfd);
+                    else
+                    {
+                        Logger.WriteLog("Es sind keine Empfänger für die interne Benachrichtigung vorhanden.");
+                        response.Success = true;
+                    }
                 }
-            }
-            //EMails_Versenden(EMailWordList, strSubject, Text, attachmentListWord);
-        }
-        private void EMailNotification_Erstellen()
-        {
-            MPSetting mpSetting = mpDBContext.MPSettings.FirstOrDefault();
-            MPEMail mpEMail = mpDBContext.MPEMails.FirstOrDefault(e => e.MPEMailDescription == "Anschreiben Interne Empfänger");
-            if (mpSetting != null && mpEMail != null)
-            {
-                string jahr = SelectedVintage.ToString().Substring(2);
-                string strSubject = Regex.Replace(mpEMail.MPEMailSubject, "'KW'", $"{SelectedKW}/{jahr}");
 
-                string Text = $"{mpSetting.MPSettingEMailAnrede}, <br> <br>{mpEMail.MPEMailBody}<br> <br> {mpSetting.MPSettingEMailSchluss}<br> <br>{mpSetting.MPSettingDatenschutzhinweis}";
-                Text = Regex.Replace(Text, "'KW'", $"{SelectedKW}/{jahr}");
-                //Adressenliste erstellen
-                ObservableCollection<MPEMailRecipient> AddressList = new ObservableCollection<MPEMailRecipient>();
-                UserDBContext context = new UserDBContext();
-                var query = context.Users.Where(n => n.MPEMailNotification == true && n.StatusId == 1).ToArray();
-                foreach (var item in query) AddressList.Add(new MPEMailRecipient { MPEMailRecipientAdress = item.EMail, MPEMailRecipientTyp = 2 });
-
-                EMails_Versenden(AddressList, strSubject, Text, null);
             }
+            catch (Exception ex)
+            {
+                ErrorMessage.CreateExceptionWithoutMessage("EMailNotification_Erstellen", ex);
+                response.Message = "Fehler beim Erstellen der Benachrichtigungs-E-Mails. Bitte prüfen Sie die Log-Datei.";
+            }
+            return response;
         }
-        private void EMails_Versenden(ObservableCollection<MPEMailRecipient> List, string strSubject, string text, List<CustomMailAttachment> attachmentListpfd)
+        private DBResponse EMails_Versenden(ObservableCollection<MPEMailRecipient> List, string strSubject, string text, List<CustomMailAttachment> attachmentListpfd)
         {
-            string strEMailAdresses = string.Empty;
-            foreach (MPEMailRecipient Member in List)
+            DBResponse response = new DBResponse();
+            try
             {
-                strEMailAdresses = !(strEMailAdresses == "") ? strEMailAdresses + ";" + Member.MPEMailRecipientAdress.ToString() : Member.MPEMailRecipientAdress.ToString();
-            }
-            if (strEMailAdresses.Length > 0)
-            {
-                EMailVersand eMailVersand = new EMailVersand();
-                DBResponse dBResponse = eMailVersand.Send_Email(
-                    emailTo: BGHKompaktSystemInfo.EMailDokstelle,
-                    BCC: strEMailAdresses,
-                    subject: strSubject,
-                    mailBody: text,
-                    attachmentList: attachmentListpfd);
-                if (!dBResponse.Success)
+                string strEMailAdresses = string.Empty;
+                foreach (MPEMailRecipient Member in List) strEMailAdresses = !(strEMailAdresses == "") ? strEMailAdresses + ";" + Member.MPEMailRecipientAdress : Member.MPEMailRecipientAdress;
+                if (strEMailAdresses.Length > 0)
                 {
-                    Logger.WriteLog(dBResponse.Message);
-                    ViewManager.ShowMainInfoFlyout(dBResponse.Message, false);
+                    EMailVersand eMailVersand = new EMailVersand();
+                    DBResponse dBResponse = eMailVersand.Send_Email(
+                        emailTo: BGHKompaktSystemInfo.EMailDokstelle,
+                        BCC: strEMailAdresses,
+                        subject: strSubject,
+                        mailBody: text,
+                        attachmentList: attachmentListpfd);
+                    if (!dBResponse.Success)
+                    {
+                        Logger.WriteLog(dBResponse.Message);
+                        response.Message = response.Message == string.Empty ? "Beim E-Mail-Versand sind folgende Fehler aufgetreten:" + Environment.NewLine + dBResponse.Message : Environment.NewLine + dBResponse.Message;
+                    }
                 }
+                if (response.Message == string.Empty) response.Success = true;
             }
+            catch (Exception ex)
+            {
+                ErrorMessage.CreateExceptionWithoutMessage("EMails_Versenden", ex);
+                response.Message = "Fehler beim Versenden der E-Mails. Bitte prüfen Sie die Log-Datei.";
+            }
+            return response;
         }
         #endregion
         private MPImportHelper FolderCreation(string senatBezeichnung, List<MPSenat> SenateList)
@@ -832,88 +1074,94 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 return string.Empty;
             }
         }
-        private void GesamtListeErstellen(string path)
+        private DBResponse GesamtListeErstellen(string path)
         {
-
+            DBResponse response = new DBResponse();
             XFont font = new XFont("Verdana", 16);
-
-            if (!Directory.Exists(path)) return;
-            string[] directories = Directory.GetDirectories(path);
-
-            foreach (string directory in directories)
+            if (!Directory.Exists(path))
             {
-
-                string bereich = directory.Substring(directory.LastIndexOf("\\") + 1);
-
-                string[] directories2 = Directory.GetDirectories(directory);
-
-                PdfDocument outputDocument = new PdfDocument();
-                int counter = 0;
-                PdfOutline outline = null;
-
-
-                foreach (string dir in directories2)
+                response.Message = $"Das Verzeichnis {path} ist nicht vorhanden.";
+                return response;
+            }
+            try
+            {
+                string[] directories = Directory.GetDirectories(path);
+                foreach (string directory in directories)
                 {
-                    string[] files = Directory.GetFiles(dir);
+                    string bereich = directory.Substring(directory.LastIndexOf("\\") + 1);
+                    string[] directories2 = Directory.GetDirectories(directory);
 
-                    foreach (string file in files)
+                    PdfDocument outputDocument = new PdfDocument();
+                    int counter = 0;
+                    PdfOutline outline = null;
+
+                    foreach (string dir in directories2)
                     {
-                        // Open the document to import pages from it.
-                        //Prüfen, ob eine pdf-Datei vorliegt
-                        FileInfo ConvertFile = new FileInfo(file);
-                        if (ConvertFile.Extension == ".pdf")
+                        if (Directory.Exists(dir))
                         {
-                            PdfDocument inputDocument = PdfReader.Open(file, PdfDocumentOpenMode.Import);
-
-                            // Iterate pages
-
-                            if (counter == 0)
+                            string[] files = Directory.GetFiles(dir);
+                            foreach (string file in files)
                             {
-                                PdfPage page = outputDocument.AddPage();
-                                XGraphics gfx = XGraphics.FromPdfPage(page);
+                                // Open the document to import pages from it.
+                                //Prüfen, ob eine pdf-Datei vorliegt
+                                FileInfo ConvertFile = new FileInfo(file);
+                                if (ConvertFile.Extension == ".pdf")
+                                {
+                                    PdfDocument inputDocument = PdfReader.Open(file, PdfDocumentOpenMode.Import);
+                                    // Iterate pages
+                                    if (counter == 0)
+                                    {
+                                        PdfPage page = outputDocument.AddPage();
+                                        XGraphics gfx = XGraphics.FromPdfPage(page);
 
-                                string Filename = inputDocument.FullPath;
-                                Filename = Filename.Substring(Filename.LastIndexOf("\\") + 1);
-                                Filename = Filename.Substring(0, (Filename.Length - 4));
-                                gfx.DrawString(Filename, font, XBrushes.Black, 90, 200, XStringFormats.Default);
+                                        string Filename = inputDocument.FullPath;
+                                        Filename = Filename.Substring(Filename.LastIndexOf("\\") + 1);
+                                        Filename = Filename.Substring(0, (Filename.Length - 4));
+                                        gfx.DrawString(Filename, font, XBrushes.Black, 90, 200, XStringFormats.Default);
+                                        // Create the root bookmark. You can set the style and the color.
+                                        outline = outputDocument.Outlines.Add(bereich, page, true, PdfOutlineStyle.Bold, XColors.Red);
+                                    }
+                                    else
+                                    {
+                                        PdfPage page = outputDocument.AddPage();
+                                        XGraphics gfx = XGraphics.FromPdfPage(page);
+                                        string Filename = inputDocument.FullPath;
+                                        Filename = Filename.Substring(Filename.LastIndexOf("\\") + 1);
+                                        Filename = Filename.Substring(0, (Filename.Length - 4));
+                                        string text = Filename;
+                                        gfx.DrawString(text, font, XBrushes.Black, 90, 200, XStringFormats.Default);
+                                        // Create a sub bookmark
+                                        outline.Outlines.Add(text, page, true);
+                                    }
 
-                                // Create the root bookmark. You can set the style and the color.
-                                outline = outputDocument.Outlines.Add(bereich, page, true, PdfOutlineStyle.Bold, XColors.Red);
+                                    int count = inputDocument.PageCount;
+                                    for (int idx = 0; idx < count; idx++)
+                                    {
+                                        // Get the page from the external document...
+                                        PdfPage page = inputDocument.Pages[idx];
+                                        // ...and add it to the output document.
+                                        outputDocument.AddPage(page);
+                                    }
+                                    counter++;
+                                }
                             }
-                            else
-                            {
-                                PdfPage page = outputDocument.AddPage();
-                                XGraphics gfx = XGraphics.FromPdfPage(page);
-                                string Filename = inputDocument.FullPath;
-                                Filename = Filename.Substring(Filename.LastIndexOf("\\") + 1);
-                                Filename = Filename.Substring(0, (Filename.Length - 4));
-                                string text = Filename;
-                                gfx.DrawString(text, font, XBrushes.Black, 90, 200, XStringFormats.Default);
-
-                                // Create a sub bookmark
-                                outline.Outlines.Add(text, page, true);
-                            }
-
-                            int count = inputDocument.PageCount;
-                            for (int idx = 0; idx < count; idx++)
-                            {
-                                // Get the page from the external document...
-                                PdfPage page = inputDocument.Pages[idx];
-                                // ...and add it to the output document.
-                                outputDocument.AddPage(page);
-                            }
-                            counter++;
                         }
+                        else {Logger.WriteLog($"Das Verzeichnis {dir} konnte nicht gefunden werden.");}   
+                    }
+                    // Dokument speichern, falls mindestens eine Datei vorhanden ist
+                    if (counter > 0)
+                    {
+                        string filename = directory + "\\" + directory.Substring(directory.LastIndexOf("\\") + 1) + ".pdf";
+                        outputDocument.Save(filename);
                     }
                 }
-                // Dokument speichern, falls mindestens eine Datei vorhanden ist
-                if (counter > 0)
-                {
-                    string filename = directory + "\\" + directory.Substring(directory.LastIndexOf("\\") + 1) + ".pdf";
-                    outputDocument.Save(filename);
-                }
-
             }
+            catch (Exception ex) 
+            { 
+                ErrorMessage.CreateExceptionWithFlyOutMessage("GesamtListeErstellen", ex); 
+                response.Message = "Fehler beim Erstellen der Gesamtliste. Bitte prüfen Sie die Log-Datei.";
+            }
+            return response;
         }
         private List<MPDecisionImportWord> Word_Datei_Auslesen(ObservableCollection<MPImportFile> ImportList)
         {
@@ -941,7 +1189,6 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             int AnzahlEntscheidungen = 0;
             int Zaehler = 1;
             string path = string.Empty;
-            DateTime temp;
 
             List<MPImportFile> ListFiles = new List<MPImportFile>();
             foreach (MPImportFile file in ImportList) ListFiles.Add(file);
@@ -997,15 +1244,15 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                             }
                             if (item.Name == "Dokumenttyp")
                             {
-                                Verfahrensart = item.Value;
-                                EntscheidungsartSchlüssel = (Verfahrensart == "Urteil") ? 1 : 2;
-                                VerfahrensartErfasst = true;
+                                Entscheidungsart = item.Value;
+                                EntscheidungsartSchlüssel = (Entscheidungsart == "Urteil") ? 1 : 2;
+                                EntscheidungsartErfasst = true;
                                 //continue;
                             }
                             if (item.Name == "Entscheidungsdatum")
                             {
                                 
-                                if(DateTime.TryParse(item.value, out temp))
+                                if(DateTime.TryParse(item.value, out DateTime temp))
                                 {
                                     DateTime checkDate = new DateTime(2025, 01, 01);
                                     if (temp > checkDate)
@@ -1104,8 +1351,11 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                     {
                                         if (TextLower.IndexOf("in ") >= 0)
                                         {
-                                            Verfahrensart = FirstLetterToUpper(TextClean(p.Range.Text));
-                                            VerfahrensartErfasst = true;
+                                            if (p.Range.Text == "In dem Rechtsstreit")
+                                            {
+                                                Verfahrensart = FirstLetterToUpper(TextClean(p.Range.Text));
+                                                VerfahrensartErfasst = true;
+                                            }
                                         }
                                     }
                                     //In den ersten drei Wörten muss "§", "Art." oder "Verordnung" vorkommen
@@ -1140,7 +1390,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                             }
                                             if (normGefunden)
                                             {
-                                                Normenkette += p.Range.Text;
+                                                string range = p.Range.Text.Trim('\r', '\n');
+                                                Normenkette += range;
                                                 NormenketteStart = true;
                                             }
                                             else
@@ -1172,7 +1423,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                                 }
                                                 else
                                                 {
-                                                    Leitsatz += Environment.NewLine + p.Range.Text;
+                                                    string range = p.Range.Text.TrimEnd('\r', '\n');
+                                                    Leitsatz += Leitsatz == string.Empty ? range : Environment.NewLine + range;
                                                 }
                                             }
                                         }
@@ -1180,7 +1432,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                         {
                                             if (p.Range.Text.Contains("wegen"))
                                             {
-                                                Leitsatz += (Leitsatz == string.Empty) ? p.Range.Text : Environment.NewLine + p.Range.Text;
+                                                string range = p.Range.Text.TrimEnd('\r', '\n');
+                                                Leitsatz += Leitsatz == string.Empty ? range : Environment.NewLine + range;
                                                 //LeitsatzErfasst = true;
                                                 //StraftatbestandErfasst = true;
                                                 //NormenketteErfasst = true;
@@ -1191,7 +1444,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                                 Regex WordCharRegex = new Regex(@"^[\w]");
                                                 if (WordCharRegex.IsMatch(p.Range.Text.TrimStart()))
                                                 {
-                                                    Leitsatz += (Leitsatz == string.Empty) ? p.Range.Text : Environment.NewLine + p.Range.Text;
+                                                    string range = p.Range.Text.TrimEnd('\r', '\n');
+                                                    Leitsatz += Leitsatz == string.Empty ? range : Environment.NewLine + range;
                                                 }
                                                 else
                                                 {
@@ -1239,7 +1493,6 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                                         }
                                     }
                                 }
-
                                 //Vorinstanzen auslesen
                                 if (p.Range.Text.IndexOf("Vorinstanz") >= 0)
                                 {
@@ -1267,8 +1520,9 @@ namespace BGH_Kompakt.ViewModel.Montagspost
 
                         entscheidungsListe.Add(new MPDecisionImportWord(entscheidung, true, Aktenzeichen, Entscheidungsart, Verfahrensart, Entscheidungsdatum, Leitsatz, Normenkette, Vorinstanz1, Vorinstanz2));
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        ErrorMessage.CreateExceptionWithFlyOutMessage("Word-Datei-Auslesen", ex);
                         entscheidungsListe.Add(new MPDecisionImportWord(entscheidung, false));
                     }
                 }
@@ -1316,10 +1570,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 obj = null;
             }
-            catch (System.Exception)
-            {
-                //TODO
-            }
+            catch (System.Exception ex) {ErrorMessage.CreateExceptionWithoutMessage("ReleaseObject", ex);}
             finally
             {
                 GC.Collect();

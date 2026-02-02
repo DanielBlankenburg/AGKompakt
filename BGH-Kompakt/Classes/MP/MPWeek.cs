@@ -57,7 +57,7 @@ namespace BGH_Kompakt.Classes.MP
                 }
                 //string BSCW_Server_Path = $"{UserManager.SenatSettings.BSCW_Server_Drive}:\\{SelectedVintage}\\{SelectedMPWeek.MPWeekNumber}\\";
             }
-            catch (Exception ex) { ErrorMessage.CreateException("MontagspostViewModel_BSCW_Check", ex.Message, ex.InnerException); }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("MontagspostViewModel_BSCW_Check", ex); }
         }
 
         private Task<DBResponse> BSCWCopy(MPSetting settings)

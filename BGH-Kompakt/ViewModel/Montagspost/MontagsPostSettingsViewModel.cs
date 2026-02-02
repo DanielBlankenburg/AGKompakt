@@ -48,7 +48,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 var query = mPDBContext.MPEMails;
                 foreach (var mail in query) EMailList.Add(mail);
             }
-            catch (Exception ex) { ErrorMessage.CreateException("Open MPSettingsViewModel", ex.Message, ex.InnerException); }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("Open MPSettingsViewModel", ex); }
         }
 
         private void SaveBSCWServerExecute(object obj)
@@ -106,7 +106,7 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             }
             catch (Exception ex)
             {
-                ErrorMessage.CreateException("MPSettings-SaveEMailExecute", ex.Message, ex.InnerException);
+                ErrorMessage.CreateExceptionWithFlyOutMessage("MPSettings-SaveEMailExecute", ex);
             }
 
         }

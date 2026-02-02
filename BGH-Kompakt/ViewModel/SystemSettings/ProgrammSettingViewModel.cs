@@ -1,12 +1,16 @@
-﻿using BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps;
+﻿using BGH_Kompakt.Classes;
+using BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps;
 using BGH_Kompakt.Classes._LookUp.MP;
+using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.SystemSettings;
 using BGH_Kompakt.Commands;
+using BGH_Kompakt.Dtos;
 using BGH_Kompakt.Enums;
 using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.SystemComponents;
+using Microsoft.Office.Interop.Outlook;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
@@ -15,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Exception = System.Exception;
 
 namespace BGH_Kompakt.ViewModel.SystemSettings
 {
@@ -24,6 +29,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
         public ICommand SeedAZCommand { get; set; }
         public ICommand SeedARCommand { get; set; }
         public ICommand TestPath { get; set; }
+        public ICommand SaveSettings { get; set; }
         public ProgrammSetting ProgrammSetting { get; set; }
         private readonly MPDBContext mpContext = new MPDBContext();
         private readonly UserDBContext userDBContext = new UserDBContext();
@@ -37,8 +43,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             {
                 _AnzeigeMontagspost = value;
                 ProgrammSetting.MontagspostActivated = value;
-                userDBContext.ProgrammSettings.AddOrUpdate(ProgrammSetting);
-                userDBContext.SaveChanges();
+                SaveProgrammsettings(ProgrammSetting, false);
             }
         }
 
@@ -50,12 +55,9 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             {
                 _AnzeigeActivitRequests = value;
                 ProgrammSetting.ActivityRequestActivated = value;
-                userDBContext.ProgrammSettings.AddOrUpdate(ProgrammSetting);
-                userDBContext.SaveChanges();
+                SaveProgrammsettings(ProgrammSetting, false);
             }
         }
-
-
 
         public ProgrammSettingViewModel()
         {
@@ -63,10 +65,25 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             SeedAZCommand = new RelayCommand(SeedAZExecute);
             TestPath = new RelayCommand(TestPathExecute);
             SeedARCommand = new RelayCommand(SeedARExecute);
+            SaveSettings = new RelayCommand(SaveSettingsExecute);
 
             ProgrammSetting = userDBContext.ProgrammSettings.FirstOrDefault() ?? new ProgrammSetting();
             AnzeigeMontagspost = ProgrammSetting.MontagspostActivated;
             AnzeigeActivitRequests = ProgrammSetting.ActivityRequestActivated;
+        }
+
+        private void SaveSettingsExecute(object obj)
+        {
+            if (Directory.Exists(ProgrammSetting.PathDokstelleDFS))
+            {
+                SaveProgrammsettings(ProgrammSetting, true); 
+            }
+            else
+            {
+                ViewManager.ShowMainInfoFlyout("Der Pfad DokstelleDFS exisitiert nicht. Bitte tragen Sie einen gültigen Pfad ein.",false);
+                return;
+            }
+            
         }
 
         private void SeedARExecute(object obj)
@@ -237,6 +254,17 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 ViewManager.ShowMainInfoFlyout($"Der Pfad {path} konnte nicht gefunden werden.", false);
             }
 
+        }
+
+        private void SaveProgrammsettings(ProgrammSetting programmSetting, bool successMessage)
+        {
+            try
+            {
+                userDBContext.ProgrammSettings.AddOrUpdate(programmSetting);
+                userDBContext.SaveChanges();
+                if (successMessage) ViewManager.ShowMainInfoFlyout("Die Änderungen wurden gespeichert", false);
+            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("Speichern der Einstellung", ex);}
         }
 
         private void SeedMontagspostExecute(object obj)
