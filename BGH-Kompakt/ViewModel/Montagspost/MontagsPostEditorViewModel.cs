@@ -135,7 +135,15 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             try
             {
                 MPDecisionList.Clear();
-                foreach (MPDecision decision in SelectedWeek.MPDecisions.OrderBy(x => x.Senat.MPCategorieID).ThenBy(x => x.Senat.MPSenatSorting)) MPDecisionList.Add(decision);
+                var query = SelectedWeek.MPDecisions.OrderBy(x => x.Senat.MPCategorieID).ThenBy(x => x.Senat.MPSenatSorting);
+                if (query != null)
+                {
+                    foreach (MPDecision decision in query) MPDecisionList.Add(decision);
+                }
+                else
+                {
+                    ErrorMessage.CreateSimpleMessage("Die Kalenderwochen konnten nicht eingelesen werden.");
+                }
             }
             catch (Exception ex)
             {
