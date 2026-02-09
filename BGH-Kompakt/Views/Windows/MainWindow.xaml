@@ -13,7 +13,7 @@
     Title="BGH-Kompakt"
     Width="1800"
     Height="800"
-    MinWidth="1400"
+    MinWidth="1200"
     MinHeight="700"
     d:DataContext="{d:DesignInstance Type=mainwindow:MainWindowViewModel}"
     Loaded="MetroWindow_Loaded"
@@ -128,21 +128,28 @@
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="20*" />
         </Grid.ColumnDefinitions>
-        <DockPanel Background="{StaticResource BGH-Color}">
+        <Grid Background="{StaticResource BGH-Color}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <!--  Bild des BGH  -->
             <Image
                 x:Name="BGH"
+                Grid.Row="0"
                 DockPanel.Dock="Top"
                 Source="/Resources/ImageResources/Images/BGH.jpg" />
             <!--  Versionangaben  -->
             <Border
+                Grid.Row="2"
                 Padding="0,10,0,10"
                 BorderThickness="0,0,0,0"
                 DockPanel.Dock="Bottom"
                 Style="{StaticResource Style_Border_Color}">
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical">
-                    <TextBlock Style="{StaticResource Style_Version}" Text="Verfasser: RiAG Dr. Blankenburg" />
-                    <TextBlock Style="{StaticResource Style_Version}" Text="{Binding Version, FallbackValue=Version}" />
+                    <TextBlock TextWrapping="WrapWithOverflow" Style="{StaticResource Style_Version}" Text="Verfasser: RiAG Dr. Blankenburg" />
+                    <TextBlock TextWrapping="WrapWithOverflow" Style="{StaticResource Style_Version}" Text="{Binding Version, FallbackValue=Version}" />
                     <Button
                         x:Name="Test"
                         Click="Test_Click"
@@ -159,7 +166,7 @@
                 </StackPanel>
             </Border>
             <!--  MainMenu  -->
-            <Grid x:Name="MainMenu">
+            <Grid x:Name="MainMenu" Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -167,72 +174,116 @@
                 </Grid.RowDefinitions>
                 <!--  Navigationsmenu  -->
                 <Border Grid.Row="0" Style="{StaticResource Style_Border_Mainmenu}">
-                    <StackPanel Grid.Row="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <Button
                             x:Name="btn_Main"
+                            Grid.Row="0"
                             Click="OpenPageOnMain"
-                            Content="Hauptmenü"
                             Style="{StaticResource Style_Button_Menu}"
-                            Visibility="Visible" />
+                            Visibility="Visible">
+                            <Button.Content>
+                                <TextBlock Text="Hauptmenü" TextWrapping="WrapWithOverflow" />
+                            </Button.Content>
+                        </Button>
                         <Button
                             x:Name="btn_Sitzungsunterlagen"
+                            Grid.Row="1"
                             Click="OpenPageOnMain"
-                            Content="{Binding SenatsText, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource Style_Button_Menu}"
-                            Visibility="{Binding ShowSitzungsunterlagen, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            Visibility="{Binding ShowSitzungsunterlagen, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                            <Button.Content>
+                                <TextBlock Text="{Binding SenatsText, UpdateSourceTrigger=PropertyChanged}" TextWrapping="WrapWithOverflow" />
+                            </Button.Content>
+                        </Button>
                         <Button
                             x:Name="btn_Sitzungplaene"
+                            Grid.Row="2"
                             Click="OpenPageOnMain"
-                            Content="Sitzungsdienste"
                             Style="{StaticResource Style_Button_Menu}"
-                            Visibility="{Binding ShowSitzungsplaene, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            Visibility="{Binding ShowSitzungsplaene, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                            <Button.Content>
+                                <TextBlock Text="Sitzungsdienste" TextWrapping="WrapWithOverflow" />
+                            </Button.Content>
+                        </Button>
                         <Button
                             x:Name="btn_Spruchgruppen"
+                            Grid.Row="3"
                             Click="OpenPageOnMain"
-                            Content="Spruchgruppen"
                             Style="{StaticResource Style_Button_Menu}"
-                            Visibility="{Binding ShowSpruchgruppen, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            Visibility="{Binding ShowSpruchgruppen, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                            <Button.Content>
+                                <TextBlock Text="Spruchgruppen" TextWrapping="WrapWithOverflow" />
+                            </Button.Content>
+                        </Button>
                         <Button
                             x:Name="btn_Montagspost"
+                            Grid.Row="4"
                             Click="OpenPageOnMain"
-                            Content="Montagspost"
                             Style="{StaticResource Style_Button_Menu}"
-                            Visibility="{Binding ShowMontagspost, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            Visibility="{Binding ShowMontagspost, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                            <Button.Content>
+                                <TextBlock Text="Montagspost" TextWrapping="WrapWithOverflow" />
+                            </Button.Content>
+                        </Button>
                         <Button
                             x:Name="btn_MontagspostAdmin"
+                            Grid.Row="5"
                             Click="OpenPageOnMain"
-                            Content="Montagspost-Admin"
                             Style="{StaticResource Style_Button_Menu}"
-                            Visibility="{Binding ShowMontagspostAdmin, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            Visibility="{Binding ShowMontagspostAdmin, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                            <Button.Content>
+                                <TextBlock Text="Montagspost-Admin" TextWrapping="WrapWithOverflow" />
+                            </Button.Content>
+                        </Button>
                         <Button
                             x:Name="btn_Nebentätigkeiten"
+                            Grid.Row="6"
                             Click="OpenPageOnMain"
-                            Content="Nebentätigkeiten"
                             Style="{StaticResource Style_Button_Menu}"
-                            Visibility="{Binding ShowNebentaetigkeiten, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
+                            Visibility="{Binding ShowNebentaetigkeiten, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                            <Button.Content>
+                                <TextBlock Text="Nebentätigkeiten" TextWrapping="WrapWithOverflow" />
+                            </Button.Content>
+                        </Button>
+                    </Grid>
                 </Border>
                 <!--  Systemmenu  -->
                 <Border Grid.Row="1" Style="{StaticResource Style_Border_Mainmenu}">
-                    <StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <Button
                             x:Name="btn_Settings"
+                            Grid.Row="0"
                             Click="OpenPageOnMain"
                             Content="Einstellungen"
                             Style="{StaticResource Style_Button_Menu}" />
                         <Button
                             x:Name="btn_Instruction"
+                            Grid.Row="1"
                             Click="OpenPageOnMain"
                             Content="Anleitungen"
                             Style="{StaticResource Style_Button_Menu}" />
                         <Button
                             x:Name="btn_Test"
+                            Grid.Row="2"
                             Click="OpenPageOnMain"
                             Content="TestInfoWindow"
                             Style="{StaticResource Style_Button_Menu}"
                             Visibility="Collapsed" />
-
-                    </StackPanel>
+                    </Grid>
                 </Border>
                 <!--  Statusbar  -->
                 <Border
@@ -289,7 +340,7 @@
                     </StackPanel>
                 </Border>
             </Grid>
-        </DockPanel>
+        </Grid>
         <!--  Platzhalter für die Unterseiten  -->
         <Grid
             x:Name="PagePlace"

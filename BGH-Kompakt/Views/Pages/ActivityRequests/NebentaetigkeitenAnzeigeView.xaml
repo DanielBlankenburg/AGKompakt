@@ -285,11 +285,12 @@
                         Command="{Binding AddPersonCommand}"
                         Content="Person hinzufügen"
                         Style="{StaticResource Button_Master}" />
-                    <Button Visibility="Collapsed"
+                    <Button
                         Margin="30,0,0,0"
                         Command="{Binding AddRequestsCommand}"
                         Content="Masseneintrag"
-                        Style="{StaticResource Button_Master}" />
+                        Style="{StaticResource Button_Master}"
+                        Visibility="Collapsed" />
                 </StackPanel>
                 <Grid
                     Grid.Row="2"
@@ -309,7 +310,17 @@
                                 Grid.Column="1"
                                 MinWidth="600"
                                 Margin="0,30,0,0">-->
-                        <StackPanel Grid.Column="1">
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
                             <!--#region Art-->
                             <Expander
                                 x:Name="Details"
@@ -899,6 +910,7 @@
                             </Expander>
                             <!--#endregion-->
                             <Border
+                                Grid.Row="1"
                                 Height="1"
                                 HorizontalAlignment="Stretch"
                                 Background="{StaticResource MaterialDesignDivider}"
@@ -906,6 +918,7 @@
                             <!--#region Vergütung-->
                             <Expander
                                 x:Name="Vergütung"
+                                Grid.Row="2"
                                 IsExpanded="{Binding Anzeige_Verguetung, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
@@ -1058,6 +1071,7 @@
                             </Expander>
                             <!--#endregion-->
                             <Border
+                                Grid.Row="3"
                                 Height="1"
                                 HorizontalAlignment="Stretch"
                                 Background="{StaticResource MaterialDesignDivider}"
@@ -1065,6 +1079,7 @@
                             <!--#region Zeitaufwand-->
                             <Expander
                                 x:Name="Zeitaufwand"
+                                Grid.Row="4"
                                 IsExpanded="{Binding Anzeige_Zeitaufwand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
@@ -1149,6 +1164,7 @@
                             </Expander>
                             <!--#endregion-->
                             <Border
+                                Grid.Row="5"
                                 Height="1"
                                 HorizontalAlignment="Stretch"
                                 Background="{StaticResource MaterialDesignDivider}"
@@ -1156,6 +1172,7 @@
                             <!--#region Erklärungen und Anlagen-->
                             <Expander
                                 x:Name="Anlagen"
+                                Grid.Row="6"
                                 IsExpanded="{Binding Anzeige_Anlagen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
@@ -1275,19 +1292,22 @@
                             </Expander>
                             <!--#endregion-->
                             <Border
+                                Grid.Row="7"
                                 Height="1"
                                 HorizontalAlignment="Stretch"
                                 Background="{StaticResource MaterialDesignDivider}"
                                 SnapsToDevicePixels="True" />
-                        </StackPanel>
+                        </Grid>
                         <!--</MD:Card>-->
                     </Grid>
                     <Grid Grid.Row="1" Margin="0,50,0,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <StackPanel
+                            Grid.Column="1"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Orientation="Horizontal">

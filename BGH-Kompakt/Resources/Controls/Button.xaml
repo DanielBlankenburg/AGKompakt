@@ -14,7 +14,8 @@
         <Setter Property="Background" Value="{StaticResource BGH-Color}" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Height" Value="40" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Height" Value="Auto" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
