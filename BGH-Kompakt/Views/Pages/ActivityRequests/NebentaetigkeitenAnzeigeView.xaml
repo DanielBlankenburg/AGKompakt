@@ -310,7 +310,17 @@
                                 Grid.Column="1"
                                 MinWidth="600"
                                 Margin="0,30,0,0">-->
-                        <StackPanel Grid.Column="1">
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
                             <!--#region Art-->
                             <Expander
                                 x:Name="Details"
@@ -883,6 +893,130 @@
                                                 </StackPanel>
                                             </StackPanel>
                                             <!--#endregion-->
+                                            <!--#region Arbitration-->
+                                            <StackPanel Margin="30,0,0,0" Visibility="{Binding AnzeigeArbitration, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                <!--  ArbitrationClient  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <Label
+                                                        Margin="0,30,0,10"
+                                                        Content="Parteien des Schiedsverfahrens"
+                                                        Style="{StaticResource Label_Base}" />
+                                                    <ListView
+                                                        Margin="20,0,0,0"
+                                                        ItemsSource="{Binding ArbitrationClientList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        SelectedItem="{Binding Path=SelectedArbitrationClient}"
+                                                        SelectionMode="Single"
+                                                        Visibility="{Binding AnzeigeArbitrationClientList, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                        <ListView.View>
+                                                            <GridView>
+                                                                <GridViewColumn
+                                                                    Width="190"
+                                                                    DisplayMemberBinding="{Binding ActivityRequestArbitrationClientText, TargetNullValue=[keine Angabe], UpdateSourceTrigger=PropertyChanged}"
+                                                                    Header="Parteibezeichnung"
+                                                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                                                <GridViewColumn
+                                                                    Width="80"
+                                                                    Header="Löschen"
+                                                                    HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
+                                                                    <GridViewColumn.CellTemplate>
+                                                                        <DataTemplate>
+                                                                            <Button
+                                                                                Command="{Binding Path=DataContext.ArbitrationClientAddClearCommand, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                                Style="{StaticResource Button_Add}"
+                                                                                ToolTip="Partei löschen">
+                                                                                <MD:PackIcon Padding="0" Kind="Bin" />
+                                                                            </Button>
+                                                                        </DataTemplate>
+                                                                    </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                            </GridView>
+                                                        </ListView.View>
+                                                    </ListView>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button
+                                                            Command="{Binding ArbitrationClientAddCommand}"
+                                                            Style="{StaticResource Button_Add}"
+                                                            ToolTip="Anlegen einer neuen Partei">
+                                                            <MD:PackIcon Kind="Add" />
+                                                        </Button>
+                                                    </StackPanel>
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte tragen Sie mindestens zwei Parteien ein"
+                                                        Visibility="{Binding ErrorArbitrationCLient, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Beauftragung  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <StackPanel Orientation="Vertical">
+                                                        <Label
+                                                            Padding="0,1,0,0"
+                                                            VerticalAlignment="Top"
+                                                            Content="Beauftragung:"
+                                                            Style="{StaticResource Label_Base}" />
+                                                        <StackPanel Style="{StaticResource Stackpanel_Horizontal}">
+                                                            <RadioButton
+                                                                Margin="10,0,0,0"
+                                                                Content="durch die Parteien gemeinsam"
+                                                                IsChecked="{Binding Party}"
+                                                                Style="{StaticResource RadioButton_Base}" />
+                                                            <RadioButton
+                                                                Margin="10,0,0,0"
+                                                                Content="durch unbeteiligte Stelle"
+                                                                IsChecked="{Binding Third}"
+                                                                Style="{StaticResource RadioButton_Base}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie eine Option aus"
+                                                        Visibility="{Binding ErrorArbitrationTyp, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Benennende Stelle  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <TextBox
+                                                        MD:HintAssist.Hint="Bezeichnung der benennenden Stelle"
+                                                        Style="{StaticResource Textbox_Request}"
+                                                        Text="{Binding ActivityRequestArbitrationCaller}"
+                                                        Visibility="{Binding AnzeigeArbitrationParties, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte wählen Sie eine Option aus"
+                                                        Visibility="{Binding ErrorArbitrationCaller, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                                <!--  Titel  -->
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <TextBox
+                                                        MD:HintAssist.Hint="Gegenstand des Schiedsverfahrens/ Rechtsmaterie"
+                                                        Style="{StaticResource Textbox_Request}"
+                                                        Text="{Binding RequestTitel}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte geben einen Gegenstand ein"
+                                                        Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <!--#endregion-->
+                                            <!--#region Künsterliche/ Sonstige Tätigkeiten, Visibility: AnzeigeSonstiges-->
+                                            <StackPanel Margin="30,0,0,0" Visibility="{Binding AnzeigeSonstiges, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                <StackPanel Style="{StaticResource Stackpanel_Vertical}">
+                                                    <TextBox
+                                                        MD:HintAssist.Hint="{Binding Hint_Description}"
+                                                        Style="{StaticResource Textbox_Request}"
+                                                        Text="{Binding RequestTitel}" />
+                                                    <!--  ErrorValidation  -->
+                                                    <TextBlock
+                                                        Style="{StaticResource Style_Textbox_Error}"
+                                                        Text="Bitte geben ein Thema ein"
+                                                        Visibility="{Binding ErrorTitel, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                                </StackPanel>
+                                            </StackPanel>
+
+
+
                                         </StackPanel>
                                     </StackPanel>
                                     <!--#endregion-->
@@ -904,6 +1038,7 @@
                             </Expander>
                             <!--#endregion-->
                             <Border
+                                Grid.Row="1"
                                 Height="1"
                                 HorizontalAlignment="Stretch"
                                 Background="{StaticResource MaterialDesignDivider}"
@@ -911,6 +1046,7 @@
                             <!--#region Vergütung-->
                             <Expander
                                 x:Name="Vergütung"
+                                Grid.Row="2"
                                 IsExpanded="{Binding Anzeige_Verguetung, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
@@ -1063,6 +1199,7 @@
                             </Expander>
                             <!--#endregion-->
                             <Border
+                                Grid.Row="3"
                                 Height="1"
                                 HorizontalAlignment="Stretch"
                                 Background="{StaticResource MaterialDesignDivider}"
@@ -1070,6 +1207,7 @@
                             <!--#region Zeitaufwand-->
                             <Expander
                                 x:Name="Zeitaufwand"
+                                Grid.Row="4"
                                 IsExpanded="{Binding Anzeige_Zeitaufwand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
@@ -1154,6 +1292,7 @@
                             </Expander>
                             <!--#endregion-->
                             <Border
+                                Grid.Row="5"
                                 Height="1"
                                 HorizontalAlignment="Stretch"
                                 Background="{StaticResource MaterialDesignDivider}"
@@ -1161,6 +1300,7 @@
                             <!--#region Erklärungen und Anlagen-->
                             <Expander
                                 x:Name="Anlagen"
+                                Grid.Row="6"
                                 IsExpanded="{Binding Anzeige_Anlagen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
@@ -1280,19 +1420,22 @@
                             </Expander>
                             <!--#endregion-->
                             <Border
+                                Grid.Row="7"
                                 Height="1"
                                 HorizontalAlignment="Stretch"
                                 Background="{StaticResource MaterialDesignDivider}"
                                 SnapsToDevicePixels="True" />
-                        </StackPanel>
+                        </Grid>
                         <!--</MD:Card>-->
                     </Grid>
                     <Grid Grid.Row="1" Margin="0,50,0,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <StackPanel
+                            Grid.Column="1"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Orientation="Horizontal">
