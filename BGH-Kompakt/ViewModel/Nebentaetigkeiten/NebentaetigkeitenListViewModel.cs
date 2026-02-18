@@ -12,6 +12,7 @@ using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
 using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.Start;
+using Microsoft.Office.Interop.Outlook;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -422,44 +423,57 @@ namespace BGH_Kompakt.ViewModel
 
         private void SetComboboxSource(ObservableCollection<ComboboxItem> list, int art)
         {
-            List<String> stringList = new List<String>();
-            list.Add(new ComboboxItem(keinFilterBezeichnung));
-            foreach (ActivityRequest item in ActivityRequestsView)
+            try
             {
-                switch (art)
-                {
-                    case 1:
-                        stringList.Add(item.ActivityRequestMeldeArt.ActivityRequestMeldeArtText);
-                        break;
-                    case 2:
-                        stringList.Add(item.ActivityRequestTyp.ActivityRequestTypText);
-                        break;
-                    case 3:
-                        stringList.Add(item.Status.ToString());
-                        break;
-                    case 4:
-                        stringList.Add($"{item.ARUser.Fullname};{item.ARUserID}");
-                        break;
-                }
-            }
-            stringList = stringList.Distinct().ToList();
-            foreach (String cbArt in stringList)
-            {
+                List<string> stringList = new List<string>();
+                list.Add(new ComboboxItem(keinFilterBezeichnung));
                 if (art == 4)
                 {
-                    string[] user = cbArt.Split(';');
-                    list.Add(new ComboboxItem(user[0], Int32.Parse(user[1])));
+                    List<User> sortUserList = new List<User>();
+                    foreach (ActivityRequest item in ActivityRequestsView)
+                    {
+                        if (item.ARUser != null) sortUserList.Add(item.ARUser);
+                    }
+                    sortUserList = sortUserList.OrderBy(x => x.NachName).ThenBy(y => y.VorName).ToList();
+                    foreach (User user in sortUserList) stringList.Add($"{user.Fullname};{user.UserId}");
+
                 }
                 else
                 {
-                    list.Add(new ComboboxItem(cbArt));
+                    foreach (ActivityRequest item in ActivityRequestsView)
+                    {
+                        switch (art)
+                        {
+                            case 1:
+                                stringList.Add(item.ActivityRequestMeldeArt.ActivityRequestMeldeArtText);
+                                break;
+                            case 2:
+                                stringList.Add(item.ActivityRequestTyp.ActivityRequestTypText);
+                                break;
+                            case 3:
+                                stringList.Add(item.Status.ToString());
+                                break;
+                            case 4:
+                                stringList.Add($"{item.ARUser.Fullname};{item.ARUserID}");
+                                break;
+                        }
+                    }
+                }
+                stringList = stringList.Distinct().ToList();
+                foreach (string cbArt in stringList)
+                {
+                    if (art == 4)
+                    {
+                        string[] user = cbArt.Split(';');
+                        list.Add(new ComboboxItem(user[0], Int32.Parse(user[1])));
+                    }
+                    else
+                    {
+                        list.Add(new ComboboxItem(cbArt));
+                    }
                 }
             }
-            //FilterMeldeartSelected = list[0];
-            //FilterTaetigkeitsartSelected = list[0];
-            //FilterStatusSelected = list[0];
-            //FilterAntragstellerSelected = list[0];
-
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithoutMessage("Fehler beim Befüllen der Filtercomboboxen", ex); }
         }
 
         private void SetWidthUser(int maxLength)

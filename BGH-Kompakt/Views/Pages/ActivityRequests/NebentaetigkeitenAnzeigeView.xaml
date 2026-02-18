@@ -285,11 +285,12 @@
                         Command="{Binding AddPersonCommand}"
                         Content="Person hinzufügen"
                         Style="{StaticResource Button_Master}" />
-                    <Button Visibility="Collapsed"
+                    <Button
                         Margin="30,0,0,0"
                         Command="{Binding AddRequestsCommand}"
                         Content="Masseneintrag"
-                        Style="{StaticResource Button_Master}" />
+                        Style="{StaticResource Button_Master}"
+                        Visibility="Collapsed" />
                 </StackPanel>
                 <Grid
                     Grid.Row="2"
@@ -365,7 +366,8 @@
                                                     <TextBox
                                                         MD:HintAssist.Hint="{Binding Hint_RequestTitel}"
                                                         Style="{StaticResource Textbox_Request}"
-                                                        Text="{Binding RequestTitel}" />
+                                                        Text="{Binding RequestTitel}"
+                                                        TextWrapping="WrapWithOverflow" />
                                                     <!--  ErrorValidation  -->
                                                     <TextBlock
                                                         Style="{StaticResource Style_Textbox_Error}"
@@ -513,7 +515,8 @@
                                                         <TextBox
                                                             MD:HintAssist.Hint="{Binding Hint_RequestTitel}"
                                                             Style="{StaticResource Textbox_Request}"
-                                                            Text="{Binding RequestTitel}" />
+                                                            Text="{Binding RequestTitel}"
+                                                            TextWrapping="WrapWithOverflow" />
                                                         <!--  ErrorValidation  -->
                                                         <TextBlock
                                                             Style="{StaticResource Style_Textbox_Error}"
@@ -601,7 +604,8 @@
                                                         <TextBox
                                                             MD:HintAssist.Hint="{Binding Hint_RequestTitel}"
                                                             Style="{StaticResource Textbox_Request}"
-                                                            Text="{Binding RequestTitel}" />
+                                                            Text="{Binding RequestTitel}"
+                                                            TextWrapping="WrapWithOverflow" />
                                                         <!--  ErrorValidation  -->
                                                         <TextBlock
                                                             Style="{StaticResource Style_Textbox_Error}"
@@ -747,7 +751,8 @@
                                                     <TextBox
                                                         MD:HintAssist.Hint="{Binding Hint_RequestTitel}"
                                                         Style="{StaticResource Textbox_Request}"
-                                                        Text="{Binding RequestTitel}" />
+                                                        Text="{Binding RequestTitel}"
+                                                        TextWrapping="WrapWithOverflow" />
                                                     <!--  ErrorValidation  -->
                                                     <TextBlock
                                                         Style="{StaticResource Style_Textbox_Error}"

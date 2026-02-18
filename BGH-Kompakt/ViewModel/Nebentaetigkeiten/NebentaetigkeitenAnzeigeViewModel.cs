@@ -1685,30 +1685,38 @@ namespace BGH_Kompakt.ViewModel
                 return;
             }
 
-            ActivityRequestDBContext activityRequestDBcontext = new ActivityRequestDBContext();
-            ARVerguetungAdventageTyp addAdventageTyp = activityRequestDBcontext.ARVerguetungAdventageTyps.FirstOrDefault(a => a.ARVerguetungAdventageTypId == selectedAdventageTyp.ARVerguetungAdventageTypId);
-            ARVerguetungAdventage newAdventage = new ARVerguetungAdventage
+            try
             {
-                ARVerguetungAdventageTyp = addAdventageTyp,
-                ARVerguetungAdventageTypId = SelectedAdventageTyp.ARVerguetungAdventageTypId,
-                ARVerguetungAdventageAmount = decimal.Parse(AdventageAmount)
-            };
-            AdventageList.Add(newAdventage);
+                ActivityRequestDBContext activityRequestDBcontext = new ActivityRequestDBContext();
+                ARVerguetungAdventageTyp addAdventageTyp = activityRequestDBcontext.ARVerguetungAdventageTyps.FirstOrDefault(a => a.ARVerguetungAdventageTypId == selectedAdventageTyp.ARVerguetungAdventageTypId);
+                ARVerguetungAdventage newAdventage = new ARVerguetungAdventage
+                {
+                    ARVerguetungAdventageTyp = addAdventageTyp,
+                    ARVerguetungAdventageTypId = SelectedAdventageTyp.ARVerguetungAdventageTypId,
+                    ARVerguetungAdventageAmount = decimal.Parse(AdventageAmount)
+                };
+                AdventageList.Add(newAdventage);
+                AnzeigeAdventageList = true;
+            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("Beim Hinzufügen des Vorteils ist ein Fehler aufgetreten. Bitte prüfen Sie die Log-Datei.", ex);}
             AdventageAmount = null;
             ShowAdventageConvert(false, true);
-            AnzeigeAdventageList = true;
         }
         private void AdventageExecute(object obj) => ShowAdventageConvert(true, false);
         private void ArbitrationClientAddApplyExecute(object obj)
         {
-            ActivityRequestArbitrationClient newClient = new ActivityRequestArbitrationClient
+            try
             {
-                ActivityRequestArbitrationClientText = ActivityRequestArbitrationClientText,
-                //ActivityRequest = activityRequest 
-            };
-            ArbitrationClientList.Add(newClient);
+                ActivityRequestArbitrationClient newClient = new ActivityRequestArbitrationClient
+                {
+                    ActivityRequestArbitrationClientText = ActivityRequestArbitrationClientText,
+                    //ActivityRequest = activityRequest 
+                };
+                ArbitrationClientList.Add(newClient);
+                AnzeigeArbitrationClientList = true;
+            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("Beim Hinzufügen des Auftraggebers ist ein Fehler aufgetreten. Bitte prüfen Sie die Log-Datei.", ex); }
             ShowArbitrationClientConvert(false, true);
-            AnzeigeArbitrationClientList = true;
         }
         private void ArbitrationClientAddExecute(object obj)
         {
@@ -1772,11 +1780,7 @@ namespace BGH_Kompakt.ViewModel
                 SelectedClientTyp = null;
                 ShowClientConvert(false, true);
             }
-            catch (Exception ex)
-            {
-                ViewManager.ShowMainInfoFlyout($"Der Auftraggeber konnte nicht eingetragen werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
-            }
-
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("Beim Hinzufügen des Auftraggebers ist ein Fehler aufgetreten. Bitte prüfen Sie die Log-Datei.", ex); }
         }
         private void ClientExecute(object obj) => ShowClientConvert(true, false);
         private void ClientBackExecute(object obj) => ShowClientConvert(false, true);
@@ -2097,17 +2101,31 @@ namespace BGH_Kompakt.ViewModel
 
         private ActivityRequestChangeHistory AddChangeHistory(string text, ActivityRequest newActivityRequest)
         {
-            ActivityRequestChangeHistory newChange = new ActivityRequestChangeHistory
+            try
             {
-                ActivityRequestChangeHistoryText = text,
-                ActivityRequestChangeHistoryDate = DateTime.Now,
-                ActivityRequestChangeHistoryAuthor = UserManager.RegistratedUser.Fullname,
-                ActivityRequest = newActivityRequest,
-                ActivityRequestId = newActivityRequest.ActivityRequestId
-            };
-            activityRequestDBcontext.ActivityRequestChangeHistories.Add(newChange);
-            activityRequestDBcontext.SaveChanges();
-            return newChange;
+                ActivityRequestChangeHistory newChange = new ActivityRequestChangeHistory
+                {
+                    ActivityRequestChangeHistoryText = text,
+                    ActivityRequestChangeHistoryDate = DateTime.Now,
+                    ActivityRequestChangeHistoryAuthor = UserManager.RegistratedUser.Fullname,
+                    ActivityRequest = newActivityRequest,
+                    ActivityRequestId = newActivityRequest.ActivityRequestId
+                };
+                activityRequestDBcontext.ActivityRequestChangeHistories.Add(newChange);
+                activityRequestDBcontext.SaveChanges();
+                return newChange;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage.CreateExceptionWithoutMessage("AddChangeHistory", ex);
+                return new ActivityRequestChangeHistory
+                {
+                    ActivityRequestChangeHistoryText = "Fehler beim Erstellen der Änderung.",
+                    ActivityRequestChangeHistoryDate = DateTime.Now,
+                    ActivityRequestChangeHistoryAuthor = UserManager.RegistratedUser.Fullname,
+                    ActivityRequestId = newActivityRequest.ActivityRequestId
+                };
+            }
         }
 
         private void NewExecute(object obj)
@@ -2145,10 +2163,7 @@ namespace BGH_Kompakt.ViewModel
                 System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttachment.FileName}", SelectedAttachment.Data);
                 Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTemp}{SelectedAttachment.FileName}") { UseShellExecute = true });
             }
-            catch (Exception ex)
-            {
-                ViewManager.ShowMainInfoFlyout($"Das Dokument konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
-            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("Das Dokument konnte nicht geöffnet werden.. Bitte prüfen Sie die Log-Datei.", ex); }
         }
         private void ScienceAuthorSelctionExecute(object obj) => ErrorScienceAuthor = false;
         private void HyperLinkExecute(object obj)
