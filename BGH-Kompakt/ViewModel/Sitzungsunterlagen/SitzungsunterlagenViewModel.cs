@@ -2199,7 +2199,7 @@ namespace BGH_Kompakt.ViewModel.Sitzungsunterlagen
             {
                 SitzungstageList.Clear();
                 if (task.Result.Data != null) foreach (var item in (List<Sitzungstage>)task.Result.Data) SitzungstageList.Add(item);
-                if (task.Result.Message != string.Empty) ViewManager.ShowMainInfoFlyout(task.Result.Message, false);
+                if (task.Result.Message != string.Empty) ErrorMessage.CreateSimpleMessage(task.Result.Message);
             }
             else ViewManager.ShowMainInfoFlyout(task.Result.Message, false);
         }

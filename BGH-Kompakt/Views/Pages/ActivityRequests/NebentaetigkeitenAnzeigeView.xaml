@@ -1667,7 +1667,7 @@
                                                 Grid.Column="0"
                                                 Style="{StaticResource Textblock_Status}"
                                                 Text="{Binding Date, StringFormat={}{0:dd.MM.yyyy - HH:mm}, FallbackValue='-'}" />
-                                            <TextBlock
+                                            <TextBlock TextWrapping="WrapWithOverflow"
                                                 Grid.Column="1"
                                                 Style="{StaticResource Textblock_Status}"
                                                 Text="{Binding ActivityRequestStatus.ActivityRequestStatusText, FallbackValue=''}" />

@@ -576,10 +576,7 @@ namespace BGH_Kompakt.ViewModel
                 if (ActivityRequestManager.LoginType == 2) ActivityRequestsView.Remove(sendRequest);
                 ViewManager.ShowMainInfoFlyout(aRSendProperties.MessageText2, false);
             }
-            catch (Exception ex)
-            {
-                ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: {ex.Message}", false);
-            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("SendAcitivityRequest", ex); }
         }
 
 

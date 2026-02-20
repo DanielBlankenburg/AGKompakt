@@ -12,6 +12,7 @@ using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.Interfaces;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
+using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.UserLogin;
 using BGH_Kompakt.Views.Windows;
 using Microsoft.Office.Interop.Word;
@@ -1281,7 +1282,7 @@ namespace BGH_Kompakt.ViewModel
             {
                 User eMailReciever = ActivityRequestManager.SelectedActivityRequest.ARUser;
                 string strSubject = "Genehmigung einer Nebentätigkeit";
-                string text = $"Sehr {(eMailReciever.GeschlechtID == 2 ? "geehrte Frau" : "geehrter Herr")} {eMailReciever.FullSurname}, <br> <br>anliegend erhalten Sie die Genehmigung<br> <br> Mit freundlichen Grüßen<br>Präsidialgeschäftsstelle";
+                string text = $"Sehr {(eMailReciever.GeschlechtID == 2 ? "geehrte Frau" : "geehrter Herr")} {eMailReciever.FullSurname}, <br> <br>beigefügt übersende ich Ihnen das Genehmigungsschreiben von Frau Präsidentin Limperg zur Kenntnis<br> <br> Mit freundlichen Grüßen";
 
                 FileInfo Attachmentfile = new FileInfo($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}");
                 if (Attachmentfile.Extension == ".docx")
@@ -1303,10 +1304,7 @@ namespace BGH_Kompakt.ViewModel
                 if (response.Success) ViewManager.ShowMainInfoFlyout("Die E-Mail wurde erstellt.", false);
                 else ViewManager.ShowMainInfoFlyout(response.Message, false);
             }
-            catch (Exception ex)
-            {
-                ViewManager.ShowMainInfoFlyout($"Bei der Erstellung der E-Mail ist folgender Fehler aufgetreten: {ex.Message}", false);
-            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithoutMessage("SendDocFileExecute", ex); }
         }
 
         private void SaveDocFileExecute(object obj)
@@ -1317,7 +1315,7 @@ namespace BGH_Kompakt.ViewModel
                 string docFilePath = $"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}";
                 if (!File.Exists(docFilePath))
                 {
-                    ViewManager.ShowMainInfoFlyout("Die Datei wurde nicht gefunden. Ein Speichern ist nicht möglich.", false);
+                    ErrorMessage.CreateSimpleMessage("Die Datei wurde nicht gefunden. Ein Speichern ist nicht möglich.");
                     if (SelectedDocFileTable != null) DocFileList.Remove(SelectedDocFile);
                     SelectedDocFile = null;
                     return;
@@ -1325,7 +1323,7 @@ namespace BGH_Kompakt.ViewModel
 
                 if (IsFileInUse(docFilePath))
                 {
-                    ViewManager.ShowMainInfoFlyout("Die Datei ist geöffnet. Bitte schließen Sie diese zunächst.", false);
+                    ErrorMessage.CreateSimpleMessage("Die Datei ist geöffnet. Bitte schließen Sie diese zunächst.");
                     return;
                 }
 
@@ -1349,10 +1347,7 @@ namespace BGH_Kompakt.ViewModel
                 SelectedDocFile = addFile;
                 ViewManager.ShowMainInfoFlyout("Die Datei wurde gespeichert.", false);
             }
-            catch (Exception ex)
-            {
-                ViewManager.ShowMainInfoFlyout($"Die Datei konnte nicht gespeichert werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
-            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("SaveDocFileExecute", ex); }
         }
 
         public static bool IsFileInUse(string filePath)
@@ -1379,10 +1374,7 @@ namespace BGH_Kompakt.ViewModel
                 System.IO.File.WriteAllBytes($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}", SelectedDocFile.Data);
                 Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathTempARDOC}{SelectedDocFile.FileName}") { UseShellExecute = true });
             }
-            catch (Exception ex)
-            {
-                ViewManager.ShowMainInfoFlyout($"Das Dokument konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
-            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("OpenDocFileExecute", ex); }
         }
 
         private void PermissionExecute(object obj)
@@ -1390,8 +1382,8 @@ namespace BGH_Kompakt.ViewModel
             try
             {
 
-                String MessageText = string.Empty;
-                String MessageText2 = string.Empty;
+                string MessageText = string.Empty;
+                string MessageText2 = string.Empty;
                 int AblageArtExport = 0;
                 int Bearbeitungsstatus = 0;
                 bool Genehmigt = false;
@@ -1436,38 +1428,47 @@ namespace BGH_Kompakt.ViewModel
                 {
                     try
                     {
-                        ActivityRequestStatus status = activityRequestDBcontext.ActivityRequestStatuses.FirstOrDefault(x => x.ActivityRequestStatusId == Bearbeitungsstatus);
-                        //if (status != null) ActivityRequestManager.SelectedActivityRequest.ActivityRequestStatus = status;
+
+                        ActivityRequestStatusHistory status = new ActivityRequestStatusHistory{ 
+                            ActivityRequestID = ActivityRequestManager.SelectedActivityRequest.ActivityRequestId, 
+                            ActivityRequestStatusID = Bearbeitungsstatus, 
+                            Date = DateTime.Now };
+
+                        ActivityRequestManager.SelectedActivityRequest.ActivityRequestStatusHistories.Add(status);
                         ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich = AblageArtExport;
-                        activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
-                        activityRequestDBcontext.SaveChanges();
+                        ActivityRequestManager.SelectedActivityRequest.ARNoteAdmin = ARNoteAdmin;
+                        ActivityRequest editRequest = activityRequestDBcontext.ActivityRequests.FirstOrDefault(a => a.ActivityRequestId == ActivityRequestManager.SelectedActivityRequest.ActivityRequestId);
+                        if (editRequest != null)
+                        {
+                            editRequest.ARZustaendigkeitsbereich = AblageArtExport;
+                            editRequest.ActivityRequestStatusHistories.Add(status);
+                            editRequest.ARNoteAdmin = ARNoteAdmin;
+                            activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
+                            activityRequestDBcontext.SaveChanges();
+                        }
                         //Liste neu füllen
                         ViewManager.ShowMainInfoFlyout(MessageText2, false);
+                        ViewManager.ShowPageOnMainView<NebentaetigkeitenView>();
                     }
                     catch (Exception ex)
                     {
-                        Logger.WriteLog($"Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: {ex.Message}; {ex.InnerException}");
-                        ViewManager.ShowMainInfoFlyout($"Es ist folgender Fehler beim Einreichen des Eintrags aufgetreten: {ex.Message}", false);
+                        ErrorMessage.CreateExceptionWithFlyOutMessage("PermissionExecute", ex);
                         return;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Logger.WriteLog($"Der Vorgang konnte nicht weitergeleitet werden: {ex.Message}; {ex.InnerException}");
-                ViewManager.ShowMainInfoFlyout($"Der Vorgang konnte nicht weitergeleitet werden. Es ist folgender Fehler aufgetreten: {ex.Message}.", false);
-            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("PermissionExecute", ex); }
         }
 
         private async void WordExecute(object obj)
         {
             string actionName = "Schreiben erstellen";
             Task<DBResponse> task = CreateWordDocumnent();
-            ViewManager.ShowMainInfoFlyout("Das Schreiben wird erstellt", false);
+            ErrorMessage.CreateSimpleMessage("Das Schreiben wird erstellt");
             ViewManager.ActionlistAdd(actionName);
             await task;
             string message = task.Result.Success ? "Das Schreiben wurde erstellt." : task.Result.Message;
-            ViewManager.ShowMainInfoFlyout(message, false);
+            ErrorMessage.CreateSimpleMessage(message);
             ViewManager.ActionlistRemove(actionName);
 
         }
@@ -1546,13 +1547,13 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                             case "BGHKompaktBodyText":
                                 range = bM.Range;
-                                range.Text = $"ich {(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "habe " : "genehmige ")}die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy}" +
-                                                $" bezeichnete Nebentätigkeit{(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? " zur Kenntnis genommen." : ".")}";
+                                range.Text = $"ich {(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "genehmigte" : "habe")} die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy}" +
+                                                $" bezeichnete Nebentätigkeit{(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "." : " zur Kenntnis genommen.")}";
                                 break;
                             case "Genehmigungstext":
                                 range = bM.Range;
                                 range.Text = $"Sehr {(ActivityRequestManager.SelectedActivityRequest.ARUser.GeschlechtID == 1 ? "geehrter Herr" : "geehrte Frau")} {ActivityRequestManager.SelectedActivityRequest.ARUser.Fullname},\n\n" +
-                                                $"Ihr Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy} wird genehmigt.";
+                                                $"beigefügt übersende ich Ihnen das Genehmigungsschreiben von Frau Präsidentin Limperg zur Kenntnis.";
                                 break;
                         }
                     }

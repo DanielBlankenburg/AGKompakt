@@ -1,4 +1,5 @@
-﻿using BGH_Kompakt.Classes.Senate;
+﻿using BGH_Kompakt.Classes.Helper;
+using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Services;
@@ -403,21 +404,32 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
 
         public SystemSettingViewModel()
         {
-            AzNewCommand = new RelayCommand(AzNewExecute);
-            AzSaveCommand = new RelayCommand(AzSaveExecute, AzSaveCanExecute);
-            AzDeleteCommand = new RelayCommand(AzDeleteExecute, AzDeleteCanExecute);
-            SGNewCommand = new RelayCommand(SGNewExecute);
-            SGSaveCommand = new RelayCommand(SGSaveExecute, SGSaveCanExecute);
-            SGDeleteCommand = new RelayCommand(SGDeleteExecute, SGDeleteCanExecute);
-            ExpanderCommand = new RelayCommand(ExpanderExecute);
-            RichterSaveCommand = new RelayCommand(RichterSaveExecute, RichterSaveCanExecute);
-            RichterDeleteCommand = new RelayCommand(RichterDeleteExecute, RichterDeleteCanExecute);
-            SaveCommand = new RelayCommand(SaveExecuted);
-            DeleteMemeberCommand = new RelayCommand(DeleteMemeberExecuted);
+            try
+            {
+                AzNewCommand = new RelayCommand(AzNewExecute);
+                AzSaveCommand = new RelayCommand(AzSaveExecute, AzSaveCanExecute);
+                AzDeleteCommand = new RelayCommand(AzDeleteExecute, AzDeleteCanExecute);
+                SGNewCommand = new RelayCommand(SGNewExecute);
+                SGSaveCommand = new RelayCommand(SGSaveExecute, SGSaveCanExecute);
+                SGDeleteCommand = new RelayCommand(SGDeleteExecute, SGDeleteCanExecute);
+                ExpanderCommand = new RelayCommand(ExpanderExecute);
+                RichterSaveCommand = new RelayCommand(RichterSaveExecute, RichterSaveCanExecute);
+                RichterDeleteCommand = new RelayCommand(RichterDeleteExecute, RichterDeleteCanExecute);
+                SaveCommand = new RelayCommand(SaveExecuted);
+                DeleteMemeberCommand = new RelayCommand(DeleteMemeberExecuted);
 
-            var QuerySenate = UserManager.RegistratedUser.Senate.ToArray();
-            if (QuerySenate != null) foreach (var Senat in QuerySenate) SenatList.Add(Senat);
+                if (UserManager.RegistratedUser.Senate != null)
+                {
+                    var QuerySenate = UserManager.RegistratedUser.Senate.ToArray();
+                    if (QuerySenate != null) foreach (var Senat in QuerySenate) SenatList.Add(Senat);
+                }
+                else
+                {
+                    ErrorMessage.CreateSimpleMessage("SystemSettingViewModel - Für den Nutzer wurden keine Senate gefunden, so dass die Senate nicht gesetzt werden konnten");
+                }
 
+            }
+            catch (Exception ex) { ErrorMessage.CreateExceptionWithoutMessage("SystemSettingViewModel", ex); }
         }
 
 
