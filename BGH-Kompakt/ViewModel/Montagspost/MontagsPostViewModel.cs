@@ -955,7 +955,7 @@ namespace BGH_Kompakt.ViewModel
             if (ShowSelectedStrafsenate) Bereich = "Strafsenate";
             if (ShowSelectedSondersenate) Bereich = "Sondersenate";
 
-            string KW = SelectedMPWeek.MPWeekNumber < 9 ? "0" + SelectedMPWeek.MPWeekNumber : SelectedMPWeek.MPWeekNumber.ToString();
+            string KW = SelectedMPWeek.MPWeekNumber <= 9 ? "0" + SelectedMPWeek.MPWeekNumber : SelectedMPWeek.MPWeekNumber.ToString();
             try
             {
                 Process.Start(new ProcessStartInfo($"{BGHKompaktSystemInfo.PathDokstelleDFS}{BGHKompaktSystemInfo.PathMontagspost}{SelectedMPWeek.MPWeekYear}\\KW{KW}\\{Bereich}\\{Bereich}.pdf")
