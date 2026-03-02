@@ -1001,13 +1001,13 @@ namespace BGH_Kompakt.ViewModel
                 ErrorDatePermanentDuration = false;
             }
         }
-        private string _AdventageAmount;
-        public string AdventageAmount
+        private decimal? _AdventageAmount;
+        public decimal? AdventageAmount
         {
             get { return _AdventageAmount; }
             set
             {
-                SetProperty<string>(ref _AdventageAmount, value);
+                SetProperty(ref _AdventageAmount, value);
                 if (value != null) ErrorAdventageAmount = false;
             }
         }
@@ -1135,6 +1135,7 @@ namespace BGH_Kompakt.ViewModel
         public ICommand ExpanderCommand { get; set; }
         public ICommand AdventageCommand { get; set; }
         public ICommand AdventageApplyCommand { get; set; }
+        public ICommand AdventageBackCommand { get; set; }
         public ICommand AdventageClearCommand { get; set; }
         public ICommand ArbitrationClientAddApplyCommand { get; set; }
         public ICommand ArbitrationClientAddCommand { get; set; }
@@ -1207,6 +1208,7 @@ namespace BGH_Kompakt.ViewModel
             ExpanderCommand = new RelayCommand(ExpanderExecute);
             AdventageCommand = new RelayCommand(AdventageExecute);
             AdventageApplyCommand = new RelayCommand(AdventageApplyExecute);
+            AdventageBackCommand = new RelayCommand(AdventageBackExecute);
             AdventageClearCommand = new RelayCommand(AdventageClearExecute);
             ArbitrationClientAddApplyCommand = new RelayCommand(ArbitrationClientAddApplyExecute);
             ArbitrationClientAddCommand = new RelayCommand(ArbitrationClientAddExecute);
@@ -1680,7 +1682,7 @@ namespace BGH_Kompakt.ViewModel
                 ErrorAdventageTyp = true;
                 return;
             }
-            if (AdventageAmount == null || decimal.Parse(AdventageAmount) < 0)
+            if (AdventageAmount == null || AdventageAmount < 0)
             {
                 ErrorAdventageAmount = true;
                 return;
@@ -1694,7 +1696,7 @@ namespace BGH_Kompakt.ViewModel
                 {
                     ARVerguetungAdventageTyp = addAdventageTyp,
                     ARVerguetungAdventageTypId = SelectedAdventageTyp.ARVerguetungAdventageTypId,
-                    ARVerguetungAdventageAmount = decimal.Parse(AdventageAmount)
+                    ARVerguetungAdventageAmount = AdventageAmount ?? 0
                 };
                 AdventageList.Add(newAdventage);
                 AnzeigeAdventageList = true;
@@ -1703,6 +1705,7 @@ namespace BGH_Kompakt.ViewModel
             AdventageAmount = null;
             ShowAdventageConvert(false, true);
         }
+        private void AdventageBackExecute(object obj) => ShowAdventageConvert(false, true);
         private void AdventageExecute(object obj) => ShowAdventageConvert(true, false);
         private void ArbitrationClientAddApplyExecute(object obj)
         {

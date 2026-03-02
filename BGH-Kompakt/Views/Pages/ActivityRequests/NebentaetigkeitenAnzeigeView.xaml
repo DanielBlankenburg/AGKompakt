@@ -1563,7 +1563,7 @@
                                 <TextBox
                                     MD:HintAssist.Hint="Betrag"
                                     Style="{StaticResource Textbox_Request}"
-                                    Text="{Binding AdventageAmount, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding AdventageAmount,  Mode=TwoWay,  StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock
                                     Style="{StaticResource Style_Textbox_Error}"
                                     Text="Bitte tragen Sie einen Wert ein"
@@ -1586,7 +1586,7 @@
                                 Style="{StaticResource Button_Master}" />
                             <Button
                                 Margin="10,0,0,0"
-                                Command="{Binding ClientBackCommand}"
+                                Command="{Binding AdventageBackCommand}"
                                 Content="Zurück"
                                 Style="{StaticResource Button_Master}" />
                         </StackPanel>
