@@ -11,6 +11,7 @@
     d:DataContext="{d:DesignInstance Type=userlogin:UserPropertyViewModel}"
     d:DesignHeight="900"
     d:DesignWidth="1400"
+    Language="DE-de"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style
@@ -220,7 +221,7 @@
                             <TextBox
                                 MD:HintAssist.Hint="Ab"
                                 Style="{StaticResource Textbox_Login}"
-                                Text="{Binding SelectedUserDienstbezeichnung.GültigAb}" />
+                                Text="{Binding SelectedUserDienstbezeichnung.GültigAb, StringFormat=d}" />
                             <ComboBox
                                 Grid.Row="5"
                                 MD:HintAssist.Hint="Dienstbezeichnung"
@@ -236,17 +237,17 @@
                             VerticalAlignment="Top"
                             Orientation="Horizontal">
                             <Button
-                                Command="{Binding AddAdventageCommand}"
+                                Command="{Binding NewUserDienstbezeichnungenCommand}"
                                 Content="Neu"
                                 Style="{StaticResource Button_Dienstbezeichnungen}"
                                 ToolTip="Hinzufügen eines Dienstbezeichnung" />
                             <Button
-                                Command="{Binding RemoveAdventageCommand}"
+                                Command="{Binding AddUserDienstbezeichnungenCommand}"
                                 Content="Speichern"
                                 Style="{StaticResource Button_Dienstbezeichnungen}"
                                 ToolTip="Entfernen eines Dienstbezeichnung" />
                             <Button
-                                Command="{Binding RemoveAdventageCommand}"
+                                Command="{Binding DeleteUserDienstbezeichnungenCommand}"
                                 Content="Löschen"
                                 Style="{StaticResource Button_Dienstbezeichnungen}"
                                 ToolTip="Entfernen eines Dienstbezeichnung" />

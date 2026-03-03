@@ -1,4 +1,5 @@
 ﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
+using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
@@ -12,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BGH_Kompakt.ViewModel.Userlogin
@@ -28,6 +30,9 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         public ICommand SaveCommand { get; set; }
         public ICommand AddCommand { get; set; }
         public ICommand RemoveCommand { get; set; }
+        public ICommand NewUserDienstbezeichnungenCommand { get; set; }
+        public ICommand AddUserDienstbezeichnungenCommand { get; set; }
+        public ICommand DeleteUserDienstbezeichnungenCommand { get; set; }
 
 
         public User CurrenUser { get; set; }
@@ -167,6 +172,45 @@ namespace BGH_Kompakt.ViewModel.Userlogin
             SaveCommand = new RelayCommand(SaveExecute);
             AddCommand = new RelayCommand(AddExecute, AddCanExecute);
             RemoveCommand = new RelayCommand(RemoveExecute, RemoveCanExecute);
+            AddUserDienstbezeichnungenCommand = new RelayCommand(AddUserDienstbezeichnungenExecute);
+            NewUserDienstbezeichnungenCommand = new RelayCommand(NewUserDienstbezeichnungenExecute);
+            DeleteUserDienstbezeichnungenCommand = new RelayCommand(DeleteUserDienstbezeichnungenExecute);
+
+        }
+
+        private void DeleteUserDienstbezeichnungenExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void NewUserDienstbezeichnungenExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AddUserDienstbezeichnungenExecute(object obj)
+        {
+            if ( SelectedUserDienstbezeichnung.GültigAb < new DateTime(2000, 1, 1))
+            {
+                MessageBox.Show("Fehler");
+                return;
+            }
+            if (SelectedUserDienstbezeichnung.Dienstbezeichnung  == null)
+            {
+                MessageBox.Show("Fehler Diestbezeichnung");
+                return;
+            }
+            try
+            {
+                UserDienstbezeichnung AddUserDienstbezeichnung = new UserDienstbezeichnung { Dienstbezeichnung = SelectedUserDienstbezeichnung.Dienstbezeichnung, GültigAb = SelectedUserDienstbezeichnung.GültigAb, User=CurrenUser};
+                UserDBcontext.UserDienstbezeichnungen.AddOrUpdate(AddUserDienstbezeichnung);
+                UserDBcontext.SaveChanges();
+                UserDienstbezeichnungenList.Add(AddUserDienstbezeichnung);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage.CreateExceptionWithFlyOutMessage("AddUserDienstbezeichnungenExecute", ex);
+            }
         }
 
         private bool RemoveCanExecute(object obj)
