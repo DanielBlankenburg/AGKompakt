@@ -201,6 +201,7 @@
     <Compile Include="Classes\SystemSettings\PageInfo.cs" />
     <Compile Include="Classes\Test\FileData.cs" />
     <Compile Include="Classes\Test\TestItem.cs" />
+    <Compile Include="Classes\UserClasses\UserDienstbezeichnung.cs" />
     <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestStatus.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestStatusHistory.cs" />
     <Compile Include="Classes\_LookUp\MP\MPEMail.cs" />
@@ -321,6 +322,10 @@
     <Compile Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.cs" />
     <Compile Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.Designer.cs">
       <DependentUpon>202509280718402_Spruchgruppenmitglieder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202603022033434_UserDienstbezeichnungen.cs" />
+    <Compile Include="Migrartions\Users\202603022033434_UserDienstbezeichnungen.Designer.cs">
+      <DependentUpon>202603022033434_UserDienstbezeichnungen.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\ActivityRequestService\ActivityRequestManager.cs" />
     <Compile Include="Services\Extentions\DirectoryInfoExtensions.cs" />
@@ -1032,6 +1037,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.resx">
       <DependentUpon>202509280718402_Spruchgruppenmitglieder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202603022033434_UserDienstbezeichnungen.resx">
+      <DependentUpon>202603022033434_UserDienstbezeichnungen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

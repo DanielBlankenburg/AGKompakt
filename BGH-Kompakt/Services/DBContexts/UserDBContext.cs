@@ -13,6 +13,7 @@ using BGH_Kompakt.Classes.Sitzungsunterlagen;
 using System.Windows;
 using BGH_Kompakt.Migrartions.Users;
 using BGH_Kompakt.Classes.SystemSettings;
+using BGH_Kompakt.Classes.Helper;
 
 namespace BGH_Kompakt.Services.DBContexts
 {
@@ -33,6 +34,7 @@ namespace BGH_Kompakt.Services.DBContexts
         public DbSet<SenatSpruchgruppe> SenatSpruchgruppen { get; set; }
         public DbSet<VerfahrenVotenmappe> Votenmappe { get; set; }
         public DbSet<ProgrammSetting> ProgrammSettings { get; set; }
+        public DbSet<UserDienstbezeichnung> UserDienstbezeichnungen { get; set; }
         
 
 
@@ -90,14 +92,16 @@ namespace BGH_Kompakt.Services.DBContexts
                 modelBuilder.Entity<VerfahrenVotenmappe>()
                     .ToTable("Votenmappe");
 
+                modelBuilder.Entity<UserDienstbezeichnung>()
+                    .ToTable("UserDienstbezeichnungen")
+                    .HasRequired(x => x.Dienstbezeichnung)
+                    .WithMany(x => x.UserDienstbezeichnungen);
+
 
                 modelBuilder.Configurations.Add(new UserConfiguration());
                 //base.OnModelCreating(modelBuilder);
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Zugriff auf die Datenbank MontagspostUser nicht möglich");
-            }
+            catch (Exception) { ErrorMessage.CreateExceptionWithFlyOutMessage("Fehler beim Zugriff auf die Datenbank MontagspostUser", new Exception("Fehler beim Zugriff auf die Datenbank MontagspostUser"));}
         }
     }
 }

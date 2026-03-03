@@ -95,15 +95,26 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         {
             get
             {
-                UserDBContext UserDBcontext = new UserDBContext();
                 var tempList = new ObservableCollection<Dienstbezeichnung>(UserDBcontext.Dienstbezeichnungen.ToList());
-                SelectedDienstbezeichnung = tempList.FirstOrDefault(item => item.DienstbezeichnungId== CurrenUser.DienstbezeichnungId);
+                //SelectedDienstbezeichnung = tempList.FirstOrDefault(item => item.DienstbezeichnungId== CurrenUser.DienstbezeichnungId);
+                return tempList;
+            }
+        }
+        public ObservableCollection<UserDienstbezeichnung> UserDienstbezeichnungenList
+        {
+            get
+            {
+                var tempList = new ObservableCollection<UserDienstbezeichnung>();
+                var Query = UserDBcontext.UserDienstbezeichnungen.Where(ud => ud.UserId == CurrenUser.UserId).Include(ud => ud.Dienstbezeichnung);
+                foreach (var item in Query) tempList.Add(item);
+                //SelectedDienstbezeichnung = tempList.FirstOrDefault(item => item.DienstbezeichnungId== CurrenUser.DienstbezeichnungId);
                 return tempList;
             }
         }
 
-        private ObservableCollection<Senat> _SenatListAll = new ObservableCollection<Senat>();
-        private ObservableCollection<Senat> _SenatListUser = new ObservableCollection<Senat>();
+
+        private readonly ObservableCollection<Senat> _SenatListAll = new ObservableCollection<Senat>();
+        private readonly ObservableCollection<Senat> _SenatListUser = new ObservableCollection<Senat>();
 
         public ObservableCollection<Senat> SenatListAll { get { return _SenatListAll; } }
         private Senat _selectedSenatAll;
@@ -118,6 +129,12 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         {
             get { return _selectedSenatUser; }
             set { SetProperty(ref _selectedSenatUser, value); }
+        }
+        private UserDienstbezeichnung _SelectedUserDienstbezeichnung = new UserDienstbezeichnung();
+        public UserDienstbezeichnung SelectedUserDienstbezeichnung
+        {
+            get { return _SelectedUserDienstbezeichnung; }
+            set { SetProperty(ref _SelectedUserDienstbezeichnung, value); }
         }
 
         private bool _ShowDienstbezeichnung;

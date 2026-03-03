@@ -48,6 +48,13 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Margin" Value="10,10,10,0" />
         </Style>
+        <Style
+            x:Key="Button_Dienstbezeichnungen"
+            BasedOn="{StaticResource Button_Master}"
+            TargetType="Button">
+            <Setter Property="Margin" Value="10,0,10,0" />
+            <Setter Property="MinWidth" Value="70" />
+        </Style>
     </UserControl.Resources>
     <Grid Background="{StaticResource MaterialDesignPaper}">
         <Grid.RowDefinitions>
@@ -74,6 +81,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <MD:Card
@@ -90,8 +98,19 @@
                         Grid.ColumnSpan="3"
                         Style="{StaticResource Style_Textblock_Eingabefenster}"
                         Text="Angaben zur Person" />
-                    <StackPanel Grid.Row="1">
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <ComboBox
+                            Grid.Row="0"
                             MD:HintAssist.Hint="Titel"
                             DisplayMemberPath="TitelText"
                             ItemsSource="{Binding TitelList}"
@@ -99,48 +118,145 @@
                             SelectedValue="{Binding SelectedTitel}"
                             Style="{StaticResource Combobox_Login}" />
                         <TextBox
+                            Grid.Row="1"
                             MD:HintAssist.Hint="Vorname"
                             Style="{StaticResource Textbox_Login}"
                             Text="{Binding CurrenUser.VorName}" />
                         <TextBox
+                            Grid.Row="2"
                             MD:HintAssist.Hint="Nachname"
                             Style="{StaticResource Textbox_Login}"
                             Text="{Binding CurrenUser.NachName}" />
                         <TextBox
+                            Grid.Row="3"
                             MD:HintAssist.Hint="EMail-Adresse"
                             Style="{StaticResource Textbox_Login}"
                             Text="{Binding CurrenUser.EMail}" />
                         <ComboBox
+                            Grid.Row="4"
                             MD:HintAssist.Hint="Geschlecht"
                             DisplayMemberPath="GeschlechtText"
                             ItemsSource="{Binding GeschlechtList}"
                             SelectedValue="{Binding SelectedGeschlecht}"
                             Style="{StaticResource Combobox_Login}" />
                         <ComboBox
+                            Grid.Row="5"
                             MD:HintAssist.Hint="Dienstgruppe"
                             DisplayMemberPath="PositionText"
                             ItemsSource="{Binding PositionList}"
                             SelectedValue="{Binding SelectedPosition}"
                             Style="{StaticResource Combobox_Login}" />
-                        <ComboBox
+                        <!--<ComboBox
+                            Grid.Row="6"
                             MD:HintAssist.Hint="Dienstbezeichnung"
                             DisplayMemberPath="DienstbezeichnungText"
                             ItemsSource="{Binding DienstbezeichnungList}"
                             SelectedValue="{Binding SelectedDienstbezeichnung}"
                             Style="{StaticResource Combobox_Login}"
-                            Visibility="{Binding ShowDienstbezeichnung, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            Visibility="{Binding ShowDienstbezeichnung, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}" />-->
                         <ComboBox
+                            Grid.Row="7"
                             MD:HintAssist.Hint="Status"
                             DisplayMemberPath="StatusText"
                             ItemsSource="{Binding StatusList}"
                             SelectedIndex="0"
                             SelectedValue="{Binding SelectedStatus}"
                             Style="{StaticResource Combobox_Login}" />
-                    </StackPanel>
+                    </Grid>
                 </Grid>
             </MD:Card>
             <MD:Card
                 Grid.Column="2"
+                Margin="20,10"
+                Padding="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.ColumnSpan="3"
+                        Style="{StaticResource Style_Textblock_Eingabefenster}"
+                        Text="Dienstbezeichnungen" />
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ListView
+                            Grid.Row="0"
+                            Margin="0,10,0,0"
+                            ItemsSource="{Binding UserDienstbezeichnungenList, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedItem="{Binding SelectedUserDienstbezeichnung}"
+                            SelectionMode="Single"
+                            Visibility="{Binding ShowDienstbezeichnung, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn
+                                        Width="100"
+                                        DisplayMemberBinding="{Binding ARVerguetungAdventageTyp.ARVerguetungAdventageTypText, TargetNullValue=[keine Angabe], UpdateSourceTrigger=PropertyChanged}"
+                                        Header="ab"
+                                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
+                                    <GridViewColumn
+                                        Width="130"
+                                        Header="Bezeichnung"
+                                        HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding ARVerguetungAdventageAmount, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+
+
+                        </ListView>
+                        <StackPanel Grid.Row="1">
+                            <TextBox
+                                MD:HintAssist.Hint="Ab"
+                                Style="{StaticResource Textbox_Login}"
+                                Text="{Binding SelectedUserDienstbezeichnung.GültigAb}" />
+                            <ComboBox
+                                Grid.Row="5"
+                                MD:HintAssist.Hint="Dienstbezeichnung"
+                                DisplayMemberPath="DienstbezeichnungText"
+                                ItemsSource="{Binding DienstbezeichnungList}"
+                                SelectedValue="{Binding SelectedUserDienstbezeichnung.Dienstbezeichnung}"
+                                Style="{StaticResource Combobox_Login}" />
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="2"
+                            Margin="0,20,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding AddAdventageCommand}"
+                                Content="Neu"
+                                Style="{StaticResource Button_Dienstbezeichnungen}"
+                                ToolTip="Hinzufügen eines Dienstbezeichnung" />
+                            <Button
+                                Command="{Binding RemoveAdventageCommand}"
+                                Content="Speichern"
+                                Style="{StaticResource Button_Dienstbezeichnungen}"
+                                ToolTip="Entfernen eines Dienstbezeichnung" />
+                            <Button
+                                Command="{Binding RemoveAdventageCommand}"
+                                Content="Löschen"
+                                Style="{StaticResource Button_Dienstbezeichnungen}"
+                                ToolTip="Entfernen eines Dienstbezeichnung" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </MD:Card>
+
+            <MD:Card
+                Grid.Column="3"
                 Margin="20,10"
                 Padding="10">
                 <Grid>
