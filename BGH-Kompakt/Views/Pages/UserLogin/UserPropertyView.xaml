@@ -187,6 +187,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <ListView
                             Grid.Row="0"
@@ -199,7 +200,7 @@
                                 <GridView>
                                     <GridViewColumn
                                         Width="100"
-                                        DisplayMemberBinding="{Binding ARVerguetungAdventageTyp.ARVerguetungAdventageTypText, TargetNullValue=[keine Angabe], UpdateSourceTrigger=PropertyChanged}"
+                                        DisplayMemberBinding="{Binding GültigAb, StringFormat=d, TargetNullValue=[keine Angabe], UpdateSourceTrigger=PropertyChanged}"
                                         Header="ab"
                                         HeaderContainerStyle="{StaticResource Person_GridViewColumn}" />
                                     <GridViewColumn
@@ -208,16 +209,15 @@
                                         HeaderContainerStyle="{StaticResource Person_GridViewColumn}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding ARVerguetungAdventageAmount, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                                <TextBlock Text="{Binding Dienstbezeichnung.DienstbezeichnungText, UpdateSourceTrigger=PropertyChanged}" />
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                 </GridView>
                             </ListView.View>
-
-
                         </ListView>
-                        <StackPanel Grid.Row="1">
+                        <Border Margin="0,20,0,0" Grid.Row="1" Style="{StaticResource Expander_Border}"></Border>
+                        <StackPanel Grid.Row="2">
                             <TextBox
                                 MD:HintAssist.Hint="Ab"
                                 Style="{StaticResource Textbox_Login}"
@@ -231,7 +231,7 @@
                                 Style="{StaticResource Combobox_Login}" />
                         </StackPanel>
                         <StackPanel
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Margin="0,20,0,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"

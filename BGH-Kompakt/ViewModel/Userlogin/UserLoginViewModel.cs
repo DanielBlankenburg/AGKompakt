@@ -168,7 +168,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
 
         public UserLoginViewModel()
         {
-            //UserDBContext UserDBcontext = new UserDBContext();
+            //UserDBContext userDBcontext = new UserDBContext();
             //Titel füllen
             var Titel_Query = userDBContext.Titel;
             foreach (var item in Titel_Query) _TitelList.Add(item);
@@ -180,7 +180,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
             var Position_Query = userDBContext.Positions;
             foreach (var item in Position_Query) _PositionList.Add(item);
             //Status füllen
-            //var Status_Query = UserDBcontext.Status;
+            //var Status_Query = userDBcontext.Status;
             //foreach (var item in Status_Query) _StatusList.Add(item);
             //enumDienstbezeichnungen füllen
             var Dienstbezeichnung_Query = userDBContext.Dienstbezeichnungen;
