@@ -329,9 +329,9 @@
     <Compile Include="Migrartions\Users\202603022033434_UserDienstbezeichnungen.Designer.cs">
       <DependentUpon>202603022033434_UserDienstbezeichnungen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrartions\Users\202603040505506_RBesoldungTable.cs" />
-    <Compile Include="Migrartions\Users\202603040505506_RBesoldungTable.Designer.cs">
-      <DependentUpon>202603040505506_RBesoldungTable.cs</DependentUpon>
+    <Compile Include="Migrartions\Users\202603052145206_RPayments.cs" />
+    <Compile Include="Migrartions\Users\202603052145206_RPayments.Designer.cs">
+      <DependentUpon>202603052145206_RPayments.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\ActivityRequestService\ActivityRequestManager.cs" />
     <Compile Include="Services\Extentions\DirectoryInfoExtensions.cs" />
@@ -1055,8 +1055,8 @@
     <EmbeddedResource Include="Migrartions\Users\202603022033434_UserDienstbezeichnungen.resx">
       <DependentUpon>202603022033434_UserDienstbezeichnungen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202603040505506_RBesoldungTable.resx">
-      <DependentUpon>202603040505506_RBesoldungTable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrartions\Users\202603052145206_RPayments.resx">
+      <DependentUpon>202603052145206_RPayments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

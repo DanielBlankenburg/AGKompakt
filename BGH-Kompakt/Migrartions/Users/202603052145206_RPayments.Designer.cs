@@ -7,13 +7,13 @@ namespace BGH_Kompakt.Migrartions.Users
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class RBesoldungTable : IMigrationMetadata
+    public sealed partial class RPayments : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(RBesoldungTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(RPayments));
         
         string IMigrationMetadata.Id
         {
-            get { return "202603040505506_RBesoldungTable"; }
+            get { return "202603052145206_RPayments"; }
         }
         
         string IMigrationMetadata.Source
