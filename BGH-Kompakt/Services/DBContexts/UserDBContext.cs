@@ -57,8 +57,7 @@ namespace BGH_Kompakt.Services.DBContexts
 
                 modelBuilder.Entity<Dienstbezeichnung>()
                     .HasRequired(x => x.Besoldungsgruppe)
-                    .WithMany(x => x.Dienstbezeichnungen)
-                    .HasForeignKey(x => x.BesoldungsgruppeID);
+                    .WithMany(x => x.Dienstbezeichnungen);
 
                 modelBuilder.Entity<Geschlecht>()
                     .ToTable("Geschlechter")

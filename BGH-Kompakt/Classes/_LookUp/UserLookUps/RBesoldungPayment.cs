@@ -10,8 +10,7 @@ namespace BGH_Kompakt.Classes._LookUp.UserLookUps
     {
         public int Id { get; set; }
         public DateTime Start { get; set; }
-        public Decimal paymentValue { get; set; }
-        public int RBesoldungId { get; set; }
+        public decimal PaymentValue { get; set; }
         public RBesoldung RBesoldung {  get; set; }
     }
 }
