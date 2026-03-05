@@ -1,9 +1,11 @@
 ﻿using BGH_Kompakt.Classes;
 using BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps;
 using BGH_Kompakt.Classes._LookUp.MP;
+using BGH_Kompakt.Classes._LookUp.UserLookUps;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.SystemSettings;
+using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Dtos;
 using BGH_Kompakt.Enums;
@@ -30,6 +32,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
         public ICommand SeedARCommand { get; set; }
         public ICommand TestPath { get; set; }
         public ICommand SaveSettings { get; set; }
+        public ICommand SeedDienstbezeichnungen { get; set; }
         public ProgrammSetting ProgrammSetting { get; set; }
         private readonly MPDBContext mpContext = new MPDBContext();
         private readonly UserDBContext userDBContext = new UserDBContext();
@@ -66,10 +69,89 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             TestPath = new RelayCommand(TestPathExecute);
             SeedARCommand = new RelayCommand(SeedARExecute);
             SaveSettings = new RelayCommand(SaveSettingsExecute);
+            SeedDienstbezeichnungen = new RelayCommand(SeedDienstbezeichnungenExecute);
 
             ProgrammSetting = userDBContext.ProgrammSettings.FirstOrDefault() ?? new ProgrammSetting();
             AnzeigeMontagspost = ProgrammSetting.MontagspostActivated;
             AnzeigeActivitRequests = ProgrammSetting.ActivityRequestActivated;
+        }
+
+        private void SeedDienstbezeichnungenExecute(object obj)
+        {
+            List<RBesoldung> TypList = new List<RBesoldung>();
+            TypList.AddRange(new List<RBesoldung> {
+
+                        new RBesoldung { id = 1, Name= "R6" },
+                        new RBesoldung { id = 1, Name = "R8" },
+                        new RBesoldung { id = 1, Name = "R9" },
+                        new RBesoldung { id = 1, Name = "R10" }
+                    });
+
+            foreach (RBesoldung suchText in TypList)
+            {
+                if (userDBContext.RBesoldungen.FirstOrDefault(x => x.id == suchText.id) == null)
+                    userDBContext.RBesoldungen.AddOrUpdate(a => a.Name, new RBesoldung{ id = suchText.id, Name = suchText.Name});
+            };
+
+            RBesoldung R6 = userDBContext.RBesoldungen.FirstOrDefault(b => b.Name == "R6");
+            RBesoldung R8 = userDBContext.RBesoldungen.FirstOrDefault(b => b.Name == "R8");
+            RBesoldung R9 = userDBContext.RBesoldungen.FirstOrDefault(b => b.Name == "R9");
+            RBesoldung R10 = userDBContext.RBesoldungen.FirstOrDefault(b => b.Name == "R10");
+
+            if (R6 == null || R8 == null || R10 == null) {ErrorMessage.CreateExceptionWithFlyOutMessage("SeedDienstbezeichnungenExecute", new Exception("Die Besoldungsgruppen konnten nicht aufgerufen werden"));}
+
+            List<Dienstbezeichnung> dienstbezeichnungen = userDBContext.Dienstbezeichnungen.ToList();
+            foreach (Dienstbezeichnung item in dienstbezeichnungen)
+            {
+                switch (item.DienstbezeichnungText)
+                {
+                    case "RiBGH":
+                        item.Besoldungsgruppe = R6;
+                        break;
+                    case "RinBGH":
+                        item.Besoldungsgruppe = R6;
+                        break;
+                    case "VRiBGH":
+                        item.Besoldungsgruppe = R8;
+                        break;
+                    case "VRinBGH":
+                        item.Besoldungsgruppe = R8;
+                        break;
+                    case "PräsBGH":
+                        item.Besoldungsgruppe = R10;
+                        break;
+                    case "PräsinBGH":
+                        item.Besoldungsgruppe = R10;
+                        break;
+                    case "VPräsBGH":
+                        item.Besoldungsgruppe = R9;
+                        break;
+                    case "VPräsinBGH":
+                        item.Besoldungsgruppe = R9;
+                        break;
+                }
+                userDBContext.Dienstbezeichnungen.AddOrUpdate(item);
+
+            }
+
+            List<User> users = userDBContext.Users.ToList();
+            foreach (User user in users)
+            {
+                if (user.PositionId == 1)
+                {
+                    UserDienstbezeichnung userDienstbezeichnung = userDBContext.UserDienstbezeichnungen.FirstOrDefault(x => x.UserId == user.UserId);
+                    if (userDienstbezeichnung == null)
+                    {
+                        int dienstbezeichnung = (int)(user.Dienstbezeichnung != null ? user.DienstbezeichnungId : 1);
+                        userDienstbezeichnung = new UserDienstbezeichnung { User = user, 
+                                                                            DienstbezeichnungId = dienstbezeichnung,
+                                                                            GültigAb = new DateTime(2025,1,1)};
+                    }
+                    userDBContext.UserDienstbezeichnungen.AddOrUpdate(userDienstbezeichnung);
+                }
+            }
+
+            userDBContext.SaveChanges();
         }
 
         private void SaveSettingsExecute(object obj)

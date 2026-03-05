@@ -54,6 +54,18 @@
             </StackPanel>
         </Button>
         <Button
+            x:Name="Btn_Besoldung"
+            Click="OpenPageOnMain"
+            Style="{StaticResource Button_Settings}">
+            <StackPanel>
+                <Image
+                    Source="/Resources/ImageResources/Images/Besoldung.jpg"
+                    Stretch="Fill"
+                    Style="{StaticResource Button_Mainwindow_Image}" />
+                <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="R-Besoldung" />
+            </StackPanel>
+        </Button>
+        <Button
             x:Name="Btn_ProgrammSettings"
             Click="OpenPageOnMain"
             Style="{StaticResource Button_Settings}">

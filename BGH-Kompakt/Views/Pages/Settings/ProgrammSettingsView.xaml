@@ -74,6 +74,10 @@
                     Command="{Binding SeedMontagspostCommand}"
                     Content="Seed Montagspost"
                     Style="{StaticResource Button_ProgrammSettings}" />
+                <Button
+                    Command="{Binding SeedDienstbezeichnungen}"
+                    Content="Seed Dienstbezeichnungen"
+                    Style="{StaticResource Button_ProgrammSettings}" />
                 <Border Style="{StaticResource Border_Programmsettings}" />
                 <StackPanel DataContext="{Binding ProgrammSetting}">
                     <TextBox

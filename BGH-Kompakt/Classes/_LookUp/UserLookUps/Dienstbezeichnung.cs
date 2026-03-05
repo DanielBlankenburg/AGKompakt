@@ -14,6 +14,8 @@ namespace BGH_Kompakt.Classes._LookUp.UserLookUps
         public string DienstbezeichnungText { get; set; }
         public IList<UserDienstbezeichnung> UserDienstbezeichnungen { get; set; }
         public IList<User> Users { get; set; }
+        public int BesoldungsgruppeID { get; set; }
+        public RBesoldung Besoldungsgruppe { get; set; }
 
         public string DienstbezeichnungLong()
         {

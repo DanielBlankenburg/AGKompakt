@@ -35,6 +35,8 @@ namespace BGH_Kompakt.Services.DBContexts
         public DbSet<VerfahrenVotenmappe> Votenmappe { get; set; }
         public DbSet<ProgrammSetting> ProgrammSettings { get; set; }
         public DbSet<UserDienstbezeichnung> UserDienstbezeichnungen { get; set; }
+        public DbSet<RBesoldung> RBesoldungen { get; set; }
+        public DbSet<RBesoldungPayment> RBesoldungPayments{ get; set; }
         
 
 
@@ -53,6 +55,11 @@ namespace BGH_Kompakt.Services.DBContexts
                     .ToTable("Dienstbezeichnungen")
                     .Property(x => x.DienstbezeichnungText).IsRequired();
 
+                modelBuilder.Entity<Dienstbezeichnung>()
+                    .HasRequired(x => x.Besoldungsgruppe)
+                    .WithMany(x => x.Dienstbezeichnungen)
+                    .HasForeignKey(x => x.BesoldungsgruppeID);
+
                 modelBuilder.Entity<Geschlecht>()
                     .ToTable("Geschlechter")
                     .Property(x => x.GeschlechtText).IsRequired();
@@ -70,7 +77,6 @@ namespace BGH_Kompakt.Services.DBContexts
                     .ToTable("Senate")
                     .HasRequired(x => x.Senatsetting)
                     .WithRequiredPrincipal(x => x.Senat);
-
 
                 modelBuilder.Entity<UserFilterMP>()
                     .ToTable("UserFilterMP");
@@ -97,6 +103,12 @@ namespace BGH_Kompakt.Services.DBContexts
                     .HasRequired(x => x.Dienstbezeichnung)
                     .WithMany(x => x.UserDienstbezeichnungen);
 
+                modelBuilder.Entity<RBesoldung>()
+                    .ToTable("RBesoldungen");
+
+                modelBuilder.Entity<RBesoldungPayment>()
+                    .HasRequired(x => x.RBesoldung)
+                    .WithMany(x => x.RBesoldungPayments);
 
                 modelBuilder.Configurations.Add(new UserConfiguration());
                 //base.OnModelCreating(modelBuilder);

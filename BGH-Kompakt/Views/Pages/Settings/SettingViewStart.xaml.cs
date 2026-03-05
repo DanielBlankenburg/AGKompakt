@@ -61,6 +61,10 @@ namespace BGH_Kompakt.Views.Settings
                 {
                     CheckAdmin(2);
                 }
+                else if (button == Btn_Besoldung)
+                {
+                    CheckAdmin(3);
+                }
                 else if (button == Btn_ErrorArea)
                 {
                     ViewManager.ShowUnderPageOn<ErrorAreaView>(ViewManager.SettingView.AnimatedContentControl);
@@ -95,6 +99,9 @@ namespace BGH_Kompakt.Views.Settings
                             break;
                         case 2:
                             ViewManager.ShowUnderPageOn<ProgrammSettingsView>(ViewManager.SettingView.AnimatedContentControl);
+                            break;
+                        case 3:
+                            ViewManager.ShowUnderPageOn<BesoldungVIew>(ViewManager.SettingView.AnimatedContentControl);
                             break;
                     }
                     ViewManager.SettingView.Grid_Settings.Visibility = Visibility.Visible;

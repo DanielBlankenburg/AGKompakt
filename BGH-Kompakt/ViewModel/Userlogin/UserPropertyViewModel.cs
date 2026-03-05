@@ -1,4 +1,5 @@
 ﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
+using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
@@ -105,18 +106,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
                 return tempList;
             }
         }
-        public ObservableCollection<UserDienstbezeichnung> UserDienstbezeichnungenList
-        {
-            get
-            {
-                var tempList = new ObservableCollection<UserDienstbezeichnung>();
-                var Query = userDBcontext.UserDienstbezeichnungen.Where(ud => ud.UserId == CurrenUser.UserId).Include(ud => ud.Dienstbezeichnung);
-                foreach (var item in Query) tempList.Add(item);
-                //SelectedDienstbezeichnung = tempList.FirstOrDefault(item => item.DienstbezeichnungId== CurrenUser.DienstbezeichnungId);
-                return tempList;
-            }
-        }
-
+        public ObservableCollection<UserDienstbezeichnung> UserDienstbezeichnungenList { get; set; }
 
         private readonly ObservableCollection<Senat> _SenatListAll = new ObservableCollection<Senat>();
         private readonly ObservableCollection<Senat> _SenatListUser = new ObservableCollection<Senat>();
@@ -176,6 +166,14 @@ namespace BGH_Kompakt.ViewModel.Userlogin
             NewUserDienstbezeichnungenCommand = new RelayCommand(NewUserDienstbezeichnungenExecute);
             DeleteUserDienstbezeichnungenCommand = new RelayCommand(DeleteUserDienstbezeichnungenExecute);
 
+            FillUserDienstleistungen();
+        }
+
+        private void FillUserDienstleistungen()
+        {
+            var Query = userDBcontext.UserDienstbezeichnungen.Where(ud => ud.UserId == CurrenUser.UserId).Include(ud => ud.Dienstbezeichnung);
+            UserDienstbezeichnungenList = new ObservableCollection<UserDienstbezeichnung>();
+            foreach (var item in Query) UserDienstbezeichnungenList.Add(item);
         }
 
         private void DeleteUserDienstbezeichnungenExecute(object obj)
@@ -203,7 +201,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
 
         private void NewUserDienstbezeichnungenExecute(object obj)
         {
-            throw new NotImplementedException();
+            SelectedUserDienstbezeichnung = new UserDienstbezeichnung();
         }
 
         private void AddUserDienstbezeichnungenExecute(object obj)
