@@ -1,4 +1,5 @@
 ﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
+using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
@@ -168,38 +169,45 @@ namespace BGH_Kompakt.ViewModel.Userlogin
 
         public UserLoginViewModel()
         {
-            //UserDBContext userDBcontext = new UserDBContext();
-            //Titel füllen
-            var Titel_Query = userDBContext.Titel;
-            foreach (var item in Titel_Query) _TitelList.Add(item);
-            SelectedTitel = _TitelList[0];
-            //Geschlecht füllen
-            var Geschelcht_Query = userDBContext.Geschlechter;
-            foreach (var item in Geschelcht_Query) _GeschlechtList.Add(item);
-            //Position füllen
-            var Position_Query = userDBContext.Positions;
-            foreach (var item in Position_Query) _PositionList.Add(item);
-            //Status füllen
-            //var Status_Query = userDBcontext.Status;
-            //foreach (var item in Status_Query) _StatusList.Add(item);
-            //enumDienstbezeichnungen füllen
-            var Dienstbezeichnung_Query = userDBContext.Dienstbezeichnungen;
-            foreach (var item in Dienstbezeichnung_Query) _DienstbezeichnungList.Add(item);
-            //Senate füllen
-            var Senat_Query = userDBContext.Senate;
-            foreach (var item in Senat_Query) if (item.SenatName != "unbekannter Senat") _SenatListAll.Add(item);
-
-
-            _titel = "Benutzerregistrierung";
-            _Introduction = "Die Funktionen des Programms werden über den Nutzernamen des Benutzers gesteuert." +
-                                Environment.NewLine + "Für Ihren Benutzernamen konnte kein Benutzer gefunden werden." +
-                                Environment.NewLine + Environment.NewLine + "Bitte tragen Sie Ihre Daten ein und registrieren sich.";
-
             QuitCommand = new RelayCommand(QuitExecute);
             LoginCommand = new RelayCommand(LoginExecute);
             AddCommand = new RelayCommand(AddExecute, AddCanExecute);
             RemoveCommand = new RelayCommand(RemoveExecute, RemoveCanExecute);
             ExpanderCommand = new RelayCommand(ExpanderExecute);
+
+            //UserDBContext userDBcontext = new UserDBContext();
+            //Titel füllen
+            try
+            {
+                var Titel_Query = userDBContext.Titel;
+                foreach (var item in Titel_Query) _TitelList.Add(item);
+                if (_TitelList.Count > 0) SelectedTitel = _TitelList[0];
+                //Geschlecht füllen
+                var Geschelcht_Query = userDBContext.Geschlechter;
+                foreach (var item in Geschelcht_Query) _GeschlechtList.Add(item);
+                //Position füllen
+                var Position_Query = userDBContext.Positions;
+                foreach (var item in Position_Query) _PositionList.Add(item);
+                //Status füllen
+                //var Status_Query = userDBcontext.Status;
+                //foreach (var item in Status_Query) _StatusList.Add(item);
+                //enumDienstbezeichnungen füllen
+                var Dienstbezeichnung_Query = userDBContext.Dienstbezeichnungen;
+                foreach (var item in Dienstbezeichnung_Query) _DienstbezeichnungList.Add(item);
+                //Senate füllen
+                var Senat_Query = userDBContext.Senate;
+                foreach (var item in Senat_Query) if (item.SenatName != "unbekannter Senat") _SenatListAll.Add(item);
+
+
+                _titel = "Benutzerregistrierung";
+                _Introduction = "Die Funktionen des Programms werden über den Nutzernamen des Benutzers gesteuert." +
+                                    Environment.NewLine + "Für Ihren Benutzernamen konnte kein Benutzer gefunden werden." +
+                                    Environment.NewLine + Environment.NewLine + "Bitte tragen Sie Ihre Daten ein und registrieren sich.";
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage.CreateExceptionWithoutMessage("UserLoginViewModel", ex);
+            }
 
         }
 
