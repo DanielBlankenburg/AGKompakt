@@ -325,6 +325,10 @@
     <Compile Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.Designer.cs">
       <DependentUpon>202509280718402_Spruchgruppenmitglieder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrartions\Users\202603071251038_InitialPayments.cs" />
+    <Compile Include="Migrartions\Users\202603071251038_InitialPayments.Designer.cs">
+      <DependentUpon>202603071251038_InitialPayments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\ActivityRequestService\ActivityRequestManager.cs" />
     <Compile Include="Services\Extentions\DirectoryInfoExtensions.cs" />
     <Compile Include="Classes\Helper\ActionStatus.cs" />
@@ -1043,6 +1047,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.resx">
       <DependentUpon>202509280718402_Spruchgruppenmitglieder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202603071251038_InitialPayments.resx">
+      <DependentUpon>202603071251038_InitialPayments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

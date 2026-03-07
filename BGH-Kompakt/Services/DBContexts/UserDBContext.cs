@@ -56,7 +56,7 @@ namespace BGH_Kompakt.Services.DBContexts
                     .Property(x => x.DienstbezeichnungText).IsRequired();
 
                 modelBuilder.Entity<Dienstbezeichnung>()
-                    .HasRequired(x => x.Besoldungsgruppe)
+                    .HasOptional(x => x.Besoldungsgruppe)
                     .WithMany(x => x.Dienstbezeichnungen);
 
                 modelBuilder.Entity<Geschlecht>()
