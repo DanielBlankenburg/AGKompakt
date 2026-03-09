@@ -1655,24 +1655,28 @@ namespace BGH_Kompakt.ViewModel
                 foreach (var item in ApplicantQuery) ApplicantList.Add(item);
 
             }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show("Es ist beim Laden folgender Fehler aufgetreten: " + ex.Message, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            catch (System.Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("Fill_ComboBoxes", ex); }
         }
         #region Executes
         private void AdventageClearExecute(object obj)
         {
-            bool confirm = ViewManager.ShowQuestionWindow("Möchten Sie den Eintrag endgültig löschen?", "Ja");
-            if (confirm)
+            if (ViewManager.ShowQuestionWindow("Möchten Sie den Eintrag endgültig löschen?", "Ja"))
             {
-                if (ActivityRequestManager.ActionType == 2)
+                try
                 {
-                    ARVerguetungAdventage deleteAdventage = activityRequestDBcontext.ARVerguetungAdventages.FirstOrDefault(a => a.ARVerguetungAdventageTypId == SelectedAdventageListView.ARVerguetungAdventageId);
-                    if (deleteAdventage != null) activityRequestDBcontext.ARVerguetungAdventages.Remove(deleteAdventage);
+                    if (ActivityRequestManager.ActionType == 2)
+                    {
+                        ARVerguetungAdventage deleteAdventage = activityRequestDBcontext.ARVerguetungAdventages.FirstOrDefault(a => a.ARVerguetungAdventageTypId == SelectedAdventageListView.ARVerguetungAdventageId);
+                        if (deleteAdventage != null)
+                        {
+                            activityRequestDBcontext.ARVerguetungAdventages.Remove(deleteAdventage);
+                            activityRequestDBcontext.SaveChanges();
+                        }
+                    }
+                    AdventageList.Remove(SelectedAdventageListView);
+                    if (AdventageList.Count == 0) AnzeigeAdventageList = false;
                 }
-                AdventageList.Remove(SelectedAdventageListView);
-                if (AdventageList.Count == 0) AnzeigeAdventageList = false;
+                catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("AdventageClearExecute", ex); }
             }
         }
         private void AdventageApplyExecute(object obj)
@@ -2134,9 +2138,7 @@ namespace BGH_Kompakt.ViewModel
 
         private void NewExecute(object obj)
         {
-            bool result = ViewManager.ShowQuestionWindow("Sollen die Eingaben zurückgesetzt werden?", "Ja");
-            //MessageBoxResult messageBoxResult = MessageBox.Show("Sollen die Eingaben zurückgesetzt werden?", "Zurücksetzen", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result)
+            if (ViewManager.ShowQuestionWindow("Sollen die Eingaben zurückgesetzt werden?", "Ja"))
             {
                 ActivityRequestManager.SelectedActivityRequest = null;
                 SetActivityRequest();

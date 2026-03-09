@@ -78,62 +78,6 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
 
         private void SeedDienstbezeichnungenExecute(object obj)
         {
-            List<RBesoldung> TypList = new List<RBesoldung>();
-            TypList.AddRange(new List<RBesoldung> {
-
-                        new RBesoldung { id = 1, Name= "R6" },
-                        new RBesoldung { id = 1, Name = "R8" },
-                        new RBesoldung { id = 1, Name = "R9" },
-                        new RBesoldung { id = 1, Name = "R10" }
-                    });
-
-            foreach (RBesoldung suchText in TypList)
-            {
-                if (userDBContext.RBesoldungen.FirstOrDefault(x => x.id == suchText.id) == null)
-                    userDBContext.RBesoldungen.AddOrUpdate(a => a.Name, new RBesoldung{ id = suchText.id, Name = suchText.Name});
-            };
-
-            RBesoldung R6 = userDBContext.RBesoldungen.FirstOrDefault(b => b.Name == "R6");
-            RBesoldung R8 = userDBContext.RBesoldungen.FirstOrDefault(b => b.Name == "R8");
-            RBesoldung R9 = userDBContext.RBesoldungen.FirstOrDefault(b => b.Name == "R9");
-            RBesoldung R10 = userDBContext.RBesoldungen.FirstOrDefault(b => b.Name == "R10");
-
-            if (R6 == null || R8 == null || R10 == null) {ErrorMessage.CreateExceptionWithFlyOutMessage("SeedDienstbezeichnungenExecute", new Exception("Die Besoldungsgruppen konnten nicht aufgerufen werden"));}
-
-            List<Dienstbezeichnung> dienstbezeichnungen = userDBContext.Dienstbezeichnungen.ToList();
-            foreach (Dienstbezeichnung item in dienstbezeichnungen)
-            {
-                switch (item.DienstbezeichnungText)
-                {
-                    case "RiBGH":
-                        item.Besoldungsgruppe = R6;
-                        break;
-                    case "RinBGH":
-                        item.Besoldungsgruppe = R6;
-                        break;
-                    case "VRiBGH":
-                        item.Besoldungsgruppe = R8;
-                        break;
-                    case "VRinBGH":
-                        item.Besoldungsgruppe = R8;
-                        break;
-                    case "PräsBGH":
-                        item.Besoldungsgruppe = R10;
-                        break;
-                    case "PräsinBGH":
-                        item.Besoldungsgruppe = R10;
-                        break;
-                    case "VPräsBGH":
-                        item.Besoldungsgruppe = R9;
-                        break;
-                    case "VPräsinBGH":
-                        item.Besoldungsgruppe = R9;
-                        break;
-                }
-                userDBContext.Dienstbezeichnungen.AddOrUpdate(item);
-
-            }
-
             List<User> users = userDBContext.Users.ToList();
             foreach (User user in users)
             {
@@ -146,8 +90,8 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                         userDienstbezeichnung = new UserDienstbezeichnung { User = user, 
                                                                             DienstbezeichnungId = dienstbezeichnung,
                                                                             GültigAb = new DateTime(2025,1,1)};
+                        userDBContext.UserDienstbezeichnungen.AddOrUpdate(userDienstbezeichnung);
                     }
-                    userDBContext.UserDienstbezeichnungen.AddOrUpdate(userDienstbezeichnung);
                 }
             }
 
