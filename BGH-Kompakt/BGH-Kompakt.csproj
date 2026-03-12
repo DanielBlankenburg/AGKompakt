@@ -502,6 +502,8 @@
     <Compile Include="ViewModel\Montagspost\MontagsPostSettingsViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostVermerkViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsRBesoldungViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsReportViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetgkeitenViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenAnzeigeViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenClientEditorViewModel.cs" />
@@ -515,7 +517,6 @@
     <Compile Include="ViewModel\Sitzungsunterlagen\VotenMappeViewModel.cs" />
     <Compile Include="ViewModel\Start\StartViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\AdminViewModel.cs" />
-    <Compile Include="ViewModel\SystemSettings\BesoldungVIewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\ErrorAreaViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\MPSettingsViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\ProgrammSettingViewModel.cs" />
@@ -525,6 +526,12 @@
     <Compile Include="ViewModel\Userlogin\UserPropertyViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\VotenViewModel.cs" />
+    <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsRBesoldungView.xaml.cs">
+      <DependentUpon>ActivityRequestsRBesoldungView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml.cs">
+      <DependentUpon>ActivityRequestsReportView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenClientEditorView.xaml.cs">
       <DependentUpon>NebentaetigkeitenClientEditorView.xaml</DependentUpon>
     </Compile>
@@ -548,9 +555,6 @@
     </Compile>
     <Compile Include="Views\Pages\Montagspost\MontagsPostSettingsView.xaml.cs">
       <DependentUpon>MontagsPostSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Settings\BesoldungVIew.xaml.cs">
-      <DependentUpon>BesoldungVIew.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Settings\ErrorAreaView.xaml.cs">
       <DependentUpon>ErrorAreaView.xaml</DependentUpon>
@@ -649,6 +653,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Pages\ActivityRequests\ActivityRequestsRBesoldungView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Pages\ActivityRequests\NebentaetigkeitenClientEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -674,10 +686,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\Montagspost\MontagsPostSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Settings\BesoldungVIew.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

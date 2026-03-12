@@ -100,9 +100,9 @@ namespace BGH_Kompakt.Views.Settings
                         case 2:
                             ViewManager.ShowUnderPageOn<ProgrammSettingsView>(ViewManager.SettingView.AnimatedContentControl);
                             break;
-                        case 3:
-                            ViewManager.ShowUnderPageOn<BesoldungVIew>(ViewManager.SettingView.AnimatedContentControl);
-                            break;
+                        //case 3:
+                        //    ViewManager.ShowUnderPageOn<BesoldungVIew>(ViewManager.SettingView.AnimatedContentControl);
+                        //    break;
                     }
                     ViewManager.SettingView.Grid_Settings.Visibility = Visibility.Visible;
                 }

@@ -369,7 +369,7 @@ namespace BGH_Kompakt.ViewModel.MainWindow
             {
                 string suchText = listPayments[i, 0];
                 RBesoldung rBesoldung = userContext.RBesoldungen.FirstOrDefault(x => x.Name == suchText);
-                if (userContext.RBesoldungPayments.FirstOrDefault(x => x.RBesoldung.id == rBesoldung.id) == null)
+                if (userContext.RBesoldungPayments.FirstOrDefault(x => x.RBesoldung.id == rBesoldung.id && x.Start == dateTime) == null)
                 {
                     RBesoldungPayment rBesoldungPayment = new RBesoldungPayment { Start = dateTime, PaymentValue = decimal.Parse(listPayments[i, 1]), RBesoldung = rBesoldung };
                     userContext.RBesoldungPayments.AddOrUpdate(rBesoldungPayment);

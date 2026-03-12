@@ -8,14 +8,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace BGH_Kompakt.ViewModel.SystemSettings
+namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
 {
-    public partial class BesoldungVIewModel : ViewModelBase
+    public partial class ActivityRequestsRBesoldungViewModel : ViewModelBase
     {
         public ICommand NewCommand { get; set; }
         public ICommand SaveCommand { get; set; }
@@ -30,12 +29,12 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
         public bool NewPayment
         {
             get { return _NewPayment; }
-            set { SetProperty(ref _NewPayment, value);}
+            set { SetProperty(ref _NewPayment, value); }
         }
 
 
 
-        public BesoldungVIewModel()
+        public ActivityRequestsRBesoldungViewModel()
         {
             var query = UserDBContext.RBesoldungen.ToList();
             foreach (var item in query) Besoldungsliste.Add(item);
