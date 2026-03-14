@@ -66,6 +66,13 @@
             <Setter Property="Width" Value="100" />
         </Style>
         <Style
+            x:Key="list_value"
+            BasedOn="{StaticResource textblock_base}"
+            TargetType="TextBlock">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Width" Value="50" />
+        </Style>
+        <Style
             x:Key="Datepicker_Report"
             BasedOn="{StaticResource Datepicker_Base}"
             TargetType="{x:Type DatePicker}">
@@ -577,25 +584,40 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>-->
-                                    <Grid >
+                                    <Grid>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <StackPanel Margin="40,0,0,0">
-                                            <TextBlock Style="{StaticResource textblock_base}" Text="Grunddaten:"/>
-                                            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
-                                                <TextBlock Style="{StaticResource textblock_base}" Text="Gesamtvergütung:"/>
-                                                <TextBlock Style="{StaticResource textblock_base}" Text="{Binding TotalAmount}"/>
-                                            </StackPanel>
-                                            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
-                                                <TextBlock Style="{StaticResource textblock_base}" Text="Gesamtstunden:"/>
-                                                <TextBlock Style="{StaticResource textblock_base}" Text="{Binding TotalHours}"/>
-                                            </StackPanel>
+                                            <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Grunddaten:" />
+                                            <Grid Margin="10,0,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Style="{StaticResource textblock_base}" Text="Gesamtvergütung:" />
+                                                <TextBlock Style="{StaticResource list_value}" Text="{Binding TotalAmount, StringFormat=\{0:C\}}" />
+                                            </Grid>
+                                            <Grid Margin="10,0,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Style="{StaticResource textblock_base}" Text="Gesamtstunden:" />
+                                                <TextBlock Style="{StaticResource list_value}" Text="{Binding TotalHours}" />
+                                            </Grid>
                                         </StackPanel>
-                                        <TextBlock Margin="40,0,0,0" Grid.Row="1" Style="{StaticResource textblock_base}" Text="Grunddaten:"/>
-                                        <ItemsControl Margin="35,0,0,0" Grid.Row="2"  ItemsSource="{Binding Requests}">
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Margin="40,0,0,0"
+                                            Style="{StaticResource textblock_ReportE1}"
+                                            Text="Tätigkeiten:" />
+                                        <ItemsControl
+                                            Grid.Row="2"
+                                            Margin="35,0,0,0"
+                                            ItemsSource="{Binding Requests}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Expander Background="{StaticResource BGHActivityRequestBackground}" Style="{StaticResource MaterialDesignExpander}">
@@ -617,33 +639,11 @@
                                                             </Grid>
                                                         </StackPanel>
                                                     </Expander>
-
-
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                     </Grid>
-
                                 </Expander>
-                                <!--<StackPanel Margin="0,0,0,12">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                                <ColumnDefinition Width="30"></ColumnDefinition>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Style="{StaticResource textblock_ReportE1}" Text="{Binding UserName}" />
-                                            <TextBlock HorizontalAlignment="Right" Grid.Column="1" Style="{StaticResource textblock_Label}" Text="{Binding RequestCount}" />
-                                        </Grid>
-                                        <ItemsControl ItemsSource="{Binding Requests}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Margin="10,2,0,2" Orientation="Horizontal">
-                                                        <TextBlock Style="{StaticResource textblock_Ergebnis}" Text="{Binding ARTitel}" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>-->
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
