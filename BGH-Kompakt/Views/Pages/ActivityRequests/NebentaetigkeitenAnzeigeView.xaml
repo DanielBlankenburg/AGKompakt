@@ -327,7 +327,7 @@
                                 IsExpanded="{Binding Anzeige_Art, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
-                                    <TextBlock Style="{StaticResource Textblock_Extender}" Text="Art" />
+                                    <TextBlock Style="{StaticResource Textblock_Extender}" Text="Art" HorizontalAlignment="Right" Width="894" />
                                 </Expander.Header>
                                 <StackPanel Style="{StaticResource ExtenderStackpanelAR}">
                                     <!--#region Meldeart; Visibility: true-->

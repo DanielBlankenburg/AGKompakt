@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 #nullable enable
 
@@ -95,6 +96,8 @@ namespace BGH_Kompakt.Classes.ActivityRequestClasses
         }
         [NotMapped]
         public Single? Gesamtzeitaufwand { get {return ARZeitaufwandMain + ARZeitaufwandPrep;}}
+        [NotMapped]
+        public decimal Gesamtverguetung { get { return ARVerguetung + (ARVerguetungAdventages != null ? ARVerguetungAdventages.Sum(a => a.ARVerguetungAdventageAmount) : 0); } }
 
         public User? ARUser
         {

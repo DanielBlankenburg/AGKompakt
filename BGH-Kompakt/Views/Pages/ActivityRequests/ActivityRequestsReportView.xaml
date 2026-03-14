@@ -73,6 +73,31 @@
             <Setter Property="Width" Value="130" />
             <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
+        <Style
+            x:Key="Expander"
+            BasedOn="{StaticResource MaterialDesignExpander}"
+            TargetType="Expander">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Style.Triggers>
+                <Trigger Property="IsExpanded" Value="True">
+                    <Setter Property="Background" Value="{StaticResource BGHActivityRequestBackground}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <!--<Style x:Key="MaterialDesignExpander_Compact" BasedOn="{StaticResource MaterialDesignExpander}" TargetType="Expander">
+            <Setter Property="Padding" Value="14,12"/>
+            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,12,0,12"/>
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ContentPresenter VerticalAlignment="Center" Margin="4,0"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
+
     </UserControl.Resources>
     <Grid Background="White">
         <Grid.RowDefinitions>
@@ -81,8 +106,15 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="500" />
+        </Grid.ColumnDefinitions>
         <TextBlock Style="{StaticResource Style_Textblock_Titel_Unter1}" Text="Abfragen" />
-        <MD:Card Grid.Row="1" Style="{StaticResource MDCard_Report}">
+        <MD:Card
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Style="{StaticResource MDCard_Report}">
             <StackPanel
                 Grid.Row="1"
                 Margin="10,0,0,0"
@@ -101,347 +133,526 @@
                     Style="{StaticResource Button_Master}" />
             </StackPanel>
         </MD:Card>
-        <MD:Card Grid.Row="2" Style="{StaticResource MDCard_Report}">
-            <Grid>
+        <MD:Card
+            Grid.Row="2"
+            Style="{StaticResource MDCard_Report}"
+            Visibility="{Binding ShowReport, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+            <!--<Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <WrapPanel Grid.Column="0" Orientation="Vertical">
-                    <Grid Style="{StaticResource Grid_Report_E0_0}">
+                </Grid.ColumnDefinitions>-->
+            <WrapPanel Grid.Column="0" Orientation="Vertical">
+                <Grid Style="{StaticResource Grid_Report_E0_0}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Anzahl der Nebentätigkeiten" />
+                    <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Anzahl der Nebentätigkeiten" />
-                        <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Anzahl Richter" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Anzeigepflichtig" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Gehemigungspflichtig" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="{Binding JudgeCount, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Anzahl Richter" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Anzeigepflichtig" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Gehemigungspflichtig" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding JudgeCount, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="{Binding AnzeigeCount, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="{Binding GenehmigungCount, UpdateSourceTrigger=PropertyChanged}" />
-                        </Grid>
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding AnzeigeCount, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding GenehmigungCount, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
-                    <Grid Style="{StaticResource Grid_Report_E0_1}">
+                </Grid>
+                <Grid Style="{StaticResource Grid_Report_E0_1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Durchschnitt der Stundenanzahl" />
+                    <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Durchschnitt der Stundenanzahl" />
-                        <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Anzeigepflichtig" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Gehemigungspflichtig" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis 2" />
-                        </Grid>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Anzeigepflichtig" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Gehemigungspflichtig" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding AnzeigeHoursAverage, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding GenehmigungHoursAverage, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
-                    <Grid Style="{StaticResource Grid_Report_E0_0}">
+                </Grid>
+                <Grid Style="{StaticResource Grid_Report_E0_0}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchste Stundenanzahl" />
+                    <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchste Stundenanzahl" />
-                        <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Anzeigepflichtig" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Gehemigungspflichtig" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis 2" />
-                        </Grid>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Anzeigepflichtig" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Gehemigungspflichtig" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding AnzeigeHoursMax, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding GenehmigungHoursMax, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
-                    <Grid Style="{StaticResource Grid_Report_E0_1}">
+                </Grid>
+                <Grid Style="{StaticResource Grid_Report_E0_1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Durchschnitt Vergütung" />
+                    <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Durchschnitt Vergütung" />
-                        <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Anzeigepflichtig" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Gehemigungspflichtig" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis 2" />
-                        </Grid>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Anzeigepflichtig" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Gehemigungspflichtig" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding AnzeigeAmountAverage, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding GenehmigungAmountAverage, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
-                    <Grid Style="{StaticResource Grid_Report_E0_0}">
+                </Grid>
+                <Grid Style="{StaticResource Grid_Report_E0_0}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchste Gesamtvergütung" />
+                    <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchste Gesamtvergütung" />
-                        <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Anzeigepflichtig" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Gehemigungspflichtig" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis 2" />
-                        </Grid>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Anzeigepflichtig" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Gehemigungspflichtig" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding AnzeigeAmountMax, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding GenehmigungAmountMax, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
-                    <Grid Style="{StaticResource Grid_Report_E0_1}">
+                </Grid>
+                <Grid Style="{StaticResource Grid_Report_E0_1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchste Einzelvergütung" />
+                    <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchste Einzelvergütung" />
-                        <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Anzeigepflichtig" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Gehemigungspflichtig" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis 2" />
-                        </Grid>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Anzeigepflichtig" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Gehemigungspflichtig" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding AnzeigeAmountMax, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="{Binding GenehmigungAmountMax, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
-                    <Grid Style="{StaticResource Grid_Report_E0_0}">
+                </Grid>
+                <Grid Style="{StaticResource Grid_Report_E0_0}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchster Betrag im Stundenverhältnis" />
+                    <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchster Betrag im Stundenverhältnis" />
-                        <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Anzeigepflichtig" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="Gehemigungspflichtig" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis 2" />
-                        </Grid>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Anzeigepflichtig" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="Gehemigungspflichtig" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="Ergebnis" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="Ergebnis 2" />
                     </Grid>
-                    <Grid Style="{StaticResource Grid_Report_E0_1}">
+                </Grid>
+                <Grid Style="{StaticResource Grid_Report_E0_1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Überschreitung 40%-Grenze" />
+                    <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Überschreitung 40%-Grenze" />
-                        <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="R6" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="R8" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="R9" />
-                            <TextBlock
-                                Grid.Row="3"
-                                Grid.Column="0"
-                                Style="{StaticResource textblock_Label}"
-                                Text="R10" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis 2" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis 3" />
-                            <TextBlock
-                                Grid.Row="3"
-                                Grid.Column="1"
-                                Style="{StaticResource textblock_Ergebnis}"
-                                Text="Ergebnis 4" />
-                        </Grid>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="R6" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="R8" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="R9" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Style="{StaticResource textblock_Label}"
+                            Text="R10" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="Ergebnis" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="Ergebnis 2" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="Ergebnis 3" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Style="{StaticResource textblock_Ergebnis}"
+                            Text="Ergebnis 4" />
                     </Grid>
+                </Grid>
 
-                </WrapPanel>
+            </WrapPanel>
 
-            </Grid>
+
+            <!--</Grid>-->
+        </MD:Card>
+        <MD:Card
+            Grid.Row="2"
+            Grid.Column="1"
+            Style="{StaticResource MDCard_Report}"
+            Visibility="{Binding ShowReport, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+
+            <TabControl Margin="0,0,0,10" Style="{StaticResource MahApps.Styles.TabControl}">
+                <TabItem Header="Tätigkeiten pro Veranstalter">
+                    <Grid Grid.Column="1" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Style="{StaticResource textblock_ReportE1}"
+                            Text="Tätigkeiten pro Veranstalter" />
+
+                        <ListBox Grid.Row="1" ItemsSource="{Binding RequestsByClient}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="{Binding TypeName}" />
+                                        <ItemsControl ItemsSource="{Binding Clients}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Margin="10,2,0,2" Orientation="Horizontal">
+                                                        <TextBlock
+                                                            Width="300"
+                                                            Style="{StaticResource textblock_Label}"
+                                                            Text="{Binding ClientName}" />
+                                                        <TextBlock
+                                                            Width="100"
+                                                            Style="{StaticResource textblock_Ergebnis}"
+                                                            Text="{Binding Count}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Tätigkeiten pro Richter">
+                    <ListBox
+                        Grid.Row="1"
+                        Margin="0,10,0,0"
+                        ItemsSource="{Binding RequestsByUser}"
+                        ScrollViewer.CanContentScroll="False"
+                        Style="{StaticResource MaterialDesignCardsListBox}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Expander Style="{StaticResource Expander}">
+                                    <Expander.Header>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="30" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{StaticResource textblock_ReportE1}" Text="{Binding UserName}" />
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                Style="{StaticResource textblock_Label}"
+                                                Text="{Binding RequestCount}" />
+                                        </Grid>
+                                    </Expander.Header>
+                                    <!--<ItemsControl Grid.Row="1" ItemsSource="{Binding Requests}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Expander Background="{StaticResource BGHActivityRequestBackground}" Style="{StaticResource MaterialDesignExpander}">
+                                                    <Expander.Header>
+                                                        <TextBlock Style="{StaticResource textblock_base}" Text="{Binding ARTitel}" />
+                                                    </Expander.Header>
+                                                    <StackPanel>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="100" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Style="{StaticResource textblock_base}" Text="Vergütung" />
+                                                            <TextBlock
+                                                                Grid.Column="1"
+                                                                HorizontalAlignment="Right"
+                                                                Style="{StaticResource textblock_base}"
+                                                                Text="{Binding Gesamtverguetung, StringFormat=\{0:C\}}" />
+                                                        </Grid>
+                                                    </StackPanel>
+                                                </Expander>
+
+
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>-->
+                                    <Grid >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <StackPanel Margin="40,0,0,0">
+                                            <TextBlock Style="{StaticResource textblock_base}" Text="Grunddaten:"/>
+                                            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource textblock_base}" Text="Gesamtvergütung:"/>
+                                                <TextBlock Style="{StaticResource textblock_base}" Text="{Binding TotalAmount}"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                                <TextBlock Style="{StaticResource textblock_base}" Text="Gesamtstunden:"/>
+                                                <TextBlock Style="{StaticResource textblock_base}" Text="{Binding TotalHours}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <TextBlock Margin="40,0,0,0" Grid.Row="1" Style="{StaticResource textblock_base}" Text="Grunddaten:"/>
+                                        <ItemsControl Margin="35,0,0,0" Grid.Row="2"  ItemsSource="{Binding Requests}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Expander Background="{StaticResource BGHActivityRequestBackground}" Style="{StaticResource MaterialDesignExpander}">
+                                                        <Expander.Header>
+                                                            <TextBlock Style="{StaticResource textblock_base}" Text="{Binding ARTitel}" />
+                                                        </Expander.Header>
+                                                        <StackPanel>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="100" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Style="{StaticResource textblock_base}" Text="Vergütung" />
+                                                                <TextBlock
+                                                                    Grid.Column="1"
+                                                                    HorizontalAlignment="Right"
+                                                                    Style="{StaticResource textblock_base}"
+                                                                    Text="{Binding Gesamtverguetung, StringFormat=\{0:C\}}" />
+                                                            </Grid>
+                                                        </StackPanel>
+                                                    </Expander>
+
+
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+
+                                </Expander>
+                                <!--<StackPanel Margin="0,0,0,12">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                                <ColumnDefinition Width="30"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{StaticResource textblock_ReportE1}" Text="{Binding UserName}" />
+                                            <TextBlock HorizontalAlignment="Right" Grid.Column="1" Style="{StaticResource textblock_Label}" Text="{Binding RequestCount}" />
+                                        </Grid>
+                                        <ItemsControl ItemsSource="{Binding Requests}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Margin="10,2,0,2" Orientation="Horizontal">
+                                                        <TextBlock Style="{StaticResource textblock_Ergebnis}" Text="{Binding ARTitel}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>-->
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </TabItem>
+            </TabControl>
+
+
+
         </MD:Card>
     </Grid>
 </UserControl>
