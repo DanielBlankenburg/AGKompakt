@@ -1,4 +1,5 @@
 ﻿using BGH_Kompakt.Classes.ActivityRequestClasses;
+using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Services;
@@ -15,20 +16,30 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
 {
     public partial class ActivityRequestsReportViewModel : ViewModelBase
     {
-        private ActivityRequestDBContext activityRequestDBContext = new ActivityRequestDBContext();
+        private readonly ActivityRequestDBContext activityRequestDBContext = new ActivityRequestDBContext();
+
+        private const int MeldeArt_Anzeige = 1;
+        private const int MeldeArt_Genehmigung = 2;
+
         private DateTime? _StartDate;
         public DateTime? StartDate
         {
             get { return _StartDate; }
-            set {SetProperty(ref _StartDate, value);}
+            set { SetProperty(ref _StartDate, value); }
         }
         private DateTime? _EndDate;
         public DateTime? EndDate
         {
             get { return _EndDate; }
-            set {SetProperty(ref _EndDate, value);}
+            set { SetProperty(ref _EndDate, value); }
         }
+
         public ICommand StartRequestCommand { get; set; }
+        public ICommand CollapseAllCommand { get; set; }
+        public ICommand CollapseAllARCommand { get; set; }
+        public ICommand ExpandAllCommand { get; set; }
+        public ICommand ExpandAllARCommand { get; set; }
+
         private int _JudgeCount;
         public int JudgeCount
         {
@@ -47,6 +58,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             get { return _GenehmigungCount; }
             set { SetProperty(ref _GenehmigungCount, value); }
         }
+
         private int _AnzeigeHoursAverage;
         public int AnzeigeHoursAverage
         {
@@ -71,6 +83,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             get { return _GenehmigungHoursMax; }
             set { SetProperty(ref _GenehmigungHoursMax, value); }
         }
+
         private int _AnzeigeAmountAverage;
         public int AnzeigeAmountAverage
         {
@@ -95,6 +108,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             get { return _GenehmigungAmountMax; }
             set { SetProperty(ref _GenehmigungAmountMax, value); }
         }
+
         private int _AnzeigeSingleAmountMax;
         public int AnzeigeSingleAmountMax
         {
@@ -128,118 +142,192 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             get { return _ShowReport; }
             set { SetProperty(ref _ShowReport, value); }
         }
+        private bool _IsExpanded = false;
+        public bool IsExpanded
+        {
+            get { return _IsExpanded; }
+            set { SetProperty(ref _IsExpanded, value); }
+        }
+        private bool _IsExpandedReport = true;
+        public bool IsExpandedReport
+        {
+            get { return _IsExpandedReport; }
+            set { SetProperty(ref _IsExpandedReport, value); }
+        }
 
         public ActivityRequestsReportViewModel()
         {
             StartRequestCommand = new RelayCommand(StartRequestExecute);
+            ExpandAllCommand = new RelayCommand(ExpandAllExcute);
+            ExpandAllARCommand = new RelayCommand(ExpandARExcute);
+            CollapseAllCommand = new RelayCommand(CollapseAllRequestExecute);
+            CollapseAllARCommand = new RelayCommand(CollapseARRequestExecute);
+
             StartDate = new DateTime(2025, 1, 1);
             EndDate = DateTime.Now;
         }
 
+        private void CollapseARRequestExecute(object obj)
+        {
+            IsExpanded = false;
+        }
+
+        private void ExpandARExcute(object obj)
+        {
+            IsExpanded = true;
+        }
+
+        private void CollapseAllRequestExecute(object obj)
+        {
+            IsExpandedReport = false;
+        }
+
+        private void ExpandAllExcute(object obj)
+        {
+            IsExpandedReport = true;
+        }
+
         private void StartRequestExecute(object obj)
         {
-            if (StartDate != null && EndDate != null)
+            try
             {
-                DateTime Start = (DateTime)StartDate;
-                DateTime End = (DateTime)EndDate;
-                List<ActivityRequest> RequestList = new List<ActivityRequest>();
-                RequestList = activityRequestDBContext.ActivityRequests
-                    .Where(x => x.ARDatum >= Start && x.ARDatum <= End)
-                    .Include(x => x.ActivityClient)
-                    .Include(x => x.ActivityClient.ActivityClientTyp)
-                    .ToList();
+                if (!ValidateDates(out var start, out var end))
+                    return;
 
-                List<ActivityRequest> RequestListAnzeige = new List<ActivityRequest>();
-                RequestListAnzeige = RequestList.Where(x => x.ActivityRequestMeldeArtID == 1).ToList();
-                List<ActivityRequest> RequestListGenehmigung = new List<ActivityRequest>();
-                RequestListGenehmigung = RequestList.Where(x => x.ActivityRequestMeldeArtID == 2).ToList();
-                var query = RequestList.Select(x => x.ActivityClient?.ACName).Distinct();
+                var requests = LoadRequests(start, end);
 
-                //Cout
-                List<User> UserList = new List<User>();
-                AnzeigeCount = RequestList.Where(x => x.ActivityRequestMeldeArtID == 1).Count();
-                GenehmigungCount = RequestList.Where(x => x.ActivityRequestMeldeArtID == 2).Count();
-
-                foreach (ActivityRequest request in RequestList)
+                if (requests == null || requests.Count == 0)
                 {
-                    User user = request.ARUser;
-                    if (user != null) UserList.Add(user);
+                    ViewManager.ShowMainInfoFlyout("Für den Zeitraum konnten keine Nebentätigkeiten gefunden werden", false);
+                    return;
                 }
-                JudgeCount = UserList.Select(x => x.UserId).Distinct().Count();
 
-                //Value
-                AnzeigeHoursMax = RequestListAnzeige.Count > 0 ? (int)RequestListAnzeige.Max(x => x.Gesamtzeitaufwand) : 0;
-                GenehmigungHoursMax = RequestListGenehmigung.Count > 0 ? (int)RequestListGenehmigung.Max(x => x.Gesamtzeitaufwand) : 0;
-                AnzeigeHoursAverage = RequestListAnzeige.Count > 0 ? (int)RequestListAnzeige.Average(x => x.Gesamtzeitaufwand) : 0;
-                GenehmigungHoursAverage = RequestListGenehmigung.Count > 0 ? (int)RequestListGenehmigung.Average(x => x.Gesamtzeitaufwand) : 0;
+                ComputeCounts(requests);
+                ComputeAggregates(requests);
 
-                AnzeigeAmountMax = RequestListAnzeige.Count > 0 ? (int)RequestListAnzeige.Max(x => x.Gesamtverguetung) : 0;
-                GenehmigungAmountMax = RequestListGenehmigung.Count > 0 ? (int)RequestListGenehmigung.Max(x => x.Gesamtverguetung) : 0;
-                AnzeigeAmountAverage = RequestListAnzeige.Count > 0 ? (int)RequestListAnzeige.Average(x => x.Gesamtverguetung) : 0;
-                GenehmigungAmountAverage = RequestListGenehmigung.Count > 0 ? (int)RequestListGenehmigung.Average(x => x.Gesamtverguetung) : 0;
-                AnzeigeSingleAmountMax = RequestListAnzeige.Count > 0 ? (int)RequestListAnzeige.Max(x => x.Gesamtverguetung) : 0;
-                GenehmigungSingleAmountMax = RequestListGenehmigung.Count > 0 ? (int)RequestListGenehmigung.Max(x => x.Gesamtverguetung) : 0;
+                RequestsByClient = BuildRequestsByClient(requests);
+                RequestsByUser = BuildRequestsByUser(requests, null);
 
-                var groupedByClientType = RequestList
-                    .GroupBy(r => r.ActivityClient?.ActivityClientTyp?.ActivityClientTypText ?? "Unbekannt")
-                    .Select(g => new ClientTypeRequestCount
-                    {
-                        TypeName = g.Key,
-                        Clients = g
-                            .GroupBy(r2 => r2.ActivityClient?.ACName ?? "Unbekannt")
-                            .Select(gc => new ClientRequestCount { ClientName = gc.Key, Count = gc.Count() })
-                            .OrderByDescending(c => c.Count)
-                            .ToList()
-                    })
-                    .OrderByDescending(ct => ct.Clients.Sum(c => c.Count))
-                    .ToList();
-
-                RequestsByClient = groupedByClientType;
-
-                // New: group by user and keep the full list of ActivityRequest items per user
-                var groupedUsers = RequestList
-                    .Where(r => r.ARUser != null)
-                    .GroupBy(r => new { r.ARUser.UserId, Name = r.ARUser.Fullname })
-                    .Select(g => new UserRequestGroup
-                    {
-                        UserId = g.Key.UserId,
-                        UserName = g.Key.Name,
-                        RequestCount = g.Count(),
-                        Requests = g.OrderByDescending(r => r.ARDatum).ToList()
-                    })
-                    .OrderByDescending(ug => ug.RequestCount)
-                    .ToList();
-
-                //// include requests without a user under "Unbekannt"
-                //var unknownUserRequests = RequestList.Where(r => r.ARUser == null).OrderByDescending(r => r.ARDatum).ToList();
-                //if (unknownUserRequests.Any())
-                //{
-                //    groupedUsers.Add(new UserRequestGroup
-                //    {
-                //        UserId = 0,
-                //        UserName = "Unbekannt",
-                //        RequestCount = unknownUserRequests.Count,
-                //        Requests = unknownUserRequests
-                //    });
-                //}
-
-                RequestsByUser = groupedUsers;
+                AnzeigeAmountMax = BuildRequestsByUser(requests, MeldeArt_Anzeige).DefaultIfEmpty().Max(x => x?.TotalAmount ?? 0);
+                GenehmigungAmountMax = BuildRequestsByUser(requests, MeldeArt_Genehmigung).DefaultIfEmpty().Max(x => x?.TotalAmount ?? 0);
 
                 ShowReport = true;
-                ViewManager.ShowMainInfoFlyout($"Anzahl Requests: {RequestList.Count}; Anzahl Clients: {query.Count()}", false);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage.CreateExceptionWithFlyOutMessage("StartRequestExecute", ex);
             }
         }
 
-}
+        private bool ValidateDates(out DateTime start, out DateTime end)
+        {
+            start = default;
+            end = default;
 
-    // Small DTO for grouping result per client
+            if (StartDate == null || EndDate == null)
+            {
+                ViewManager.ShowMainInfoFlyout("Bitte wählen Sie ein Start und Enddatum aus", false);
+                return false;
+            }
+
+            start = StartDate.Value;
+            end = EndDate.Value;
+
+            if (start >= end)
+            {
+                ViewManager.ShowMainInfoFlyout("Das Startdatum muss kleiner als das Enddatum sein.", false);
+                return false;
+            }
+            return true;
+        }
+
+        private List<ActivityRequest> LoadRequests(DateTime start, DateTime end)
+        {
+            return activityRequestDBContext.ActivityRequests
+                .Where(x => x.ARDatum >= start && x.ARDatum <= end)
+                .Include(x => x.ActivityClient)
+                .Include(x => x.ActivityClient.ActivityClientTyp)
+                .ToList();
+        }
+
+        private void ComputeCounts(List<ActivityRequest> requests)
+        {
+            AnzeigeCount = requests.Count(x => x.ActivityRequestMeldeArtID == MeldeArt_Anzeige);
+            GenehmigungCount = requests.Count(x => x.ActivityRequestMeldeArtID == MeldeArt_Genehmigung);
+
+            var users = requests
+                .Where(r => r.ARUser != null)
+                .Select(r => r.ARUser.UserId)
+                .Distinct()
+                .Count();
+
+            JudgeCount = users;
+        }
+
+        private void ComputeAggregates(List<ActivityRequest> requests)
+        {
+            var anzeigen = requests.Where(x => x.ActivityRequestMeldeArtID == MeldeArt_Anzeige).ToList();
+            var genehmigungen = requests.Where(x => x.ActivityRequestMeldeArtID == MeldeArt_Genehmigung).ToList();
+
+            AnzeigeHoursMax = anzeigen.Count > 0 ? (int)anzeigen.Max(x => x.Gesamtzeitaufwand) : 0;
+            GenehmigungHoursMax = genehmigungen.Count > 0 ? (int)genehmigungen.Max(x => x.Gesamtzeitaufwand) : 0;
+            AnzeigeHoursAverage = anzeigen.Count > 0 ? (int)anzeigen.Average(x => x.Gesamtzeitaufwand) : 0;
+            GenehmigungHoursAverage = genehmigungen.Count > 0 ? (int)genehmigungen.Average(x => x.Gesamtzeitaufwand) : 0;
+
+            AnzeigeAmountAverage = anzeigen.Count > 0 ? (int)anzeigen.Average(x => x.Gesamtverguetung) : 0;
+            GenehmigungAmountAverage = genehmigungen.Count > 0 ? (int)genehmigungen.Average(x => x.Gesamtverguetung) : 0;
+            AnzeigeSingleAmountMax = anzeigen.Count > 0 ? (int)anzeigen.Max(x => x.Gesamtverguetung) : 0;
+            GenehmigungSingleAmountMax = genehmigungen.Count > 0 ? (int)genehmigungen.Max(x => x.Gesamtverguetung) : 0;
+        }
+
+        private List<ClientTypeRequestCount> BuildRequestsByClient(List<ActivityRequest> requests)
+        {
+            var groupedByClientType = requests
+                .GroupBy(r => r.ActivityClient?.ActivityClientTyp?.ActivityClientTypText ?? "Unbekannt")
+                .Select(g => new ClientTypeRequestCount
+                {
+                    TypeName = g.Key,
+                    Clients = g
+                        .GroupBy(r2 => r2.ActivityClient?.ACName ?? "Unbekannt")
+                        .Select(gc => new ClientRequestCount { ClientName = gc.Key, Count = gc.Count() })
+                        .OrderByDescending(c => c.Count)
+                        .ToList()
+                })
+                .OrderByDescending(ct => ct.Clients.Sum(c => c.Count))
+                .ToList();
+
+            return groupedByClientType;
+        }
+
+        private List<UserRequestGroup> BuildRequestsByUser(List<ActivityRequest> requests, int? meldeArtId)
+        {
+            var filtered = meldeArtId.HasValue
+                ? requests.Where(r => r.ARUser != null && r.ActivityRequestMeldeArtID == meldeArtId.Value)
+                : requests.Where(r => r.ARUser != null);
+
+            var groupedUsers = filtered
+                .GroupBy(r => new { r.ARUser.UserId, Name = r.ARUser.Fullname })
+                .Select(g => new UserRequestGroup
+                {
+                    UserId = g.Key.UserId,
+                    UserName = g.Key.Name,
+                    RequestCount = g.Count(),
+                    Requests = g.OrderByDescending(r => r.ARDatum).ToList()
+                })
+                .OrderByDescending(ug => ug.RequestCount)
+                .ToList();
+
+            return groupedUsers;
+        }
+
+    }
+
     public class ClientRequestCount
     {
         public string ClientName { get; set; } = string.Empty;
         public int Count { get; set; }
     }
 
-    // DTO for grouping by client type and containing clients with counts
     public class ClientTypeRequestCount
     {
         public string TypeName { get; set; } = string.Empty;
@@ -248,7 +336,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
         public int TotalRequests => Clients?.Sum(c => c.Count) ?? 0;
     }
 
-    // New DTO: groups activity requests per user and contains the full ActivityRequest list for details
     public class UserRequestGroup
     {
         public int UserId { get; set; }
@@ -256,7 +343,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
         public int RequestCount { get; set; }
         public List<ActivityRequest> Requests { get; set; } = new List<ActivityRequest>();
 
-        // convenience properties
         public int TotalHours => Requests?.Where(r => r.Gesamtzeitaufwand != null).Sum(r => (int)r.Gesamtzeitaufwand) ?? 0;
         public int TotalAmount => Requests?.Where(r => r.Gesamtverguetung != null).Sum(r => (int)r.Gesamtverguetung) ?? 0;
     }

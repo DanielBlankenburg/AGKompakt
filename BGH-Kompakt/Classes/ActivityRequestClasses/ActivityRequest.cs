@@ -75,23 +75,16 @@ namespace BGH_Kompakt.Classes.ActivityRequestClasses
         {
             get
             {
-                switch (ARZustaendigkeitsbereich)
+                return ARZustaendigkeitsbereich switch
                 {
-                    case 1:
-                        return "Entwurf";
-                    case 2:
-                        return "In Bearbeitung";
-                    case 3:
-                        return "In Bearbeitung";
-                    case 4:
-                        return "In Bearbeitung";
-                    case 5:
-                        return "Archiv";
-                    case 6:
-                        return "Beim Vorsitzenden";
-                    default:
-                        return "Unbekannt";
-                }
+                    1 => "Entwurf",
+                    2 => "In Bearbeitung",
+                    3 => "In Bearbeitung",
+                    4 => "In Bearbeitung",
+                    5 => "Archiv",
+                    6 => "Beim Vorsitzenden",
+                    _ => "Unbekannt",
+                };
             }
         }
         [NotMapped]
