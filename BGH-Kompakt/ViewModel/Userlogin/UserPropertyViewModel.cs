@@ -208,12 +208,12 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         {
             if ( SelectedUserDienstbezeichnung.GültigAb < new DateTime(2000, 1, 1))
             {
-                MessageBox.Show("Fehler");
+                ViewManager.ShowMainInfoFlyout("Das Datum muss größer als der 1. Januar 2020 sein.", false);
                 return;
             }
             if (SelectedUserDienstbezeichnung.Dienstbezeichnung  == null)
             {
-                MessageBox.Show("Fehler Diestbezeichnung");
+                ViewManager.ShowMainInfoFlyout("Bitte wählen Sie eine Dienstbezeichnung aus.", false);
                 return;
             }
             try
@@ -276,13 +276,13 @@ namespace BGH_Kompakt.ViewModel.Userlogin
                 {
                     CurrenUser.PositionId= SelectedPosition.PositionId;
                     CurrenUser.Position = PositionList.Where(a => a.PositionId== CurrenUser.PositionId).FirstOrDefault();
-                    if (SelectedPosition.PositionId == 1)
-                    {
-                        CurrenUser.DienstbezeichnungId = SelectedDienstbezeichnung.DienstbezeichnungId;
-                        //Dienstbezeichnung dienstbezeichnung = DienstbezeichnungList.FirstOrDefault(d => d.DienstbezeichnungId == CurrenUser.DienstbezeichnungId);
-                        //if (dienstbezeichnung != null)
-                        //    CurrenUser.Dienstbezeichnung = dienstbezeichnung;
-                    }
+                    //if (SelectedPosition.PositionId == 1)
+                    //{
+                    //    //CurrenUser.DienstbezeichnungId = SelectedDienstbezeichnung.DienstbezeichnungId;
+                    //    //Dienstbezeichnung dienstbezeichnung = DienstbezeichnungList.FirstOrDefault(d => d.DienstbezeichnungId == CurrenUser.DienstbezeichnungId);
+                    //    //if (dienstbezeichnung != null)
+                    //    //    CurrenUser.Dienstbezeichnung = dienstbezeichnung;
+                    //}
                 }
                 if (SelectedStatus != null)
                 {

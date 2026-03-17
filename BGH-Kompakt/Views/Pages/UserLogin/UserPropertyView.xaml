@@ -178,9 +178,8 @@
                     </Grid.RowDefinitions>
                     <TextBlock
                         Grid.Row="0"
-                        Grid.ColumnSpan="3"
                         Style="{StaticResource Style_Textblock_Eingabefenster}"
-                        Text="Dienstbezeichnungen" />
+                        Text="Dienstbezeichnungen" Margin="0,0,0,6" VerticalAlignment="Bottom" />
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />

@@ -53,7 +53,7 @@
                 <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="User-Verwaltung" />
             </StackPanel>
         </Button>
-        <Button
+        <!--<Button
             x:Name="Btn_Besoldung"
             Click="OpenPageOnMain"
             Style="{StaticResource Button_Settings}">
@@ -64,7 +64,7 @@
                     Style="{StaticResource Button_Mainwindow_Image}" />
                 <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="R-Besoldung" />
             </StackPanel>
-        </Button>
+        </Button>-->
         <Button
             x:Name="Btn_ProgrammSettings"
             Click="OpenPageOnMain"
