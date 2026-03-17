@@ -61,6 +61,10 @@ namespace BGH_Kompakt.Views.Settings
                 {
                     CheckAdmin(2);
                 }
+                //else if (button == Btn_Besoldung)
+                //{
+                //    CheckAdmin(3);
+                //}
                 else if (button == Btn_ErrorArea)
                 {
                     ViewManager.ShowUnderPageOn<ErrorAreaView>(ViewManager.SettingView.AnimatedContentControl);

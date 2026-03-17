@@ -57,7 +57,7 @@ namespace BGH_Kompakt.Services.SystemComponents
                 }
                 PageInfo.TopPage = pageServices.Name;
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
 
                 MessageBox.Show(ex.Message);

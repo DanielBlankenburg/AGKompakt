@@ -1,4 +1,6 @@
 ﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
+using BGH_Kompakt.Classes.ActivityRequestClasses;
+using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
@@ -12,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BGH_Kompakt.ViewModel.Userlogin
@@ -21,13 +24,16 @@ namespace BGH_Kompakt.ViewModel.Userlogin
 
         public string Titel { get; set; }
 
-        public UserDBContext UserDBcontext = new UserDBContext();
+        public UserDBContext userDBcontext = new UserDBContext();
 
         public string Introduction { get; set; }
         public ICommand QuitCommand { get; set; }
         public ICommand SaveCommand { get; set; }
         public ICommand AddCommand { get; set; }
         public ICommand RemoveCommand { get; set; }
+        public ICommand NewUserDienstbezeichnungenCommand { get; set; }
+        public ICommand AddUserDienstbezeichnungenCommand { get; set; }
+        public ICommand DeleteUserDienstbezeichnungenCommand { get; set; }
 
 
         public User CurrenUser { get; set; }
@@ -36,7 +42,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         {
             get
             {
-                var tempList = new ObservableCollection<Titel>(UserDBcontext.Titel.ToList());
+                var tempList = new ObservableCollection<Titel>(userDBcontext.Titel.ToList());
                 SelectedTitel = tempList.FirstOrDefault(item => item.TitelId == CurrenUser.TitelId);
                 return tempList;
             }
@@ -46,7 +52,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         {
             get
             {
-                var tempList = new ObservableCollection<Geschlecht>(UserDBcontext.Geschlechter.ToList());
+                var tempList = new ObservableCollection<Geschlecht>(userDBcontext.Geschlechter.ToList());
                 SelectedGeschlecht = tempList.FirstOrDefault(item => item.GeschlechtID == CurrenUser.GeschlechtID);
                 return tempList;
             }
@@ -56,7 +62,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         {
             get
             {
-                var tempList = new ObservableCollection<Status>(UserDBcontext.Status.ToList());
+                var tempList = new ObservableCollection<Status>(userDBcontext.Status.ToList());
                 SelectedStatus = tempList.FirstOrDefault(item => item.StatusId== CurrenUser.StatusId);
                 return tempList;
             }
@@ -77,7 +83,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         {
             get
             {
-                var tempList = new ObservableCollection<Position>(UserDBcontext.Positions.ToList());
+                var tempList = new ObservableCollection<Position>(userDBcontext.Positions.ToList());
                 SelectedPosition = tempList.FirstOrDefault(item => item.PositionId== CurrenUser.PositionId);
                 return tempList;
             }
@@ -95,15 +101,15 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         {
             get
             {
-                UserDBContext UserDBcontext = new UserDBContext();
-                var tempList = new ObservableCollection<Dienstbezeichnung>(UserDBcontext.Dienstbezeichnungen.ToList());
-                SelectedDienstbezeichnung = tempList.FirstOrDefault(item => item.DienstbezeichnungId== CurrenUser.DienstbezeichnungId);
+                var tempList = new ObservableCollection<Dienstbezeichnung>(userDBcontext.Dienstbezeichnungen.ToList());
+                //SelectedDienstbezeichnung = tempList.FirstOrDefault(item => item.DienstbezeichnungId== CurrenUser.DienstbezeichnungId);
                 return tempList;
             }
         }
+        public ObservableCollection<UserDienstbezeichnung> UserDienstbezeichnungenList { get; set; }
 
-        private ObservableCollection<Senat> _SenatListAll = new ObservableCollection<Senat>();
-        private ObservableCollection<Senat> _SenatListUser = new ObservableCollection<Senat>();
+        private readonly ObservableCollection<Senat> _SenatListAll = new ObservableCollection<Senat>();
+        private readonly ObservableCollection<Senat> _SenatListUser = new ObservableCollection<Senat>();
 
         public ObservableCollection<Senat> SenatListAll { get { return _SenatListAll; } }
         private Senat _selectedSenatAll;
@@ -118,6 +124,12 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         {
             get { return _selectedSenatUser; }
             set { SetProperty(ref _selectedSenatUser, value); }
+        }
+        private UserDienstbezeichnung _SelectedUserDienstbezeichnung = new UserDienstbezeichnung();
+        public UserDienstbezeichnung SelectedUserDienstbezeichnung
+        {
+            get { return _SelectedUserDienstbezeichnung; }
+            set { SetProperty(ref _SelectedUserDienstbezeichnung, value); }
         }
 
         private bool _ShowDienstbezeichnung;
@@ -134,7 +146,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
 
             Introduction = $"Bitte ändern Sie {(ViewManager.PageInfo.UserSettingType == 0 ? "Ihre" : "die")} Nutzerdaten in den Feldern ab.";
             int UserID = ViewManager.PageInfo.UserSettingType == 0 ? UserManager.RegistratedUser.UserId : ViewManager.PageInfo.SelectedUser.UserId;
-            CurrenUser = UserDBcontext.Users.Where(a => a.UserId == UserID).Include(x => x.Senate).FirstOrDefault();
+            CurrenUser = userDBcontext.Users.Where(a => a.UserId == UserID).Include(x => x.Senate).FirstOrDefault();
             if (CurrenUser.Senate != null)
             {
                 foreach (var item in CurrenUser.Senate)
@@ -143,13 +155,78 @@ namespace BGH_Kompakt.ViewModel.Userlogin
                 }
             }
 
-            var Senat_Query = UserDBcontext.Senate;
+            var Senat_Query = userDBcontext.Senate;
             foreach (var item in Senat_Query) _SenatListAll.Add(item);
 
             QuitCommand = new RelayCommand(QuitExecute);
             SaveCommand = new RelayCommand(SaveExecute);
             AddCommand = new RelayCommand(AddExecute, AddCanExecute);
             RemoveCommand = new RelayCommand(RemoveExecute, RemoveCanExecute);
+            AddUserDienstbezeichnungenCommand = new RelayCommand(AddUserDienstbezeichnungenExecute);
+            NewUserDienstbezeichnungenCommand = new RelayCommand(NewUserDienstbezeichnungenExecute);
+            DeleteUserDienstbezeichnungenCommand = new RelayCommand(DeleteUserDienstbezeichnungenExecute);
+
+            FillUserDienstleistungen();
+        }
+
+        private void FillUserDienstleistungen()
+        {
+            var Query = userDBcontext.UserDienstbezeichnungen.Where(ud => ud.UserId == CurrenUser.UserId).Include(ud => ud.Dienstbezeichnung);
+            UserDienstbezeichnungenList = new ObservableCollection<UserDienstbezeichnung>();
+            foreach (var item in Query) UserDienstbezeichnungenList.Add(item);
+        }
+
+        private void DeleteUserDienstbezeichnungenExecute(object obj)
+        {
+            bool antwort = ViewManager.ShowQuestionWindow("Soll der Eintrag gelöscht werden?", "Ja");
+            if (antwort)
+            {
+                try
+                {
+                    UserDienstbezeichnung DeleteItem = userDBcontext.UserDienstbezeichnungen.FirstOrDefault(s => s.UserDienstbezeichnungId == SelectedUserDienstbezeichnung.UserDienstbezeichnungId);
+                    if (DeleteItem != null)
+                    {
+                        userDBcontext.UserDienstbezeichnungen.Remove(DeleteItem);
+                        userDBcontext.SaveChanges();
+                        UserDienstbezeichnungenList.Remove(SelectedUserDienstbezeichnung);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage.CreateExceptionWithFlyOutMessage("DeleteUserDienstbezeichnungenExecute", ex);
+                }
+            }
+
+        }
+
+        private void NewUserDienstbezeichnungenExecute(object obj)
+        {
+            SelectedUserDienstbezeichnung = new UserDienstbezeichnung();
+        }
+
+        private void AddUserDienstbezeichnungenExecute(object obj)
+        {
+            if ( SelectedUserDienstbezeichnung.GültigAb < new DateTime(2000, 1, 1))
+            {
+                ViewManager.ShowMainInfoFlyout("Das Datum muss größer als der 1. Januar 2020 sein.", false);
+                return;
+            }
+            if (SelectedUserDienstbezeichnung.Dienstbezeichnung  == null)
+            {
+                ViewManager.ShowMainInfoFlyout("Bitte wählen Sie eine Dienstbezeichnung aus.", false);
+                return;
+            }
+            try
+            {
+                UserDienstbezeichnung AddUserDienstbezeichnung = new UserDienstbezeichnung { Dienstbezeichnung = SelectedUserDienstbezeichnung.Dienstbezeichnung, GültigAb = SelectedUserDienstbezeichnung.GültigAb, User=CurrenUser};
+                userDBcontext.UserDienstbezeichnungen.AddOrUpdate(AddUserDienstbezeichnung);
+                userDBcontext.SaveChanges();
+                UserDienstbezeichnungenList.Add(AddUserDienstbezeichnung);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage.CreateExceptionWithFlyOutMessage("AddUserDienstbezeichnungenExecute", ex);
+            }
         }
 
         private bool RemoveCanExecute(object obj)
@@ -199,13 +276,13 @@ namespace BGH_Kompakt.ViewModel.Userlogin
                 {
                     CurrenUser.PositionId= SelectedPosition.PositionId;
                     CurrenUser.Position = PositionList.Where(a => a.PositionId== CurrenUser.PositionId).FirstOrDefault();
-                    if (SelectedPosition.PositionId == 1)
-                    {
-                        CurrenUser.DienstbezeichnungId = SelectedDienstbezeichnung.DienstbezeichnungId;
-                        //Dienstbezeichnung dienstbezeichnung = DienstbezeichnungList.FirstOrDefault(d => d.DienstbezeichnungId == CurrenUser.DienstbezeichnungId);
-                        //if (dienstbezeichnung != null)
-                        //    CurrenUser.Dienstbezeichnung = dienstbezeichnung;
-                    }
+                    //if (SelectedPosition.PositionId == 1)
+                    //{
+                    //    //CurrenUser.DienstbezeichnungId = SelectedDienstbezeichnung.DienstbezeichnungId;
+                    //    //Dienstbezeichnung dienstbezeichnung = DienstbezeichnungList.FirstOrDefault(d => d.DienstbezeichnungId == CurrenUser.DienstbezeichnungId);
+                    //    //if (dienstbezeichnung != null)
+                    //    //    CurrenUser.Dienstbezeichnung = dienstbezeichnung;
+                    //}
                 }
                 if (SelectedStatus != null)
                 {
@@ -226,9 +303,9 @@ namespace BGH_Kompakt.ViewModel.Userlogin
                 }
 
 
-                userSet = UserDBcontext.Set<User>();
+                userSet = userDBcontext.Set<User>();
                 userSet.AddOrUpdate(CurrenUser);
-                UserDBcontext.SaveChanges();
+                userDBcontext.SaveChanges();
                 ViewManager.ShowMainInfoFlyout("Die Änderungen wurden gespeichert", false);
                 if (ViewManager.PageInfo.UserSettingType == 0)
                 {

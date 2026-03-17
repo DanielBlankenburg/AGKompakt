@@ -1,9 +1,11 @@
 ﻿using BGH_Kompakt.Classes;
 using BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps;
 using BGH_Kompakt.Classes._LookUp.MP;
+using BGH_Kompakt.Classes._LookUp.UserLookUps;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.SystemSettings;
+using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Dtos;
 using BGH_Kompakt.Enums;
@@ -30,6 +32,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
         public ICommand SeedARCommand { get; set; }
         public ICommand TestPath { get; set; }
         public ICommand SaveSettings { get; set; }
+        public ICommand SeedDienstbezeichnungen { get; set; }
         public ProgrammSetting ProgrammSetting { get; set; }
         private readonly MPDBContext mpContext = new MPDBContext();
         private readonly UserDBContext userDBContext = new UserDBContext();
@@ -66,10 +69,33 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             TestPath = new RelayCommand(TestPathExecute);
             SeedARCommand = new RelayCommand(SeedARExecute);
             SaveSettings = new RelayCommand(SaveSettingsExecute);
+            SeedDienstbezeichnungen = new RelayCommand(SeedDienstbezeichnungenExecute);
 
             ProgrammSetting = userDBContext.ProgrammSettings.FirstOrDefault() ?? new ProgrammSetting();
             AnzeigeMontagspost = ProgrammSetting.MontagspostActivated;
             AnzeigeActivitRequests = ProgrammSetting.ActivityRequestActivated;
+        }
+
+        private void SeedDienstbezeichnungenExecute(object obj)
+        {
+            List<User> users = userDBContext.Users.ToList();
+            foreach (User user in users)
+            {
+                if (user.PositionId == 1)
+                {
+                    UserDienstbezeichnung userDienstbezeichnung = userDBContext.UserDienstbezeichnungen.FirstOrDefault(x => x.UserId == user.UserId);
+                    if (userDienstbezeichnung == null)
+                    {
+                        int dienstbezeichnung = (int)(user.Dienstbezeichnung != null ? user.DienstbezeichnungId : 1);
+                        userDienstbezeichnung = new UserDienstbezeichnung { User = user, 
+                                                                            DienstbezeichnungId = dienstbezeichnung,
+                                                                            GültigAb = new DateTime(2025,1,1)};
+                        userDBContext.UserDienstbezeichnungen.AddOrUpdate(userDienstbezeichnung);
+                    }
+                }
+            }
+
+            userDBContext.SaveChanges();
         }
 
         private void SaveSettingsExecute(object obj)

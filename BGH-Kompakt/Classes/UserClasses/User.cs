@@ -45,6 +45,7 @@ namespace BGH_Kompakt.Classes.UserClasses
         public IList<Senat> SenateAdmin { get; set; }
         public IList<AdminStatus> AdminStatus { get; set; }
         public IList<SenatSpruchgruppe> Spruchgruppen { get; set; }
+        public IList<UserDienstbezeichnung> UserDienstbezeichnungen { get; set; }
         public Drives? MPBSCW_Server_Drive { get; set; } = new Drives();
         public bool MPEMailNotification { get; set; } = false;
         public bool MPBSCWSubFolders { get; set; } = false;

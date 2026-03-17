@@ -139,6 +139,27 @@
                     </StackPanel>
                 </TabItem.Header>
             </TabItem>
+            <TabItem
+                x:Name="RBesoldung"
+                Style="{StaticResource TabItem_AR}"
+                Visibility="{Binding ShowAdmin, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TabItemHeaderTextTop_AR}" Text="R-Besoldung" />
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
+            <TabItem
+                x:Name="ReportMain"
+                Style="{StaticResource TabItem_AR}"
+                Visibility="{Binding ShowAdmin, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TabItemHeaderTextTop_AR}" Text="Bericht" />
+                        <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="erstellen" />
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
         </TabControl>
         <Border
             Grid.Row="2"

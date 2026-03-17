@@ -107,6 +107,12 @@ namespace BGH_Kompakt.Views
                  case "ClientEditor":
                     ViewManager.ShowUnderPageOn<NebentaetigkeitenClientEditorView>(AnimatedContentControl);
                     break;
+                 case "RBesoldung":
+                    ViewManager.ShowUnderPageOn<ActivityRequestsRBesoldungView>(AnimatedContentControl);
+                    break;
+                 case "ReportMain":
+                    ViewManager.ShowUnderPageOn<ActivityRequestsReportView>(AnimatedContentControl);
+                    break;
             }
             //Debug.WriteLine(tabItem);
             //ViewManager.ShowUnderPageOn<NebentaetigkeitenAnzeigeView>(AnimatedContentControl);

@@ -327,7 +327,11 @@
                                 IsExpanded="{Binding Anzeige_Art, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
-                                    <TextBlock Style="{StaticResource Textblock_Extender}" Text="Art" />
+                                    <TextBlock
+                                        Width="894"
+                                        HorizontalAlignment="Right"
+                                        Style="{StaticResource Textblock_Extender}"
+                                        Text="Art" />
                                 </Expander.Header>
                                 <StackPanel Style="{StaticResource ExtenderStackpanelAR}">
                                     <!--#region Meldeart; Visibility: true-->
@@ -1563,7 +1567,7 @@
                                 <TextBox
                                     MD:HintAssist.Hint="Betrag"
                                     Style="{StaticResource Textbox_Request}"
-                                    Text="{Binding AdventageAmount,  Mode=TwoWay,  StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding AdventageAmount, Mode=TwoWay, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock
                                     Style="{StaticResource Style_Textbox_Error}"
                                     Text="Bitte tragen Sie einen Wert ein"
@@ -1667,10 +1671,11 @@
                                                 Grid.Column="0"
                                                 Style="{StaticResource Textblock_Status}"
                                                 Text="{Binding Date, StringFormat={}{0:dd.MM.yyyy - HH:mm}, FallbackValue='-'}" />
-                                            <TextBlock TextWrapping="WrapWithOverflow"
+                                            <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource Textblock_Status}"
-                                                Text="{Binding ActivityRequestStatus.ActivityRequestStatusText, FallbackValue=''}" />
+                                                Text="{Binding ActivityRequestStatus.ActivityRequestStatusText, FallbackValue=''}"
+                                                TextWrapping="WrapWithOverflow" />
                                         </Grid>
                                     </Border>
                                 </DataTemplate>

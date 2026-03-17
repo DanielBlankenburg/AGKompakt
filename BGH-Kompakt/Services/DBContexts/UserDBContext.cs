@@ -13,6 +13,7 @@ using BGH_Kompakt.Classes.Sitzungsunterlagen;
 using System.Windows;
 using BGH_Kompakt.Migrartions.Users;
 using BGH_Kompakt.Classes.SystemSettings;
+using BGH_Kompakt.Classes.Helper;
 
 namespace BGH_Kompakt.Services.DBContexts
 {
@@ -33,6 +34,9 @@ namespace BGH_Kompakt.Services.DBContexts
         public DbSet<SenatSpruchgruppe> SenatSpruchgruppen { get; set; }
         public DbSet<VerfahrenVotenmappe> Votenmappe { get; set; }
         public DbSet<ProgrammSetting> ProgrammSettings { get; set; }
+        public DbSet<UserDienstbezeichnung> UserDienstbezeichnungen { get; set; }
+        public DbSet<RBesoldung> RBesoldungen { get; set; }
+        public DbSet<RBesoldungPayment> RBesoldungPayments{ get; set; }
         
 
 
@@ -51,6 +55,10 @@ namespace BGH_Kompakt.Services.DBContexts
                     .ToTable("Dienstbezeichnungen")
                     .Property(x => x.DienstbezeichnungText).IsRequired();
 
+                modelBuilder.Entity<Dienstbezeichnung>()
+                    .HasOptional(x => x.Besoldungsgruppe)
+                    .WithMany(x => x.Dienstbezeichnungen);
+
                 modelBuilder.Entity<Geschlecht>()
                     .ToTable("Geschlechter")
                     .Property(x => x.GeschlechtText).IsRequired();
@@ -68,7 +76,6 @@ namespace BGH_Kompakt.Services.DBContexts
                     .ToTable("Senate")
                     .HasRequired(x => x.Senatsetting)
                     .WithRequiredPrincipal(x => x.Senat);
-
 
                 modelBuilder.Entity<UserFilterMP>()
                     .ToTable("UserFilterMP");
@@ -90,14 +97,22 @@ namespace BGH_Kompakt.Services.DBContexts
                 modelBuilder.Entity<VerfahrenVotenmappe>()
                     .ToTable("Votenmappe");
 
+                modelBuilder.Entity<UserDienstbezeichnung>()
+                    .ToTable("UserDienstbezeichnungen")
+                    .HasRequired(x => x.Dienstbezeichnung)
+                    .WithMany(x => x.UserDienstbezeichnungen);
+
+                modelBuilder.Entity<RBesoldung>()
+                    .ToTable("RBesoldungen");
+
+                modelBuilder.Entity<RBesoldungPayment>()
+                    .HasRequired(x => x.RBesoldung)
+                    .WithMany(x => x.RBesoldungPayments);
 
                 modelBuilder.Configurations.Add(new UserConfiguration());
                 //base.OnModelCreating(modelBuilder);
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Zugriff auf die Datenbank MontagspostUser nicht möglich");
-            }
+            catch (Exception) { ErrorMessage.CreateExceptionWithFlyOutMessage("Fehler beim Zugriff auf die Datenbank MontagspostUser", new Exception("Fehler beim Zugriff auf die Datenbank MontagspostUser"));}
         }
     }
 }

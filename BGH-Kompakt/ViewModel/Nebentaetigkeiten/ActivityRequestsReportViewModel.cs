@@ -1,0 +1,349 @@
+﻿using BGH_Kompakt.Classes.ActivityRequestClasses;
+using BGH_Kompakt.Classes.Helper;
+using BGH_Kompakt.Classes.UserClasses;
+using BGH_Kompakt.Commands;
+using BGH_Kompakt.Services;
+using BGH_Kompakt.Services.SystemComponents;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+
+namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
+{
+    public partial class ActivityRequestsReportViewModel : ViewModelBase
+    {
+        private readonly ActivityRequestDBContext activityRequestDBContext = new ActivityRequestDBContext();
+
+        private const int MeldeArt_Anzeige = 1;
+        private const int MeldeArt_Genehmigung = 2;
+
+        private DateTime? _StartDate;
+        public DateTime? StartDate
+        {
+            get { return _StartDate; }
+            set { SetProperty(ref _StartDate, value); }
+        }
+        private DateTime? _EndDate;
+        public DateTime? EndDate
+        {
+            get { return _EndDate; }
+            set { SetProperty(ref _EndDate, value); }
+        }
+
+        public ICommand StartRequestCommand { get; set; }
+        public ICommand CollapseAllCommand { get; set; }
+        public ICommand CollapseAllARCommand { get; set; }
+        public ICommand ExpandAllCommand { get; set; }
+        public ICommand ExpandAllARCommand { get; set; }
+
+        private int _JudgeCount;
+        public int JudgeCount
+        {
+            get { return _JudgeCount; }
+            set { SetProperty(ref _JudgeCount, value); }
+        }
+        private int _AnzeigeCount;
+        public int AnzeigeCount
+        {
+            get { return _AnzeigeCount; }
+            set { SetProperty(ref _AnzeigeCount, value); }
+        }
+        private int _GenehmigungCount;
+        public int GenehmigungCount
+        {
+            get { return _GenehmigungCount; }
+            set { SetProperty(ref _GenehmigungCount, value); }
+        }
+
+        private int _AnzeigeHoursAverage;
+        public int AnzeigeHoursAverage
+        {
+            get { return _AnzeigeHoursAverage; }
+            set { SetProperty(ref _AnzeigeHoursAverage, value); }
+        }
+        private int _GenehmigungHoursAverage;
+        public int GenehmigungHoursAverage
+        {
+            get { return _GenehmigungHoursAverage; }
+            set { SetProperty(ref _GenehmigungHoursAverage, value); }
+        }
+        private int _AnzeigeHoursMax;
+        public int AnzeigeHoursMax
+        {
+            get { return _AnzeigeHoursMax; }
+            set { SetProperty(ref _AnzeigeHoursMax, value); }
+        }
+        private int _GenehmigungHoursMax;
+        public int GenehmigungHoursMax
+        {
+            get { return _GenehmigungHoursMax; }
+            set { SetProperty(ref _GenehmigungHoursMax, value); }
+        }
+
+        private int _AnzeigeAmountAverage;
+        public int AnzeigeAmountAverage
+        {
+            get { return _AnzeigeAmountAverage; }
+            set { SetProperty(ref _AnzeigeAmountAverage, value); }
+        }
+        private int _GenehmigungAmountAverage;
+        public int GenehmigungAmountAverage
+        {
+            get { return _GenehmigungAmountAverage; }
+            set { SetProperty(ref _GenehmigungAmountAverage, value); }
+        }
+        private int _AnzeigeAmountMax;
+        public int AnzeigeAmountMax
+        {
+            get { return _AnzeigeAmountMax; }
+            set { SetProperty(ref _AnzeigeAmountMax, value); }
+        }
+        private int _GenehmigungAmountMax;
+        public int GenehmigungAmountMax
+        {
+            get { return _GenehmigungAmountMax; }
+            set { SetProperty(ref _GenehmigungAmountMax, value); }
+        }
+
+        private int _AnzeigeSingleAmountMax;
+        public int AnzeigeSingleAmountMax
+        {
+            get { return _AnzeigeSingleAmountMax; }
+            set { SetProperty(ref _AnzeigeSingleAmountMax, value); }
+        }
+        private int _GenehmigungSingleAmountMax;
+        public int GenehmigungSingleAmountMax
+        {
+            get { return _GenehmigungSingleAmountMax; }
+            set { SetProperty(ref _GenehmigungSingleAmountMax, value); }
+        }
+
+        private List<ClientTypeRequestCount> _RequestsByClient = new List<ClientTypeRequestCount>();
+        public List<ClientTypeRequestCount> RequestsByClient
+        {
+            get { return _RequestsByClient; }
+            set { SetProperty(ref _RequestsByClient, value); }
+        }
+
+        private List<UserRequestGroup> _RequestsByUser = new List<UserRequestGroup>();
+        public List<UserRequestGroup> RequestsByUser
+        {
+            get { return _RequestsByUser; }
+            set { SetProperty(ref _RequestsByUser, value); }
+        }
+
+        private bool _ShowReport = false;
+        public bool ShowReport
+        {
+            get { return _ShowReport; }
+            set { SetProperty(ref _ShowReport, value); }
+        }
+        private bool _IsExpanded = false;
+        public bool IsExpanded
+        {
+            get { return _IsExpanded; }
+            set { SetProperty(ref _IsExpanded, value); }
+        }
+        private bool _IsExpandedReport = true;
+        public bool IsExpandedReport
+        {
+            get { return _IsExpandedReport; }
+            set { SetProperty(ref _IsExpandedReport, value); }
+        }
+
+        public ActivityRequestsReportViewModel()
+        {
+            StartRequestCommand = new RelayCommand(StartRequestExecute);
+            ExpandAllCommand = new RelayCommand(ExpandAllExcute);
+            ExpandAllARCommand = new RelayCommand(ExpandARExcute);
+            CollapseAllCommand = new RelayCommand(CollapseAllRequestExecute);
+            CollapseAllARCommand = new RelayCommand(CollapseARRequestExecute);
+
+            StartDate = new DateTime(2025, 1, 1);
+            EndDate = DateTime.Now;
+        }
+
+        private void CollapseARRequestExecute(object obj)
+        {
+            IsExpanded = false;
+        }
+
+        private void ExpandARExcute(object obj)
+        {
+            IsExpanded = true;
+        }
+
+        private void CollapseAllRequestExecute(object obj)
+        {
+            IsExpandedReport = false;
+        }
+
+        private void ExpandAllExcute(object obj)
+        {
+            IsExpandedReport = true;
+        }
+
+        private void StartRequestExecute(object obj)
+        {
+            try
+            {
+                if (!ValidateDates(out var start, out var end))
+                    return;
+
+                var requests = LoadRequests(start, end);
+
+                if (requests == null || requests.Count == 0)
+                {
+                    ViewManager.ShowMainInfoFlyout("Für den Zeitraum konnten keine Nebentätigkeiten gefunden werden", false);
+                    return;
+                }
+
+                ComputeCounts(requests);
+                ComputeAggregates(requests);
+
+                RequestsByClient = BuildRequestsByClient(requests);
+                RequestsByUser = BuildRequestsByUser(requests, null);
+
+                AnzeigeAmountMax = BuildRequestsByUser(requests, MeldeArt_Anzeige).DefaultIfEmpty().Max(x => x?.TotalAmount ?? 0);
+                GenehmigungAmountMax = BuildRequestsByUser(requests, MeldeArt_Genehmigung).DefaultIfEmpty().Max(x => x?.TotalAmount ?? 0);
+
+                ShowReport = true;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage.CreateExceptionWithFlyOutMessage("StartRequestExecute", ex);
+            }
+        }
+
+        private bool ValidateDates(out DateTime start, out DateTime end)
+        {
+            start = default;
+            end = default;
+
+            if (StartDate == null || EndDate == null)
+            {
+                ViewManager.ShowMainInfoFlyout("Bitte wählen Sie ein Start und Enddatum aus", false);
+                return false;
+            }
+
+            start = StartDate.Value;
+            end = EndDate.Value;
+
+            if (start >= end)
+            {
+                ViewManager.ShowMainInfoFlyout("Das Startdatum muss kleiner als das Enddatum sein.", false);
+                return false;
+            }
+            return true;
+        }
+
+        private List<ActivityRequest> LoadRequests(DateTime start, DateTime end)
+        {
+            return activityRequestDBContext.ActivityRequests
+                .Where(x => x.ARDatum >= start && x.ARDatum <= end)
+                .Include(x => x.ActivityClient)
+                .Include(x => x.ActivityClient.ActivityClientTyp)
+                .ToList();
+        }
+
+        private void ComputeCounts(List<ActivityRequest> requests)
+        {
+            AnzeigeCount = requests.Count(x => x.ActivityRequestMeldeArtID == MeldeArt_Anzeige);
+            GenehmigungCount = requests.Count(x => x.ActivityRequestMeldeArtID == MeldeArt_Genehmigung);
+
+            var users = requests
+                .Where(r => r.ARUser != null)
+                .Select(r => r.ARUser.UserId)
+                .Distinct()
+                .Count();
+
+            JudgeCount = users;
+        }
+
+        private void ComputeAggregates(List<ActivityRequest> requests)
+        {
+            var anzeigen = requests.Where(x => x.ActivityRequestMeldeArtID == MeldeArt_Anzeige).ToList();
+            var genehmigungen = requests.Where(x => x.ActivityRequestMeldeArtID == MeldeArt_Genehmigung).ToList();
+
+            AnzeigeHoursMax = anzeigen.Count > 0 ? (int)anzeigen.Max(x => x.Gesamtzeitaufwand) : 0;
+            GenehmigungHoursMax = genehmigungen.Count > 0 ? (int)genehmigungen.Max(x => x.Gesamtzeitaufwand) : 0;
+            AnzeigeHoursAverage = anzeigen.Count > 0 ? (int)anzeigen.Average(x => x.Gesamtzeitaufwand) : 0;
+            GenehmigungHoursAverage = genehmigungen.Count > 0 ? (int)genehmigungen.Average(x => x.Gesamtzeitaufwand) : 0;
+
+            AnzeigeAmountAverage = anzeigen.Count > 0 ? (int)anzeigen.Average(x => x.Gesamtverguetung) : 0;
+            GenehmigungAmountAverage = genehmigungen.Count > 0 ? (int)genehmigungen.Average(x => x.Gesamtverguetung) : 0;
+            AnzeigeSingleAmountMax = anzeigen.Count > 0 ? (int)anzeigen.Max(x => x.Gesamtverguetung) : 0;
+            GenehmigungSingleAmountMax = genehmigungen.Count > 0 ? (int)genehmigungen.Max(x => x.Gesamtverguetung) : 0;
+        }
+
+        private List<ClientTypeRequestCount> BuildRequestsByClient(List<ActivityRequest> requests)
+        {
+            var groupedByClientType = requests
+                .GroupBy(r => r.ActivityClient?.ActivityClientTyp?.ActivityClientTypText ?? "Unbekannt")
+                .Select(g => new ClientTypeRequestCount
+                {
+                    TypeName = g.Key,
+                    Clients = g
+                        .GroupBy(r2 => r2.ActivityClient?.ACName ?? "Unbekannt")
+                        .Select(gc => new ClientRequestCount { ClientName = gc.Key, Count = gc.Count() })
+                        .OrderByDescending(c => c.Count)
+                        .ToList()
+                })
+                .OrderByDescending(ct => ct.Clients.Sum(c => c.Count))
+                .ToList();
+
+            return groupedByClientType;
+        }
+
+        private List<UserRequestGroup> BuildRequestsByUser(List<ActivityRequest> requests, int? meldeArtId)
+        {
+            var filtered = meldeArtId.HasValue
+                ? requests.Where(r => r.ARUser != null && r.ActivityRequestMeldeArtID == meldeArtId.Value)
+                : requests.Where(r => r.ARUser != null);
+
+            var groupedUsers = filtered
+                .GroupBy(r => new { r.ARUser.UserId, Name = r.ARUser.Fullname })
+                .Select(g => new UserRequestGroup
+                {
+                    UserId = g.Key.UserId,
+                    UserName = g.Key.Name,
+                    RequestCount = g.Count(),
+                    Requests = g.OrderByDescending(r => r.ARDatum).ToList()
+                })
+                .OrderByDescending(ug => ug.RequestCount)
+                .ToList();
+
+            return groupedUsers;
+        }
+
+    }
+
+    public class ClientRequestCount
+    {
+        public string ClientName { get; set; } = string.Empty;
+        public int Count { get; set; }
+    }
+
+    public class ClientTypeRequestCount
+    {
+        public string TypeName { get; set; } = string.Empty;
+        public List<ClientRequestCount> Clients { get; set; } = new List<ClientRequestCount>();
+        public int ClientCount => Clients?.Count ?? 0;
+        public int TotalRequests => Clients?.Sum(c => c.Count) ?? 0;
+    }
+
+    public class UserRequestGroup
+    {
+        public int UserId { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public int RequestCount { get; set; }
+        public List<ActivityRequest> Requests { get; set; } = new List<ActivityRequest>();
+
+        public int TotalHours => Requests?.Where(r => r.Gesamtzeitaufwand != null).Sum(r => (int)r.Gesamtzeitaufwand) ?? 0;
+        public int TotalAmount => Requests?.Where(r => r.Gesamtverguetung != null).Sum(r => (int)r.Gesamtverguetung) ?? 0;
+    }
+}
