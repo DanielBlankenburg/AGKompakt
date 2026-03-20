@@ -148,8 +148,14 @@
                 DockPanel.Dock="Bottom"
                 Style="{StaticResource Style_Border_Color}">
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical">
-                    <TextBlock TextWrapping="WrapWithOverflow" Style="{StaticResource Style_Version}" Text="Verfasser: RiAG Dr. Blankenburg" />
-                    <TextBlock TextWrapping="WrapWithOverflow" Style="{StaticResource Style_Version}" Text="{Binding Version, FallbackValue=Version}" />
+                    <TextBlock
+                        Style="{StaticResource Style_Version}"
+                        Text="Verfasser: RiAG Dr. Blankenburg"
+                        TextWrapping="WrapWithOverflow" />
+                    <TextBlock
+                        Style="{StaticResource Style_Version}"
+                        Text="{Binding Version, FallbackValue=Version}"
+                        TextWrapping="WrapWithOverflow" />
                     <Button
                         x:Name="Test"
                         Click="Test_Click"

@@ -56,6 +56,10 @@ namespace BGH_Kompakt.EntityConfigurations
             HasMany(x => x.Spruchgruppen)
             .WithMany(x => x.Members)
             .Map(m => m.ToTable("Spruchgruppenmitglieder"));
+
+            HasMany(x => x.UserDienstbezeichnungen)
+                .WithRequired(x => x.User)
+                .HasForeignKey(x => x.UserId);
         }
     }
 }

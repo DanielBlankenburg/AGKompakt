@@ -201,11 +201,14 @@
     <Compile Include="Classes\SystemSettings\PageInfo.cs" />
     <Compile Include="Classes\Test\FileData.cs" />
     <Compile Include="Classes\Test\TestItem.cs" />
+    <Compile Include="Classes\UserClasses\UserDienstbezeichnung.cs" />
     <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestStatus.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestStatusHistory.cs" />
     <Compile Include="Classes\_LookUp\MP\MPEMail.cs" />
     <Compile Include="Classes\_LookUp\MP\MPSetting.cs" />
     <Compile Include="Classes\_LookUp\MP\MPVermerk.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\RBesoldung.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\RBesoldungPayment.cs" />
     <Compile Include="Converter\BoolToWidthConverter.cs" />
     <Compile Include="Converter\RadioBoolToIntConverter.cs" />
     <Compile Include="Dtos\EMailResponse.cs" />
@@ -321,6 +324,10 @@
     <Compile Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.cs" />
     <Compile Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.Designer.cs">
       <DependentUpon>202509280718402_Spruchgruppenmitglieder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202603071251038_InitialPayments.cs" />
+    <Compile Include="Migrartions\Users\202603071251038_InitialPayments.Designer.cs">
+      <DependentUpon>202603071251038_InitialPayments.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\ActivityRequestService\ActivityRequestManager.cs" />
     <Compile Include="Services\Extentions\DirectoryInfoExtensions.cs" />
@@ -495,6 +502,8 @@
     <Compile Include="ViewModel\Montagspost\MontagsPostSettingsViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostVermerkViewModel.cs" />
     <Compile Include="ViewModel\Montagspost\MontagsPostViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsRBesoldungViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsReportViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetgkeitenViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenAnzeigeViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenClientEditorViewModel.cs" />
@@ -517,6 +526,12 @@
     <Compile Include="ViewModel\Userlogin\UserPropertyViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\VotenViewModel.cs" />
+    <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsRBesoldungView.xaml.cs">
+      <DependentUpon>ActivityRequestsRBesoldungView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml.cs">
+      <DependentUpon>ActivityRequestsReportView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenClientEditorView.xaml.cs">
       <DependentUpon>NebentaetigkeitenClientEditorView.xaml</DependentUpon>
     </Compile>
@@ -635,6 +650,14 @@
       <DependentUpon>PreviewEMail.xaml</DependentUpon>
     </Compile>
     <Page Include="Components\AnimatedContentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityRequests\ActivityRequestsRBesoldungView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1033,6 +1056,9 @@
     <EmbeddedResource Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.resx">
       <DependentUpon>202509280718402_Spruchgruppenmitglieder.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202603071251038_InitialPayments.resx">
+      <DependentUpon>202603071251038_InitialPayments.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -1228,6 +1254,11 @@
     <SplashScreen Include="Resources\ImageResources\Images\Splashscreen.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </SplashScreen>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ImageResources\Images\Besoldung.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />

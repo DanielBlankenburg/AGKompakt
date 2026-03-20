@@ -189,6 +189,11 @@ namespace BGH_Kompakt
             iServiceColletion.AddTransient<MontagsPostEditorView>();
             iServiceColletion.AddTransient<MontagsPostEditorViewModel>();
 
+            iServiceColletion.AddTransient<ActivityRequestsRBesoldungView>();
+            iServiceColletion.AddTransient<ActivityRequestsRBesoldungViewModel>();
+            iServiceColletion.AddTransient<ActivityRequestsReportView>();
+            iServiceColletion.AddTransient<ActivityRequestsReportViewModel>();
+
 
 
 

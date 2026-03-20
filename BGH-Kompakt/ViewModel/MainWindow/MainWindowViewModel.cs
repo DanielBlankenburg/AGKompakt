@@ -154,11 +154,75 @@ namespace BGH_Kompakt.ViewModel.MainWindow
             try
             {
                 #region SeedUser
+                //Seed Besoldungsgruppen
+                List<String> ListRB = new List<String> { "R6", "R8", "R9", "R10" };
+                foreach (string suchText in ListRB)
+                {
+                    if (userContext.RBesoldungen.FirstOrDefault(x => x.Name == suchText) == null)
+                        userContext.RBesoldungen.AddOrUpdate(a => a.Name, new RBesoldung { Name = suchText });
+                }
+                userContext.SaveChanges();
+
+                string[,] ListPayments = {
+                    { "R6", "11372,62" },
+                    { "R8", "12548,95" },
+                    { "R9", "13294,99" },
+                    { "R10", "15612,33" }
+                };
+                AddPayments(new DateTime(2024, 1, 4), ListPayments);
+
+                string[,] ListPayments2 = {
+                    { "R6", "11713,81" },
+                    { "R8", "12925,42" },
+                    { "R9", "13693,84" },
+                    { "R10", "16566,89" }
+                };
+                AddPayments(new DateTime(2025, 1, 4), ListPayments2);
+
+                string[,] ListPayments3 = {
+                    { "R6", "12041,80" },
+                    { "R8", "13287,33" },
+                    { "R9", "14077,27" },
+                    { "R10", "16530,96" }
+                };
+                AddPayments(new DateTime(2026, 1, 4), ListPayments3);
+
                 //Seed Dienstbezeichnung
                 foreach (UserEnums.EnumDienstbezeichnungen val in Enum.GetValues(typeof(UserEnums.EnumDienstbezeichnungen))) 
                 {
                     if (userContext.Dienstbezeichnungen.FirstOrDefault(x => x.DienstbezeichnungText == val.ToString()) == null)
                         userContext.Dienstbezeichnungen.AddOrUpdate(a => a.DienstbezeichnungText, new Dienstbezeichnung { DienstbezeichnungText = val.ToString()});
+                }
+
+                List<Dienstbezeichnung> dienstbezeichnungListe = userContext.Dienstbezeichnungen.ToList();
+                if (dienstbezeichnungListe.Count > 0)
+                {
+                    foreach (Dienstbezeichnung item in dienstbezeichnungListe)
+                    {
+                        if (item.Besoldungsgruppe == null)
+                        {
+                            try
+                            {
+                                if (item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.RiBGH.ToString() || item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.RinBGH.ToString())
+                                {
+                                    item.Besoldungsgruppe = userContext.RBesoldungen.FirstOrDefault(x => x.Name == "R6");
+                                }
+                                else if (item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VRiBGH.ToString() || item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VRinBGH.ToString())
+                                {
+                                    item.Besoldungsgruppe = userContext.RBesoldungen.FirstOrDefault(x => x.Name == "R8");
+                                }
+                                else if (item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.PräsBGH.ToString() || item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.PräsinBGH.ToString())
+                                {
+                                    item.Besoldungsgruppe = userContext.RBesoldungen.FirstOrDefault(x => x.Name == "R10");
+                                }
+                                else if (item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VPräsBGH.ToString() || item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VPräsinBGH.ToString())
+                                {
+                                    item.Besoldungsgruppe = userContext.RBesoldungen.FirstOrDefault(x => x.Name == "R9");
+                                }
+                            }
+                            catch (Exception ex) { ErrorMessage.CreateExceptionWithoutMessage("MainWindowViewModel - SeedUserDB - Dienstbezeichnung Besoldungsgruppe", ex); }
+                        }
+                    }
                 }
 
                 //Seed Geschlecht
@@ -298,6 +362,22 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 Logger.WriteLog($"logTime: {DateTime.Now}; Es konnte folgender Fehler beim Füllen der User-Werte aufgetreten: {ex.Message}.");
             }
         }
+
+        private void AddPayments(DateTime dateTime, string[,] listPayments)
+        {
+            for (int i = 0; i < listPayments.GetLength(0); i++)
+            {
+                string suchText = listPayments[i, 0];
+                RBesoldung rBesoldung = userContext.RBesoldungen.FirstOrDefault(x => x.Name == suchText);
+                if (userContext.RBesoldungPayments.FirstOrDefault(x => x.RBesoldung.id == rBesoldung.id && x.Start == dateTime) == null)
+                {
+                    RBesoldungPayment rBesoldungPayment = new RBesoldungPayment { Start = dateTime, PaymentValue = decimal.Parse(listPayments[i, 1]), RBesoldung = rBesoldung };
+                    userContext.RBesoldungPayments.AddOrUpdate(rBesoldungPayment);
+                }
+            }
+            userContext.SaveChanges();
+        }
+
         public void SenatListFill(User RegistratedUser)
         {
             if (RegistratedUser.Senate.Count > 0)
