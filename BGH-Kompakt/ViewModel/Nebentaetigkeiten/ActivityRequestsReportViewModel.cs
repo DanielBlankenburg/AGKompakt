@@ -1,4 +1,5 @@
-﻿using BGH_Kompakt.Classes.ActivityRequestClasses;
+﻿using BGH_Kompakt.Classes._LookUp.ActivityRequestLookUps;
+using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
@@ -121,6 +122,18 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             get { return _GenehmigungSingleAmountMax; }
             set { SetProperty(ref _GenehmigungSingleAmountMax, value); }
         }
+        private ARHourAmountProportion _AnzeigeProportion;
+        public ARHourAmountProportion AnzeigeProportion
+        {
+            get { return _AnzeigeProportion; }
+            set { SetProperty(ref _AnzeigeProportion, value); }
+        }
+        private ARHourAmountProportion _GenehmigungProportion;
+        public ARHourAmountProportion GenehmigungProportion
+        {
+            get { return _GenehmigungProportion; }
+            set { SetProperty(ref _GenehmigungProportion, value); }
+        }
 
         private List<ClientTypeRequestCount> _RequestsByClient = new List<ClientTypeRequestCount>();
         public List<ClientTypeRequestCount> RequestsByClient
@@ -136,6 +149,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             set { SetProperty(ref _RequestsByUser, value); }
         }
 
+        #region Show variables
         private bool _ShowReport = false;
         public bool ShowReport
         {
@@ -148,12 +162,62 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             get { return _IsExpanded; }
             set { SetProperty(ref _IsExpanded, value); }
         }
-        private bool _IsExpandedReport = true;
-        public bool IsExpandedReport
+        private bool _IsExpandedReport1 = true;
+        public bool IsExpandedReport1
         {
-            get { return _IsExpandedReport; }
-            set { SetProperty(ref _IsExpandedReport, value); }
+            get { return _IsExpandedReport1; }
+            set { SetProperty(ref _IsExpandedReport1, value); }
         }
+        private bool _IsExpandedReport2 = true;
+        public bool IsExpandedReport2
+        {
+            get { return _IsExpandedReport2; }
+            set { SetProperty(ref _IsExpandedReport2, value); }
+        }
+        private bool _IsExpandedReport3 = true;
+        public bool IsExpandedReport3
+        {
+            get { return _IsExpandedReport3; }
+            set { SetProperty(ref _IsExpandedReport3, value); }
+        }
+        private bool _IsExpandedReport4 = true;
+        public bool IsExpandedReport4
+        {
+            get { return _IsExpandedReport4; }
+            set { SetProperty(ref _IsExpandedReport4, value); }
+        }
+        private bool _IsExpandedReport5 = true;
+        public bool IsExpandedReport5
+        {
+            get { return _IsExpandedReport5; }
+            set { SetProperty(ref _IsExpandedReport5, value); }
+        }
+        private bool _IsExpandedReport6 = true;
+        public bool IsExpandedReport6
+        {
+            get { return _IsExpandedReport6; }
+            set { SetProperty(ref _IsExpandedReport6, value); }
+        }
+        private bool _IsExpandedReport7 = true;
+        public bool IsExpandedReport7
+        {
+            get { return _IsExpandedReport7; }
+            set { SetProperty(ref _IsExpandedReport7, value); }
+        }
+        private bool _IsExpandedReport8 = true;
+        public bool IsExpandedReport8
+        {
+            get { return _IsExpandedReport8; }
+            set { SetProperty(ref _IsExpandedReport8, value); }
+        }
+        private bool _IsExpandedReport9 = true;
+        public bool IsExpandedReport9
+        {
+            get { return _IsExpandedReport9; }
+            set { SetProperty(ref _IsExpandedReport9, value); }
+        }
+
+        #endregion
 
         public ActivityRequestsReportViewModel()
         {
@@ -179,12 +243,28 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
 
         private void CollapseAllRequestExecute(object obj)
         {
-            IsExpandedReport = false;
+            IsExpandedReport1 = false;
+            IsExpandedReport2 = false;
+            IsExpandedReport3 = false;
+            IsExpandedReport4 = false;
+            IsExpandedReport5 = false;
+            IsExpandedReport6 = false;
+            IsExpandedReport7 = false;
+            IsExpandedReport8 = false;
+            IsExpandedReport9 = false;
         }
 
         private void ExpandAllExcute(object obj)
         {
-            IsExpandedReport = true;
+            IsExpandedReport1 = true;
+            IsExpandedReport2 = true;
+            IsExpandedReport3 = true;
+            IsExpandedReport4 = true;
+            IsExpandedReport5 = true;
+            IsExpandedReport6 = true;
+            IsExpandedReport7 = true;
+            IsExpandedReport8 = true;
+            IsExpandedReport9 = true;
         }
 
         private void StartRequestExecute(object obj)
@@ -243,11 +323,18 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
 
         private List<ActivityRequest> LoadRequests(DateTime start, DateTime end)
         {
-            return activityRequestDBContext.ActivityRequests
-                .Where(x => x.ARDatum >= start && x.ARDatum <= end)
+            var query = activityRequestDBContext.ActivityRequests
+                .Where(x => x.ARDatum >= start && x.ARDatum <= end && x.ARZustaendigkeitsbereich > 1)
                 .Include(x => x.ActivityClient)
                 .Include(x => x.ActivityClient.ActivityClientTyp)
                 .ToList();
+            List<ActivityRequest> judgeList = new List<ActivityRequest>();
+            foreach (ActivityRequest request in query)
+            {
+                if (request.ARUser.PositionId == 1) judgeList.Add(request);
+            }
+            return judgeList;
+
         }
 
         private void ComputeCounts(List<ActivityRequest> requests)
@@ -278,6 +365,15 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             GenehmigungAmountAverage = genehmigungen.Count > 0 ? (int)genehmigungen.Average(x => x.Gesamtverguetung) : 0;
             AnzeigeSingleAmountMax = anzeigen.Count > 0 ? (int)anzeigen.Max(x => x.Gesamtverguetung) : 0;
             GenehmigungSingleAmountMax = genehmigungen.Count > 0 ? (int)genehmigungen.Max(x => x.Gesamtverguetung) : 0;
+
+            AnzeigeProportion = FindMaxProportion(anzeigen);
+            GenehmigungProportion = FindMaxProportion(genehmigungen);
+        }
+
+        private ARHourAmountProportion FindMaxProportion(List<ActivityRequest> list)
+        {
+            var query = list.OrderByDescending(x => x.HourAmountProportion.Proportion).First();
+            return query.HourAmountProportion;
         }
 
         private List<ClientTypeRequestCount> BuildRequestsByClient(List<ActivityRequest> requests)

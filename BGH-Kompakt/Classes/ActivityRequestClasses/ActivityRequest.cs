@@ -91,6 +91,8 @@ namespace BGH_Kompakt.Classes.ActivityRequestClasses
         public Single? Gesamtzeitaufwand { get {return ARZeitaufwandMain + ARZeitaufwandPrep;}}
         [NotMapped]
         public decimal Gesamtverguetung { get { return ARVerguetung + (ARVerguetungAdventages != null ? ARVerguetungAdventages.Sum(a => a.ARVerguetungAdventageAmount) : 0); } }
+        [NotMapped]
+        public ARHourAmountProportion HourAmountProportion => new ARHourAmountProportion { Amount = Gesamtverguetung, Hours = Gesamtzeitaufwand ?? 0, Proportion = (Single)Gesamtverguetung / Gesamtzeitaufwand ?? 0 };
 
         public User? ARUser
         {

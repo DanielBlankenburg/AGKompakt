@@ -204,6 +204,7 @@
     <Compile Include="Classes\UserClasses\UserDienstbezeichnung.cs" />
     <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestStatus.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestStatusHistory.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ARHourAmountProportion.cs" />
     <Compile Include="Classes\_LookUp\MP\MPEMail.cs" />
     <Compile Include="Classes\_LookUp\MP\MPSetting.cs" />
     <Compile Include="Classes\_LookUp\MP\MPVermerk.cs" />
