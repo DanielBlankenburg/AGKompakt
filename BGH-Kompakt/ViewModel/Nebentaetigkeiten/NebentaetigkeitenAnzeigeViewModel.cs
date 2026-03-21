@@ -1195,7 +1195,8 @@ namespace BGH_Kompakt.ViewModel
         private bool FuncShowChanges()
         {
             if (ActivityRequestManager.SelectedActivityRequest == null) return true;
-            if (ActivityRequestManager.LoginType == 1 && ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich > 1) return false;
+            //Vermerk: Es wird ermöglicht, dass die Anwender jederzeit den Antrag ändern können (21.03.2026)
+            //if (ActivityRequestManager.LoginType == 1 && ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich > 1) return false;
             return true;
         }
         private void SetExecutes()

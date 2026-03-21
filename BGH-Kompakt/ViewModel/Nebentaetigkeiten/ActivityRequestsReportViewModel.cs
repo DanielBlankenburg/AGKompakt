@@ -366,8 +366,8 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             AnzeigeSingleAmountMax = anzeigen.Count > 0 ? (int)anzeigen.Max(x => x.Gesamtverguetung) : 0;
             GenehmigungSingleAmountMax = genehmigungen.Count > 0 ? (int)genehmigungen.Max(x => x.Gesamtverguetung) : 0;
 
-            AnzeigeProportion = FindMaxProportion(anzeigen);
-            GenehmigungProportion = FindMaxProportion(genehmigungen);
+            AnzeigeProportion = anzeigen.Count > 0 ? FindMaxProportion(anzeigen) : null;
+            GenehmigungProportion = genehmigungen.Count > 0 ? FindMaxProportion(genehmigungen): null;
         }
 
         private ARHourAmountProportion FindMaxProportion(List<ActivityRequest> list)

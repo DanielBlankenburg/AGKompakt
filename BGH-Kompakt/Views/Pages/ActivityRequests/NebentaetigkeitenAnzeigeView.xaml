@@ -328,9 +328,8 @@
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
                                     <TextBlock
-                                        Width="894"
-                                        HorizontalAlignment="Right"
-                                        Style="{StaticResource Textblock_Extender}"
+                                        FontSize="15"
+                                        FontWeight="Bold"
                                         Text="Art" />
                                 </Expander.Header>
                                 <StackPanel Style="{StaticResource ExtenderStackpanelAR}">
