@@ -187,6 +187,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AttchedProperties\WebBrowserBehaviors.cs" />
+    <Compile Include="Classes\ActivityRequestClasses\AcivityRequestChangesDetections.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestChangeHistory.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestComment.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestDataFile.cs" />

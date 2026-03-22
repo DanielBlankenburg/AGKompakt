@@ -515,7 +515,7 @@
                         Style="{StaticResource Button_Master}" />
                     <Button
                         Width="170"
-                        Command="{Binding CollapseAllARCommand}"
+                        Command="{Binding CreateReportCommand}"
                         Style="{StaticResource Button_Master}"
                         ToolTip="Bericht erstellen">
                         <StackPanel Orientation="Horizontal">
