@@ -570,14 +570,19 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                 {
                     try
                     {
+                        string R = $"R{i}";
                         var payment = userDBContext.RBesoldungPayments
-                        .Where(p => p.RBesoldung.Name == $"R{i}" && p.Start <= StartDate)
+                        .Where(p => p.RBesoldung.Name == R && p.Start <= StartDate)
+                        .Include(x => x.RBesoldung)
                         .OrderByDescending(p => p.Start)
                         .FirstOrDefault();
-                        decimal limit = payment.PaymentValue;
-                        limits.Add(new PaymentLimit { Id = payment.RBesoldung.id, Besoldungsgruppe = $"R{i}", Limit = limit });
+                        if (payment != null)
+                        {
+                            decimal limit = payment.PaymentValue * 12;
+                            limits.Add(new PaymentLimit { Id = payment.RBesoldung.id, Besoldungsgruppe = $"R{i}", Limit = limit });
+                        }
                     }
-                    catch (Exception) {}
+                    catch (Exception ex) { ErrorMessage.CreateExceptionWithoutMessage("SetPaymentLimits", ex); }
                 }
             }
             return limits;

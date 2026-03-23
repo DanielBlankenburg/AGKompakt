@@ -482,22 +482,22 @@
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis" />
+                                    Text="{Binding ExceedR6}" />
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis 2" />
+                                    Text="{Binding ExceedR8}" />
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis 3" />
+                                    Text="{Binding ExceedR9}" />
                                 <TextBlock
                                     Grid.Row="3"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis 4" />
+                                    Text="{Binding ExceedR10}" />
                             </Grid>
                         </Expander>
                     </MD:Card>
