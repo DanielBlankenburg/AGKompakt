@@ -1562,7 +1562,7 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                             case "BGHKompaktBodyText":
                                 range = bM.Range;
-                                range.Text = $"ich {(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "genehmigte" : "habe")} die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy}" +
+                                range.Text = $"ich {(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "genehmigye" : "habe")} die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy}" +
                                                 $" bezeichnete Nebentätigkeit{(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "." : " zur Kenntnis genommen.")}";
                                 break;
                             case "Genehmigungstext":
@@ -1843,7 +1843,7 @@ namespace BGH_Kompakt.ViewModel
                 ViewManager.ActionlistRemove(actionName);
             }
 
-            if (!!resp.Success) { ViewManager.ShowMainInfoFlyout(resp.Message, false); }
+            if (!resp.Success) { ViewManager.ShowMainInfoFlyout(resp.Message, false); }
             else ViewManager.NebentaetigkeitenView.Overview.IsSelected = true;
         }
 
@@ -2000,7 +2000,7 @@ namespace BGH_Kompakt.ViewModel
                             if (ActivityRequestManager.LoginType == 2)
                             {
                                 newActivityRequest.ARZustaendigkeitsbereich = 5;
-                                statusID = 5;
+                                statusID = 4;
                             }
                             else
                             {
@@ -2031,7 +2031,7 @@ namespace BGH_Kompakt.ViewModel
                             foreach (ActivityRequestDataFile importFile in ImportFileList)
                             {
                                 importFile.ActivityRequestId = newActivityRequest.ActivityRequestId;
-                                activityRequestDBcontext.ActivityRequestDataFiles.Add(importFile);
+                                activityRequestDBcontext.ActivityRequestDataFiles.AddOrUpdate(importFile);
                             }
                             activityRequestDBcontext.SaveChanges();
 

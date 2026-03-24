@@ -113,6 +113,9 @@ namespace BGH_Kompakt.Views
                  case "ReportMain":
                     ViewManager.ShowUnderPageOn<ActivityRequestsReportView>(AnimatedContentControl);
                     break;
+                 case "Search":
+                    ViewManager.ShowUnderPageOn<ActivityRequestsReportView>(AnimatedContentControl);
+                    break;
             }
             //Debug.WriteLine(tabItem);
             //ViewManager.ShowUnderPageOn<NebentaetigkeitenAnzeigeView>(AnimatedContentControl);

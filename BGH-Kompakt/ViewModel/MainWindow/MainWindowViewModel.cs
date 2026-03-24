@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Windows;
 
 namespace BGH_Kompakt.ViewModel.MainWindow
 {
@@ -390,5 +391,11 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 SelectedSenat = RegistratedUser.Senate.FirstOrDefault();
             }
         }
+
+        public override void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Console.WriteLine(e.NewSize.Height);
+        }
+
     }
 }

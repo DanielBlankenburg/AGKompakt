@@ -506,6 +506,7 @@
     <Compile Include="ViewModel\Montagspost\MontagsPostViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsRBesoldungViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsReportViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsSearchViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetgkeitenViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenAnzeigeViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenClientEditorViewModel.cs" />
@@ -533,6 +534,9 @@
     </Compile>
     <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml.cs">
       <DependentUpon>ActivityRequestsReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsSearchView.xaml.cs">
+      <DependentUpon>ActivityRequestsSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenClientEditorView.xaml.cs">
       <DependentUpon>NebentaetigkeitenClientEditorView.xaml</DependentUpon>
@@ -660,6 +664,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityRequests\ActivityRequestsSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

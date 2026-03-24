@@ -147,26 +147,26 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             get { return _GenehmigungProportion; }
             set { SetProperty(ref _GenehmigungProportion, value); }
         }
-        private int _ExceedR6;
-        public int ExceedR6
+        private ExceedInfo _ExceedR6 = new ExceedInfo();
+        public ExceedInfo ExceedR6
         {
             get { return _ExceedR6; }
             set { SetProperty(ref _ExceedR6, value); }
         }
-        private int _ExceedR8;
-        public int ExceedR8
+        private ExceedInfo _ExceedR8 = new ExceedInfo();
+        public ExceedInfo ExceedR8
         {
             get { return _ExceedR8; }
             set { SetProperty(ref _ExceedR8, value); }
         }
-        private int _ExceedR9;
-        public int ExceedR9
+        private ExceedInfo _ExceedR9 = new ExceedInfo();
+        public ExceedInfo ExceedR9
         {
             get { return _ExceedR9; }
             set { SetProperty(ref _ExceedR9, value); }
         }
-        private int _ExceedR10;
-        public int ExceedR10
+        private ExceedInfo _ExceedR10 = new ExceedInfo();
+        public ExceedInfo ExceedR10
         {
             get { return _ExceedR10; }
             set { SetProperty(ref _ExceedR10, value); }
@@ -523,6 +523,11 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             List<PaymentLimit> limits = SetPaymentLimits();
             List<UserRequestGroup> allGroups = BuildRequestsByUser(requests, null);
 
+            ExceedR6.Count = 0;
+            ExceedR8.Count = 0;
+            ExceedR9.Count = 0;
+            ExceedR10.Count = 0;
+
             foreach (UserRequestGroup User in allGroups)
             {
                 UserDienstbezeichnung userDienstbezeichnung = userDBContext.UserDienstbezeichnungen
@@ -541,16 +546,20 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                                 switch (limit.Besoldungsgruppe)
                                 {
                                     case "R6":
-                                        ExceedR6++;
+                                        ExceedR6.Count++;
+                                        ExceedR6.Limit = limit.Limit;
                                         break;
                                     case "R8":
-                                        ExceedR8++;
+                                        ExceedR8.Count++;
+                                        ExceedR8.Limit = limit.Limit;
                                         break;
                                     case "R9":
-                                        ExceedR9++;
+                                        ExceedR9.Count++;
+                                        ExceedR9.Limit = limit.Limit;
                                         break;
                                     case "R10":
-                                        ExceedR10++;
+                                        ExceedR10.Count++;
+                                        ExceedR10.Limit = limit.Limit;
                                         break;
                                 }
                             }
@@ -578,7 +587,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                         .FirstOrDefault();
                         if (payment != null)
                         {
-                            decimal limit = payment.PaymentValue * 12;
+                            decimal limit = ((payment.PaymentValue * 12)/ 100) * 40;
                             limits.Add(new PaymentLimit { Id = payment.RBesoldung.id, Besoldungsgruppe = $"R{i}", Limit = limit });
                         }
                     }
@@ -738,6 +747,12 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
     {
         public int Id { get; set; }    
         public string Besoldungsgruppe { get; set; }
+        public decimal Limit { get; set; }
+    }
+
+    public class ExceedInfo
+    {
+        public int Count { get; set; }
         public decimal Limit { get; set; }
     }
 }

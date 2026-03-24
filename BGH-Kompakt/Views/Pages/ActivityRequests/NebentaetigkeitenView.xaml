@@ -118,6 +118,17 @@
                 </TabItem.Header>
             </TabItem>
             <TabItem
+                x:Name="Search"
+                Style="{StaticResource TabItem_AR}"
+                Visibility="{Binding ShowNewRequest, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource TabItemHeaderTextTop_AR}" Text="Richter-" />
+                        <TextBlock Style="{StaticResource TabItemHeaderText_AR}" Text="suche" />
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
+            <TabItem
                 x:Name="Request"
                 Style="{StaticResource TabItem_AR}"
                 Visibility="{Binding ShowNewRequest, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
@@ -169,6 +180,7 @@
         <Border
             Grid.Row="3"
             Grid.Column="0"
+            Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Path=ActualHeight}"
             BorderThickness="0,1,0,0">
             <Ctrl:AnimatedContentControl x:Name="AnimatedContentControl" />
         </Border>

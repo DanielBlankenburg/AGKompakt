@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BGH_Kompakt.ViewModel
 {
@@ -20,5 +21,6 @@ namespace BGH_Kompakt.ViewModel
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
+        public virtual void OnWindowSizeChanged(object sender, SizeChangedEventArgs e) { }
     }
 }
