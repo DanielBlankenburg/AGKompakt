@@ -318,20 +318,20 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 //        userContext.AdminStatus.AddOrUpdate(a => a.AdminStatusText, new AdminStatus { AdminStatusText = suchText });
                 //}
 
-                List<User> userListe = new List<User>();
-                userListe.AddRange(new List<User> {
+                //List<User> userListe = new List<User>();
+                //userListe.AddRange(new List<User> {
 
-                    new User("Max", "Präsidialrichter", "Mustermann@gmx.de", "Test1", 1, 2, 1, 1, 1),
-                    new User("Paula", "Präsidentin", "Mustermann@gmx.de", "Test1", 2, 1, 1, 1, 3),
-                    new User("Uwe", "Vorzimmer", "Mustermann@gmx.de", "Test1", 2, 1, 3, 1, 1),
-                    //new User("Heinrich", "Schoppmeyer", "Heinrich-Schoppmeyer@bgh.bund.de", "Test1", 1, 3, 1, 1, 3),
-                    //new User("Volker", "Schultze", "Volker-Schultze@bgh.bund.de", "Test1", 1, 2, 1, 1, 1),
-                    //new User("Christian", "Röhl", "Christian-Roehl@bgh.bund.de", "Test1", 1, 1, 1, 1, 1),
-                    //new User("Sven", "Harms", "Sven-Harms@bgh.bund.de", "Test1", 1, 1, 1, 1, 1)
-                    //new User("Max", "Präsidialrichter", "Mustermann@gmx.de", "Test1", userContext.Geschlechter.FirstOrDefault(x => x.GeschlechtText == "männlich").GeschlechtID, userContext.Positions.FirstOrDefault(x => x.PositionText == "Richter am Bundesgerichtshof").PositionId, userContext.Status.FirstOrDefault(x => x.StatusText == "aktiv").StatusId, userContext.enumDienstbezeichnungen.FirstOrDefault(x => x.DienstbezeichnungText == UserEnums.EnumAdminStatus.Präsidentin.ToString()).DienstbezeichnungId),
-                    //new User("Max", "Präsidentin", "Mustermann@gmx.de", "Test1", userContext.Geschlechter.FirstOrDefault(x => x.GeschlechtText == "weiblich").GeschlechtID, userContext.Positions.FirstOrDefault(x => x.PositionText == "Richter am Bundesgerichtshof").PositionId, userContext.Status.FirstOrDefault(x => x.StatusText == "aktiv").StatusId, userContext.enumDienstbezeichnungen.FirstOrDefault(x => x.DienstbezeichnungText == UserEnums.EnumAdminStatus.Präsidialrichter.ToString()).DienstbezeichnungId),
-                    //new User("Max", "Vorzimmer", "Mustermann@gmx.de", "Test1", userContext.Geschlechter.FirstOrDefault(x => x.GeschlechtText == "männlich").GeschlechtID, userContext.Positions.FirstOrDefault(x => x.PositionText == "Geschäftsstellenmitarbeiter").PositionId, userContext.Status.FirstOrDefault(x => x.StatusText == "aktiv").StatusId, userContext.enumDienstbezeichnungen.FirstOrDefault(x => x.DienstbezeichnungText == UserEnums.EnumAdminStatus.Vorzimmer.ToString()).DienstbezeichnungId),
-                });
+                //    new User("Max", "Präsidialrichter", "Mustermann@gmx.de", "Test1", 1, 2, 1, 1, 1),
+                //    new User("Paula", "Präsidentin", "Mustermann@gmx.de", "Test1", 2, 1, 1, 1, 3),
+                //    new User("Uwe", "Vorzimmer", "Mustermann@gmx.de", "Test1", 2, 1, 3, 1, 1),
+                //    //new User("Heinrich", "Schoppmeyer", "Heinrich-Schoppmeyer@bgh.bund.de", "Test1", 1, 3, 1, 1, 3),
+                //    //new User("Volker", "Schultze", "Volker-Schultze@bgh.bund.de", "Test1", 1, 2, 1, 1, 1),
+                //    //new User("Christian", "Röhl", "Christian-Roehl@bgh.bund.de", "Test1", 1, 1, 1, 1, 1),
+                //    //new User("Sven", "Harms", "Sven-Harms@bgh.bund.de", "Test1", 1, 1, 1, 1, 1)
+                //    //new User("Max", "Präsidialrichter", "Mustermann@gmx.de", "Test1", userContext.Geschlechter.FirstOrDefault(x => x.GeschlechtText == "männlich").GeschlechtID, userContext.Positions.FirstOrDefault(x => x.PositionText == "Richter am Bundesgerichtshof").PositionId, userContext.Status.FirstOrDefault(x => x.StatusText == "aktiv").StatusId, userContext.enumDienstbezeichnungen.FirstOrDefault(x => x.DienstbezeichnungText == UserEnums.EnumAdminStatus.Präsidentin.ToString()).DienstbezeichnungId),
+                //    //new User("Max", "Präsidentin", "Mustermann@gmx.de", "Test1", userContext.Geschlechter.FirstOrDefault(x => x.GeschlechtText == "weiblich").GeschlechtID, userContext.Positions.FirstOrDefault(x => x.PositionText == "Richter am Bundesgerichtshof").PositionId, userContext.Status.FirstOrDefault(x => x.StatusText == "aktiv").StatusId, userContext.enumDienstbezeichnungen.FirstOrDefault(x => x.DienstbezeichnungText == UserEnums.EnumAdminStatus.Präsidialrichter.ToString()).DienstbezeichnungId),
+                //    //new User("Max", "Vorzimmer", "Mustermann@gmx.de", "Test1", userContext.Geschlechter.FirstOrDefault(x => x.GeschlechtText == "männlich").GeschlechtID, userContext.Positions.FirstOrDefault(x => x.PositionText == "Geschäftsstellenmitarbeiter").PositionId, userContext.Status.FirstOrDefault(x => x.StatusText == "aktiv").StatusId, userContext.enumDienstbezeichnungen.FirstOrDefault(x => x.DienstbezeichnungText == UserEnums.EnumAdminStatus.Vorzimmer.ToString()).DienstbezeichnungId),
+                //});
 
                 foreach (User suchText in userListe)
                 {
