@@ -124,6 +124,9 @@
                 </Setter.Value>
             </Setter>
         </Style>-->
+        <Style x:Key="Grid_Exceed" TargetType="Grid">
+            <Setter Property="Margin" Value="15,0,0,0" />
+        </Style>
 
     </UserControl.Resources>
     <Grid Background="White">
@@ -162,16 +165,19 @@
         </MD:Card>
         <MD:Card
             Grid.Row="2"
+            MaxHeight="700"
+            VerticalAlignment="Top"
             Style="{StaticResource MDCard_Report}"
             Visibility="{Binding ShowReport, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <WrapPanel Orientation="Vertical">
                     <MD:Card Style="{StaticResource MDCard_Report_Expander}">
-                        <Expander IsExpanded="{Binding IsExpandedReport, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
+                        <Expander IsExpanded="{Binding IsExpandedReport1, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
                             <Expander.Header>
                                 <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Anzahl der Nebentätigkeiten" />
                             </Expander.Header>
@@ -220,7 +226,7 @@
                     </MD:Card>
                     <MD:Card Style="{StaticResource MDCard_Report_Expander}">
 
-                        <Expander IsExpanded="{Binding IsExpandedReport, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
+                        <Expander IsExpanded="{Binding IsExpandedReport2, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
                             <Expander.Header>
                                 <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Durchschnitt der Stundenanzahl" />
                             </Expander.Header>
@@ -257,7 +263,7 @@
                         </Expander>
                     </MD:Card>
                     <MD:Card Style="{StaticResource MDCard_Report_Expander}">
-                        <Expander IsExpanded="{Binding IsExpandedReport, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
+                        <Expander IsExpanded="{Binding IsExpandedReport3, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
                             <Expander.Header>
                                 <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchste Stundenanzahl" />
                             </Expander.Header>
@@ -294,7 +300,7 @@
                         </Expander>
                     </MD:Card>
                     <MD:Card Style="{StaticResource MDCard_Report_Expander}">
-                        <Expander IsExpanded="{Binding IsExpandedReport, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
+                        <Expander IsExpanded="{Binding IsExpandedReport4, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
                             <Expander.Header>
                                 <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Durchschnitt Vergütung" />
                             </Expander.Header>
@@ -332,7 +338,7 @@
                         </Expander>
                     </MD:Card>
                     <MD:Card Style="{StaticResource MDCard_Report_Expander}">
-                        <Expander IsExpanded="{Binding IsExpandedReport, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
+                        <Expander IsExpanded="{Binding IsExpandedReport5, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
                             <Expander.Header>
                                 <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchste Gesamtvergütung" />
                             </Expander.Header>
@@ -369,7 +375,7 @@
                         </Expander>
                     </MD:Card>
                     <MD:Card Style="{StaticResource MDCard_Report_Expander}">
-                        <Expander IsExpanded="{Binding IsExpandedReport, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
+                        <Expander IsExpanded="{Binding IsExpandedReport6, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
                             <Expander.Header>
                                 <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchste Einzelvergütung" />
                             </Expander.Header>
@@ -406,7 +412,7 @@
                         </Expander>
                     </MD:Card>
                     <MD:Card Style="{StaticResource MDCard_Report_Expander}">
-                        <Expander IsExpanded="{Binding IsExpandedReport, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
+                        <Expander IsExpanded="{Binding IsExpandedReport7, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
                             <Expander.Header>
                                 <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Höchster Betrag im Stundenverhältnis" />
                             </Expander.Header>
@@ -433,32 +439,157 @@
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis" />
+                                    Text="{Binding AnzeigeProportion.Proportion, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis 2" />
+                                    Text="{Binding GenehmigungProportion.Proportion, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Expander>
                     </MD:Card>
                     <MD:Card Style="{StaticResource MDCard_Report_Expander}">
-                        <Expander IsExpanded="{Binding IsExpandedReport, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
+                        <Expander IsExpanded="{Binding IsExpandedReport8, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Expander}">
                             <Expander.Header>
                                 <TextBlock Style="{StaticResource textblock_ReportE1}" Text="Überschreitung 40%-Grenze" />
                             </Expander.Header>
                             <Grid Grid.Row="1" Style="{StaticResource Grid_Report_E1}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <TextBlock
+                                <StackPanel Grid.Row="0">
+                                    <TextBlock Style="{StaticResource textblock_Label}" Text="R6" />
+                                    <Grid Style="{StaticResource Grid_Exceed}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="Grenze" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="{Binding ExceedR6.Limit, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                    <Grid Style="{StaticResource Grid_Exceed}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="Anzahl" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="{Binding ExceedR6.Count, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+
+                                </StackPanel>
+                                <StackPanel Grid.Row="1">
+                                    <TextBlock Style="{StaticResource textblock_Label}" Text="R8" />
+                                    <Grid Style="{StaticResource Grid_Exceed}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="Grenze" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="{Binding ExceedR8.Limit, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                    <Grid Style="{StaticResource Grid_Exceed}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="Anzahl" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="{Binding ExceedR8.Count, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+
+                                </StackPanel>
+                                <StackPanel Grid.Row="2">
+                                    <TextBlock Style="{StaticResource textblock_Label}" Text="R9" />
+                                    <Grid Style="{StaticResource Grid_Exceed}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="Grenze" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="{Binding ExceedR9.Limit, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                    <Grid Style="{StaticResource Grid_Exceed}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="Anzahl" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="{Binding ExceedR9.Count, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+
+                                </StackPanel>
+                                <StackPanel Grid.Row="3">
+                                    <TextBlock Style="{StaticResource textblock_Label}" Text="R10" />
+                                    <Grid Style="{StaticResource Grid_Exceed}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="Grenze" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="{Binding ExceedR10.Limit, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                    <Grid Style="{StaticResource Grid_Exceed}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="Anzahl" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{StaticResource textblock_Label}"
+                                            Text="{Binding ExceedR10.Count, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+
+                                </StackPanel>
+
+                                <!--<TextBlock
                                     Grid.Row="0"
                                     Grid.Column="0"
                                     Style="{StaticResource textblock_Label}"
@@ -482,44 +613,59 @@
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis" />
+                                    Text="{Binding ExceedR6}" />
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis 2" />
+                                    Text="{Binding ExceedR8}" />
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis 3" />
+                                    Text="{Binding ExceedR9}" />
                                 <TextBlock
                                     Grid.Row="3"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="Ergebnis 4" />
+                                    Text="{Binding ExceedR10}" />-->
                             </Grid>
                         </Expander>
                     </MD:Card>
                 </WrapPanel>
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Border Grid.Row="1" Style="{StaticResource Expander_Border}" Margin="0,15"/>
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
                     <Button
                         Margin="0,0,15,0"
                         Command="{Binding ExpandAllCommand}"
                         Content="Alle ausklappen"
                         Style="{StaticResource Button_Master}" />
                     <Button
+                        Margin="0,0,15,0"
                         Command="{Binding CollapseAllCommand}"
                         Content="Alle einklappen"
                         Style="{StaticResource Button_Master}" />
+                    <Button
+                        Width="170"
+                        Command="{Binding CreateReportCommand}"
+                        Style="{StaticResource Button_Master}"
+                        ToolTip="Bericht erstellen">
+                        <StackPanel Orientation="Horizontal">
+                            <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                Style="{StaticResource textblock_base}"
+                                Text="Bericht erstellen" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
-
-
             </Grid>
         </MD:Card>
         <MD:Card
             Grid.Row="2"
             Grid.Column="1"
+            MaxHeight="700"
+            VerticalAlignment="Top"
             Style="{StaticResource MDCard_Report}"
             Visibility="{Binding ShowReport, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
 
@@ -530,34 +676,42 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-
-                        <TextBlock
-                            Grid.Row="0"
-                            Style="{StaticResource textblock_ReportE1}"
-                            Text="Tätigkeiten pro Veranstalter" />
-
-                        <ListBox Grid.Row="1" ItemsSource="{Binding RequestsByClient}">
+                        <ListBox
+                            Grid.Row="1"
+                            ItemsSource="{Binding RequestsByClient}"
+                            Style="{StaticResource MaterialDesignCardsListBox}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Margin="0,0,0,12">
-                                        <TextBlock Style="{StaticResource textblock_ReportE1}" Text="{Binding TypeName}" />
-                                        <ItemsControl ItemsSource="{Binding Clients}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Margin="10,2,0,2" Orientation="Horizontal">
-                                                        <TextBlock
-                                                            Width="300"
-                                                            Style="{StaticResource textblock_Label}"
-                                                            Text="{Binding ClientName}" />
-                                                        <TextBlock
-                                                            Width="100"
-                                                            Style="{StaticResource textblock_Ergebnis}"
-                                                            Text="{Binding Count}" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
+
+                                    <Expander Style="{StaticResource Expander}">
+                                        <Expander.Header>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="30" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Style="{StaticResource textblock_ReportE1}" Text="{Binding TypeName}" />
+                                            </Grid>
+                                        </Expander.Header>
+                                        <Grid Margin="40,0,0,10">
+                                            <ItemsControl ItemsSource="{Binding Clients}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Margin="10,2,0,2" Orientation="Horizontal">
+                                                            <TextBlock
+                                                                Width="300"
+                                                                Style="{StaticResource textblock_Label}"
+                                                                Text="{Binding ClientName}" />
+                                                            <TextBlock
+                                                                Width="100"
+                                                                Style="{StaticResource textblock_Ergebnis}"
+                                                                Text="{Binding Count}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </Expander>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -639,7 +793,10 @@
                                                             IsExpanded="{Binding UpdateSourceTrigger=PropertyChanged, Path=DataContext.IsExpanded, RelativeSource={RelativeSource AncestorLevel=1, Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                             Style="{StaticResource MaterialDesignExpander}">
                                                             <Expander.Header>
-                                                                <TextBlock Style="{StaticResource textblock_base}" Text="{Binding ARTitel}" />
+                                                                <TextBlock
+                                                                    FontStyle="Italic"
+                                                                    Style="{StaticResource textblock_base}"
+                                                                    Text="{Binding ARTitel}" />
                                                             </Expander.Header>
                                                             <Grid Margin="40,0,0,0">
                                                                 <Grid.RowDefinitions>
@@ -654,10 +811,18 @@
                                                                         <ColumnDefinition Width="*" />
                                                                         <ColumnDefinition Width="Auto" />
                                                                     </Grid.ColumnDefinitions>
+                                                                    <TextBlock Style="{StaticResource list_label}" Text="Tätigkeitsdatum" />
+                                                                    <TextBlock Style="{StaticResource list_value}" Text="{Binding ARActivityDate, StringFormat=d}" />
+                                                                </Grid>
+                                                                <Grid Grid.Row="1">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="*" />
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                    </Grid.ColumnDefinitions>
                                                                     <TextBlock Style="{StaticResource list_label}" Text="Gesamtvergütung" />
                                                                     <TextBlock Style="{StaticResource list_value}" Text="{Binding Gesamtverguetung, StringFormat=\{0:C\}}" />
                                                                 </Grid>
-                                                                <Grid Grid.Row="1">
+                                                                <Grid Grid.Row="2">
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="*" />
                                                                         <ColumnDefinition Width="100" />
@@ -669,7 +834,7 @@
                                                                         Style="{StaticResource list_value}"
                                                                         Text="{Binding Gesamtzeitaufwand}" />
                                                                 </Grid>
-                                                                <Grid Grid.Row="2">
+                                                                <Grid Grid.Row="3">
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="*" />
                                                                         <ColumnDefinition Width="200" />
@@ -677,7 +842,7 @@
                                                                     <TextBlock Style="{StaticResource list_label}" Text="Auftraggeber" />
                                                                     <TextBlock Style="{StaticResource list_value}" Text="{Binding ActivityClient.ACName}" />
                                                                 </Grid>
-                                                                <Border Grid.Row="3" Style="{StaticResource Expander_Border}" />
+                                                                <Border Grid.Row="4" Style="{StaticResource Expander_Border}" />
                                                             </Grid>
                                                         </Expander>
                                                     </DataTemplate>

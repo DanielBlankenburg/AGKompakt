@@ -15,6 +15,7 @@ using BGH_Kompakt.Services.UserService;
 using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.UserLogin;
 using BGH_Kompakt.Views.Windows;
+using ControlzEx.Standard;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -1195,7 +1196,8 @@ namespace BGH_Kompakt.ViewModel
         private bool FuncShowChanges()
         {
             if (ActivityRequestManager.SelectedActivityRequest == null) return true;
-            if (ActivityRequestManager.LoginType == 1 && ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich > 1) return false;
+            //Vermerk: Es wird ermöglicht, dass die Anwender jederzeit den Antrag ändern können (21.03.2026)
+            //if (ActivityRequestManager.LoginType == 1 && ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich > 1) return false;
             return true;
         }
         private void SetExecutes()
@@ -1379,11 +1381,15 @@ namespace BGH_Kompakt.ViewModel
             catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("OpenDocFileExecute", ex); }
         }
 
-        private void PermissionExecute(object obj)
+        private async void PermissionExecute(object obj)
+        {
+            await ExecutePermissonAsync(obj);
+        }
+
+        private async Task ExecutePermissonAsync(object obj)
         {
             try
             {
-
                 string MessageText = string.Empty;
                 string MessageText2 = string.Empty;
                 int AblageArtExport = 0;
@@ -1425,30 +1431,36 @@ namespace BGH_Kompakt.ViewModel
                         break;
                 }
 
-                bool Antwort = ViewManager.ShowQuestionWindow(MessageText, "Ja");
-                if (Antwort == true)
+                if (ViewManager.ShowQuestionWindow(MessageText, "Ja"))
                 {
                     try
                     {
 
-                        ActivityRequestStatusHistory status = new ActivityRequestStatusHistory{ 
-                            ActivityRequestID = ActivityRequestManager.SelectedActivityRequest.ActivityRequestId, 
-                            ActivityRequestStatusID = Bearbeitungsstatus, 
-                            Date = DateTime.Now };
-
-                        ActivityRequestManager.SelectedActivityRequest.ActivityRequestStatusHistories.Add(status);
-                        ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich = AblageArtExport;
-                        ActivityRequestManager.SelectedActivityRequest.ARNoteAdmin = ARNoteAdmin;
-                        ActivityRequest editRequest = activityRequestDBcontext.ActivityRequests.FirstOrDefault(a => a.ActivityRequestId == ActivityRequestManager.SelectedActivityRequest.ActivityRequestId);
-                        if (editRequest != null)
+                        ActivityRequestStatusHistory status = new ActivityRequestStatusHistory
                         {
-                            editRequest.ARZustaendigkeitsbereich = AblageArtExport;
-                            editRequest.ActivityRequestStatusHistories.Add(status);
-                            editRequest.ARNoteAdmin = ARNoteAdmin;
-                            activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
-                            activityRequestDBcontext.SaveChanges();
-                        }
+                            ActivityRequestID = ActivityRequestManager.SelectedActivityRequest.ActivityRequestId,
+                            ActivityRequestStatusID = Bearbeitungsstatus,
+                            Date = DateTime.Now
+                        };
+                        PermissionDTO permissionInfo = new PermissionDTO { Status = status, ARZustaendigkeitsbereich = AblageArtExport, ARNoteAdmin = ARNoteAdmin };
+                        string actionName = "Änderungen für Weitergabe speichern";
+                        await ExecuteSaveAsync(actionName, permissionInfo);
+
+                        //ActivityRequestManager.SelectedActivityRequest.ActivityRequestStatusHistories.Add(status);
+                        //ActivityRequestManager.SelectedActivityRequest.ARZustaendigkeitsbereich = AblageArtExport;
+                        //ActivityRequestManager.SelectedActivityRequest.ARNoteAdmin = ARNoteAdmin;
+                        //ActivityRequest editRequest = activityRequestDBcontext.ActivityRequests.FirstOrDefault(a => a.ActivityRequestId == ActivityRequestManager.SelectedActivityRequest.ActivityRequestId);
+                        //if (editRequest != null)
+                        //{
+                        //    editRequest.ARZustaendigkeitsbereich = AblageArtExport;
+                        //    editRequest.ActivityRequestStatusHistories.Add(status);
+                        //    editRequest.ARNoteAdmin = ARNoteAdmin;
+                        //    activityRequestDBcontext.ActivityRequests.AddOrUpdate(ActivityRequestManager.SelectedActivityRequest);
+                        //    activityRequestDBcontext.SaveChanges();
+                        //}
                         //Liste neu füllen
+
+
                         ViewManager.ShowMainInfoFlyout(MessageText2, false);
                         ViewManager.ShowPageOnMainView<NebentaetigkeitenView>();
                     }
@@ -1460,6 +1472,7 @@ namespace BGH_Kompakt.ViewModel
                 }
             }
             catch (Exception ex) { ErrorMessage.CreateExceptionWithFlyOutMessage("PermissionExecute", ex); }
+
         }
 
         private async void WordExecute(object obj)
@@ -1549,7 +1562,7 @@ namespace BGH_Kompakt.ViewModel
                                 break;
                             case "BGHKompaktBodyText":
                                 range = bM.Range;
-                                range.Text = $"ich {(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "genehmigte" : "habe")} die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy}" +
+                                range.Text = $"ich {(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "genehmigye" : "habe")} die in Ihrem Antrag vom {ActivityRequestManager.SelectedActivityRequest.ARDatum:d. MMMM yyyy}" +
                                                 $" bezeichnete Nebentätigkeit{(ActivityRequestManager.SelectedActivityRequest.ActivityRequestMeldeArtID == 2 ? "." : " zur Kenntnis genommen.")}";
                                 break;
                             case "Genehmigungstext":
@@ -1807,17 +1820,39 @@ namespace BGH_Kompakt.ViewModel
         private async void ApplyExecute(object obj)
         {
             string actionName = "Änderungen speichern";
-            Task<DBResponse> task = SaveActivityRequest();
+            await ExecuteSaveAsync(actionName, null);
+            //Task<DBResponse> task = SaveActivityRequest();
+            //ViewManager.ActionlistAdd(actionName);
+            //await task;
+            //ViewManager.ActionlistRemove(actionName);
+            //if (!task.Result.Success) { ViewManager.ShowMainInfoFlyout(task.Result.Message, false); }
+            //else ViewManager.NebentaetigkeitenView.Overview.IsSelected = true;
+        }
+
+        private async Task ExecuteSaveAsync(string actionName, PermissionDTO? permissionInfo)
+        {
+            Task<DBResponse> task = SaveActivityRequest(permissionInfo);
             ViewManager.ActionlistAdd(actionName);
-            await task;
-            ViewManager.ActionlistRemove(actionName);
-            if (!task.Result.Success) { string message = task.Result.Message; ViewManager.ShowMainInfoFlyout(message, false); }
+            DBResponse resp;
+            try
+            {
+                resp = await task;
+            }
+            finally
+            {
+                ViewManager.ActionlistRemove(actionName);
+            }
+
+            if (!resp.Success) { ViewManager.ShowMainInfoFlyout(resp.Message, false); }
             else ViewManager.NebentaetigkeitenView.Overview.IsSelected = true;
         }
+
+
+
         private bool ApplyCanExecute(object obj) => FuncShowChanges();
 
 
-        private Task<DBResponse> SaveActivityRequest()
+        private Task<DBResponse> SaveActivityRequest(PermissionDTO permissionInfo)
         {
             Task<DBResponse> task = Task.Run<DBResponse>(() =>
             {
@@ -1965,7 +2000,7 @@ namespace BGH_Kompakt.ViewModel
                             if (ActivityRequestManager.LoginType == 2)
                             {
                                 newActivityRequest.ARZustaendigkeitsbereich = 5;
-                                statusID = 5;
+                                statusID = 4;
                             }
                             else
                             {
@@ -1979,6 +2014,13 @@ namespace BGH_Kompakt.ViewModel
                         {
                             newActivityRequest.ARUserID = RequestUserID;
                         }
+                        if (permissionInfo != null)
+                        {
+                            AddPermissionInfo(ActivityRequestManager.SelectedActivityRequest, permissionInfo);
+                            AddPermissionInfo(newActivityRequest, permissionInfo);
+                        }
+
+
                         activityRequestDBcontext.ActivityRequests.AddOrUpdate(newActivityRequest);
                         activityRequestDBcontext.SaveChanges();
                         if (ActivityRequestManager.SelectedActivityRequest != null && newActivityRequest.ARZustaendigkeitsbereich > 1)
@@ -1989,7 +2031,7 @@ namespace BGH_Kompakt.ViewModel
                             foreach (ActivityRequestDataFile importFile in ImportFileList)
                             {
                                 importFile.ActivityRequestId = newActivityRequest.ActivityRequestId;
-                                activityRequestDBcontext.ActivityRequestDataFiles.Add(importFile);
+                                activityRequestDBcontext.ActivityRequestDataFiles.AddOrUpdate(importFile);
                             }
                             activityRequestDBcontext.SaveChanges();
 
@@ -1999,8 +2041,8 @@ namespace BGH_Kompakt.ViewModel
                     catch (Exception ex)
                     {
                         resp.Success = false;
-                        Logger.WriteLog("Die Meldung konnte nicht eintragen werden. Es ist folgender Fehler aufgetreten: " + ex.Message + "; " + ex.InnerException);
-                        resp.Message = "Die Meldung konnte nicht eintragen werden. Es ist folgender Fehler aufgetreten: " + ex.InnerException;
+                        ErrorMessage.CreateExceptionWithoutMessage("NebentaetigkeitenAnzeigeViewModel - SaveActivityRequest", ex);
+                        resp.Message = "Die Meldung konnte nicht eintragen werden. Bitte prüfen Sie die Logdatei.";
                     }
                 }
                 else
@@ -2012,6 +2054,13 @@ namespace BGH_Kompakt.ViewModel
                 return resp;
             });
             return task;
+        }
+
+        private void AddPermissionInfo(ActivityRequest editActivityRequest, PermissionDTO info)
+        {
+            editActivityRequest.ActivityRequestStatusHistories.Add(info.Status);
+            editActivityRequest.ARZustaendigkeitsbereich = info.ARZustaendigkeitsbereich;
+            editActivityRequest.ARNoteAdmin = info.ARNoteAdmin;
         }
 
         private void LogChanges(ActivityRequest newActivityRequest)
@@ -2734,5 +2783,12 @@ namespace BGH_Kompakt.ViewModel
             }
             ShowAttachmentList = true;
         }
+    }
+
+    public class PermissionDTO
+    {
+        public ActivityRequestStatusHistory Status { get; set; }
+        public int ARZustaendigkeitsbereich { get; set; }
+        public string ARNoteAdmin { get; set; }
     }
 }

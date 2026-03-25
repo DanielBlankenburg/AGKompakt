@@ -194,6 +194,11 @@ namespace BGH_Kompakt
             iServiceColletion.AddTransient<ActivityRequestsReportView>();
             iServiceColletion.AddTransient<ActivityRequestsReportViewModel>();
 
+            iServiceColletion.AddTransient<ActivityRequestsSearchView>();
+            iServiceColletion.AddTransient<ActivityRequestsSearchViewModel>();
+
+
+
 
 
 

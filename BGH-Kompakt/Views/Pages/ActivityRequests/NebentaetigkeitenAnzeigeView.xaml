@@ -328,9 +328,8 @@
                                 Style="{StaticResource ExpanderAR}">
                                 <Expander.Header>
                                     <TextBlock
-                                        Width="894"
-                                        HorizontalAlignment="Right"
-                                        Style="{StaticResource Textblock_Extender}"
+                                        FontSize="15"
+                                        FontWeight="Bold"
                                         Text="Art" />
                                 </Expander.Header>
                                 <StackPanel Style="{StaticResource ExtenderStackpanelAR}">
@@ -1101,10 +1100,10 @@
                                                 Content="Honorarfrei"
                                                 IsChecked="{Binding PaymentNothing, UpdateSourceTrigger=PropertyChanged}"
                                                 Style="{StaticResource RadioButto_Verguetung}" />
-                                            <RadioButton
+                                            <!--<RadioButton
                                                 Content="derzeit unbekannt; wird nachgereicht"
                                                 IsChecked="{Binding PaymentUnknown, UpdateSourceTrigger=PropertyChanged}"
-                                                Style="{StaticResource RadioButto_Verguetung}" />
+                                                Style="{StaticResource RadioButto_Verguetung}" />-->
                                             <!--  ErrorValidation  -->
                                             <TextBlock
                                                 Style="{StaticResource Style_Textbox_Error}"

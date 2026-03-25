@@ -3,6 +3,7 @@ using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.Fillclasses;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
+using BGH_Kompakt.ViewModel;
 using BGH_Kompakt.ViewModel.MainWindow;
 using BGH_Kompakt.Views;
 using BGH_Kompakt.Views.Pages.Montagspost;
@@ -40,7 +41,11 @@ namespace BGH_Kompakt
         {
             InitializeComponent();
             MainWindowViewModel = mainWindowViewModel;
-            DataContext = mainWindowViewModel;
+            if (mainWindowViewModel is ViewModelBase @base)
+            {
+                this.SizeChanged += @base.OnWindowSizeChanged;
+                DataContext = mainWindowViewModel;
+             }
             //MessageBox.Show(Environment.UserName);
 
         }

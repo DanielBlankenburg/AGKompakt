@@ -187,6 +187,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AttchedProperties\WebBrowserBehaviors.cs" />
+    <Compile Include="Classes\ActivityRequestClasses\AcivityRequestChangesDetections.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestChangeHistory.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestComment.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestDataFile.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="Classes\UserClasses\UserDienstbezeichnung.cs" />
     <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestStatus.cs" />
     <Compile Include="Classes\ActivityRequestClasses\ActivityRequestStatusHistory.cs" />
+    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ARHourAmountProportion.cs" />
     <Compile Include="Classes\_LookUp\MP\MPEMail.cs" />
     <Compile Include="Classes\_LookUp\MP\MPSetting.cs" />
     <Compile Include="Classes\_LookUp\MP\MPVermerk.cs" />
@@ -504,6 +506,7 @@
     <Compile Include="ViewModel\Montagspost\MontagsPostViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsRBesoldungViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsReportViewModel.cs" />
+    <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsSearchViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetgkeitenViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenAnzeigeViewModel.cs" />
     <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenClientEditorViewModel.cs" />
@@ -531,6 +534,9 @@
     </Compile>
     <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml.cs">
       <DependentUpon>ActivityRequestsReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsSearchView.xaml.cs">
+      <DependentUpon>ActivityRequestsSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenClientEditorView.xaml.cs">
       <DependentUpon>NebentaetigkeitenClientEditorView.xaml</DependentUpon>
@@ -658,6 +664,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ActivityRequests\ActivityRequestsSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1251,14 +1261,14 @@
     <Resource Include="Resources\ImageResources\Images\ErrorArea.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="Resources\ImageResources\Images\Splashscreen.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </SplashScreen>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\ImageResources\Images\Besoldung.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Resources\ImageResources\Images\Splashscreen.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </SplashScreen>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />
