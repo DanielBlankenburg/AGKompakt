@@ -750,9 +750,20 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
         public decimal Limit { get; set; }
     }
 
-    public class ExceedInfo
+    public class ExceedInfo : ViewModelBase
     {
-        public int Count { get; set; }
-        public decimal Limit { get; set; }
+        private int _Count;
+        public int Count
+        {
+            get { return _Count; }
+            set { SetProperty(ref _Count, value); }
+        }
+
+        private decimal _Limit;
+        public decimal Limit
+        {
+            get { return _Limit; }
+            set { SetProperty(ref _Limit, value); }
+        }
     }
 }

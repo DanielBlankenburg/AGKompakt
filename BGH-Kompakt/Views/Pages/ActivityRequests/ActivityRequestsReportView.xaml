@@ -165,11 +165,14 @@
         </MD:Card>
         <MD:Card
             Grid.Row="2"
+            MaxHeight="700"
+            VerticalAlignment="Top"
             Style="{StaticResource MDCard_Report}"
             Visibility="{Binding ShowReport, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <WrapPanel Orientation="Vertical">
@@ -436,12 +439,12 @@
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="{Binding AnzeigeProportion.Proportion}" />
+                                    Text="{Binding AnzeigeProportion.Proportion, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="{Binding GenehmigungProportion.Proportion}" />
+                                    Text="{Binding GenehmigungProportion.Proportion, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Expander>
                     </MD:Card>
@@ -471,7 +474,7 @@
                                         <TextBlock
                                             Grid.Column="1"
                                             Style="{StaticResource textblock_Label}"
-                                            Text="{Binding ExceedR6.Limit, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{Binding ExceedR6.Limit, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
                                     <Grid Style="{StaticResource Grid_Exceed}">
                                         <Grid.ColumnDefinitions>
@@ -503,7 +506,7 @@
                                         <TextBlock
                                             Grid.Column="1"
                                             Style="{StaticResource textblock_Label}"
-                                            Text="{Binding ExceedR8.Limit, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{Binding ExceedR8.Limit, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
                                     <Grid Style="{StaticResource Grid_Exceed}">
                                         <Grid.ColumnDefinitions>
@@ -535,7 +538,7 @@
                                         <TextBlock
                                             Grid.Column="1"
                                             Style="{StaticResource textblock_Label}"
-                                            Text="{Binding ExceedR9.Limit, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{Binding ExceedR9.Limit, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
                                     <Grid Style="{StaticResource Grid_Exceed}">
                                         <Grid.ColumnDefinitions>
@@ -567,7 +570,7 @@
                                         <TextBlock
                                             Grid.Column="1"
                                             Style="{StaticResource textblock_Label}"
-                                            Text="{Binding ExceedR10.Limit, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{Binding ExceedR10.Limit, StringFormat=\{0:C\}, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
                                     <Grid Style="{StaticResource Grid_Exceed}">
                                         <Grid.ColumnDefinitions>
@@ -630,7 +633,8 @@
                         </Expander>
                     </MD:Card>
                 </WrapPanel>
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Border Grid.Row="1" Style="{StaticResource Expander_Border}" Margin="0,15"/>
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
                     <Button
                         Margin="0,0,15,0"
                         Command="{Binding ExpandAllCommand}"
@@ -660,6 +664,8 @@
         <MD:Card
             Grid.Row="2"
             Grid.Column="1"
+            MaxHeight="700"
+            VerticalAlignment="Top"
             Style="{StaticResource MDCard_Report}"
             Visibility="{Binding ShowReport, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
 

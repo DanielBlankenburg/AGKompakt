@@ -1261,14 +1261,14 @@
     <Resource Include="Resources\ImageResources\Images\ErrorArea.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="Resources\ImageResources\Images\Splashscreen.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </SplashScreen>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\ImageResources\Images\Besoldung.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Resources\ImageResources\Images\Splashscreen.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </SplashScreen>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />
