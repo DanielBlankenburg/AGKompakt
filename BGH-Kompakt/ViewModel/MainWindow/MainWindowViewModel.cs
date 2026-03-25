@@ -333,11 +333,11 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 //    //new User("Max", "Vorzimmer", "Mustermann@gmx.de", "Test1", userContext.Geschlechter.FirstOrDefault(x => x.GeschlechtText == "männlich").GeschlechtID, userContext.Positions.FirstOrDefault(x => x.PositionText == "Geschäftsstellenmitarbeiter").PositionId, userContext.Status.FirstOrDefault(x => x.StatusText == "aktiv").StatusId, userContext.enumDienstbezeichnungen.FirstOrDefault(x => x.DienstbezeichnungText == UserEnums.EnumAdminStatus.Vorzimmer.ToString()).DienstbezeichnungId),
                 //});
 
-                foreach (User suchText in userListe)
-                {
-                    if (userContext.Users.FirstOrDefault(x => x.NachName == suchText.NachName) == null)
-                        userContext.Users.AddOrUpdate(a => a.NachName, new User { VorName = suchText.VorName, NachName = suchText.NachName, EMail = suchText.EMail, ComputerName = suchText.ComputerName, GeschlechtID = suchText.GeschlechtID, PositionId = suchText.PositionId, StatusId = suchText.StatusId, DienstbezeichnungId = suchText.DienstbezeichnungId });
-                }
+                //foreach (User suchText in userListe)
+                //{
+                //    if (userContext.Users.FirstOrDefault(x => x.NachName == suchText.NachName) == null)
+                //        userContext.Users.AddOrUpdate(a => a.NachName, new User { VorName = suchText.VorName, NachName = suchText.NachName, EMail = suchText.EMail, ComputerName = suchText.ComputerName, GeschlechtID = suchText.GeschlechtID, PositionId = suchText.PositionId, StatusId = suchText.StatusId, DienstbezeichnungId = suchText.DienstbezeichnungId });
+                //}
 
                 var programmSetting = userContext.ProgrammSettings.ToArray();
                 if (programmSetting.Count() == 0)
