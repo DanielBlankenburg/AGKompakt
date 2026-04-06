@@ -12,6 +12,7 @@ using BGH_Kompakt.Services.SystemComponents;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -52,6 +53,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
         public ICommand ExpandAllCommand { get; set; }
         public ICommand ExpandAllARCommand { get; set; }
         public ICommand CreateReportCommand { get; set; }
+        public ICommand CreateTableCommand { get; set; }
         #endregion
         #region Values
         private int _JudgeCount;
@@ -263,9 +265,15 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             CollapseAllCommand = new RelayCommand(CollapseAllRequestExecute);
             CollapseAllARCommand = new RelayCommand(CollapseARRequestExecute);
             CreateReportCommand = new RelayCommand(CreateReportExecute);
+            CreateTableCommand = new RelayCommand(CreateTableExecute);
 
             StartDate = new DateTime(2025, 1, 1);
             EndDate = DateTime.Now;
+        }
+
+        private void CreateTableExecute(object obj)
+        {
+            createTables();
         }
 
         private async void CreateReportExecute(object obj)
@@ -716,6 +724,123 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             return groupedUsers;
         }
 
+        public void createTables()
+        {
+            //Creating a sample DataTable - same can be queried from a database
+            //System.Data.DataTable dataTable = new System.Data.DataTable();
+            //dataTable.Clear();
+            //dataTable.Columns.Add("Name");
+            //dataTable.Columns.Add("Marks");
+            //DataRow dataRow0 = dataTable.NewRow();
+            //DataRow dataRow1 = dataTable.NewRow();
+            //DataRow dataRow2 = dataTable.NewRow();
+            //dataRow0["Name"] = "Robert";
+            //dataRow0["Marks"] = "100";
+            //dataTable.Rows.Add(dataRow0);
+            //dataRow1["Name"] = "Method";
+            //dataRow1["Marks"] = "97";
+            //dataTable.Rows.Add(dataRow1);
+            //dataRow2["Name"] = "Karamagi";
+            //dataRow2["Marks"] = "92";
+            //dataTable.Rows.Add(dataRow2);
+
+            //Opening the Word Document
+            Application application = new Application();
+            Document document = application.Documents.Add();
+            application.Visible = true;
+            application.WindowState = WdWindowState.wdWindowStateMaximize;
+
+
+            //Counting the DataTaable Rows and Column to Export
+            //int RowCount = dataTable.Rows.Count;
+            //int ColumnCount = dataTable.Columns.Count;
+            int RowCount = 0;
+            int ColumnCount = 2;
+
+            //Creating the Table DataArray to Export
+            //Object[,] DataArray = new object[RowCount + 1, ColumnCount + 1];
+            //int r = 0;
+            //for (int c = 0; c <= ColumnCount - 1; c++)
+            //{
+            //    DataArray[r, c] = dataTable.Columns[c].ColumnName;
+            //    for (r = 0; r <= RowCount - 1; r++)
+            //    {
+            //        DataArray[r, c] = dataTable.Rows[r][c];
+            //    } //end row loop
+            //} //end column loop
+
+            List<int> headlines = new List<int>();
+            string tableExportString = "";
+            foreach (ClientTypeRequestCount item in RequestsByClient)
+            {
+                tableExportString += $"{item.TypeName}\t{item.ClientCount}\t";
+                headlines.Add(RowCount);
+                RowCount++;
+                foreach (ClientRequestCount client in item.Clients)
+                {
+                    tableExportString += $"{client.ClientName}\t{client.Count}\t";
+                    RowCount++;
+                }
+            } 
+
+
+            dynamic range = document.Content.Application.Selection.Range;
+            //String temp = "";
+            //for (r = 0; r <= RowCount - 1; r++)
+            //{
+            //    for (int c = 0; c <= ColumnCount - 1; c++)
+            //    {
+            //        temp = temp + DataArray[r, c] + "\t";
+            //    }
+            //}
+            range.Text = tableExportString;
+
+            //Basic Table Styling and Exporting
+            object Separator = MSWord.WdTableFieldSeparator.wdSeparateByTabs;
+            object Format = MSWord.WdTableFormat.wdTableFormatWeb1;
+            object ApplyBorders = false;
+            object AutoFit = true;
+            object ApplyHeadingRows = true;
+
+            object DefaultTableBehavior = MSWord.WdDefaultTableBehavior.wdWord9TableBehavior;
+            object AutoFitBehavior = MSWord.WdAutoFitBehavior.wdAutoFitContent;
+            range.ConvertToTable(ref Separator,
+                ref RowCount, ref ColumnCount, Type.Missing, ref Format,
+                ref ApplyBorders, Type.Missing, Type.Missing, Type.Missing,
+                    Type.Missing, Type.Missing, Type.Missing,
+                    Type.Missing, ref AutoFit, ref AutoFitBehavior,
+                    ref DefaultTableBehavior);
+
+            range.Select();
+            //document.Application.Selection.Tables[1].Select();
+            //document.Application.Selection.Tables[1].Rows.AllowBreakAcrossPages = 0;
+            //document.Application.Selection.Tables[1].Rows.Alignment = 0;
+            //document.Application.Selection.Tables[1].Rows[1].Select();
+            //document.Application.Selection.InsertRowsAbove(1);
+            document.Application.Selection.Tables[1].Rows[1].Select();
+            document.Application.Selection.Tables[1].Borders.InsideLineStyle = WdLineStyle.wdLineStyleSingle;
+            document.Application.Selection.Tables[1].Borders.OutsideLineStyle = WdLineStyle.wdLineStyleSingle;
+
+
+            //inserting the Header Row
+            //for (int c = 0; c <= ColumnCount - 1; c++)
+            //{
+            //    document.Application.Selection.Tables[1].Cell(1, c + 1).Range.Text = dataTable.Columns[c].ColumnName;
+            //    //Header Row Font Color and Background Color
+            //    document.Application.Selection.Tables[1].Cell(1, c + 1).Range.Font.Color = WdColor.wdColorWhite;
+            //    document.Application.Selection.Tables[1].Cell(1, c + 1).Range.Shading.BackgroundPatternColor = WdColor.wdColorBlue;
+            //}
+
+            foreach (int item in headlines)
+            {
+                for (int c = 1; c <= 2; c++)
+                {
+                    document.Application.Selection.Tables[1].Cell(item + 1, c).Range.Font.Color = WdColor.wdColorWhite;
+                    document.Application.Selection.Tables[1].Cell(item + 1, c).Range.Shading.BackgroundPatternColor = WdColor.wdColorBlue;
+                }
+            }
+        }
+
     }
 
     public class ClientRequestCount
@@ -766,4 +891,5 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             set { SetProperty(ref _Limit, value); }
         }
     }
+
 }

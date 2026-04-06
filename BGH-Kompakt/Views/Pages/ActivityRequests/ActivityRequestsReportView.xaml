@@ -658,6 +658,19 @@
                                 Text="Bericht erstellen" />
                         </StackPanel>
                     </Button>
+                    <Button
+                        Width="170"
+                        Command="{Binding CreateTableCommand}"
+                        Style="{StaticResource Button_Master}"
+                        ToolTip="Tabelle erstellen">
+                        <StackPanel Orientation="Horizontal">
+                            <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                Style="{StaticResource textblock_base}"
+                                Text="Bericht erstellen" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Grid>
         </MD:Card>
