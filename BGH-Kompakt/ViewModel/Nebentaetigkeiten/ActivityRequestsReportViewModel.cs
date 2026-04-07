@@ -9,18 +9,22 @@ using BGH_Kompakt.Services;
 using BGH_Kompakt.Services.ActivityRequestService;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.SystemComponents;
+using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml.Linq;
 using MSWord = Microsoft.Office.Interop.Word;
 using Task = System.Threading.Tasks.Task;
 
@@ -186,6 +190,13 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             get { return _RequestsByUser; }
             set { SetProperty(ref _RequestsByUser, value); }
         }
+        private List<ActivityRequest> _ReportRequest = new List<ActivityRequest>();
+        public List<ActivityRequest> ReportRequest
+        {
+            get { return _ReportRequest; }
+            set { SetProperty(ref _ReportRequest, value); }
+        }
+
         #endregion
         #region Show variables
         private bool _ShowReport = false;
@@ -271,23 +282,30 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             EndDate = DateTime.Now;
         }
 
-        private void CreateTableExecute(object obj)
+        private async void CreateTableExecute(object obj)
         {
-            createTables();
+            string actionName = "Tabellen erstellen";
+            Task<DBResponse> task = CreateTables();
+            //ErrorMessage.CreateSimpleMessage("Die Tabellen werden erstellt");
+            ViewManager.ActionlistAdd(actionName);
+            await task;
+            string message = task.Result.Success ? "Die Tabellen wurden erstellt." : task.Result.Message;
+            ErrorMessage.CreateSimpleMessage(message);
+            ViewManager.ActionlistRemove(actionName);
+
         }
 
         private async void CreateReportExecute(object obj)
         {
             string actionName = "Bericht erstellen";
             Task<DBResponse> task = CreateWordDocumnent();
-            ErrorMessage.CreateSimpleMessage("Der Bericht wird erstellt");
+            //ErrorMessage.CreateSimpleMessage("Der Bericht wird erstellt");
             ViewManager.ActionlistAdd(actionName);
             await task;
             string message = task.Result.Success ? "Der Bericht wurde erstellt." : task.Result.Message;
             ErrorMessage.CreateSimpleMessage(message);
             ViewManager.ActionlistRemove(actionName);
         }
-
         private Task<DBResponse> CreateWordDocumnent()
         {
             Task<DBResponse> task = Task.Run<DBResponse>(() =>
@@ -296,29 +314,8 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                 MSWord.Application wordApp = new MSWord.Application();
                 Document wordDoc = null;
 
-                string[] directories = Assembly.GetExecutingAssembly().Location.Split('\\');
-                string pathApp = string.Empty;
-                for (int i = 0; i < directories.Length - 1; i++) pathApp += directories[i] + "\\";
-                string DocDir = $"{pathApp}Documents\\";
-                object oTemplate = $"{DocDir}\\Bericht BMJ.dotx";
+                if (GetWordDocument(ref wordApp, ref wordDoc, "Bericht BMJ.dotx", ref response) == false) return response;
 
-                try
-                {
-                    if (!File.Exists(oTemplate.ToString()))
-                    {
-                        //MessageBox.Show(oTemplate.ToString());
-                        response.Success = false;
-                        response.Message = $"Die Vorlage \"Bericht BMJ.dotx\" wurde im Pfad {DocDir} nicht gefunden";
-                        return response;
-                    }
-                    wordDoc = wordApp.Documents.Add(oTemplate);
-                }
-                catch (Exception ex)
-                {
-                    response.Success = false;
-                    response.Message = $"Die Vorlage \"Bericht BMJ.dotx\" im Pfad {DocDir} konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
-                    return response;
-                }
                 try
                 {
                     foreach (Bookmark bM in wordDoc.Bookmarks)
@@ -374,7 +371,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                             case "Betrag_Relation_G":
                                 range = bM.Range;
                                 range.Text = GenehmigungProportion != null ? GenehmigungProportion.Proportion.ToString("F2") : "0";
-                                range.Text = GenehmigungProportion.Proportion.ToString("F2");
+                                //range.Text = GenehmigungProportion.Proportion.ToString("F2");
                                 break;
                             case "Betrag_Richter_Max_A":
                                 range = bM.Range;
@@ -424,7 +421,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                 catch (Exception ex)
                 {
                     response.Success = false;
-                    response.Message = $"Das Schreiben konnte nicht erstellt werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
+                    response.Message = $"Der Bericht konnte nicht erstellt werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
                 }
                 finally
                 {
@@ -438,11 +435,35 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             });
             return task;
         }
+        private bool GetWordDocument(ref Application wordApp, ref Document wordDoc, string fileName, ref DBResponse response)
+        {
+            string[] directories = Assembly.GetExecutingAssembly().Location.Split('\\');
+            string pathApp = string.Empty;
+            for (int i = 0; i < directories.Length - 1; i++) pathApp += directories[i] + "\\";
+            string DocDir = $"{pathApp}Documents\\";
+            object oTemplate = $"{DocDir}\\{fileName}";
 
+            try
+            {
+                if (!File.Exists(oTemplate.ToString()))
+                {
+                    //MessageBox.Show(oTemplate.ToString());
+                    response.Success = false;
+                    response.Message = $"Die Vorlage \"{fileName}\" wurde im Pfad {DocDir} nicht gefunden";
+                    return false;
+                }
+                wordDoc = wordApp.Documents.Add(oTemplate);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = $"Die Vorlage \"{fileName}\" im Pfad {DocDir} konnte nicht geöffnet werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
+                return false;
+            }
+            return true;
+        }
         private void CollapseARRequestExecute(object obj) => IsExpanded = false;
-
         private void ExpandARExcute(object obj) => IsExpanded = true;
-
         private void CollapseAllRequestExecute(object obj)
         {
             IsExpandedReport1 = false;
@@ -455,7 +476,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             IsExpandedReport8 = false;
             IsExpandedReport9 = false;
         }
-
         private void ExpandAllExcute(object obj)
         {
             IsExpandedReport1 = true;
@@ -468,7 +488,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             IsExpandedReport8 = true;
             IsExpandedReport9 = true;
         }
-
         private async void StartRequestExecute(object obj)
         {
             string actionName = "Berichtsdaten ermitteln";
@@ -479,7 +498,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             if (!task.Result.Success) ErrorMessage.CreateSimpleMessage(task.Result.Message);
             ViewManager.ActionlistRemove(actionName);
         }
-
         private Task<DBResponse> CreateReport()
         {
             Task<DBResponse> task = Task.Run<DBResponse>(() => {
@@ -494,23 +512,23 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                         return response;
                     }
 
-                    var requests = LoadRequests(start, end);
+                    ReportRequest = LoadRequests(start, end);
 
-                    if (requests == null || requests.Count == 0)
+                    if (ReportRequest == null || ReportRequest.Count == 0)
                     {
                         response.Message = "Für den Zeitraum konnten keine Nebentätigkeiten gefunden werden";
                         return response;
                     }
 
-                    ComputeCounts(requests);
-                    ComputeAggregates(requests);
+                    ComputeCounts(ReportRequest);
+                    ComputeAggregates(ReportRequest);
 
-                    RequestsByClient = BuildRequestsByClient(requests);
-                    RequestsByUser = BuildRequestsByUser(requests, null);
+                    RequestsByClient = BuildRequestsByClient(ReportRequest);
+                    RequestsByUser = BuildRequestsByUser(ReportRequest, null);
 
-                    AnzeigeAmountMax = BuildRequestsByUser(requests, MeldeArt_Anzeige).DefaultIfEmpty().Max(x => x?.TotalAmount ?? 0);
-                    GenehmigungAmountMax = BuildRequestsByUser(requests, MeldeArt_Genehmigung).DefaultIfEmpty().Max(x => x?.TotalAmount ?? 0);
-                    CountExeeds(requests);
+                    AnzeigeAmountMax = BuildRequestsByUser(ReportRequest, MeldeArt_Anzeige).DefaultIfEmpty().Max(x => x?.TotalAmount ?? 0);
+                    GenehmigungAmountMax = BuildRequestsByUser(ReportRequest, MeldeArt_Genehmigung).DefaultIfEmpty().Max(x => x?.TotalAmount ?? 0);
+                    CountExeeds(ReportRequest);
 
                     ShowReport = true;
                     response.Success = true;
@@ -525,7 +543,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             );
             return task;
         }
-
         private void CountExeeds(List<ActivityRequest> requests)
         {
             List<PaymentLimit> limits = SetPaymentLimits();
@@ -577,7 +594,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                 }
             }
         }
-
         private List<PaymentLimit> SetPaymentLimits()
         {
             List<PaymentLimit> limits = new List<PaymentLimit>();
@@ -604,7 +620,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             }
             return limits;
         }
-
         private DBResponse ValidateDates(out DateTime start, out DateTime end)
         {
             DBResponse response = new DBResponse();
@@ -628,7 +643,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             response.Success = true;
             return response;
         }
-
         private List<ActivityRequest> LoadRequests(DateTime start, DateTime end)
         {
             var query = activityRequestDBContext.ActivityRequests
@@ -644,7 +658,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             return judgeList;
 
         }
-
         private void ComputeCounts(List<ActivityRequest> requests)
         {
             AnzeigeCount = requests.Count(x => x.ActivityRequestMeldeArtID == MeldeArt_Anzeige);
@@ -658,7 +671,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
 
             JudgeCount = users;
         }
-
         private void ComputeAggregates(List<ActivityRequest> requests)
         {
             var anzeigen = requests.Where(x => x.ActivityRequestMeldeArtID == MeldeArt_Anzeige).ToList();
@@ -677,13 +689,11 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             AnzeigeProportion = anzeigen.Count > 0 ? FindMaxProportion(anzeigen) : null;
             GenehmigungProportion = genehmigungen.Count > 0 ? FindMaxProportion(genehmigungen): null;
         }
-
         private ARHourAmountProportion FindMaxProportion(List<ActivityRequest> list)
         {
             var query = list.OrderByDescending(x => x.HourAmountProportion.Proportion).First();
             return query.HourAmountProportion;
         }
-
         private List<ClientTypeRequestCount> BuildRequestsByClient(List<ActivityRequest> requests)
         {
             var groupedByClientType = requests
@@ -702,7 +712,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
 
             return groupedByClientType;
         }
-
         private List<UserRequestGroup> BuildRequestsByUser(List<ActivityRequest> requests, int? meldeArtId)
         {
             var filtered = meldeArtId.HasValue
@@ -723,55 +732,97 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
 
             return groupedUsers;
         }
-
-        public void createTables()
+        public Task<DBResponse> CreateTables()
         {
-            //Creating a sample DataTable - same can be queried from a database
-            //System.Data.DataTable dataTable = new System.Data.DataTable();
-            //dataTable.Clear();
-            //dataTable.Columns.Add("Name");
-            //dataTable.Columns.Add("Marks");
-            //DataRow dataRow0 = dataTable.NewRow();
-            //DataRow dataRow1 = dataTable.NewRow();
-            //DataRow dataRow2 = dataTable.NewRow();
-            //dataRow0["Name"] = "Robert";
-            //dataRow0["Marks"] = "100";
-            //dataTable.Rows.Add(dataRow0);
-            //dataRow1["Name"] = "Method";
-            //dataRow1["Marks"] = "97";
-            //dataTable.Rows.Add(dataRow1);
-            //dataRow2["Name"] = "Karamagi";
-            //dataRow2["Marks"] = "92";
-            //dataTable.Rows.Add(dataRow2);
+            Task<DBResponse> task = Task.Run<DBResponse>(() =>
+            {
+                DBResponse response = new DBResponse();
+                MSWord.Application wordApp = new MSWord.Application();
+                Document wordDoc = null;
 
-            //Opening the Word Document
-            Application application = new Application();
-            Document document = application.Documents.Add();
-            application.Visible = true;
-            application.WindowState = WdWindowState.wdWindowStateMaximize;
+                string dirTemp = $"{BGHKompaktSystemInfo.PathTempARDOC}";
+                if (Directory.Exists(dirTemp)) Directory.Delete(dirTemp, true);
 
+                if (CreateTableByType(ref wordApp, ref wordDoc, 1, ref response, dirTemp) == false) return response;
+                CreateTableByType(ref wordApp, ref wordDoc, 2, ref response, dirTemp);
+                return response;
+            });
+            return task;
+        }
 
-            //Counting the DataTaable Rows and Column to Export
-            //int RowCount = dataTable.Rows.Count;
-            //int ColumnCount = dataTable.Columns.Count;
+        private bool CreateTableByType(ref Application wordApp, ref Document wordDoc, int art, ref DBResponse response, string dirTemp)
+        {
+            if (GetWordDocument(ref wordApp, ref wordDoc, "Bericht BMJ - Anlage Nebentätigkeiten.dotx", ref response) == false) return false;
+
+            try
+            {
+                foreach (Bookmark bM in wordDoc.Bookmarks)
+                {
+
+                    switch (bM.Name)
+                    {
+                        case "Date":
+                            Range rangeDate = bM.Range;
+                            rangeDate.Text = DateTime.Now.ToString("d");
+                            break;
+                        case "RequestType":
+                            Range rangeRequestType = bM.Range;
+                            rangeRequestType.Text = art == 1 ? "Anzeigepflichtige" : "Genehmigungspflichtige";
+                            break;
+                        case "Year":
+                            Range rangeYear = bM.Range;
+                            rangeYear.Text = "2025";
+                            break;
+                        case "Table":
+                            dynamic rangeTable = bM.Range;
+                            CreateTabeleContent(ref rangeTable, wordDoc, art);
+                            break;
+                    }
+                }
+
+                DateTime date = new DateTime();
+                date = DateTime.Now;
+                string docName = $"Bericht BMJ - Anlage Nebentätigkeiten - {(art == 1 ? "Anzeigepflichtig" : "Genehmiungspflichtig")}_{date:d}.docx";
+                //if (Directory.Exists(dirTemp)) Directory.Delete(dirTemp, true);
+                Directory.CreateDirectory(dirTemp);
+                wordDoc.SaveAs2($"{dirTemp}{docName}");
+                wordApp.Visible = true;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = $"Der Bericht konnte nicht erstellt werden. Es ist folgender Fehler aufgetreten: {ex.Message}";
+            }
+            finally
+            {
+                if (response.Success == false)
+                {
+                    wordDoc?.Close(WdSaveOptions.wdDoNotSaveChanges);
+                    wordApp.Quit();
+                }
+            }
+            return true;
+        }
+
+        private void CreateTabeleContent(ref dynamic rangeTable, Document wordDoc, int art)
+        {
             int RowCount = 0;
             int ColumnCount = 2;
 
-            //Creating the Table DataArray to Export
-            //Object[,] DataArray = new object[RowCount + 1, ColumnCount + 1];
-            //int r = 0;
-            //for (int c = 0; c <= ColumnCount - 1; c++)
-            //{
-            //    DataArray[r, c] = dataTable.Columns[c].ColumnName;
-            //    for (r = 0; r <= RowCount - 1; r++)
-            //    {
-            //        DataArray[r, c] = dataTable.Rows[r][c];
-            //    } //end row loop
-            //} //end column loop
-
             List<int> headlines = new List<int>();
             string tableExportString = "";
-            foreach (ClientTypeRequestCount item in RequestsByClient)
+
+            List<ActivityRequest> requests = ReportRequest.Where(r => r.ActivityRequestMeldeArtID == art).ToList();
+            if (requests == null || requests.Count == 0)
+            {
+                rangeTable.Text = "Es sind keine Einträge für diesen Nebentätigkeitstyp vorhanden.";
+                return;
+            }
+            List<ClientTypeRequestCount> clients = new List<ClientTypeRequestCount>();
+            clients = BuildRequestsByClient(requests);
+
+            foreach (ClientTypeRequestCount item in clients)
             {
                 tableExportString += $"{item.TypeName}\t{item.ClientCount}\t";
                 headlines.Add(RowCount);
@@ -781,21 +832,10 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                     tableExportString += $"{client.ClientName}\t{client.Count}\t";
                     RowCount++;
                 }
-            } 
+            }
 
+            rangeTable.Text = tableExportString;
 
-            dynamic range = document.Content.Application.Selection.Range;
-            //String temp = "";
-            //for (r = 0; r <= RowCount - 1; r++)
-            //{
-            //    for (int c = 0; c <= ColumnCount - 1; c++)
-            //    {
-            //        temp = temp + DataArray[r, c] + "\t";
-            //    }
-            //}
-            range.Text = tableExportString;
-
-            //Basic Table Styling and Exporting
             object Separator = MSWord.WdTableFieldSeparator.wdSeparateByTabs;
             object Format = MSWord.WdTableFormat.wdTableFormatWeb1;
             object ApplyBorders = false;
@@ -804,43 +844,28 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
 
             object DefaultTableBehavior = MSWord.WdDefaultTableBehavior.wdWord9TableBehavior;
             object AutoFitBehavior = MSWord.WdAutoFitBehavior.wdAutoFitContent;
-            range.ConvertToTable(ref Separator,
+            rangeTable.ConvertToTable(ref Separator,
                 ref RowCount, ref ColumnCount, Type.Missing, ref Format,
                 ref ApplyBorders, Type.Missing, Type.Missing, Type.Missing,
                     Type.Missing, Type.Missing, Type.Missing,
                     Type.Missing, ref AutoFit, ref AutoFitBehavior,
                     ref DefaultTableBehavior);
 
-            range.Select();
-            //document.Application.Selection.Tables[1].Select();
-            //document.Application.Selection.Tables[1].Rows.AllowBreakAcrossPages = 0;
-            //document.Application.Selection.Tables[1].Rows.Alignment = 0;
-            //document.Application.Selection.Tables[1].Rows[1].Select();
-            //document.Application.Selection.InsertRowsAbove(1);
-            document.Application.Selection.Tables[1].Rows[1].Select();
-            document.Application.Selection.Tables[1].Borders.InsideLineStyle = WdLineStyle.wdLineStyleSingle;
-            document.Application.Selection.Tables[1].Borders.OutsideLineStyle = WdLineStyle.wdLineStyleSingle;
-
-
-            //inserting the Header Row
-            //for (int c = 0; c <= ColumnCount - 1; c++)
-            //{
-            //    document.Application.Selection.Tables[1].Cell(1, c + 1).Range.Text = dataTable.Columns[c].ColumnName;
-            //    //Header Row Font Color and Background Color
-            //    document.Application.Selection.Tables[1].Cell(1, c + 1).Range.Font.Color = WdColor.wdColorWhite;
-            //    document.Application.Selection.Tables[1].Cell(1, c + 1).Range.Shading.BackgroundPatternColor = WdColor.wdColorBlue;
-            //}
+            rangeTable.Select();
+            wordDoc.Application.Selection.Tables[1].Rows[1].Select();
+            wordDoc.Application.Selection.Tables[1].Columns[1].Width = 450;
+            wordDoc.Application.Selection.Tables[1].Borders.InsideLineStyle = WdLineStyle.wdLineStyleSingle;
+            wordDoc.Application.Selection.Tables[1].Borders.OutsideLineStyle = WdLineStyle.wdLineStyleSingle;
 
             foreach (int item in headlines)
             {
                 for (int c = 1; c <= 2; c++)
                 {
-                    document.Application.Selection.Tables[1].Cell(item + 1, c).Range.Font.Color = WdColor.wdColorWhite;
-                    document.Application.Selection.Tables[1].Cell(item + 1, c).Range.Shading.BackgroundPatternColor = WdColor.wdColorBlue;
+                    wordDoc.Application.Selection.Tables[1].Cell(item + 1, c).Range.Font.Color = WdColor.wdColorWhite;
+                    wordDoc.Application.Selection.Tables[1].Cell(item + 1, c).Range.Shading.BackgroundPatternColor = WdColor.wdColorGray40;
                 }
             }
         }
-
     }
 
     public class ClientRequestCount

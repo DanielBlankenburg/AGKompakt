@@ -409,8 +409,8 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             {
                 SetShow(start: true);
                 ViewManager.ShowMainInfoFlyout("Die Kalenderwoche wurde importiert.", false);
-                //MPWeek importweek = task.Result.Data as MPWeek;
-                //importweek.ExportBSCWAdmin(mpDBContext);
+                MPWeek importweek = task.Result.Data as MPWeek;
+                importweek.ExportBSCWAdmin(mpDBContext);
             }
             else { ErrorMessage.CreateSimpleMessage(task.Result.Message); }
         }

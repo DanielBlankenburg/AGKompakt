@@ -633,7 +633,10 @@
                         </Expander>
                     </MD:Card>
                 </WrapPanel>
-                <Border Grid.Row="1" Style="{StaticResource Expander_Border}" Margin="0,15"/>
+                <Border
+                    Grid.Row="1"
+                    Margin="0,15"
+                    Style="{StaticResource Expander_Border}" />
                 <StackPanel Grid.Row="2" Orientation="Horizontal">
                     <Button
                         Margin="0,0,15,0"
@@ -647,6 +650,7 @@
                         Style="{StaticResource Button_Master}" />
                     <Button
                         Width="170"
+                        Margin="0,0,15,0"
                         Command="{Binding CreateReportCommand}"
                         Style="{StaticResource Button_Master}"
                         ToolTip="Bericht erstellen">
@@ -662,13 +666,13 @@
                         Width="170"
                         Command="{Binding CreateTableCommand}"
                         Style="{StaticResource Button_Master}"
-                        ToolTip="Tabelle erstellen">
+                        ToolTip="Tabellen erstellen">
                         <StackPanel Orientation="Horizontal">
                             <MD:PackIcon Padding="0" Kind="MicrosoftWord" />
                             <TextBlock
                                 Margin="10,0,0,0"
                                 Style="{StaticResource textblock_base}"
-                                Text="Bericht erstellen" />
+                                Text="Tabellen erstellen" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
