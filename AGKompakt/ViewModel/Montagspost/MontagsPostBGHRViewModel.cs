@@ -290,12 +290,10 @@ namespace BGH_Kompakt.ViewModel.Montagspost
                 }
             };
         }
-
         private void SaveEMailExecute(object obj)
         {
             SaveEMail("Der E-Mail-Text wurde gespeichert.");
         }
-
         private void ResetExecute(object obj)
         {
             try
@@ -324,18 +322,15 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             }
             
         }
-
         private void BESelectionExecute(object obj)
         {
             User user = (User)obj;
             MessageBox.Show(user.VorName);
         }
-
         private void BackExecute(object obj)
         {
             ViewManager.ShowPageOnMainView<MontagsPostView>();
         }
-
         private void WeekFill()
         {
             MPWeekList.Clear();
@@ -354,19 +349,23 @@ namespace BGH_Kompakt.ViewModel.Montagspost
             {
                 MPDBContext mPDBContext = new MPDBContext();
                 UserDBContext userDBContext = new UserDBContext();
-                var Query = mPDBContext.MPDecisions.Where(x => x.MPWeekID == SelectedWeek.MPWeekID && x.Senat.MPCategorieID == 2).OrderBy(x => x.Senat.MPSenatSorting).ThenBy(x => x.Aktenzeichen);
+                var Query = mPDBContext.MPDecisions.Where(x => x.MPWeekID == SelectedWeek.MPWeekID && (x.Senat.MPCategorieID == 2 || x.Senat.MPCategorieID == 4)).OrderBy(x => x.Senat.MPSenatSorting).ThenBy(x => x.Aktenzeichen);
                 foreach (MPDecision item in Query)
                 {
                     if (item.Leitsatz != string.Empty)
                     {
+                        //Entweder Zivilsenat oder Anwalts-, Notarsenat oder Kartellsenat
+                        if (item.Senat.MPCategorieID == 2 || item.Senat.MPSenatID == 22 || item.Senat.MPSenatID == 23 || item.Senat.MPSenatID == 24 || item.Senat.MPSenatID == 32)
+                        {
+                            User BEAlternative = userDBContext.Users.FirstOrDefault(x => x.UserId == item.BE);
+                            MPDecisionBEList.Add(new MPDecisionBE { Decision = item, BEAlternative = BEAlternative });
+                        }
                         User BE = userDBContext.Users.FirstOrDefault(x => x.UserId == item.BE);
                         MPDecisionBEList.Add(new MPDecisionBE { Decision = item, BE = BE });
                     }
                 }
             }
         }
-
-
         private async void SendExecute(object obj)
         {
             if (SelectedWeek == null)

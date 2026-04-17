@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGH-Kompakt", "BGH-Kompakt\BGH-Kompakt.csproj", "{5B8A83A6-7C27-4D8A-8EE7-1AC5ED39C87F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGKompakt", "AGKompakt\AGKompakt.csproj", "{5B8A83A6-7C27-4D8A-8EE7-1AC5ED39C87F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

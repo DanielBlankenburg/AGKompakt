@@ -215,12 +215,12 @@
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="{Binding AnzeigeCount, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding JudgeCountAnzeige, UpdateSourceTrigger=PropertyChanged}" />
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.Column="1"
                                     Style="{StaticResource textblock_Ergebnis}"
-                                    Text="{Binding GenehmigungCount, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding JudgeCountGenehmigung, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Expander>
                     </MD:Card>

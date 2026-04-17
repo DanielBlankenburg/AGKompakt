@@ -66,6 +66,18 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             get { return _JudgeCount; }
             set { SetProperty(ref _JudgeCount, value); }
         }
+        private int _JudgeCountGenehmigung;
+        public int JudgeCountGenehmigung
+        {
+            get { return _JudgeCountGenehmigung; }
+            set { SetProperty(ref _JudgeCountGenehmigung, value); }
+        }
+        private int _JudgeCountAnzeige;
+        public int JudgeCountAnzeige
+        {
+            get { return _JudgeCountAnzeige; }
+            set { SetProperty(ref _JudgeCountAnzeige, value); }
+        }
         private int _AnzeigeCount;
         public int AnzeigeCount
         {
@@ -281,7 +293,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             StartDate = new DateTime(2025, 1, 1);
             EndDate = DateTime.Now;
         }
-
         private async void CreateTableExecute(object obj)
         {
             string actionName = "Tabellen erstellen";
@@ -294,7 +305,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             ViewManager.ActionlistRemove(actionName);
 
         }
-
         private async void CreateReportExecute(object obj)
         {
             string actionName = "Bericht erstellen";
@@ -330,11 +340,11 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                                 break;
                             case "Anzahl_Richter_A":
                                 range = bM.Range;
-                                range.Text = AnzeigeCount.ToString();
+                                range.Text = JudgeCountAnzeige.ToString();
                                 break;
                             case "Anzahl_Richter_G":
                                 range = bM.Range;
-                                range.Text = GenehmigungCount.ToString();
+                                range.Text = JudgeCountGenehmigung.ToString();
                                 break;
                             //case "Anzahl_Richter_Überschreitung":
                             //    range = bM.Range;
@@ -663,6 +673,18 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             AnzeigeCount = requests.Count(x => x.ActivityRequestMeldeArtID == MeldeArt_Anzeige);
             GenehmigungCount = requests.Count(x => x.ActivityRequestMeldeArtID == MeldeArt_Genehmigung);
 
+            JudgeCountAnzeige = requests
+               .Where(r => r.ARUser != null && r.ActivityRequestMeldeArtID == MeldeArt_Anzeige)
+               .Select(r => r.ARUser.UserId)
+               .Distinct()
+               .Count();
+
+            JudgeCountGenehmigung = requests
+                .Where(r => r.ARUser != null && r.ActivityRequestMeldeArtID == MeldeArt_Genehmigung)
+                .Select(r => r.ARUser.UserId)
+                .Distinct()
+                .Count();
+
             var users = requests
                 .Where(r => r.ARUser != null)
                 .Select(r => r.ARUser.UserId)
@@ -749,7 +771,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             });
             return task;
         }
-
         private bool CreateTableByType(ref Application wordApp, ref Document wordDoc, int art, ref DBResponse response, string dirTemp)
         {
             if (GetWordDocument(ref wordApp, ref wordDoc, "Bericht BMJ - Anlage Nebentätigkeiten.dotx", ref response) == false) return false;
@@ -771,7 +792,7 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                             break;
                         case "Year":
                             Range rangeYear = bM.Range;
-                            rangeYear.Text = "2025";
+                            rangeYear.Text = DateTime.Parse(StartDate.ToString()).Year.ToString();
                             break;
                         case "Table":
                             dynamic rangeTable = bM.Range;
@@ -779,7 +800,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
                             break;
                     }
                 }
-
                 DateTime date = new DateTime();
                 date = DateTime.Now;
                 string docName = $"Bericht BMJ - Anlage Nebentätigkeiten - {(art == 1 ? "Anzeigepflichtig" : "Genehmiungspflichtig")}_{date:d}.docx";
@@ -804,7 +824,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             }
             return true;
         }
-
         private void CreateTabeleContent(ref dynamic rangeTable, Document wordDoc, int art)
         {
             int RowCount = 0;
@@ -867,13 +886,11 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
             }
         }
     }
-
     public class ClientRequestCount
     {
         public string ClientName { get; set; } = string.Empty;
         public int Count { get; set; }
     }
-
     public class ClientTypeRequestCount
     {
         public string TypeName { get; set; } = string.Empty;
@@ -881,7 +898,6 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
         public int ClientCount => Clients?.Count ?? 0;
         public int TotalRequests => Clients?.Sum(c => c.Count) ?? 0;
     }
-
     public class UserRequestGroup
     {
         public int UserId { get; set; }
@@ -892,14 +908,12 @@ namespace BGH_Kompakt.ViewModel.Nebentaetigkeiten
         public int TotalHours => Requests?.Where(r => r.Gesamtzeitaufwand != null).Sum(r => (int)r.Gesamtzeitaufwand) ?? 0;
         public int TotalAmount => Requests?.Where(r => r.Gesamtverguetung != null).Sum(r => (int)r.Gesamtverguetung) ?? 0;
     }
-
     public class PaymentLimit
     {
         public int Id { get; set; }    
         public string Besoldungsgruppe { get; set; }
         public decimal Limit { get; set; }
     }
-
     public class ExceedInfo : ViewModelBase
     {
         private int _Count;
