@@ -187,191 +187,32 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AttchedProperties\WebBrowserBehaviors.cs" />
-    <Compile Include="Classes\ActivityRequestClasses\AcivityRequestChangesDetections.cs" />
-    <Compile Include="Classes\ActivityRequestClasses\ActivityRequestChangeHistory.cs" />
-    <Compile Include="Classes\ActivityRequestClasses\ActivityRequestComment.cs" />
-    <Compile Include="Classes\ActivityRequestClasses\ActivityRequestDataFile.cs" />
     <Compile Include="Classes\BereichMP.cs" />
     <Compile Include="Classes\ComboboxItems.cs" />
     <Compile Include="Classes\Helper\ARSendProperties.cs" />
     <Compile Include="Classes\Helper\ComboboxItem.cs" />
     <Compile Include="Classes\Helper\ErrorMessage.cs" />
     <Compile Include="Classes\Helper\ScienceAuthor.cs" />
-    <Compile Include="Classes\MP\MPBGHRSenat.cs" />
-    <Compile Include="Classes\MP\MPDecisionBE.cs" />
     <Compile Include="Classes\SystemSettings\PageInfo.cs" />
     <Compile Include="Classes\Test\FileData.cs" />
     <Compile Include="Classes\Test\TestItem.cs" />
     <Compile Include="Classes\UserClasses\UserDienstbezeichnung.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestStatus.cs" />
-    <Compile Include="Classes\ActivityRequestClasses\ActivityRequestStatusHistory.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ARHourAmountProportion.cs" />
-    <Compile Include="Classes\_LookUp\MP\MPEMail.cs" />
-    <Compile Include="Classes\_LookUp\MP\MPSetting.cs" />
-    <Compile Include="Classes\_LookUp\MP\MPVermerk.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\RBesoldung.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\RBesoldungPayment.cs" />
     <Compile Include="Converter\BoolToWidthConverter.cs" />
     <Compile Include="Converter\RadioBoolToIntConverter.cs" />
     <Compile Include="Dtos\EMailResponse.cs" />
-    <Compile Include="Enums\AREnums.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202507030418003_InitialAR.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202507030418003_InitialAR.Designer.cs">
-      <DependentUpon>202507030418003_InitialAR.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202507041314112_Assurance.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202507041314112_Assurance.Designer.cs">
-      <DependentUpon>202507041314112_Assurance.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202507280722052_ARNoteAdmin.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202507280722052_ARNoteAdmin.Designer.cs">
-      <DependentUpon>202507280722052_ARNoteAdmin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202508181137426_DataFiles.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202508181137426_DataFiles.Designer.cs">
-      <DependentUpon>202508181137426_DataFiles.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202508190621526_ARVerguetungType.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202508190621526_ARVerguetungType.Designer.cs">
-      <DependentUpon>202508190621526_ARVerguetungType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202508252043560_ARRejected.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202508252043560_ARRejected.Designer.cs">
-      <DependentUpon>202508252043560_ARRejected.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202509030634241_ScienceAuthor.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202509030634241_ScienceAuthor.Designer.cs">
-      <DependentUpon>202509030634241_ScienceAuthor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202509040422173_HasOptionalARClient.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202509040422173_HasOptionalARClient.Designer.cs">
-      <DependentUpon>202509040422173_HasOptionalARClient.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202509091651228_3_014_0.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202509091651228_3_014_0.Designer.cs">
-      <DependentUpon>202509091651228_3_014_0.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202509181328450_ARChangeHistory.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202509181328450_ARChangeHistory.Designer.cs">
-      <DependentUpon>202509181328450_ARChangeHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202509212013463_ARStatus.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202509212013463_ARStatus.Designer.cs">
-      <DependentUpon>202509212013463_ARStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202509220322077_ARAccepted.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202509220322077_ARAccepted.Designer.cs">
-      <DependentUpon>202509220322077_ARAccepted.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202510051624358_3_017_2_ActivityRequestComments.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202510051624358_3_017_2_ActivityRequestComments.Designer.cs">
-      <DependentUpon>202510051624358_3_017_2_ActivityRequestComments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202512130452031_ARSatusHistories.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202512130452031_ARSatusHistories.Designer.cs">
-      <DependentUpon>202512130452031_ARSatusHistories.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\ActivityRequests\202512202156428_DeleteSingleStatus.cs" />
-    <Compile Include="Migrartions\ActivityRequests\202512202156428_DeleteSingleStatus.Designer.cs">
-      <DependentUpon>202512202156428_DeleteSingleStatus.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.cs" />
-    <Compile Include="Migrartions\MP\202507090547129_MPEMailMPSetting.Designer.cs">
-      <DependentUpon>202507090547129_MPEMailMPSetting.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202507091539261_Vermerke.cs" />
-    <Compile Include="Migrartions\MP\202507091539261_Vermerke.Designer.cs">
-      <DependentUpon>202507091539261_Vermerke.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202509301601206_3_017_2_BE.cs" />
-    <Compile Include="Migrartions\MP\202509301601206_3_017_2_BE.Designer.cs">
-      <DependentUpon>202509301601206_3_017_2_BE.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202510110422449_BSCWServer.cs" />
-    <Compile Include="Migrartions\MP\202510110422449_BSCWServer.Designer.cs">
-      <DependentUpon>202510110422449_BSCWServer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202511010538599_MPRedakteureEMailNotice.cs" />
-    <Compile Include="Migrartions\MP\202511010538599_MPRedakteureEMailNotice.Designer.cs">
-      <DependentUpon>202511010538599_MPRedakteureEMailNotice.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202601220502427_BGHRSenate.cs" />
-    <Compile Include="Migrartions\MP\202601220502427_BGHRSenate.Designer.cs">
-      <DependentUpon>202601220502427_BGHRSenate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202507110630070_SortingMP.cs" />
-    <Compile Include="Migrartions\Users\202507110630070_SortingMP.Designer.cs">
-      <DependentUpon>202507110630070_SortingMP.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202507140325575_FilterLS.cs" />
-    <Compile Include="Migrartions\Users\202507140325575_FilterLS.Designer.cs">
-      <DependentUpon>202507140325575_FilterLS.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202508191535020_BSCWSubFolders.cs" />
-    <Compile Include="Migrartions\Users\202508191535020_BSCWSubFolders.Designer.cs">
-      <DependentUpon>202508191535020_BSCWSubFolders.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202509050913148_Update3_013.cs" />
-    <Compile Include="Migrartions\Users\202509050913148_Update3_013.Designer.cs">
-      <DependentUpon>202509050913148_Update3_013.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202509180626522_3_016_Straf.cs" />
-    <Compile Include="Migrartions\Users\202509180626522_3_016_Straf.Designer.cs">
-      <DependentUpon>202509180626522_3_016_Straf.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202509180632435_UserInitials.cs" />
-    <Compile Include="Migrartions\Users\202509180632435_UserInitials.Designer.cs">
-      <DependentUpon>202509180632435_UserInitials.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.cs" />
-    <Compile Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.Designer.cs">
-      <DependentUpon>202509280718402_Spruchgruppenmitglieder.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202603071251038_InitialPayments.cs" />
-    <Compile Include="Migrartions\Users\202603071251038_InitialPayments.Designer.cs">
-      <DependentUpon>202603071251038_InitialPayments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Services\ActivityRequestService\ActivityRequestManager.cs" />
     <Compile Include="Services\Extentions\DirectoryInfoExtensions.cs" />
     <Compile Include="Classes\Helper\ActionStatus.cs" />
     <Compile Include="Classes\Helper\CompareBSCW.cs" />
     <Compile Include="Classes\Helper\MailAttechment.cs" />
     <Compile Include="Classes\Helper\StringContainer.cs" />
-    <Compile Include="Classes\MP\MPDecisionFile.cs" />
-    <Compile Include="Classes\MP\MPDecisionImportWord.cs" />
-    <Compile Include="Classes\MP\MPDecisionImport.cs" />
     <Compile Include="Classes\Helper\SelectableItemWrapper.cs" />
     <Compile Include="Classes\Kalenderwoche.cs" />
-    <Compile Include="Classes\MP\MPDecision.cs" />
-    <Compile Include="Classes\MP\MPEMailRecipient.cs" />
-    <Compile Include="Classes\MP\MPImportFile.cs" />
-    <Compile Include="Classes\MP\MPImportHelper.cs" />
-    <Compile Include="Classes\MP\MPImportResult.cs" />
-    <Compile Include="Classes\MP\MPUserDecision.cs" />
-    <Compile Include="Classes\MP\MPWeek.cs" />
-    <Compile Include="Classes\Senate\Senat.cs" />
-    <Compile Include="Classes\Senate\SenatAktenzeichen.cs" />
-    <Compile Include="Classes\Senate\SenatSpruchgruppe.cs" />
     <Compile Include="Classes\Sitzungsunterlagen\Helper\CompareFile.cs" />
     <Compile Include="Classes\Sitzungsunterlagen\VerfahrenVotenmappe.cs" />
     <Compile Include="Classes\SystemSettings\ProgrammSetting.cs" />
     <Compile Include="Classes\Test\ItemPresenter.cs" />
-    <Compile Include="Classes\Senate\SenatSetting.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityClientTyp.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestArbitrationClient.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestArbitrationTyp.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestFrequency.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestOrtArt.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestScienceAuthorName.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestScienceCategorie.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestMeldeArt.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestScienceTyp.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ActivityRequestTyp.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ARVerguetungAdventage.cs" />
-    <Compile Include="Classes\_LookUp\ActivityRequestLookUps\ARVerguetungAdventageTyp.cs" />
-    <Compile Include="Classes\_LookUp\MP\MPCategory.cs" />
-    <Compile Include="Classes\_LookUp\MP\MPSenat.cs" />
-    <Compile Include="Classes\_LookUp\MP\MPSenatAbbreviation.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\AdminStatus.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\Dienstbezeichnung.cs" />
     <Compile Include="Classes\UserClasses\UserFilterMP.cs" />
@@ -380,8 +221,6 @@
     <Compile Include="Classes\_LookUp\UserLookUps\Status.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\Titel.cs" />
     <Compile Include="Classes\MontagspostFilter.cs" />
-    <Compile Include="Classes\ActivityRequestClasses\ActivityClient.cs" />
-    <Compile Include="Classes\ActivityRequestClasses\ActivityRequest.cs" />
     <Compile Include="Classes\Person.cs" />
     <Compile Include="Classes\Postions.cs" />
     <Compile Include="Classes\SenatKW.cs" />
@@ -402,72 +241,11 @@
     <Compile Include="Converter\DocxToPDFConverter.cs" />
     <Compile Include="Converter\SenatsConverter.cs" />
     <Compile Include="Dtos\DBResponse.cs" />
-    <Compile Include="EntityConfigurations\ActivityRequestDBContext\ActivityClientConfigurations.cs" />
-    <Compile Include="EntityConfigurations\ActivityRequestDBContext\ActivityRequestConfigurations.cs" />
-    <Compile Include="EntityConfigurations\ActivityRequestDBContext\ActivityRequestSeeder.cs" />
-    <Compile Include="EntityConfigurations\MP\MPConfiguration.cs" />
-    <Compile Include="EntityConfigurations\MP\MPSeed.cs" />
-    <Compile Include="EntityConfigurations\MP\MPSenatConfiguration.cs" />
     <Compile Include="EntityConfigurations\UserDBContext\UserSeeder.cs" />
     <Compile Include="EntityConfigurations\UserDBContext\UserConfiguration.cs" />
-    <Compile Include="Enums\MPEnums.cs" />
     <Compile Include="Enums\UserEnums.cs" />
     <Compile Include="Enums\SettingEnums.cs" />
     <Compile Include="Enums\SitzungsunterlagenEnums.cs" />
-    <Compile Include="Migrartions\ActivityRequests\ConfigurationActivityRequest.cs" />
-    <Compile Include="Migrartions\MP\202501301414587_InitialMP.cs" />
-    <Compile Include="Migrartions\MP\202501301414587_InitialMP.Designer.cs">
-      <DependentUpon>202501301414587_InitialMP.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202501310518185_TypAnzeige.cs" />
-    <Compile Include="Migrartions\MP\202501310518185_TypAnzeige.Designer.cs">
-      <DependentUpon>202501310518185_TypAnzeige.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202502060918051_MPUserStage.cs" />
-    <Compile Include="Migrartions\MP\202502060918051_MPUserStage.Designer.cs">
-      <DependentUpon>202502060918051_MPUserStage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202502170421086_MPBE.cs" />
-    <Compile Include="Migrartions\MP\202502170421086_MPBE.Designer.cs">
-      <DependentUpon>202502170421086_MPBE.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202502170624273_MPBEString.cs" />
-    <Compile Include="Migrartions\MP\202502170624273_MPBEString.Designer.cs">
-      <DependentUpon>202502170624273_MPBEString.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202502171814099_MPVermerk.cs" />
-    <Compile Include="Migrartions\MP\202502171814099_MPVermerk.Designer.cs">
-      <DependentUpon>202502171814099_MPVermerk.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202503031407468_VermerkAnzeige.cs" />
-    <Compile Include="Migrartions\MP\202503031407468_VermerkAnzeige.Designer.cs">
-      <DependentUpon>202503031407468_VermerkAnzeige.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\202505090944265_EMail.cs" />
-    <Compile Include="Migrartions\MP\202505090944265_EMail.Designer.cs">
-      <DependentUpon>202505090944265_EMail.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\MP\ConfigurationMP.cs" />
-    <Compile Include="Migrartions\Users\202506152030562_InitialUser.cs" />
-    <Compile Include="Migrartions\Users\202506152030562_InitialUser.Designer.cs">
-      <DependentUpon>202506152030562_InitialUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202506161009483_TestZahl.cs" />
-    <Compile Include="Migrartions\Users\202506161009483_TestZahl.Designer.cs">
-      <DependentUpon>202506161009483_TestZahl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202506200435117_AktenzeichenNameRaw.cs" />
-    <Compile Include="Migrartions\Users\202506200435117_AktenzeichenNameRaw.Designer.cs">
-      <DependentUpon>202506200435117_AktenzeichenNameRaw.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202506230328565_EMailDokstelle.cs" />
-    <Compile Include="Migrartions\Users\202506230328565_EMailDokstelle.Designer.cs">
-      <DependentUpon>202506230328565_EMailDokstelle.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrartions\Users\202506240927088_MPEMailNotification.cs" />
-    <Compile Include="Migrartions\Users\202506240927088_MPEMailNotification.Designer.cs">
-      <DependentUpon>202506240927088_MPEMailNotification.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrartions\Users\ConfigurationUser.cs" />
     <Compile Include="MigrationsSave_SQLStrings\SaveConfigurations.cs" />
     <Compile Include="MigrationsSave_SQLStrings\SaveSQL-Strings.cs" />
@@ -476,10 +254,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Services\DBContexts\ActivityRequestDBContext.cs" />
     <Compile Include="Services\Extentions\FileInfoExtensions.cs" />
     <Compile Include="Services\Fillclasses\UserFill.cs" />
-    <Compile Include="Services\DBContexts\MPDBContext.cs" />
     <Compile Include="Services\DBContexts\UserDBContext.cs" />
     <Compile Include="Services\DBUnit.cs" />
     <Compile Include="Services\DBUnitBase.cs" />
@@ -487,30 +263,11 @@
     <Compile Include="Services\Extentions\Stringextentions.cs" />
     <Compile Include="Services\FillKlassen.cs" />
     <Compile Include="Services\Interfaces\DropInterface.cs" />
-    <Compile Include="Services\MontagspostService\MontagsPostManager.cs" />
     <Compile Include="Services\SystemComponents\BGHKompaktSystemInfo.cs" />
     <Compile Include="Services\SystemComponents\Logger.cs" />
     <Compile Include="Services\SystemComponents\ViewManager.cs" />
     <Compile Include="Services\UserService\UserManager.cs" />
     <Compile Include="ViewModel\MainWindow\MainWindowViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\FilterViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagsPostBEViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagsPostBGHRViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagsPostEditorViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagsPostEMailsViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagsPostFilterViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagspostImportViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagsPostMetadataEditViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagsPostSettingsViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagsPostVermerkViewModel.cs" />
-    <Compile Include="ViewModel\Montagspost\MontagsPostViewModel.cs" />
-    <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsRBesoldungViewModel.cs" />
-    <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsReportViewModel.cs" />
-    <Compile Include="ViewModel\Nebentaetigkeiten\ActivityRequestsSearchViewModel.cs" />
-    <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetgkeitenViewModel.cs" />
-    <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenAnzeigeViewModel.cs" />
-    <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenClientEditorViewModel.cs" />
-    <Compile Include="ViewModel\Nebentaetigkeiten\NebentaetigkeitenListViewModel.cs" />
     <Compile Include="ViewModel\PersonChangeViewModel.cs" />
     <Compile Include="ViewModel\PersonenViewModel.cs" />
     <Compile Include="ViewModel\PString.cs" />
@@ -529,50 +286,11 @@
     <Compile Include="ViewModel\Userlogin\UserPropertyViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\VotenViewModel.cs" />
-    <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsRBesoldungView.xaml.cs">
-      <DependentUpon>ActivityRequestsRBesoldungView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml.cs">
-      <DependentUpon>ActivityRequestsReportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\ActivityRequests\ActivityRequestsSearchView.xaml.cs">
-      <DependentUpon>ActivityRequestsSearchView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenClientEditorView.xaml.cs">
-      <DependentUpon>NebentaetigkeitenClientEditorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Anwaltsauswahl\AnwaltswahlView.xaml.cs">
-      <DependentUpon>AnwaltswahlView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml.cs">
-      <DependentUpon>MontagsPostAdminView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostBGHRView.xaml.cs">
-      <DependentUpon>MontagsPostBGHRView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostEditorView.xaml.cs">
-      <DependentUpon>MontagsPostEditorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostEMailsView.xaml.cs">
-      <DependentUpon>MontagsPostEMailsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostMetadataEditView.xaml.cs">
-      <DependentUpon>MontagsPostMetadataEditView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostSettingsView.xaml.cs">
-      <DependentUpon>MontagsPostSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Settings\ErrorAreaView.xaml.cs">
-      <DependentUpon>ErrorAreaView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Pages\Sitzungsunterlagen\SitzungsunterlagenStrafView.xaml.cs">
       <DependentUpon>SitzungsunterlagenStrafView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Start\InstructionsView.xaml.cs">
       <DependentUpon>InstructionsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\TestDesign\StartTest.xaml.cs">
-      <DependentUpon>StartTest.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\ActivityRequestChangeListView.xaml.cs">
       <DependentUpon>ActivityRequestChangeListView.xaml</DependentUpon>
@@ -580,53 +298,8 @@
     <Compile Include="Views\Windows\InputBoxBGH.xaml.cs">
       <DependentUpon>InputBoxBGH.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\Sitzungsunterlagen\Kanzleiunterlagen.xaml.cs">
-      <DependentUpon>Kanzleiunterlagen.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostBE.xaml.cs">
-      <DependentUpon>MontagsPostBE.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostFilterView.xaml.cs">
-      <DependentUpon>MontagsPostFilterView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagspostImportView.xaml.cs">
-      <DependentUpon>MontagspostImportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostVermerkView.xaml.cs">
-      <DependentUpon>MontagsPostVermerkView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Montagspost\MontagsPostView.xaml.cs">
-      <DependentUpon>MontagsPostView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenAnzeigeView.xaml.cs">
-      <DependentUpon>NebentaetigkeitenAnzeigeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenListView.xaml.cs">
-      <DependentUpon>NebentaetigkeitenListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\ActivityRequests\NebentaetigkeitenView.xaml.cs">
-      <DependentUpon>NebentaetigkeitenView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Settings\MPSettingsView.xaml.cs">
-      <DependentUpon>MPSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Settings\ProgrammSettingsView.xaml.cs">
-      <DependentUpon>ProgrammSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Settings\SettingsView.xaml.cs">
-      <DependentUpon>SettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Settings\SettingViewStart.xaml.cs">
-      <DependentUpon>SettingViewStart.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Settings\SystemSettingView.xaml.cs">
-      <DependentUpon>SystemSettingView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Pages\Sitzungsunterlagen\SitzungsplaeneView.xaml.cs">
       <DependentUpon>SitzungsplaeneView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Sitzungsunterlagen\BSCWServerView.xaml.cs">
-      <DependentUpon>BSCWServerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Sitzungsunterlagen\SitzungsunterlagenView.xaml.cs">
       <DependentUpon>SitzungsunterlagenView.xaml</DependentUpon>
@@ -636,9 +309,6 @@
     </Compile>
     <Compile Include="Views\Pages\Sitzungsunterlagen\SpruchgruppenView.xaml.cs">
       <DependentUpon>SpruchgruppenView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Pages\Settings\AdminView.xaml.cs">
-      <DependentUpon>AdminView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Start\StartView.xaml.cs">
       <DependentUpon>StartView.xaml</DependentUpon>
@@ -659,59 +329,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\ActivityRequests\ActivityRequestsRBesoldungView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\ActivityRequests\ActivityRequestsReportView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\ActivityRequests\ActivityRequestsSearchView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\ActivityRequests\NebentaetigkeitenClientEditorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostAdminView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostBGHRView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostEditorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostEMailsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostMetadataEditView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Settings\ErrorAreaView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Pages\Sitzungsunterlagen\SitzungsunterlagenStrafView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\Start\InstructionsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\TestDesign\StartTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -818,75 +440,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\Anwaltsauswahl\AnwaltswahlView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Windows\InputBoxBGH.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\Sitzungsunterlagen\Kanzleiunterlagen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostBE.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostFilterView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagspostImportView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostVermerkView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Montagspost\MontagsPostView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\ActivityRequests\NebentaetigkeitenAnzeigeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\ActivityRequests\NebentaetigkeitenListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\ActivityRequests\NebentaetigkeitenView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Settings\MPSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Settings\ProgrammSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Settings\SettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Settings\SettingViewStart.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Settings\SystemSettingView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Pages\Sitzungsunterlagen\SitzungsplaeneView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Sitzungsunterlagen\BSCWServerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -899,10 +457,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\Sitzungsunterlagen\SpruchgruppenView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\Settings\AdminView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -936,139 +490,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202507030418003_InitialAR.resx">
-      <DependentUpon>202507030418003_InitialAR.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202507041314112_Assurance.resx">
-      <DependentUpon>202507041314112_Assurance.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202507280722052_ARNoteAdmin.resx">
-      <DependentUpon>202507280722052_ARNoteAdmin.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202508181137426_DataFiles.resx">
-      <DependentUpon>202508181137426_DataFiles.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202508190621526_ARVerguetungType.resx">
-      <DependentUpon>202508190621526_ARVerguetungType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202508252043560_ARRejected.resx">
-      <DependentUpon>202508252043560_ARRejected.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202509030634241_ScienceAuthor.resx">
-      <DependentUpon>202509030634241_ScienceAuthor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202509040422173_HasOptionalARClient.resx">
-      <DependentUpon>202509040422173_HasOptionalARClient.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202509091651228_3_014_0.resx">
-      <DependentUpon>202509091651228_3_014_0.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202509181328450_ARChangeHistory.resx">
-      <DependentUpon>202509181328450_ARChangeHistory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202509212013463_ARStatus.resx">
-      <DependentUpon>202509212013463_ARStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202509220322077_ARAccepted.resx">
-      <DependentUpon>202509220322077_ARAccepted.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202510051624358_3_017_2_ActivityRequestComments.resx">
-      <DependentUpon>202510051624358_3_017_2_ActivityRequestComments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202512130452031_ARSatusHistories.resx">
-      <DependentUpon>202512130452031_ARSatusHistories.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\ActivityRequests\202512202156428_DeleteSingleStatus.resx">
-      <DependentUpon>202512202156428_DeleteSingleStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202501301414587_InitialMP.resx">
-      <DependentUpon>202501301414587_InitialMP.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202501310518185_TypAnzeige.resx">
-      <DependentUpon>202501310518185_TypAnzeige.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202502060918051_MPUserStage.resx">
-      <DependentUpon>202502060918051_MPUserStage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202502170421086_MPBE.resx">
-      <DependentUpon>202502170421086_MPBE.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202502170624273_MPBEString.resx">
-      <DependentUpon>202502170624273_MPBEString.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202502171814099_MPVermerk.resx">
-      <DependentUpon>202502171814099_MPVermerk.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202503031407468_VermerkAnzeige.resx">
-      <DependentUpon>202503031407468_VermerkAnzeige.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202505090944265_EMail.resx">
-      <DependentUpon>202505090944265_EMail.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202507090547129_MPEMailMPSetting.resx">
-      <DependentUpon>202507090547129_MPEMailMPSetting.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202507091539261_Vermerke.resx">
-      <DependentUpon>202507091539261_Vermerke.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202509301601206_3_017_2_BE.resx">
-      <DependentUpon>202509301601206_3_017_2_BE.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202510110422449_BSCWServer.resx">
-      <DependentUpon>202510110422449_BSCWServer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202511010538599_MPRedakteureEMailNotice.resx">
-      <DependentUpon>202511010538599_MPRedakteureEMailNotice.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\MP\202601220502427_BGHRSenate.resx">
-      <DependentUpon>202601220502427_BGHRSenate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202506152030562_InitialUser.resx">
-      <DependentUpon>202506152030562_InitialUser.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202506161009483_TestZahl.resx">
-      <DependentUpon>202506161009483_TestZahl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202506200435117_AktenzeichenNameRaw.resx">
-      <DependentUpon>202506200435117_AktenzeichenNameRaw.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202506230328565_EMailDokstelle.resx">
-      <DependentUpon>202506230328565_EMailDokstelle.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202506240927088_MPEMailNotification.resx">
-      <DependentUpon>202506240927088_MPEMailNotification.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202507110630070_SortingMP.resx">
-      <DependentUpon>202507110630070_SortingMP.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202507140325575_FilterLS.resx">
-      <DependentUpon>202507140325575_FilterLS.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202508191535020_BSCWSubFolders.resx">
-      <DependentUpon>202508191535020_BSCWSubFolders.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202509050913148_Update3_013.resx">
-      <DependentUpon>202509050913148_Update3_013.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202509180626522_3_016_Straf.resx">
-      <DependentUpon>202509180626522_3_016_Straf.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202509180632435_UserInitials.resx">
-      <DependentUpon>202509180632435_UserInitials.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202509280718402_Spruchgruppenmitglieder.resx">
-      <DependentUpon>202509280718402_Spruchgruppenmitglieder.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrartions\Users\202603071251038_InitialPayments.resx">
-      <DependentUpon>202603071251038_InitialPayments.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

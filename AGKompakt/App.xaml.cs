@@ -102,8 +102,6 @@ namespace BGH_Kompakt
 
             iServiceColletion.AddSingleton<SitzungsplaeneView>();
             iServiceColletion.AddSingleton<SpruchgruppenView>();
-            iServiceColletion.AddSingleton<Kanzleiunterlagen>();
-            //iServiceColletion.AddTransient<PersonChangeView>();
             iServiceColletion.AddSingleton<SettingsView>();
 
             iServiceColletion.AddTransient<StartView>();
