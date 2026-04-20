@@ -41,21 +41,9 @@ namespace BGH_Kompakt.EntityConfigurations
             HasRequired(x => x.FilterMP)
             .WithRequiredPrincipal(x => x.User);
 
-            HasMany(x => x.Senate)
-            .WithMany(x => x.Users)
-            .Map(m => m.ToTable("Senatsmitglieder"));
-
             HasMany(x => x.AdminStatus)
             .WithMany(x => x.Users)
             .Map(m => m.ToTable("Rollen"));
-
-            HasMany(x => x.SenateAdmin)
-            .WithMany(x => x.AdminUsers)
-            .Map(m => m.ToTable("Senatsadministratoren"));
-
-            HasMany(x => x.Spruchgruppen)
-            .WithMany(x => x.Members)
-            .Map(m => m.ToTable("Spruchgruppenmitglieder"));
 
             HasMany(x => x.UserDienstbezeichnungen)
                 .WithRequired(x => x.User)

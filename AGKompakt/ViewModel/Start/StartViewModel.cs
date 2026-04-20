@@ -68,19 +68,9 @@ namespace BGH_Kompakt.ViewModel.Start
 
         public StartViewModel()
         {
-            Title = (UserManager.SenatSettings.Senat != null) ? UserManager.SenatSettings.Senat.SenatName : "kein Senat ausgewählt";
             if (UserManager.RegistratedUser != null)
             {
-                ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
-                if (UserManager.SenatSettings.Senat != null)
-                    SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
-                ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
-                ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
-                ShowMontagspostAdmin = UserManager.RegistratedUser.ShowMontagspostAdmin;
-                ShowSitzungsplaene = UserManager.SenatSettings.ShowSitzungsplaene;
-                ShowSpruchgruppen = UserManager.SenatSettings.ShowSpruchgruppen;
-                ShowKanzlei = false;
-                ShowAnwaltsauswahl = false;
+
             }
         }
     }

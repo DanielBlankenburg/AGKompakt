@@ -1,13 +1,4 @@
-﻿using BGH_Kompakt.EntityConfigurations.ActivityRequestDBContext;
-using BGH_Kompakt.EntityConfigurations.UserDBContext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BGH_Kompakt.MigrationsSave_SQLStrings
+﻿namespace BGH_Kompakt.MigrationsSave_SQLStrings
 {
     internal class SaveConfigurations
     {

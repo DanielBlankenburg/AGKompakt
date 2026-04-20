@@ -1,17 +1,4 @@
-﻿using BGH_Kompakt.Classes;
-using BGH_Kompakt.Classes._LookUp.UserLookUps;
-using BGH_Kompakt.Classes.Senate;
-using BGH_Kompakt.Classes.UserClasses;
-using BGH_Kompakt.Enums;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BGH_Kompakt.EntityConfigurations.UserDBContext
+﻿namespace BGH_Kompakt.EntityConfigurations.UserDBContext
 {
     public class UserSeeder
     {

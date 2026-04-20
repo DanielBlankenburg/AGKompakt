@@ -1,24 +1,9 @@
 ﻿using BGH_Kompakt.Services.SystemComponents;
-using BGH_Kompakt.ViewModel;
 using BGH_Kompakt.ViewModel.MainWindow;
-using BGH_Kompakt.ViewModel.Montagspost;
-using BGH_Kompakt.ViewModel.Nebentaetigkeiten;
-using BGH_Kompakt.ViewModel.Sitzungsunterlagen;
 using BGH_Kompakt.ViewModel.Start;
-using BGH_Kompakt.ViewModel.SystemSettings;
 using BGH_Kompakt.ViewModel.Userlogin;
-using BGH_Kompakt.Views;
-using BGH_Kompakt.Views.Montagspost;
-using BGH_Kompakt.Views.Pages.ActivityRequests;
-using BGH_Kompakt.Views.Pages.Montagspost;
-using BGH_Kompakt.Views.Pages.Settings;
-using BGH_Kompakt.Views.Pages.Sitzungsunterlagen;
 using BGH_Kompakt.Views.Pages.Start;
-using BGH_Kompakt.Views.Pages.TestDesign;
-using BGH_Kompakt.Views.Settings;
-using BGH_Kompakt.Views.Sitzungsunterlagen;
 using BGH_Kompakt.Views.Start;
-using BGH_Kompakt.Views.SystemSettingsView;
 using BGH_Kompakt.Views.UserLogin;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -66,16 +51,16 @@ namespace BGH_Kompakt
             {
                 var mainView = _ServiceProvider.GetService<MainWindow>();
                 var mainViewModel = _ServiceProvider.GetService<MainWindowViewModel>();
-                var settingView = _ServiceProvider.GetService<SettingsView>();
-                var nebentaetigkeiten = _ServiceProvider.GetService<NebentaetigkeitenView>();
+                //var settingView = _ServiceProvider.GetService<SettingsView>();
+                //var nebentaetigkeiten = _ServiceProvider.GetService<NebentaetigkeitenView>();
 
-                if (mainView is null || settingView is null || nebentaetigkeiten is null)
-                {
-                    MessageBox.Show("Problem bei Initialisierung des Serviceproviders", "Fehler", MessageBoxButton.OK,MessageBoxImage.Error);
-                    Current.Shutdown();
-                }
+                //if (mainView is null || settingView is null || nebentaetigkeiten is null)
+                //{
+                //    MessageBox.Show("Problem bei Initialisierung des Serviceproviders", "Fehler", MessageBoxButton.OK,MessageBoxImage.Error);
+                //    Current.Shutdown();
+                //}
 
-                ViewManager.InitViewManagerData(mainView, mainViewModel, settingView, nebentaetigkeiten, _ServiceProvider);
+                ViewManager.InitViewManagerData(mainView, mainViewModel, _ServiceProvider);
                 mainView.Show();
             }
             catch (Exception ex)
@@ -94,106 +79,18 @@ namespace BGH_Kompakt
             iServiceColletion.AddSingleton<MainWindow>();
             iServiceColletion.AddSingleton<MainWindowViewModel>();
 
-            iServiceColletion.AddTransient<SitzungsunterlagenView>();
-            iServiceColletion.AddTransient<SitzungsunterlagenViewModel>();
-            iServiceColletion.AddTransient<SitzungsunterlagenStrafView>();
-            iServiceColletion.AddTransient<SitzungsunterlagenStrafViewModel>();
-
-
-            iServiceColletion.AddSingleton<SitzungsplaeneView>();
-            iServiceColletion.AddSingleton<SpruchgruppenView>();
-            iServiceColletion.AddSingleton<SettingsView>();
 
             iServiceColletion.AddTransient<StartView>();
             iServiceColletion.AddTransient<StartViewModel>();
-
-            iServiceColletion.AddTransient<VotenMappeView>();
-            iServiceColletion.AddTransient<VotenMappeViewModel>();
-
-            iServiceColletion.AddSingleton<SettingViewStart>();
-
-            iServiceColletion.AddSingleton<SystemSettingView >();
-            iServiceColletion.AddSingleton<SystemSettingViewModel>();
-
-            iServiceColletion.AddTransient<MontagsPostView>();
-            iServiceColletion.AddTransient<MontagsPostViewModel>();
-
-            iServiceColletion.AddTransient<MontagsPostBE>();
-            iServiceColletion.AddTransient<MontagsPostBEViewModel>();
-
-            iServiceColletion.AddTransient<MontagsPostVermerkView>();
-            iServiceColletion.AddTransient<MontagsPostVermerkViewModel>();
-
-            iServiceColletion.AddSingleton<MontagsPostFilterView>();
-            iServiceColletion.AddSingleton<MontagsPostFilterViewModel>();
-
-            iServiceColletion.AddSingleton<AnwaltswahlView>();
-
-            iServiceColletion.AddSingleton<NebentaetigkeitenView>();
-            iServiceColletion.AddSingleton<NebentaetgkeitenViewModel>();
-            iServiceColletion.AddTransient<NebentaetigkeitenAnzeigeView>();
-            iServiceColletion.AddTransient<NebentaetigkeitenAnzeigeViewModel>();
-
-            //iServiceColletion.AddSingleton<ActivityRequestInputView>();
-            //iServiceColletion.AddSingleton<ActivityRequestInputViewModel>();
-            iServiceColletion.AddTransient<NebentaetigkeitenListView>();
-            iServiceColletion.AddTransient<NebentaetigkeitenListViewModel>();
-
-            iServiceColletion.AddTransient<NebentaetigkeitenListViewModel>();
 
             iServiceColletion.AddSingleton<UserLoginView>();
             iServiceColletion.AddSingleton<UserLoginViewModel>();
             iServiceColletion.AddTransient<UserPropertyView>();
             iServiceColletion.AddTransient<UserPropertyViewModel>();
 
-            iServiceColletion.AddTransient<AdminView>();
-            iServiceColletion.AddTransient<AdminViewModel>();
-
             //iServiceColletion.AddSingleton<TestDesignView>();
             iServiceColletion.AddSingleton<UserSwitchWindow>();
-
-            iServiceColletion.AddSingleton<MontagspostImportView>();
-            iServiceColletion.AddSingleton<MontagspostImportViewModel>();
-
-            iServiceColletion.AddSingleton<ProgrammSettingsView>();
-            iServiceColletion.AddSingleton<ProgrammSettingViewModel>();
-
-            iServiceColletion.AddSingleton<BSCWServerView>();
-            iServiceColletion.AddSingleton<BSCWServerViewModel>();
-
-            iServiceColletion.AddSingleton<MPSettingsView>();
-            iServiceColletion.AddSingleton<MPSettingsViewModel>();
-
-            iServiceColletion.AddSingleton<MontagsPostAdminView>();
-
-
-            iServiceColletion.AddSingleton<StartTest>();
-
             iServiceColletion.AddSingleton<InstructionsView>();
-            iServiceColletion.AddSingleton<ErrorAreaView>();
-            iServiceColletion.AddSingleton<ErrorAreaViewModel>();
-
-            iServiceColletion.AddTransient<NebentaetigkeitenClientEditorView>();
-            iServiceColletion.AddTransient<NebentaetigkeitenClientEditorViewModel>();
-
-            iServiceColletion.AddTransient<MontagsPostBGHRView>();
-            iServiceColletion.AddTransient<MontagsPostBGHRViewModel>();
-            iServiceColletion.AddTransient<MontagsPostEMailsView>();
-            iServiceColletion.AddTransient<MontagsPostEMailsViewModel>();
-            iServiceColletion.AddTransient<MontagsPostMetadataEditView>();
-            iServiceColletion.AddTransient<MontagsPostMetadataEditViewModel>();
-            iServiceColletion.AddTransient<MontagsPostSettingsView>();
-            iServiceColletion.AddTransient<MontagsPostSettingsViewModel>();
-            iServiceColletion.AddTransient<MontagsPostEditorView>();
-            iServiceColletion.AddTransient<MontagsPostEditorViewModel>();
-
-            iServiceColletion.AddTransient<ActivityRequestsRBesoldungView>();
-            iServiceColletion.AddTransient<ActivityRequestsRBesoldungViewModel>();
-            iServiceColletion.AddTransient<ActivityRequestsReportView>();
-            iServiceColletion.AddTransient<ActivityRequestsReportViewModel>();
-
-            iServiceColletion.AddTransient<ActivityRequestsSearchView>();
-            iServiceColletion.AddTransient<ActivityRequestsSearchViewModel>();
 
 
 

@@ -139,7 +139,7 @@
                 x:Name="BGH"
                 Grid.Row="0"
                 DockPanel.Dock="Top"
-                Source="/Resources/ImageResources/Images/BGH.jpg" />
+                Source="/Resources/ImageResources/Images/Amtsgericht-Hannover.jpg" />
             <!--  Versionangaben  -->
             <Border
                 Grid.Row="2"
@@ -158,7 +158,6 @@
                         TextWrapping="WrapWithOverflow" />
                     <Button
                         x:Name="Test"
-                        Click="Test_Click"
                         Content="Test"
                         Style="{StaticResource Button_Master}"
                         Visibility="Collapsed" />

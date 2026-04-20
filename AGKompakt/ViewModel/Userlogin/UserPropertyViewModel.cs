@@ -1,20 +1,16 @@
 ﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
-using BGH_Kompakt.Classes.ActivityRequestClasses;
 using BGH_Kompakt.Classes.Helper;
-using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
 using BGH_Kompakt.Views.Start;
-using BGH_Kompakt.Views.SystemSettingsView;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace BGH_Kompakt.ViewModel.Userlogin
@@ -108,23 +104,6 @@ namespace BGH_Kompakt.ViewModel.Userlogin
         }
         public ObservableCollection<UserDienstbezeichnung> UserDienstbezeichnungenList { get; set; }
 
-        private readonly ObservableCollection<Senat> _SenatListAll = new ObservableCollection<Senat>();
-        private readonly ObservableCollection<Senat> _SenatListUser = new ObservableCollection<Senat>();
-
-        public ObservableCollection<Senat> SenatListAll { get { return _SenatListAll; } }
-        private Senat _selectedSenatAll;
-        public Senat SelectedSenatAll
-        {
-            get { return _selectedSenatAll; }
-            set { SetProperty(ref _selectedSenatAll, value); }
-        }
-        public ObservableCollection<Senat> SenatListUser { get { return _SenatListUser; } }
-        private Senat _selectedSenatUser;
-        public Senat SelectedSenatUser
-        {
-            get { return _selectedSenatUser; }
-            set { SetProperty(ref _selectedSenatUser, value); }
-        }
         private UserDienstbezeichnung _SelectedUserDienstbezeichnung = new UserDienstbezeichnung();
         public UserDienstbezeichnung SelectedUserDienstbezeichnung
         {
@@ -146,22 +125,11 @@ namespace BGH_Kompakt.ViewModel.Userlogin
 
             Introduction = $"Bitte ändern Sie {(ViewManager.PageInfo.UserSettingType == 0 ? "Ihre" : "die")} Nutzerdaten in den Feldern ab.";
             int UserID = ViewManager.PageInfo.UserSettingType == 0 ? UserManager.RegistratedUser.UserId : ViewManager.PageInfo.SelectedUser.UserId;
-            CurrenUser = userDBcontext.Users.Where(a => a.UserId == UserID).Include(x => x.Senate).FirstOrDefault();
-            if (CurrenUser.Senate != null)
-            {
-                foreach (var item in CurrenUser.Senate)
-                {
-                    _SenatListUser.Add(item);
-                }
-            }
+            CurrenUser = userDBcontext.Users.Where(a => a.UserId == UserID).FirstOrDefault();
 
-            var Senat_Query = userDBcontext.Senate;
-            foreach (var item in Senat_Query) _SenatListAll.Add(item);
 
             QuitCommand = new RelayCommand(QuitExecute);
             SaveCommand = new RelayCommand(SaveExecute);
-            AddCommand = new RelayCommand(AddExecute, AddCanExecute);
-            RemoveCommand = new RelayCommand(RemoveExecute, RemoveCanExecute);
             AddUserDienstbezeichnungenCommand = new RelayCommand(AddUserDienstbezeichnungenExecute);
             NewUserDienstbezeichnungenCommand = new RelayCommand(NewUserDienstbezeichnungenExecute);
             DeleteUserDienstbezeichnungenCommand = new RelayCommand(DeleteUserDienstbezeichnungenExecute);
@@ -229,31 +197,6 @@ namespace BGH_Kompakt.ViewModel.Userlogin
             }
         }
 
-        private bool RemoveCanExecute(object obj)
-        {
-            return SelectedSenatUser != null;
-        }
-
-        private void RemoveExecute(object obj)
-        {
-            _SenatListAll.Add(SelectedSenatUser);
-            _SenatListAll.OrderBy(s => s.SenatID);
-            _SenatListUser.Remove(SelectedSenatUser);
-        }
-
-        private bool AddCanExecute(object obj)
-        {
-            return SelectedSenatAll != null;
-        }
-
-        private void AddExecute(object obj)
-        {
-            _SenatListUser.Add(SelectedSenatAll);
-            _SenatListUser.OrderBy(s => s.SenatID);
-            _SenatListAll.Remove(SelectedSenatAll);
-
-        }
-
         private DbSet<User> userSet;
 
         private void SaveExecute(object obj)
@@ -291,16 +234,6 @@ namespace BGH_Kompakt.ViewModel.Userlogin
                     if (status != null)
                         CurrenUser.Status= StatusList.FirstOrDefault(g => g.StatusId == CurrenUser.StatusId);
                 }
-                if (SenatListUser != null)
-                {
-                    CurrenUser.Senate.Clear();
-                    foreach (Senat senat in SenatListUser)
-                    {
-                        //Senat Query = CurrenUser.Senate.FirstOrDefault(x => x.SenatID == senat.SenatID);
-                        //if (Query == null) 
-                        CurrenUser.Senate.Add(senat);
-                    }
-                }
 
 
                 userSet = userDBcontext.Set<User>();
@@ -311,12 +244,11 @@ namespace BGH_Kompakt.ViewModel.Userlogin
                 {
                     UserManager.RegistratedUser = CurrenUser;
                     ViewManager.MainWindowViewModel.LoginUser = CurrenUser.Fullname;
-                    ViewManager.MainWindowViewModel.SenatListFill(CurrenUser);
                     ViewManager.ShowPageOnMainView<StartView>();
                 }
                 else
                 {
-                    ViewManager.ShowPageOnMainView<AdminView>();
+                    //ViewManager.ShowPageOnMainView<AdminView>();
                 }
             }
             catch (Exception ex)
@@ -328,7 +260,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
 
         private void QuitExecute(object obj)
         {
-            if (ViewManager.PageInfo.UserSettingType == 0) ViewManager.ShowPageOnMainView<StartView>(); else ViewManager.ShowPageOnMainView<AdminView>();
+            //if (ViewManager.PageInfo.UserSettingType == 0) ViewManager.ShowPageOnMainView<StartView>(); else ViewManager.ShowPageOnMainView<AdminView>();
         }
     }
 }

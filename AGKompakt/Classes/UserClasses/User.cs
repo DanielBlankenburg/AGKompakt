@@ -1,10 +1,8 @@
 ﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
-using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.SystemSettings;
 using BGH_Kompakt.Enums;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.SystemComponents;
-using BGH_Kompakt.Services.UserService;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -41,10 +39,7 @@ namespace BGH_Kompakt.Classes.UserClasses
 
         public UserFilterMP? FilterMP { get; set; }
 
-        public IList<Senat> Senate { get; set; }
-        public IList<Senat> SenateAdmin { get; set; }
         public IList<AdminStatus> AdminStatus { get; set; }
-        public IList<SenatSpruchgruppe> Spruchgruppen { get; set; }
         public IList<UserDienstbezeichnung> UserDienstbezeichnungen { get; set; }
         public Drives? MPBSCW_Server_Drive { get; set; } = new Drives();
         public bool MPEMailNotification { get; set; } = false;
@@ -164,7 +159,6 @@ namespace BGH_Kompakt.Classes.UserClasses
                         if (programmSettings.ActivityRequestActivated == true) if (!ShowActivityRequests) ShowActivityRequests = PositionId == 1 || PositionId == 2;
                     }
                     if (!ShowActivityRequests) ShowActivityRequests = IsARAdmin || IsARPraesdialrichter || IsARPraesident;
-                    if (Senate != null) ShowSitzungsunterlagen = Senate.Count > 0;
                 }
                 //Bestimmung, ob User VorsitzenderRichter ist
                 if (Dienstbezeichnung != null)
@@ -179,15 +173,5 @@ namespace BGH_Kompakt.Classes.UserClasses
                 throw;
             }
         }
-
-        public bool IsSenatAdmin(Senat iSenat)
-        {
-            if (iSenat == null) return false; 
-            foreach(Senat senat in SenateAdmin) if (senat.SenatID == iSenat.SenatID) return true;
-            return false;
-        }
-
-
-
     }
 }

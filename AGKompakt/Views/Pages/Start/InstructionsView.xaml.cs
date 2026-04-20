@@ -36,23 +36,6 @@ namespace BGH_Kompakt.Views.Pages.Start
                 string fileName = string.Empty;
                 switch (button.Name)
                 {
-                    case "Geschäftstellenbereich":
-                        if (UserManager.SenatSettings.Senat != null)
-                        {
-                            if (UserManager.SenatSettings.Senat.SenatArt == 1) fileName = "Anleitung BGHKompaktSitzungsunterlagenZivil.pdf";
-                            else if (UserManager.SenatSettings.Senat.SenatArt == 2) fileName = "Anleitung BGHKompaktSitzungsunterlagenStraf.pdf";
-                        }
-                        else
-                        {
-                            ViewManager.ShowMainInfoFlyout($"Es ist kein Senat ausgewählt.", false);
-                        }
-                        break;
-                    case "Montagspost":
-                        fileName = "Anleitung BGHKompaktMontagspost.pdf";
-                        break;
-                    case "Nebentätigkeiten":
-                        fileName = "Anleitung BGHKompaktNebentaetigkeiten.pdf";
-                        break;
                     default:
                         break;
                 }

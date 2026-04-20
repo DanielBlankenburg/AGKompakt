@@ -1,11 +1,9 @@
 ﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
-using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Commands;
 using BGH_Kompakt.Services.DBContexts;
 using BGH_Kompakt.Services.SystemComponents;
 using BGH_Kompakt.Services.UserService;
-using BGH_Kompakt.Views.Settings;
 using BGH_Kompakt.Views.UserLogin;
 using System;
 using System.Collections.ObjectModel;
@@ -32,8 +30,6 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 SetProperty<User>(ref _selectedUser, value);
                 SetAdminUser();
                 SetAdminAll();
-                SetSenatAdminUser();
-                SetSenatAdminAll();
             }
         }
 
@@ -65,30 +61,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             }
         }
 
-        private ObservableCollection<Senat> _SenatAdminAll = new ObservableCollection<Senat>();
-        public ObservableCollection<Senat> SenatAdminAll { get { return _SenatAdminAll; } }
 
-        private Senat _SelectedSenatAdminAll;
-
-        public Senat SelectedSenatAdminAll
-        {
-            get { return _SelectedSenatAdminAll; }
-            set { SetProperty<Senat>(ref _SelectedSenatAdminAll, value);}
-        }
-
-        private ObservableCollection<Senat> _SenatAdminUser = new ObservableCollection<Senat>();
-        public ObservableCollection<Senat> SenatAdminUser { get { return _SenatAdminUser; } }
-
-        private Senat _SelectedSenatAdminUser;
-
-        public Senat SelectedSenatAdminUser
-        {
-            get { return _SelectedSenatAdminUser; }
-            set
-            {
-                SetProperty<Senat>(ref _SelectedSenatAdminUser, value);
-            }
-        }
 
         public ICommand AddCommand { get; set; }
         public ICommand RemoveCommand { get; set; }
@@ -103,12 +76,10 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
         {
             AddCommand = new RelayCommand(AddExecute, AddCanExecute);
             RemoveCommand = new RelayCommand(RemoveExecute, RemoveCanExecute);
-            SenatAddCommand = new RelayCommand(SenatAddExecute, SenatAddCanExecute);
-            SenatRemoveCommand = new RelayCommand(SenatRemoveExecute, SenatRemoveCanExecute);
             QuitCommand = new RelayCommand(QuitExecute);
             SaveCommand = new RelayCommand(SaveExecute);
             ListViewDblClickCommand = new RelayCommand(ListViewDblClickExecute);
-            var query = userDBContext.Users.Include(x => x.AdminStatus).Include(x => x.SenateAdmin).OrderBy(x => x.NachName).ThenBy(x => x.VorName);
+            var query = userDBContext.Users.Include(x => x.AdminStatus).OrderBy(x => x.NachName).ThenBy(x => x.VorName);
             foreach (var user in query) UserList.Add(user);
         }
 
@@ -119,59 +90,6 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             ViewManager.ShowPageOnMainView<UserPropertyView>();
         }
 
-        private bool SenatRemoveCanExecute(object obj)
-        {
-            return SelectedSenatAdminUser != null;
-        }
-
-        private void SenatRemoveExecute(object obj)
-        {
-            try
-            {
-                _SenatAdminAll.Add(SelectedSenatAdminUser);
-                SelectedUser.SenateAdmin.Remove(SelectedSenatAdminUser);
-                _SenatAdminAll.OrderBy(s => s.SenatID);
-                _SenatAdminAll.Remove(SelectedSenatAdminUser);
-                if (SelectedUser.UserId == UserManager.RegistratedUser.UserId) UserManager.RegistratedUser.SenateAdmin.Remove(SelectedSenatAdminUser);
-            }
-            catch (Exception ex)
-            {
-                ViewManager.ShowMainInfoFlyout($"Der Senat konnte nicht entfernt werden. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
-            }
-            
-        }
-
-        private bool SenatAddCanExecute(object obj)
-        {
-            return SelectedSenatAdminAll != null;
-        }
-
-        private void SenatAddExecute(object obj)
-        {
-            try
-            {
-                _SenatAdminUser.Add(SelectedSenatAdminAll);
-                SelectedUser.SenateAdmin.Add(SelectedSenatAdminAll);
-                _SenatAdminUser.OrderBy(s => s.SenatID);
-
-                if (SelectedUser.UserId == UserManager.RegistratedUser.UserId)
-                {
-                    User AddUser = userDBContext.Users.Find(SelectedUser.UserId);
-                    if (AddUser != null)
-                    {
-                        Senat AddSenat = userDBContext.Senate.Find(SelectedSenatAdminAll.SenatID);
-                        AddUser.SenateAdmin.Add(AddSenat);
-                        UserManager.RegistratedUser = AddUser;
-                    }
-                }
-                _SenatAdminAll.Remove(SelectedSenatAdminAll);
-            }
-            catch (Exception ex)
-            {
-                ViewManager.ShowMainInfoFlyout($"Der Benutzer konnte dem Senat nicht zugewiesen. Es ist folgender Fehler aufgetreten: {ex.Message}", false);
-            }
-
-        }
 
         private void SaveExecute(object obj)
         {
@@ -187,7 +105,7 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
 
         private void QuitExecute(object obj)
         {
-            ViewManager.ShowPageOnMainView<SettingsView>();
+            //ViewManager.ShowPageOnMainView<SettingsView>();
         }
 
         private bool AddCanExecute(object obj)
@@ -257,20 +175,6 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
                 
         }
 
-        private void SetSenatAdminUser()
-        {
-            SenatAdminUser.Clear();
-            var query = SelectedUser.SenateAdmin;
-            if (query != null) foreach (var senat in query) SenatAdminUser.Add(senat);
-        }
-
-        private void SetSenatAdminAll()
-        {
-            SenatAdminAll.Clear();
-            var query = userDBContext.Senate;
-            foreach (Senat senat in query) if (SenatAdminUser.Where(x => x.SenatID == senat.SenatID).FirstOrDefault() == null) SenatAdminAll.Add(senat);
-                
-        }
 
     }
 }

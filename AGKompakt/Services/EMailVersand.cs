@@ -20,15 +20,10 @@ namespace BGH_Kompakt.Services
             string strEMailAdresses = string.Empty;
 
             Text = textAnrede + textBody;
-            Text += "<br> Mit freundlichen Grüßen <br> Geschäftsstelle " + UserManager.SenatSettings.Senat.SenatName;
             //Text = "<html><div style='font-size:15px; font-family:Calibri;'>" + "blah blah <a href='file:///G:/Title.xlsx'>blah</a>" + "</div></html>";
 
             List<User> MemberList = new List<User>();
             UserDBContext userDBContext = new UserDBContext();
-            var tempList = userDBContext.Senate.Include(x => x.Users).FirstOrDefault(s => s.SenatID == UserManager.SenatSettings.SenatID);
-            foreach (var item in tempList.Users) MemberList.Add(item); 
-            //foreach (var item in tempList.Users) if (item.PositionId == 2) MemberList.Add(item); //nur WiMa (PositionID = 2) hinzufügen
-
             foreach (User Member in MemberList)
             {
                 if (Member.PositionId == 1 || Member.PositionId == 2)

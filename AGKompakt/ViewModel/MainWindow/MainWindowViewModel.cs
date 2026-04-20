@@ -1,6 +1,5 @@
 ﻿using BGH_Kompakt.Classes._LookUp.UserLookUps;
 using BGH_Kompakt.Classes.Helper;
-using BGH_Kompakt.Classes.Senate;
 using BGH_Kompakt.Classes.SystemSettings;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Enums;
@@ -21,13 +20,6 @@ namespace BGH_Kompakt.ViewModel.MainWindow
     public partial class MainWindowViewModel : ViewModelBase
     {
         //private UserDBContext userDBContext = new UserDBContext();
-        private string _SenatsText;
-        public string SenatsText
-        {
-            get { return _SenatsText; }
-            set { SetProperty<string>(ref _SenatsText, value); }
-        }
-
         private string _loginUser;
         private readonly UserDBContext userContext = new UserDBContext();
         //String suchText = string.Empty;
@@ -38,19 +30,6 @@ namespace BGH_Kompakt.ViewModel.MainWindow
             set { SetProperty<string>(ref _loginUser, value); }
         }
 
-        public ObservableCollection<Senat> SenatList { get; set; } = new ObservableCollection<Senat>();
-        private Senat selectedSenat;
-        public Senat SelectedSenat
-        {
-            get { return selectedSenat; }
-            set 
-            { 
-                selectedSenat = value; 
-                UserManager.Set_SenatSettings(UserManager.RegistratedUser.Senate, SelectedSenat);
-                ViewManager.ShowPageOnMainView<StartView>();
-                SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
-            }
-        }
 
         public ObservableCollection<ActionStatus> ActionList { get; set; } = new ObservableCollection<ActionStatus>();
         private bool _ShowStatusBar = false;
@@ -125,10 +104,7 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 if (UserManager.LoginUser(Environment.UserName))
                 {
                     LoginUser = UserManager.RegistratedUser.Fullname;
-                    SenatListFill(UserManager.RegistratedUser);
                     ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
-                    if (UserManager.SenatSettings.Senat != null)
-                        SenatsText = UserManager.SenatSettings.Senat.SenatArt == 2 ? "Senatshefte" : "Sitzungsunterlagen";
                     ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
                     ShowMontagspostAdmin = UserManager.RegistratedUser.IsMPAdmin;
                     ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
@@ -156,74 +132,12 @@ namespace BGH_Kompakt.ViewModel.MainWindow
             {
                 #region SeedUser
                 //Seed Besoldungsgruppen
-                List<String> ListRB = new List<String> { "R6", "R8", "R9", "R10" };
-                foreach (string suchText in ListRB)
-                {
-                    if (userContext.RBesoldungen.FirstOrDefault(x => x.Name == suchText) == null)
-                        userContext.RBesoldungen.AddOrUpdate(a => a.Name, new RBesoldung { Name = suchText });
-                }
-                userContext.SaveChanges();
-
-                string[,] ListPayments = {
-                    { "R6", "11372,62" },
-                    { "R8", "12548,95" },
-                    { "R9", "13294,99" },
-                    { "R10", "15612,33" }
-                };
-                AddPayments(new DateTime(2024, 1, 4), ListPayments);
-
-                string[,] ListPayments2 = {
-                    { "R6", "11713,81" },
-                    { "R8", "12925,42" },
-                    { "R9", "13693,84" },
-                    { "R10", "16566,89" }
-                };
-                AddPayments(new DateTime(2025, 1, 4), ListPayments2);
-
-                string[,] ListPayments3 = {
-                    { "R6", "12041,80" },
-                    { "R8", "13287,33" },
-                    { "R9", "14077,27" },
-                    { "R10", "16530,96" }
-                };
-                AddPayments(new DateTime(2026, 1, 4), ListPayments3);
 
                 //Seed Dienstbezeichnung
                 foreach (UserEnums.EnumDienstbezeichnungen val in Enum.GetValues(typeof(UserEnums.EnumDienstbezeichnungen))) 
                 {
                     if (userContext.Dienstbezeichnungen.FirstOrDefault(x => x.DienstbezeichnungText == val.ToString()) == null)
                         userContext.Dienstbezeichnungen.AddOrUpdate(a => a.DienstbezeichnungText, new Dienstbezeichnung { DienstbezeichnungText = val.ToString()});
-                }
-
-                List<Dienstbezeichnung> dienstbezeichnungListe = userContext.Dienstbezeichnungen.ToList();
-                if (dienstbezeichnungListe.Count > 0)
-                {
-                    foreach (Dienstbezeichnung item in dienstbezeichnungListe)
-                    {
-                        if (item.Besoldungsgruppe == null)
-                        {
-                            try
-                            {
-                                if (item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.RiBGH.ToString() || item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.RinBGH.ToString())
-                                {
-                                    item.Besoldungsgruppe = userContext.RBesoldungen.FirstOrDefault(x => x.Name == "R6");
-                                }
-                                else if (item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VRiBGH.ToString() || item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VRinBGH.ToString())
-                                {
-                                    item.Besoldungsgruppe = userContext.RBesoldungen.FirstOrDefault(x => x.Name == "R8");
-                                }
-                                else if (item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.PräsBGH.ToString() || item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.PräsinBGH.ToString())
-                                {
-                                    item.Besoldungsgruppe = userContext.RBesoldungen.FirstOrDefault(x => x.Name == "R10");
-                                }
-                                else if (item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VPräsBGH.ToString() || item.DienstbezeichnungText == UserEnums.EnumDienstbezeichnungen.VPräsinBGH.ToString())
-                                {
-                                    item.Besoldungsgruppe = userContext.RBesoldungen.FirstOrDefault(x => x.Name == "R9");
-                                }
-                            }
-                            catch (Exception ex) { ErrorMessage.CreateExceptionWithoutMessage("MainWindowViewModel - SeedUserDB - Dienstbezeichnung Besoldungsgruppe", ex); }
-                        }
-                    }
                 }
 
                 //Seed Geschlecht
@@ -256,50 +170,6 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 {
                     if (userContext.Titel.FirstOrDefault(x => x.TitelText == suchText) == null)
                         userContext.Titel.AddOrUpdate(a => a.TitelText, new Titel { TitelText = suchText });
-                }
-
-                //Seed Senate
-                List<Senat> senatsListe = new List<Senat>();
-                senatsListe.AddRange(new List<Senat> { 
-                
-                    new Senat("unbekannter Senat", "u.S.", 1),
-                    new Senat("I. Zivilsenat", "I", 1, "\\bgh.bund.de\\dfs\\1-Zivilsenat"),
-                    new Senat("II. Zivilsenat", "II", 1, "\\bgh.bund.de\\dfs\\2-Zivilsenat"),
-                    new Senat("III. Zivilsenat", "III", 1, "\\bgh.bund.de\\dfs\\3-Zivilsenat"),
-                    new Senat("IV. Zivilsenat", "IV", 1, "\\bgh.bund.de\\dfs\\4-Zivilsenat"),
-                    new Senat("V. Zivilsenat", "V", 1, "\\bgh.bund.de\\dfs\\5-Zivilsenat"),
-                    new Senat("VI. Zivilsenat", "VI", 1, "\\bgh.bund.de\\dfs\\6-Zivilsenat"),
-                    new Senat("VIa. Zivilsenat", "VIa", 1, "\\bgh.bund.de\\dfs\\6a-Zivilsenat"),
-                    new Senat("VII. Zivilsenat", "VII", 1, "\\bgh.bund.de\\dfs\\7-Zivilsenat"),
-                    new Senat("VIII. Zivilsenat", "VIII", 1, "\\bgh.bund.de\\dfs\\8-Zivilsenat"),
-                    new Senat("IX. Zivilsenat", "IX", 1, "\\bgh.bund.de\\dfs\\9-Zivilsenat"),
-                    new Senat("X. Zivilsenat", "X", 1, "\\bgh.bund.de\\dfs\\10-Zivilsenat"),
-                    new Senat("XI. Zivilsenat", "XI", 1, "\\bgh.bund.de\\dfs\\11-Zivilsenat"),
-                    new Senat("XII. Zivilsenat", "XII", 1, "\\bgh.bund.de\\dfs\\12-Zivilsenat"),
-                    new Senat("XIII. Zivilsenat", "XIII", 1, "\\bgh.bund.de\\dfs\\13-Zivilsenat"),
-                    new Senat("1. Strafsenat", "1", 2, "\\bgh.bund.de\\dfs\\1-Strafsenat"),
-                    new Senat("2. Strafsenat", "2", 2, "\\bgh.bund.de\\dfs\\2-Strafsenat"),
-                    new Senat("3. Strafsenat", "3", 2, "\\bgh.bund.de\\dfs\\3-Strafsenat"),
-                    new Senat("4. Strafsenat", "4", 2, "\\bgh.bund.de\\dfs\\4-Strafsenat"),
-                    new Senat("5. Strafsenat", "5", 2, "\\bgh.bund.de\\dfs\\5-Strafsenat"),
-                    new Senat("6. Strafsenat", "6", 2, "\\bgh.bund.de\\dfs\\6-Strafsenat"),
-                    new Senat("Anwaltssenat", "AnwS", 3),
-                    new Senat("Notarsenat", "NotS", 3),
-                    new Senat("Landwirtschaftssenat", "LwS", 3),
-                    new Senat("Patentanwaltsenat", "PAnwS", 3),
-                    new Senat("Steuerberatersenat", "StBS", 3),
-                    new Senat("Gemeinsamer Senat der obersten Gerichtshöfe", "GSOGH", 3),
-                    new Senat("Großer Zivilsenat", "GZS", 3),
-                    new Senat("Großer Strafsenat", "GStZ", 3),
-                    new Senat("Dienstgericht", "DG", 3),
-                    new Senat("Vereinigte Große Senate", "VGZ", 3)
-                
-                });
-
-                foreach (Senat suchText in senatsListe)
-                {
-                    if (userContext.Senate.FirstOrDefault(x => x.SenatName == suchText.SenatName) == null)
-                        userContext.Senate.AddOrUpdate(a => a.SenatName, new Senat { SenatName = suchText.SenatName, SenatShort = suchText.SenatShort, SenatArt = suchText.SenatArt });
                 }
 
                 //Seed Adminstatus
@@ -361,34 +231,6 @@ namespace BGH_Kompakt.ViewModel.MainWindow
             catch (Exception ex) 
             {
                 Logger.WriteLog($"logTime: {DateTime.Now}; Es konnte folgender Fehler beim Füllen der User-Werte aufgetreten: {ex.Message}.");
-            }
-        }
-
-        private void AddPayments(DateTime dateTime, string[,] listPayments)
-        {
-            for (int i = 0; i < listPayments.GetLength(0); i++)
-            {
-                string suchText = listPayments[i, 0];
-                RBesoldung rBesoldung = userContext.RBesoldungen.FirstOrDefault(x => x.Name == suchText);
-                if (userContext.RBesoldungPayments.FirstOrDefault(x => x.RBesoldung.id == rBesoldung.id && x.Start == dateTime) == null)
-                {
-                    RBesoldungPayment rBesoldungPayment = new RBesoldungPayment { Start = dateTime, PaymentValue = decimal.Parse(listPayments[i, 1]), RBesoldung = rBesoldung };
-                    userContext.RBesoldungPayments.AddOrUpdate(rBesoldungPayment);
-                }
-            }
-            userContext.SaveChanges();
-        }
-
-        public void SenatListFill(User RegistratedUser)
-        {
-            if (RegistratedUser.Senate.Count > 0)
-            {
-                SenatList.Clear();
-                foreach (var item in RegistratedUser.Senate)
-                {
-                    SenatList.Add(item);
-                }
-                SelectedSenat = RegistratedUser.Senate.FirstOrDefault();
             }
         }
 
