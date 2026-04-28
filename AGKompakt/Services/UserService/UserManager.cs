@@ -42,7 +42,7 @@ namespace BGH_Kompakt.Services.UserService
         }
 
         public static DBResponse RegisterUser(string nachname, string vorname, string eMail, string username, 
-                                            Titel titel, Geschlecht geschlecht, Status status, Position position, Dienstbezeichnung dienstbezeichnung, bool senatszugehögrigkeit)
+                                            Titel titel, Geschlecht geschlecht, Status status, Position position, Dienstbezeichnung dienstbezeichnung)
         {
             string errorText = "Der Nutzer konnte nicht eingetragen werden. Es ist folgender Fehler aufgetreten: ";
             DBResponse resp = new DBResponse { Success = true };
@@ -56,7 +56,6 @@ namespace BGH_Kompakt.Services.UserService
                 GeschlechtID = geschlecht.GeschlechtID,
                 StatusId = (status != null) ? status.StatusId : 1,
                 PositionId = position.PositionId,              
-                Senatszugehörigkeit = senatszugehögrigkeit
             };
             if (dienstbezeichnung != null)
             {

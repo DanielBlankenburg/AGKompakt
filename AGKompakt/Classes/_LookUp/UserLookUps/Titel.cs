@@ -13,5 +13,6 @@ namespace BGH_Kompakt.Classes._LookUp.UserLookUps
         public int TitelId { get; set; }
         public string TitelText { get; set; }
         public IList<User> Users { get; set; }
+        public IList<Verfahrensbeistand> Verfahrensbeistaende{ get; set; }
     }
 }

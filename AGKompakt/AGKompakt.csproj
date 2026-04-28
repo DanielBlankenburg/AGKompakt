@@ -187,6 +187,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AttchedProperties\WebBrowserBehaviors.cs" />
+    <Compile Include="Classes\Base\Person.cs" />
     <Compile Include="Classes\ComboboxItems.cs" />
     <Compile Include="Classes\Helper\ARSendProperties.cs" />
     <Compile Include="Classes\Helper\ComboboxItem.cs" />
@@ -195,9 +196,19 @@
     <Compile Include="Classes\Test\FileData.cs" />
     <Compile Include="Classes\Test\TestItem.cs" />
     <Compile Include="Classes\UserClasses\UserDienstbezeichnung.cs" />
+    <Compile Include="Classes\UserClasses\Verfahrensbeistand.cs" />
     <Compile Include="Converter\BoolToWidthConverter.cs" />
     <Compile Include="Converter\RadioBoolToIntConverter.cs" />
     <Compile Include="Dtos\EMailResponse.cs" />
+    <Compile Include="EntityConfigurations\UserDBContext\VerfahrensbeistandConfiguration.cs" />
+    <Compile Include="Migrartions\Users\202604210414178_InitialUser.cs" />
+    <Compile Include="Migrartions\Users\202604210414178_InitialUser.Designer.cs">
+      <DependentUpon>202604210414178_InitialUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202604211740422_InitialVerfahrensbeistaende.cs" />
+    <Compile Include="Migrartions\Users\202604211740422_InitialVerfahrensbeistaende.Designer.cs">
+      <DependentUpon>202604211740422_InitialVerfahrensbeistaende.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\Extentions\DirectoryInfoExtensions.cs" />
     <Compile Include="Classes\Helper\ActionStatus.cs" />
     <Compile Include="Classes\Helper\CompareBSCW.cs" />
@@ -208,13 +219,10 @@
     <Compile Include="Classes\Test\ItemPresenter.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\AdminStatus.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\Dienstbezeichnung.cs" />
-    <Compile Include="Classes\UserClasses\UserFilterMP.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\Geschlecht.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\Position.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\Status.cs" />
     <Compile Include="Classes\_LookUp\UserLookUps\Titel.cs" />
-    <Compile Include="Classes\Person.cs" />
-    <Compile Include="Classes\Postions.cs" />
     <Compile Include="Classes\SliderButton.cs" />
     <Compile Include="Classes\SystemSetting.cs" />
     <Compile Include="Classes\UserClasses\User.cs" />
@@ -254,19 +262,23 @@
     <Compile Include="Services\SystemComponents\Logger.cs" />
     <Compile Include="Services\SystemComponents\ViewManager.cs" />
     <Compile Include="Services\UserService\UserManager.cs" />
+    <Compile Include="ViewModel\Abteilungen\Familienabteilung\FamilienabteilungMainViewModel.cs" />
+    <Compile Include="ViewModel\Abteilungen\Familienabteilung\VerfahrensbeistaendeViewModel.cs" />
     <Compile Include="ViewModel\MainWindow\MainWindowViewModel.cs" />
-    <Compile Include="ViewModel\PersonChangeViewModel.cs" />
-    <Compile Include="ViewModel\PersonenViewModel.cs" />
-    <Compile Include="ViewModel\PString.cs" />
     <Compile Include="ViewModel\Start\StartViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\AdminViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\ErrorAreaViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\ProgrammSettingViewModel.cs" />
     <Compile Include="ViewModel\SystemSettings\SystemSettingViewModel.cs" />
-    <Compile Include="ViewModel\TestViewModel.cs" />
     <Compile Include="ViewModel\Userlogin\UserLoginViewModel.cs" />
     <Compile Include="ViewModel\Userlogin\UserPropertyViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="Views\Pages\Abteilungen\Familienabteilung\FamilienabteilungMainView.xaml.cs">
+      <DependentUpon>FamilienabteilungMainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Abteilungen\Familienabteilung\VerfahrensbeistaendeView.xaml.cs">
+      <DependentUpon>VerfahrensbeistaendeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\Start\InstructionsView.xaml.cs">
       <DependentUpon>InstructionsView.xaml</DependentUpon>
     </Compile>
@@ -292,6 +304,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Pages\Abteilungen\Familienabteilung\FamilienabteilungMainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Abteilungen\Familienabteilung\VerfahrensbeistaendeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Pages\Start\InstructionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -304,7 +324,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Richter.cs" />
     <Compile Include="Classes\Vintages.cs" />
     <Compile Include="Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Views\Windows\MainWindow.xaml.cs">
@@ -423,6 +442,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrartions\Users\202604210414178_InitialUser.resx">
+      <DependentUpon>202604210414178_InitialUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202604211740422_InitialVerfahrensbeistaende.resx">
+      <DependentUpon>202604211740422_InitialVerfahrensbeistaende.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -37,20 +37,6 @@ namespace BGH_Kompakt.Services.SystemComponents
             UserDBContext userDBContext = new UserDBContext();
             ProgrammSetting programmSettings = userDBContext.ProgrammSettings.FirstOrDefault();
             PathLaufwerksbuchstabe = Assembly.GetExecutingAssembly().Location.Split('\\')[0] + "\\";
-
-
-            PathSitzungsunterlagen = (programmSettings != null) ? programmSettings.PathSitzungsunterlagen : string.Empty;
-            Pathunterlagenverwaltung = PathSitzungsunterlagen;
-            Pathunterlagenverwaltung += (programmSettings != null) ? programmSettings.Pathunterlagenverwaltung : string.Empty;
-            PathSystemdateien = Pathunterlagenverwaltung + "Systemdateien\\";
-            PathSitzungsplaene = Pathunterlagenverwaltung + "Systemdateien\\";
-            PathDokstelle = (programmSettings != null) ? programmSettings.PathDokstelle : string.Empty;
-            PathMontagspost = (programmSettings != null) ? programmSettings.PathMontagspost : string.Empty;
-            PathEigeneDateien = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\";
-            PathDokstelleDFS = (programmSettings != null) ? programmSettings.PathDokstelleDFS : string.Empty;
-            EMailDokstelle = (programmSettings != null) ? programmSettings.EMailDokstelle : string.Empty;
-            
-            
             PathTemp = System.Environment.GetEnvironmentVariable("TEMP") + Path.DirectorySeparatorChar;
             PathTempARDOC = $"{PathTemp}ARDOC\\";
             PathLoggingData = $"{PathTemp}LoggingData\\";

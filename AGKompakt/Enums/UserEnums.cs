@@ -10,19 +10,17 @@ namespace BGH_Kompakt.Enums
     {
         public enum EnumAdminStatus
         {
-            MontagspostAdmin, NebentätigkeitenAdmin, Programm, Präsidentin, Präsidialrichter, Vorzimmer, Senat, MontagspostShow, NebentätigkeitenShow
+            Bereitschaftsdienst, Zivilabteilung, Familienabteilung, Insolvenzabteilung
         }
 
         public enum EnumDienstbezeichnungen
         {
-            RiBGH,
-            RinBGH,
-            VRiBGH,
-            VRinBGH,
-            PräsBGH,
-            PräsinBGH,
-            VPräsBGH,
-            VPräsinBGH
+            RiAG,
+            RinAG,
+            PräsAG,
+            PräsinAG,
+            VPräsAG,
+            VPräsinAG
         }
 
         public enum EnumSex

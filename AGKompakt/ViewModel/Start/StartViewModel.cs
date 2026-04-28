@@ -15,55 +15,31 @@ namespace BGH_Kompakt.ViewModel.Start
 
         #region Show
 
-        private bool _ShowSitzungsunterlagen = false;
-        public bool ShowSitzungsunterlagen
+        private bool _ShowBereitschaftsdienste = false;
+        public bool ShowBereitschaftsdienste
         {
-            get { return _ShowSitzungsunterlagen; }
-            set { SetProperty(ref _ShowSitzungsunterlagen, value); }
+            get { return _ShowBereitschaftsdienste; }
+            set { SetProperty(ref _ShowBereitschaftsdienste, value); }
         }
-        private bool _ShowSpruchgruppen = false;
-        public bool ShowSpruchgruppen
+        private bool _ShowFamilie = true;
+        public bool ShowFamilie
         {
-            get { return _ShowSpruchgruppen; }
-            set { SetProperty(ref _ShowSpruchgruppen, value); }
+            get { return _ShowFamilie; }
+            set { SetProperty(ref _ShowFamilie, value); }
         }
-        private bool _ShowNebentaetigkeiten = false;
-        public bool ShowNebentaetigkeiten
+        private bool _ShowZivil = true;
+        public bool ShowZivil
         {
-            get { return _ShowNebentaetigkeiten; }
-            set { SetProperty(ref _ShowNebentaetigkeiten, value); }
+            get { return _ShowZivil; }
+            set { SetProperty(ref _ShowZivil, value); }
         }
-        private bool _ShowSitzungsplaene = false;
-        public bool ShowSitzungsplaene
+        private bool _ShowInsO = true;
+        public bool ShowInsO
         {
-            get { return _ShowSitzungsplaene; }
-            set { SetProperty(ref _ShowSitzungsplaene, value); }
-        }
-        private bool _ShowKanzlei = false;
-        public bool ShowKanzlei
-        {
-            get { return _ShowKanzlei; }
-            set { SetProperty(ref _ShowKanzlei, value); }
-        }
-        private bool _ShowMontagspost = false;
-        public bool ShowMontagspost
-        {
-            get { return _ShowMontagspost; }
-            set { SetProperty(ref _ShowMontagspost, value); }
-        }
-        private bool _ShowMontagspostAdmin = false;
-        public bool ShowMontagspostAdmin
-        {
-            get { return _ShowMontagspostAdmin; }
-            set { SetProperty(ref _ShowMontagspostAdmin, value); }
+            get { return _ShowInsO; }
+            set { SetProperty(ref _ShowInsO, value); }
         }
 
-        private bool _ShowAnwaltsauswahl = false;
-        public bool ShowAnwaltsauswahl
-        {
-            get { return _ShowAnwaltsauswahl; }
-            set { SetProperty(ref _ShowAnwaltsauswahl, value); }
-        }
         #endregion
 
         public StartViewModel()

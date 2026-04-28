@@ -5,7 +5,6 @@
     xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:BGH_Kompakt.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:start="clr-namespace:BGH_Kompakt.ViewModel.Start"
     d:DataContext="{d:DesignInstance Type=start:StartViewModel}"
@@ -101,20 +100,20 @@
                         Grid.Row="0"
                         MinWidth="700"
                         Margin="30,30,0,20">
-                        <!--#region Sitzungsunterlagen-->
+                        <!--#region Bereitschaft-->
                         <Border Style="{StaticResource ButtonMainwindowButtonBorder}">
                             <Button
-                                x:Name="BtnMainSitzungsunterlagen"
+                                x:Name="BtnMainBereitschaftsdienste"
                                 Click="OpenPageOnMain"
                                 Style="{StaticResource ButtonMainwindow}"
-                                Visibility="{Binding ShowSitzungsunterlagen, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                Visibility="{Binding ShowBereitschaftsdienste, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                 <StackPanel VerticalAlignment="Top">
                                     <Border Style="{StaticResource ButtonMainwindowImageBorder}">
                                         <Border.Background>
                                             <ImageBrush ImageSource="/Resources/ImageResources/Images/Unterlagen.jpg" Stretch="Fill" />
                                         </Border.Background>
                                     </Border>
-                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="{Binding SenatsText}" />
+                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Bereitschaftsdienste" />
                                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                         <TextBlock
                                             Margin="0,5,40,0"
@@ -122,7 +121,7 @@
                                             Style="{StaticResource textblock_base}"
                                             Text="{Binding Title}" />
                                         <Button
-                                            x:Name="BtnInfoSitzungsunterlagen"
+                                            x:Name="BtnInfoBereitschaftsdienste"
                                             Click="InfoClick"
                                             Style="{StaticResource ButtonMainwindowInformationBorder}">
                                             <MD:PackIcon
@@ -137,22 +136,22 @@
                             </Button>
                         </Border>
                         <!--#endregion-->
-                        <!--#region Spruchgruppen-->
+                        <!--#region Familie-->
                         <Border Style="{StaticResource ButtonMainwindowButtonBorder}">
                             <Button
-                                x:Name="BtnMainSpruchgruppen"
+                                x:Name="BtnMainFamilienabteilung"
                                 Click="OpenPageOnMain"
                                 Style="{StaticResource ButtonMainwindow}"
-                                Visibility="{Binding ShowSpruchgruppen, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                Visibility="{Binding ShowFamilie, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                 <StackPanel VerticalAlignment="Top">
                                     <Border Style="{StaticResource ButtonMainwindowImageBorder}">
                                         <Border.Background>
                                             <ImageBrush ImageSource="/Resources/ImageResources/Images/chairs-2181916_1280.jpg" Stretch="Fill" />
                                         </Border.Background>
                                     </Border>
-                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Spruchgruppen" />
+                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Familienabteilung" />
                                     <Button
-                                        x:Name="BtnInfoSpruchgruppen"
+                                        x:Name="BtnInfoFamilienabteilung"
                                         Click="InfoClick"
                                         Style="{StaticResource ButtonMainwindowInformationBorder}">
                                         <MD:PackIcon
@@ -165,22 +164,22 @@
                             </Button>
                         </Border>
                         <!--#endregion-->
-                        <!--#region Nebentätigkeiten-->
+                        <!--#region Zivil-->
                         <Border Style="{StaticResource ButtonMainwindowButtonBorder}">
                             <Button
-                                x:Name="BtnNebentaetigkeiten"
+                                x:Name="BtnMainZivilabteilung"
                                 Click="OpenPageOnMain"
                                 Style="{StaticResource ButtonMainwindow}"
-                                Visibility="{Binding ShowNebentaetigkeiten, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                Visibility="{Binding ShowZivil, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                 <StackPanel VerticalAlignment="Top">
                                     <Border Style="{StaticResource ButtonMainwindowImageBorder}">
                                         <Border.Background>
                                             <ImageBrush ImageSource="/Resources/ImageResources/Images/Nebentaetigkeiten-stift.jpg" Stretch="UniformToFill" />
                                         </Border.Background>
                                     </Border>
-                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Nebentätigkeiten" />
+                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Zivilabteilung" />
                                     <Button
-                                        x:Name="BtnInfoNebentaetigkeiten"
+                                        x:Name="BtnInfoZivilabteilung"
                                         Click="InfoClick"
                                         Style="{StaticResource ButtonMainwindowInformationBorder}">
                                         <MD:PackIcon
@@ -193,22 +192,22 @@
                             </Button>
                         </Border>
                         <!--#endregion-->
-                        <!--#region Sitzungspläne-->
+                        <!--#region Insolvenz-->
                         <Border Style="{StaticResource ButtonMainwindowButtonBorder}">
                             <Button
-                                x:Name="BtnMainSitzungsplaene"
+                                x:Name="BtnMainInsolvenzabteilung"
                                 Click="OpenPageOnMain"
                                 Style="{StaticResource ButtonMainwindow}"
-                                Visibility="{Binding ShowSitzungsplaene, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                Visibility="{Binding ShowInsO, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
                                 <StackPanel VerticalAlignment="Top">
                                     <Border Style="{StaticResource ButtonMainwindowImageBorder}">
                                         <Border.Background>
                                             <ImageBrush ImageSource="/Resources/ImageResources/Images/holzhammer-und-buecher-auf-holztisch.png" Stretch="Fill" />
                                         </Border.Background>
                                     </Border>
-                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Sitzungsdienste" />
+                                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Insolvenzabteilung" />
                                     <Button
-                                        x:Name="BtnInfoSitzungsplaene"
+                                        x:Name="BtnInfoInsolvenzabteilung"
                                         Click="InfoClick"
                                         Style="{StaticResource ButtonMainwindowInformationBorder}">
                                         <MD:PackIcon
@@ -221,7 +220,7 @@
                             </Button>
                         </Border>
                         <!--#endregion-->
-                        <!--#region Montagspost-->
+                        <!--#region Montagspost--><!--
                         <Border Style="{StaticResource ButtonMainwindowButtonBorder}">
                             <Button
                                 x:Name="BtnMainMontagspost"
@@ -248,8 +247,8 @@
                                 </StackPanel>
                             </Button>
                         </Border>
-                        <!--#endregion-->
-                        <!--#region Montagspost Admin-->
+                        --><!--#endregion-->
+                        <!--#region Montagspost Admin--><!--
                         <Border Style="{StaticResource ButtonMainwindowButtonBorder}">
                             <Button
                                 x:Name="BtnMontagspostAdmin"
@@ -276,7 +275,7 @@
                                 </StackPanel>
                             </Button>
                         </Border>
-                        <!--#endregion-->
+                        --><!--#endregion-->
 
                     </WrapPanel>
                 </ScrollViewer>

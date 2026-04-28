@@ -37,7 +37,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
             set 
             { 
                 SetProperty<string>(ref _Nachname, value);
-                if (EMail == string.Empty) EMail = $"{Nachname.RemoveDiacritics().ToLower()}-{Vorname.RemoveDiacritics().ToLower()}@bgh.bund.de";
+                if (EMail == string.Empty) EMail = $"{Vorname.RemoveDiacritics().ToLower()}.{Nachname.RemoveDiacritics().ToLower()}@justiz.niedersachsen.de";
             }
         }
         public string Vorname { get; set; }
@@ -245,7 +245,7 @@ namespace BGH_Kompakt.ViewModel.Userlogin
             //}
             UserDBContext userDBcontext = new UserDBContext();
             Status status = userDBcontext.Status.FirstOrDefault(x => x.StatusText == UserEnums.EnumUserStatus.aktiv.ToString());
-            DBResponse resp = UserManager.RegisterUser(Nachname, Vorname, EMail, Environment.UserName, SelectedTitel, SelectedGeschlecht, status ?? null, SelectedPosition, SelectedDienstbezeichnung ?? null, Show_SenatsChoise);
+            DBResponse resp = UserManager.RegisterUser(Nachname, Vorname, EMail, Environment.UserName, SelectedTitel, SelectedGeschlecht, status ?? null, SelectedPosition, SelectedDienstbezeichnung ?? null);
             if (resp.Success)
             {
                 
@@ -254,9 +254,6 @@ namespace BGH_Kompakt.ViewModel.Userlogin
                     if (UserManager.LoginUser(responseUser.ComputerName))
                     {
                         ViewManager.MainWindowViewModel.LoginUser = UserManager.RegistratedUser.Fullname;
-                        ViewManager.MainWindowViewModel.ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
-                        ViewManager.MainWindowViewModel.ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
-                        ViewManager.MainWindowViewModel.ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
                         ViewManager.ShowPageOnMainView<StartView>();
                     }
                     else

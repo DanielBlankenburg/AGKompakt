@@ -38,9 +38,6 @@ namespace BGH_Kompakt.EntityConfigurations
             .WithMany(a => a.Users)
             .HasForeignKey(x => x.TitelId);
 
-            HasRequired(x => x.FilterMP)
-            .WithRequiredPrincipal(x => x.User);
-
             HasMany(x => x.AdminStatus)
             .WithMany(x => x.Users)
             .Map(m => m.ToTable("Rollen"));

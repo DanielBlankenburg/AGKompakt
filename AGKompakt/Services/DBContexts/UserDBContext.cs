@@ -5,6 +5,7 @@ using BGH_Kompakt.Classes._LookUp.UserLookUps;
 using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Classes.SystemSettings;
 using BGH_Kompakt.Classes.Helper;
+using BGH_Kompakt.EntityConfigurations.UserDBContext;
 
 namespace BGH_Kompakt.Services.DBContexts
 {
@@ -17,10 +18,10 @@ namespace BGH_Kompakt.Services.DBContexts
         public DbSet<Status> Status { get; set; }
         public DbSet<Titel> Titel { get; set; }
         public DbSet<Dienstbezeichnung> Dienstbezeichnungen { get; set; }
-        public DbSet<UserFilterMP> FilterMP { get; set; }
         public DbSet<AdminStatus> AdminStatus { get; set; }
         public DbSet<ProgrammSetting> ProgrammSettings { get; set; }
         public DbSet<UserDienstbezeichnung> UserDienstbezeichnungen { get; set; }
+        public DbSet<Verfahrensbeistand> Verfahrensbeistaende{ get; set; }
        
 
 
@@ -52,9 +53,6 @@ namespace BGH_Kompakt.Services.DBContexts
                 modelBuilder.Entity<Titel>()
                     .Property(x => x.TitelText).IsRequired();
 
-                modelBuilder.Entity<UserFilterMP>()
-                    .ToTable("UserFilterMP");
-
                 modelBuilder.Entity<AdminStatus>()
                     .ToTable("AdminStatus")
                     .Property(x => x.AdminStatusText).IsRequired();
@@ -67,6 +65,7 @@ namespace BGH_Kompakt.Services.DBContexts
                     .WithMany(x => x.UserDienstbezeichnungen);
 
                 modelBuilder.Configurations.Add(new UserConfiguration());
+                modelBuilder.Configurations.Add(new VerfahrensbeistandConfiguration());
                 //base.OnModelCreating(modelBuilder);
             }
             catch (Exception) { ErrorMessage.CreateExceptionWithFlyOutMessage("Fehler beim Zugriff auf die Datenbank MontagspostUser", new Exception("Fehler beim Zugriff auf die Datenbank MontagspostUser"));}

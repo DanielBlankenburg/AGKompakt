@@ -67,22 +67,22 @@ namespace BGH_Kompakt.Views.Start
             {
                 if (sender is Button button)
                 {
-                    if (button == BtnInfoSitzungsunterlagen)
-                    {
-                        ViewManager.ShowDescriptionWindow("Der Bereich der Sitzungsunterlagen dient zur Verwaltung der Senatslaufwerke.\n" +
-                            "In diesem Bereich können Sie einzelnen Sitzungstage verwalten.\n\n Es stehen folgende Möglichkeiten zur Auswahl:\n\n"+
-                            "- Anlegen/ Editieren von Sitzungstagen\n" +
-                            "- Anlegen/ Editieren von Verfahren\n" +
-                            "- Automatisches Umbenennen von Dokumenten\n" +
-                            "- Umwandlung von Word- in pdf-Dateien\n" +
-                            "- Übertragügung der Vollständigkeit des BSCW-Servers\n" +
-                            "- Übertragung von Dokumenten auf den BSCW-Server\n" +
-                            "- Führung einer Votenmappe\n" +
-                            "- Zentrale Sammlung der Sitzungs- und Beratungslisten\n",
-                            button.Name);
-                        e.Handled = true;
-                    }
-                    if (button == BtnInfoSpruchgruppen)
+                    //if (button == BtnInfoSitzungsunterlagen)
+                    //{
+                    //    ViewManager.ShowDescriptionWindow("Der Bereich der Sitzungsunterlagen dient zur Verwaltung der Senatslaufwerke.\n" +
+                    //        "In diesem Bereich können Sie einzelnen Sitzungstage verwalten.\n\n Es stehen folgende Möglichkeiten zur Auswahl:\n\n"+
+                    //        "- Anlegen/ Editieren von Sitzungstagen\n" +
+                    //        "- Anlegen/ Editieren von Verfahren\n" +
+                    //        "- Automatisches Umbenennen von Dokumenten\n" +
+                    //        "- Umwandlung von Word- in pdf-Dateien\n" +
+                    //        "- Übertragügung der Vollständigkeit des BSCW-Servers\n" +
+                    //        "- Übertragung von Dokumenten auf den BSCW-Server\n" +
+                    //        "- Führung einer Votenmappe\n" +
+                    //        "- Zentrale Sammlung der Sitzungs- und Beratungslisten\n",
+                    //        button.Name);
+                    //    e.Handled = true;
+                    //}
+                    if (button == BtnInfoFamilienabteilung)
                     {
                         ViewManager.ShowDescriptionWindow("In diesem Bereich kann durch die Eingabe des Aktenzeichens die Spruchgruppe für das Verfahren bestimmt werden.\n\n" +
                             "ACHTUNG: Es ist erforderlich, dass für den Senat die entsprechenden Einstellungen vorgenommen wurden. Sollte dies nicht der Fall sein" +
@@ -90,7 +90,7 @@ namespace BGH_Kompakt.Views.Start
                             button.Name);
                         e.Handled = true;
                     }
-                    if (button == BtnInfoNebentaetigkeiten)
+                    if (button == BtnInfoZivilabteilung)
                     {
                         ViewManager.ShowDescriptionWindow("Der Bereich der Nebentätigkeiten dient zur Anzeige einer Nebentätigkeit bzw. der Beantrag der Genehmigung einer solchen Tätigkeit.\n" +
                             "Es stehen folgende Möglichkeiten zur Auswahl:\n\n" +
@@ -100,32 +100,32 @@ namespace BGH_Kompakt.Views.Start
                             button.Name);
                         e.Handled = true;
                     }
-                    if (button == BtnInfoSitzungsplaene)
+                    if (button == BtnInfoInsolvenzabteilung)
                     {
                         ViewManager.ShowDescriptionWindow("Der Bereich dient zur Verwaltung der Sitzungsdienste für die wissenschaftlichen Mitarbeiter.\n", button.Name);
                         e.Handled = true;
                     }
-                    if (button == BtnInfoMontagspost)
-                    {
-                        ViewManager.ShowDescriptionWindow("Über diesen Bereich kann die digitale Montagspost eingesehen werden.\n" +
-                            "Es stehen folgende Möglichkeiten zur Auswahl:\n\n" +
-                            "- Auswahl der Montagspost nach den Kalenderwochen\n" +
-                            "- Filtereinstellungen\n" +
-                            "- Eigene Mappe für Auswahl an Entscheidungen\n" +
-                            "- Übertragung auf den BSCW-Server\n",
-                            button.Name);
-                        e.Handled = true;
-                    }
-                    if (button == BtnInfoMontagspostAdmin)
-                    {
-                        ViewManager.ShowDescriptionWindow("Der Bereich dient zur Verwaltung der Montagspost.\n" +
-                            "Es stehen folgende Möglichkeiten zur Auswahl:\n\n" +
-                            "- Montagsapost einlesen\n" +
-                            "- Entscheidungssuche\n" +
-                            "- Erstellung von Vermerken\n",
-                            button.Name);
-                        e.Handled = true;
-                    }
+                    //if (button == BtnInfoMontagspost)
+                    //{
+                    //    ViewManager.ShowDescriptionWindow("Über diesen Bereich kann die digitale Montagspost eingesehen werden.\n" +
+                    //        "Es stehen folgende Möglichkeiten zur Auswahl:\n\n" +
+                    //        "- Auswahl der Montagspost nach den Kalenderwochen\n" +
+                    //        "- Filtereinstellungen\n" +
+                    //        "- Eigene Mappe für Auswahl an Entscheidungen\n" +
+                    //        "- Übertragung auf den BSCW-Server\n",
+                    //        button.Name);
+                    //    e.Handled = true;
+                    //}
+                    //if (button == BtnInfoMontagspostAdmin)
+                    //{
+                    //    ViewManager.ShowDescriptionWindow("Der Bereich dient zur Verwaltung der Montagspost.\n" +
+                    //        "Es stehen folgende Möglichkeiten zur Auswahl:\n\n" +
+                    //        "- Montagsapost einlesen\n" +
+                    //        "- Entscheidungssuche\n" +
+                    //        "- Erstellung von Vermerken\n",
+                    //        button.Name);
+                    //    e.Handled = true;
+                    //}
 
                 }
             }

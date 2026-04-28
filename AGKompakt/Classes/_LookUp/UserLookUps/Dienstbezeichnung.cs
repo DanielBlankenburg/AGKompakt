@@ -19,14 +19,12 @@ namespace BGH_Kompakt.Classes._LookUp.UserLookUps
         {
             return DienstbezeichnungText switch
             {
-                "RiBGH" => "Richter am Bundesgerichtshof",
-                "RinBGH" => "Richterin am Bundesgerichtshof",
-                "VRiBGH" => "Vorsitzender Richter am Bundesgerichtshof",
-                "VRinBGH" => "Vorsitzende Richterin am Bundesgerichtshof",
-                "PräsBGH" => "Präsidenten des Bundesgerichtshof",
-                "PräsinBGH" => "Präsidentin des Bundesgerichtshof",
-                "VPräsBGH" => "Vizepräsidenten des Bundesgerichtshof",
-                "VPräsinBGH" => "Vizepräsidenten des Bundesgerichtshof",
+                "RiAG" => "Richter am Amtsgericht",
+                "RinAG" => "Richterin am Amtsgericht",
+                "PräsAG" => "Präsidentin des Amtsgerichts",
+                "PräsinAG" => "Präsident des Amtsgerichts",
+                "VPräsAG" => "Vizepräsidenten des Amtsgerichts",
+                "VPräsinAG" => "Vizepräsidenten des Amtsgerichts",
                 _ => DienstbezeichnungText,
             };
         }

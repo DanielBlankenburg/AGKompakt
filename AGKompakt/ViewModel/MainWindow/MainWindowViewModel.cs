@@ -104,10 +104,6 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 if (UserManager.LoginUser(Environment.UserName))
                 {
                     LoginUser = UserManager.RegistratedUser.Fullname;
-                    ShowSitzungsunterlagen = UserManager.RegistratedUser.ShowSitzungsunterlagen;
-                    ShowMontagspost = UserManager.RegistratedUser.ShowMontagspost;
-                    ShowMontagspostAdmin = UserManager.RegistratedUser.IsMPAdmin;
-                    ShowNebentaetigkeiten = UserManager.RegistratedUser.ShowActivityRequests;
                 }
                 if (UserManager.RegistratedUser != null)
                 {
@@ -149,7 +145,7 @@ namespace BGH_Kompakt.ViewModel.MainWindow
 
 
                 //Seed Position
-                List<String> List = new List<String> { "Richter am Bundesgerichtshof", "Wissenschaftlicher Mitarbeiter", "Geschäftsstellenmitarbeiter", "Verwaltungsmitarbeiter" };
+                List<String> List = new List<String> { "Richter", "Rechtspfleger", "Geschäftsstellenmitarbeiter", "Verwaltungsmitarbeiter" };
                 foreach (string suchText in List)
                 {
                     if (userContext.Positions.FirstOrDefault(x => x.PositionText == suchText) == null)
@@ -214,12 +210,12 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                 {
                     userContext.ProgrammSettings.AddOrUpdate(a => a.Id, new ProgrammSetting
                     {
-                        PathSitzungsunterlagen = "Sitzungsunterlagen\\",
-                        Pathunterlagenverwaltung = "Unterlagenverwaltung\\",
-                        PathDokstelle = "Diskettenversand\\Entscheidungen\\",
-                        PathMontagspost = "Montagspost\\",
-                        PathDokstelleDFS = $"\\\\bgh.bund.de\\dfs\\Dokumentationsstelle\\",
-                        EMailDokstelle = "Montagspost@bgh.bund.de"
+                        //PathSitzungsunterlagen = "Sitzungsunterlagen\\",
+                        //Pathunterlagenverwaltung = "Unterlagenverwaltung\\",
+                        //PathDokstelle = "Diskettenversand\\Entscheidungen\\",
+                        //PathMontagspost = "Montagspost\\",
+                        //PathDokstelleDFS = $"\\\\bgh.bund.de\\dfs\\Dokumentationsstelle\\",
+                        //EMailDokstelle = "Montagspost@bgh.bund.de"
                     });
                 }
 

@@ -12,30 +12,22 @@ namespace BGH_Kompakt.Classes.SystemSettings
     {
         [Key]
         public int Id { get; set; }
-        public string PathSitzungsunterlagen { get; set; }
-        public string Pathunterlagenverwaltung { get; set; }
-        public string PathMontagspost { get; set; }
-        public string PathDokstelle { get; set; }
-        public string PathDokstelleDFS { get; set; }
-        public string EMailDokstelle { get; set; }
-        public bool MontagspostActivated { get; set; } = false;
-        public bool ActivityRequestActivated { get; set; } = false;
+        public string PathAG { get; set; }
+        public string PathFam { get; set; }
+        public string PathZiv { get; set; }
+        public string PathInsO { get; set; }
 
         public ProgrammSetting()
         {
             
         }
 
-        public ProgrammSetting(string pathSitzungsunterlagen, string pathunterlagenverwaltung, string pathMontagspost, string pathDokstelle, string pathDokstelleDFS, string eMailDokstelle, bool montagspostActivated, bool activityRequestActivated)
+        public ProgrammSetting(string pathAG, string pathFam, string pathZiv, string pathInsO)
         {
-            PathSitzungsunterlagen = pathSitzungsunterlagen;
-            Pathunterlagenverwaltung = pathunterlagenverwaltung;
-            PathMontagspost = pathMontagspost;
-            PathDokstelle = pathDokstelle;
-            PathDokstelleDFS = pathDokstelleDFS;
-            EMailDokstelle = eMailDokstelle;
-            MontagspostActivated = montagspostActivated;
-            ActivityRequestActivated = activityRequestActivated;
+            PathAG = pathAG;
+            PathFam = pathFam;
+            PathZiv = pathZiv;
+            PathInsO = pathInsO;
         }
     }
 }

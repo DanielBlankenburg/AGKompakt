@@ -7,13 +7,13 @@ namespace BGH_Kompakt.Migrartions.Users
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class _3_017_2_Besoldung : IMigrationMetadata
+    public sealed partial class InitialUser : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(_3_017_2_Besoldung));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialUser));
         
         string IMigrationMetadata.Id
         {
-            get { return "202509301534578_3_017_2_Besoldung"; }
+            get { return "202604210414178_InitialUser"; }
         }
         
         string IMigrationMetadata.Source

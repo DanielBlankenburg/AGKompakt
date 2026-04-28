@@ -4,6 +4,7 @@ using BGH_Kompakt.Components;
 using BGH_Kompakt.Enums;
 using BGH_Kompakt.ViewModel.MainWindow;
 using BGH_Kompakt.Views.HelperWindows;
+using BGH_Kompakt.Views.Pages.Abteilungen.Familienabteilung;
 using BGH_Kompakt.Views.Pages.Start;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -117,12 +118,19 @@ namespace BGH_Kompakt.Services.SystemComponents
             {
 
                 MainView.MainMenu.Visibility = Visibility.Visible;
-                if (button == "BtnMainSitzungsunterlagen" || button == "BtnInfoSitzungsunterlagen")
+                switch (button)
                 {
+                    case "BtnMainFamilienabteilung":
+                        ViewManager.ShowPageOnMainView<FamilienabteilungMainView>();
+                        break;
+                    case "BtnMainZivilabteilung":
+                        break;
+                    case "BtnMainInsolvewnzabteilung":
+                        break;
+
                 }
-                else if (button == "BtnMainSpruchgruppen")
-                {
-                }
+
+
                 //else if (button == Btn_Main_Kanzleiunterlagen)
                 //{
                 //    MessageBox.Show("Dieser Bereich steht noch nicht zur Verfügung");
@@ -131,10 +139,6 @@ namespace BGH_Kompakt.Services.SystemComponents
                 //{
                 //    ViewManager.ShowPageOnMainView<AnwaltswahlView>();
                 //}
-                else if (button == "Btn_Main_Instruction")
-                {
-                    ViewManager.ShowPageOnMainView<InstructionsView>();
-                }
             }
             catch (Exception ex)
             {

@@ -33,7 +33,6 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             set 
             {
                 _AnzeigeMontagspost = value;
-                ProgrammSetting.MontagspostActivated = value;
                 SaveProgrammsettings(ProgrammSetting, false);
             }
         }
@@ -45,20 +44,15 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             set
             {
                 _AnzeigeActivitRequests = value;
-                ProgrammSetting.ActivityRequestActivated = value;
                 SaveProgrammsettings(ProgrammSetting, false);
             }
         }
 
         public ProgrammSettingViewModel()
         {
-            TestPath = new RelayCommand(TestPathExecute);
-            SaveSettings = new RelayCommand(SaveSettingsExecute);
             SeedDienstbezeichnungen = new RelayCommand(SeedDienstbezeichnungenExecute);
 
             ProgrammSetting = userDBContext.ProgrammSettings.FirstOrDefault() ?? new ProgrammSetting();
-            AnzeigeMontagspost = ProgrammSetting.MontagspostActivated;
-            AnzeigeActivitRequests = ProgrammSetting.ActivityRequestActivated;
         }
 
         private void SeedDienstbezeichnungenExecute(object obj)
@@ -83,34 +77,6 @@ namespace BGH_Kompakt.ViewModel.SystemSettings
             userDBContext.SaveChanges();
         }
 
-        private void SaveSettingsExecute(object obj)
-        {
-            if (Directory.Exists(ProgrammSetting.PathDokstelleDFS))
-            {
-                SaveProgrammsettings(ProgrammSetting, true); 
-            }
-            else
-            {
-                ViewManager.ShowMainInfoFlyout("Der Pfad DokstelleDFS exisitiert nicht. Bitte tragen Sie einen gültigen Pfad ein.",false);
-                return;
-            }
-            
-        }
-
-
-        private void TestPathExecute(object obj)
-        {
-            string path = $"{ProgrammSetting.PathDokstelleDFS}{ProgrammSetting.PathDokstelle}";
-            if (Directory.Exists(path))
-            {
-                ViewManager.ShowMainInfoFlyout($"Der Pfad {path} wurde gefunden.", false);
-            }
-            else
-            {
-                ViewManager.ShowMainInfoFlyout($"Der Pfad {path} konnte nicht gefunden werden.", false);
-            }
-
-        }
 
         private void SaveProgrammsettings(ProgrammSetting programmSetting, bool successMessage)
         {

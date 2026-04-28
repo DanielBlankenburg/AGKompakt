@@ -1,7 +1,9 @@
 ﻿using BGH_Kompakt.Services.SystemComponents;
+using BGH_Kompakt.ViewModel.Abteilungen.Familienabteilung;
 using BGH_Kompakt.ViewModel.MainWindow;
 using BGH_Kompakt.ViewModel.Start;
 using BGH_Kompakt.ViewModel.Userlogin;
+using BGH_Kompakt.Views.Pages.Abteilungen.Familienabteilung;
 using BGH_Kompakt.Views.Pages.Start;
 using BGH_Kompakt.Views.Start;
 using BGH_Kompakt.Views.UserLogin;
@@ -92,7 +94,13 @@ namespace BGH_Kompakt
             iServiceColletion.AddSingleton<UserSwitchWindow>();
             iServiceColletion.AddSingleton<InstructionsView>();
 
+            #region Familie
+            iServiceColletion.AddSingleton<FamilienabteilungMainView>();
+            iServiceColletion.AddSingleton<FamilienabteilungMainViewModel>();
+            iServiceColletion.AddSingleton<VerfahrensbeistaendeView>();
+            iServiceColletion.AddSingleton<VerfahrensbeistaendeViewModel>();
 
+            #endregion
 
 
 
