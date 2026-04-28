@@ -20,20 +20,60 @@
             <ColumnDefinition Width="6*" />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.ColumnSpan="2" Text="Verfahrensbeistände" />
-        <ListBox
+        <!--<ListBox
             Grid.Row="1"
             Grid.Column="0"
             ItemsSource="{Binding VBList}"
             Style="{StaticResource MaterialDesignCardsListBox}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="40,0,0,10">
-                        <TextBlock Text="{Binding VorName}" />
+                    <StackPanel Margin="40,0,0,10">
+                        <TextBlock FontWeight="Bold" Text="{Binding VorName}" />
                         <TextBlock Text="{Binding NachName}" />
-                    </Grid>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-        </ListBox>
+        </ListBox>-->
+        <DataGrid
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="5,5,5,5"
+            HorizontalScrollBarVisibility="Disabled"
+            ItemsSource="{Binding VBList, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding SelectedMPWeek, UpdateSourceTrigger=PropertyChanged}"
+            SelectionMode="Single"
+            VerticalScrollBarVisibility="Auto">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="*" MinWidth="200">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="10,0,0,10">
+                                <TextBlock FontWeight="Bold" Text="{Binding VorName}" />
+                                <TextBlock Text="{Binding NachName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridColumn.Header>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource Style_ListView_Header}" Text="Verfahrensbeistand" />
+                            <!--<Button
+                                                    x:Name="Add_KW"
+                                                    Width="50"
+                                                    Height="25"
+                                                    Margin="10,0,0,0"
+                                                    components:FileDragDropHelper.FileDragDropTarget="{Binding}"
+                                                    components:FileDragDropHelper.IsFileDragDropEnabled="True"
+                                                    AllowDrop="True"
+                                                    Background="White"
+                                                    BorderThickness="0">
+                                                    <MD:PackIcon Kind="Add" />
+                                                </Button>-->
+                        </StackPanel>
+                    </DataGridColumn.Header>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
 
 
     </Grid>
