@@ -1,5 +1,6 @@
 ﻿using BGH_Kompakt.Classes.UserClasses;
 using BGH_Kompakt.Services.DBContexts;
+using BGH_Kompakt.Services.SystemComponents;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,7 +22,7 @@ namespace BGH_Kompakt.ViewModel.Abteilungen.Familienabteilung
             set
             {
                 SetProperty(ref _SelectedVB, value);
-                //WeekFill();
+                ViewManager.ShowMainInfoFlyout(_SelectedVB.NachName, false);
             }
         }
 

@@ -28,7 +28,7 @@
     </Style>
 
     <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="{x:Type DataGridCell}">
-        <Setter Property="Height" Value="45" />
+        <Setter Property="Height" Value="75" />
         <Setter Property="Padding" Value="5,6,0,6" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -68,7 +68,7 @@
     </Style>
 
     <Style BasedOn="{StaticResource MaterialDesignDataGridRow}" TargetType="{x:Type DataGridRow}">
-        <Setter Property="Height" Value="38" />
+        <Setter Property="Height" Value="Auto" />
         <Setter Property="BorderThickness" Value="0,0,0,1" />
         <Setter Property="BorderBrush" Value="LightGray" />
         <Setter Property="Background" Value="White" />
