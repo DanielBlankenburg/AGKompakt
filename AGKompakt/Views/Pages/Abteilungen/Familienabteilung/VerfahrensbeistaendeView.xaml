@@ -2,6 +2,8 @@
     x:Class="BGH_Kompakt.Views.Pages.Abteilungen.Familienabteilung.VerfahrensbeistaendeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MD="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:MW="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:familienabteilung="clr-namespace:BGH_Kompakt.ViewModel.Abteilungen.Familienabteilung"
     xmlns:local="clr-namespace:BGH_Kompakt.Views.Pages.Abteilungen.Familienabteilung"
@@ -9,6 +11,7 @@
     d:DataContext="{d:DesignInstance Type=familienabteilung:VerfahrensbeistaendeViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Language="DE-de"
     mc:Ignorable="d">
     <Grid Background="White">
         <Grid.RowDefinitions>
@@ -17,6 +20,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="6*" />
         </Grid.ColumnDefinitions>
         <TextBlock
@@ -47,17 +51,179 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Grid Grid.Row="1" Grid.Column="1">
-            <StackPanel Margin="10,0,0,10">
-                <TextBlock
+        <Border
+            Grid.Row="1"
+            Grid.Column="1"
+            Style="{StaticResource Expander_Border_Vertical}" />
+        <Grid
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" MinWidth="250" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Grid.Column="0"
+                Margin="10,0,0,10"
+                HorizontalAlignment="Left">
+                <!--  Photo display  -->
+                <Border
+                    Width="150"
+                    Height="150"
+                    Margin="0,0,0,15"
+                    HorizontalAlignment="Left"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    Visibility="{Binding ShowVBPhoto, Converter={StaticResource BoolToVisConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <Image
+                        Width="150"
+                        Height="150"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="{Binding SelectedVB.PhotoImage}"
+                        Stretch="UniformToFill" />
+                </Border>
+                <Button
+                    Margin="0,0,0,15"
+                    Command="{Binding UploadPhotoCommand}"
+                    Content="Foto hinzufügen"
+                    Style="{StaticResource Button_Master}" />
+
+                <TextBox
+                    MaxWidth="300"
+                    Margin="0,0,0,10"
+                    MD:HintAssist.Hint="Vorname"
                     FontSize="14"
-                    FontWeight="Bold"
+                    Style="{StaticResource Textbox_Base}"
                     Text="{Binding SelectedVB.VorName}" />
-                <TextBlock
+                <TextBox
+                    MaxWidth="300"
+                    Margin="0,0,0,10"
+                    MD:HintAssist.Hint="Nachname"
                     FontSize="14"
-                    FontWeight="Bold"
+                    Style="{StaticResource Textbox_Base}"
                     Text="{Binding SelectedVB.NachName}" />
+                <TextBox
+                    MaxWidth="300"
+                    Margin="0,0,0,10"
+                    MD:HintAssist.Hint="Geschlecht"
+                    FontSize="14"
+                    Style="{StaticResource Textbox_Base}"
+                    Text="{Binding SelectedVB.Geschlecht.GeschlechtText}" />
+                <TextBox
+                    MaxWidth="300"
+                    Margin="0,0,0,10"
+                    MD:HintAssist.Hint="letzte Vorlage BZR"
+                    FontSize="14"
+                    Style="{StaticResource Textbox_Base}"
+                    Text="{Binding SelectedVB.LastBZR, StringFormat=d}" />
             </StackPanel>
+            <Border Grid.Column="1" Style="{StaticResource Expander_Border_Vertical}" />
+            <StackPanel MinWidth="300"
+                Grid.Column="2"
+                Margin="10,0,20,10"
+                HorizontalAlignment="Left">
+                <TextBlock
+                    Margin="0,0,0,10"
+                    Foreground="Gray"
+                    Style="{StaticResource textblock_base}"
+                    Text="Kontaktdaten:" />
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        Grid.Column="0"
+                        MaxWidth="300"
+                        Margin="0,0,20,10"
+                        MD:HintAssist.Hint="Straße"
+                        FontSize="14"
+                        Style="{StaticResource Textbox_Base}"
+                        Text="{Binding SelectedVB.Strasse}" />
+                    <TextBox
+                        Grid.Column="1"
+                        MaxWidth="120"
+                        Margin="0,0,0,10" HorizontalAlignment="Left"
+                        MD:HintAssist.Hint="Hausnummer"
+                        FontSize="14"
+                        Style="{StaticResource Textbox_Base}"
+                        Text="{Binding SelectedVB.Hausnummer}" />
+                </Grid>
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        Grid.Column="0"
+                        MaxWidth="300"
+                        Margin="0,0,20,10"
+                        MD:HintAssist.Hint="PLZ"
+                        FontSize="14"
+                        Style="{StaticResource Textbox_Base}"
+                        Text="{Binding SelectedVB.PLZ}" />
+                    <TextBox
+                        Grid.Column="1" HorizontalAlignment="Left"
+                        MaxWidth="300"
+                        Margin="0,0,0,10"
+                        MD:HintAssist.Hint="Stadt"
+                        FontSize="14"
+                        Style="{StaticResource Textbox_Base}"
+                        Text="{Binding SelectedVB.Stadt, StringFormat=d}" />
+                </Grid>
+                <TextBox
+                    MaxWidth="300"
+                    Margin="0,0,0,10"
+                    MD:HintAssist.Hint="Telefon"
+                    FontSize="14"
+                    Style="{StaticResource Textbox_Base}"
+                    Text="{Binding SelectedVB.Telefon, StringFormat=d}" />
+                <TextBox
+                    MaxWidth="300"
+                    Margin="0,0,0,10"
+                    MD:HintAssist.Hint="Mobiltelefon"
+                    FontSize="14"
+                    Style="{StaticResource Textbox_Base}"
+                    Text="{Binding SelectedVB.Mobiltelefon, StringFormat=d}" />
+            </StackPanel>
+
+            <Border Grid.Column="3" Style="{StaticResource Expander_Border_Vertical}" />
+
+            <Grid Grid.Column="4" Margin="10,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Margin="0,0,0,10"
+                    Foreground="Gray"
+                    Style="{StaticResource textblock_base}"
+                    Text="Sprachen:" />
+                <ListBox
+                    Grid.Row="1"
+                    MaxWidth="300"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{Binding SelectedVB.Sprachen}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="Transparent">
+                                <TextBlock Style="{StaticResource textblock_base}" Text="{Binding SpracheText}" />
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
         </Grid>
 
     </Grid>

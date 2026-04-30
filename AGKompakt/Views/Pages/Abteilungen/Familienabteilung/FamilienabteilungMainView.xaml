@@ -10,10 +10,49 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="Button_Settings"
+            BasedOn="{StaticResource Button_Mainwindow}"
+            TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="40,30,0,0" />
+        </Style>
+    </UserControl.Resources>
     <Grid Background="White">
-        <StackPanel>
-            <TextBlock Text="{Binding Title}" />
-            <Button Command="{Binding VerfahrensbeistandCommand}" Content="Verfahrensbeistände" />
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding Title}" />
+        <WrapPanel Grid.Row="1">
+            <Button Command="{Binding VerfahrensbeistandCommand}" Style="{StaticResource Button_Settings}">
+                <StackPanel>
+                    <Image
+                        Source="/Resources/ImageResources/Images/List.jpg"
+                        Stretch="Fill"
+                        Style="{StaticResource Button_Mainwindow_Image}" />
+                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Liste Verfahrensbeistände" />
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource Button_Settings}">
+                <StackPanel>
+                    <Image
+                        Source="/Resources/ImageResources/Images/Montagspost.png"
+                        Stretch="Fill"
+                        Style="{StaticResource Button_Mainwindow_Image}" />
+                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Unterlagen Familiengericht" />
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource Button_Settings}">
+                <StackPanel>
+                    <Image
+                        Source="/Resources/ImageResources/Images/Montagspost.png"
+                        Stretch="Fill"
+                        Style="{StaticResource Button_Mainwindow_Image}" />
+                    <TextBlock Style="{StaticResource Button_Mainwindow_Textblock}" Text="Urteilsdatenbank" />
+                </StackPanel>
+            </Button>
+
+        </WrapPanel>
     </Grid>
 </UserControl>

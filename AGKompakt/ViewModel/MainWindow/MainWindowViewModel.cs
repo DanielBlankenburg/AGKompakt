@@ -175,6 +175,13 @@ namespace BGH_Kompakt.ViewModel.MainWindow
                         userContext.AdminStatus.AddOrUpdate(a => a.AdminStatusText, new AdminStatus { AdminStatusText = val.ToString() });
                 }
 
+                //Seed Sprachen
+                foreach (UserEnums.EnumSprachen val in Enum.GetValues(typeof(UserEnums.EnumSprachen)))
+                {
+                    if (userContext.Sprachen.FirstOrDefault(x => x.SpracheText== val.ToString()) == null)
+                        userContext.Sprachen.AddOrUpdate(a => a.SpracheText, new Sprache { SpracheText = val.ToString() });
+                }
+
                 //List.Clear();
 
                 //List = new List<String> { UserEnums.EnumAdminStatus.MontagspostAdmin.ToString(), UserEnums.EnumAdminStatus.NebentätigkeitenAdmin.ToString(), UserEnums.EnumAdminStatus.Programm.ToString(), UserEnums.EnumAdminStatus.Präsidentin.ToString(), UserEnums.EnumAdminStatus.Präsidialrichter.ToString(), UserEnums.EnumAdminStatus.Vorzimmer.ToString(), UserEnums.EnumAdminStatus.Senat.ToString() };

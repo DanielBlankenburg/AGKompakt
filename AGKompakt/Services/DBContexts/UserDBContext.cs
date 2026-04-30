@@ -22,7 +22,8 @@ namespace BGH_Kompakt.Services.DBContexts
         public DbSet<ProgrammSetting> ProgrammSettings { get; set; }
         public DbSet<UserDienstbezeichnung> UserDienstbezeichnungen { get; set; }
         public DbSet<Verfahrensbeistand> Verfahrensbeistaende{ get; set; }
-       
+        public DbSet<Sprache> Sprachen { get; set; }
+
 
 
 
@@ -58,11 +59,14 @@ namespace BGH_Kompakt.Services.DBContexts
                     .Property(x => x.AdminStatusText).IsRequired();
 
 
-
                 modelBuilder.Entity<UserDienstbezeichnung>()
                     .ToTable("UserDienstbezeichnungen")
                     .HasRequired(x => x.Dienstbezeichnung)
                     .WithMany(x => x.UserDienstbezeichnungen);
+
+                modelBuilder.Entity<Sprache>()
+                    .ToTable("Sprachen");
+
 
                 modelBuilder.Configurations.Add(new UserConfiguration());
                 modelBuilder.Configurations.Add(new VerfahrensbeistandConfiguration());

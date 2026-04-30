@@ -38,7 +38,7 @@
         <Setter Property="BorderThickness" Value="0" />
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="true">
-                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontWeight" Value="Bold" />
                 <Setter Property="Padding" Value="5,4,0,4" />
                 <Setter Property="Foreground" Value="White" />

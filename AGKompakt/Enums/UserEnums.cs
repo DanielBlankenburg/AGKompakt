@@ -38,5 +38,10 @@ namespace BGH_Kompakt.Enums
             aktiv, inaktiv
         }
 
+        public enum EnumSprachen
+        {
+            Englisch, Deutsch, Französisch, Spanisch, Italienisch, Russisch, Chinesisch, Japanisch, Arabisch, Portugiesisch, Niederländisch, Schwedisch, Norwegisch, Dänisch, Finnisch, Polnisch, Tschechisch, Ungarisch, Griechisch, Türkisch
+        }
+
     }
 }

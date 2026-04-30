@@ -195,8 +195,12 @@
     <Compile Include="Classes\SystemSettings\PageInfo.cs" />
     <Compile Include="Classes\Test\FileData.cs" />
     <Compile Include="Classes\Test\TestItem.cs" />
+    <Compile Include="Classes\UserClasses\Entscheidung.cs" />
     <Compile Include="Classes\UserClasses\UserDienstbezeichnung.cs" />
     <Compile Include="Classes\UserClasses\Verfahrensbeistand.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\Rechtsgebiet.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\Registerzeichen.cs" />
+    <Compile Include="Classes\_LookUp\UserLookUps\Sprache.cs" />
     <Compile Include="Converter\BoolToWidthConverter.cs" />
     <Compile Include="Converter\RadioBoolToIntConverter.cs" />
     <Compile Include="Dtos\EMailResponse.cs" />
@@ -208,6 +212,22 @@
     <Compile Include="Migrartions\Users\202604211740422_InitialVerfahrensbeistaende.cs" />
     <Compile Include="Migrartions\Users\202604211740422_InitialVerfahrensbeistaende.Designer.cs">
       <DependentUpon>202604211740422_InitialVerfahrensbeistaende.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202604281949585_LastBZR.cs" />
+    <Compile Include="Migrartions\Users\202604281949585_LastBZR.Designer.cs">
+      <DependentUpon>202604281949585_LastBZR.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202604290406346_Sprachen.cs" />
+    <Compile Include="Migrartions\Users\202604290406346_Sprachen.Designer.cs">
+      <DependentUpon>202604290406346_Sprachen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202604290549317_VBPhoto.cs" />
+    <Compile Include="Migrartions\Users\202604290549317_VBPhoto.Designer.cs">
+      <DependentUpon>202604290549317_VBPhoto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrartions\Users\202604290606494_ContactData.cs" />
+    <Compile Include="Migrartions\Users\202604290606494_ContactData.Designer.cs">
+      <DependentUpon>202604290606494_ContactData.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\Extentions\DirectoryInfoExtensions.cs" />
     <Compile Include="Classes\Helper\ActionStatus.cs" />
@@ -447,6 +467,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrartions\Users\202604211740422_InitialVerfahrensbeistaende.resx">
       <DependentUpon>202604211740422_InitialVerfahrensbeistaende.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202604281949585_LastBZR.resx">
+      <DependentUpon>202604281949585_LastBZR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202604290406346_Sprachen.resx">
+      <DependentUpon>202604290406346_Sprachen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202604290549317_VBPhoto.resx">
+      <DependentUpon>202604290549317_VBPhoto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrartions\Users\202604290606494_ContactData.resx">
+      <DependentUpon>202604290606494_ContactData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

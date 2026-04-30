@@ -26,6 +26,15 @@ namespace BGH_Kompakt.EntityConfigurations.UserDBContext
             .WithMany(a => a.Verfahrensbeistaende)
             .HasForeignKey(x => x.TitelId);
 
+            HasMany(x => x.Sprachen)
+                .WithMany(a => a.Verfahrensbeistaende)
+                .Map(m =>
+                {
+                    m.ToTable("Verfahrensbeistand_Sprache");
+                    m.MapLeftKey("VerfahrensbeistandId");
+                    m.MapRightKey("SpracheId");
+                });
+
         }
     }
 }

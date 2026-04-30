@@ -220,7 +220,8 @@
                             </Button>
                         </Border>
                         <!--#endregion-->
-                        <!--#region Montagspost--><!--
+                        <!--#region Montagspost-->
+                        <!--
                         <Border Style="{StaticResource ButtonMainwindowButtonBorder}">
                             <Button
                                 x:Name="BtnMainMontagspost"
@@ -247,8 +248,10 @@
                                 </StackPanel>
                             </Button>
                         </Border>
-                        --><!--#endregion-->
-                        <!--#region Montagspost Admin--><!--
+                        -->
+                        <!--#endregion-->
+                        <!--#region Montagspost Admin-->
+                        <!--
                         <Border Style="{StaticResource ButtonMainwindowButtonBorder}">
                             <Button
                                 x:Name="BtnMontagspostAdmin"
@@ -275,7 +278,8 @@
                                 </StackPanel>
                             </Button>
                         </Border>
-                        --><!--#endregion-->
+                        -->
+                        <!--#endregion-->
 
                     </WrapPanel>
                 </ScrollViewer>
